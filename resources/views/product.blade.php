@@ -163,7 +163,7 @@ list view
                         <div class="col-xxl-6">
                             <div>
                                 <label for="lastName" class="form-label">HSN</label>
-                                <input type="text" class="form-control" id="lastName"  name = "make" placeholder="Enter make">
+                                <input type="text" class="form-control" id="lastName-2"  name = "make" placeholder="Enter make">
                             </div>
                         </div><!--end col-->
                         <div class="col-xxl-6">

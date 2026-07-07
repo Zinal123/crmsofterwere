@@ -6,7 +6,6 @@
     li {
         .nav-link {
             color: var(--#{$prefix}body-color);
-            padding-left: 0;
             font-weight: $font-weight-medium;
             background-color: var(--#{$prefix}light);
             padding: 10px 12px;

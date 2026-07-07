@@ -318,11 +318,11 @@ Standerconfiglist
     </div>
 </div>
 
-<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Add Gear</h5>
+                <h5 class="modal-title" id="exampleModalgrid1Label">Add Gear</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -331,7 +331,7 @@ Standerconfiglist
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-2"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id2"  name = "product_id" placeholder="Enter Product">
                         </div>
                        
@@ -362,11 +362,11 @@ Standerconfiglist
     </div>
 </div>
 
-<div class="modal fade" id="exampleModalgrid2" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid2" tabindex="-1" aria-labelledby="exampleModalgrid2Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Rack Details</h5>
+                <h5 class="modal-title" id="exampleModalgrid2Label">Rack Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -375,7 +375,7 @@ Standerconfiglist
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-3"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id3"  name = "product_id" placeholder="Enter Product">
                         </div>
                        
@@ -404,11 +404,11 @@ Standerconfiglist
         </div>
     </div>
 </div>
-<div class="modal fade" id="exampleModalgrid3" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid3" tabindex="-1" aria-labelledby="exampleModalgrid3Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Add Softwere</h5>
+                <h5 class="modal-title" id="exampleModalgrid3Label">Add Softwere</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -417,7 +417,7 @@ Standerconfiglist
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-4"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id4"  name = "product_id" placeholder="Enter Product">
                         </div>
                        
@@ -441,11 +441,11 @@ Standerconfiglist
         </div>
     </div>
 </div>
-<div class="modal fade" id="editsofterwere" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="editsofterwere" tabindex="-1" aria-labelledby="editsofterwereLabel" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Add Softwere</h5>
+                <h5 class="modal-title" id="editsofterwereLabel">Add Softwere</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -454,8 +454,8 @@ Standerconfiglist
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
-                            <input type="text" class="form-control" id="product_id4"  name = "product_id" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-5"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="product_id4-2"  name = "product_id" placeholder="Enter Product">
                         </div>
                        
                         <div class ="col-md-3">

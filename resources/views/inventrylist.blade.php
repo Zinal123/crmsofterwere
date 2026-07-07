@@ -182,11 +182,11 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
                     </div>
                 </div>
                 <!--end modal -->
-                <div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+                <div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalgridLabel">Payment</h5>
+                                <h5 class="modal-title" id="exampleModalgrid1Label">Payment</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">

@@ -58,7 +58,7 @@ Qutation
                         </div>
                         <div class="col-md-3">
                         <label class="col-form-label" style="visibility: hidden;" for="basic-default-name">Quotation For</label><br>
-                        <input type="radio" id="html" name="fav_language" value="Without Canopy">
+                        <input type="radio" id="html-2" name="fav_language" value="Without Canopy">
                         <label class="col-form-label" for="basic-default-name">Without Canopy</label>
                         </div>
                       
@@ -196,27 +196,27 @@ Qutation
                      <tr>
                         <td>3</td>
                         <td>CNC Span (mm)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="cncspan" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-2" placeholder="John Doe" name="cncspan" /></td>
                      </tr>
                      <tr>
                         <td>4</td>
                         <td>CNC Length (mm)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="cnslenght"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-3" placeholder="John Doe"  name="cnslenght"/></td>
                      </tr>
                      <tr>
                         <td>5</td>
                         <td>Effective Cutting Range</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="cuttingrang"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-4" placeholder="John Doe"  name="cuttingrang"/></td>
                      </tr>
                      <tr>
                         <td>6</td>
                         <td>Cutting Head Lifting Height (mm)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  value ="200" name="liftingheight" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-5"  value ="200" name="liftingheight" /></td>
                      </tr>
                      <tr>
                         <td>7</td>
                         <td>Laser Cutting Head Quantity</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  value ="200"  name="headquantity"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-6"  value ="200"  name="headquantity"/></td>
                      </tr>
                      <tr>
                         <td>8</td>
@@ -231,17 +231,17 @@ Qutation
                      <tr>
                         <td>9</td>
                         <td>Idle Stroke Speed</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" name="strokespeed" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-7" name="strokespeed" /></td>
                      </tr>
                      <tr>
                         <td>10</td>
                         <td>Cutting Speed</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  name="cuttingspeed" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-8"  name="cuttingspeed" /></td>
                      </tr>
                      <tr>
                         <td>11</td>
                         <td>Drive</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  name="drive" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-9"  name="drive" /></td>
                      </tr>
                     </tbody>
                   </table>
@@ -326,16 +326,16 @@ Qutation
                       <tr>
                         <td>1</td>
                         <td><input type="text" class="form-control" name="description" ></td>
-<td>                            <input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="amount" /></td>
+<td>                            <input type="text" class="form-control" id="basic-default-name-10" placeholder="John Doe" name="amount" /></td>
                      </tr>
                      <tr>
                         <td>2</td>
                         <td><input type="text" class="form-control" name="description1" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="amount1" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-11" placeholder="John Doe"  name="amount1" /></td>
                      </tr>
                      <td>3</td>
                         <td><input type="text" class="form-control" name="description2" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="amount2"  /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-12" placeholder="John Doe" name="amount2"  /></td>
                      </tr>
                     
                     </tbody>

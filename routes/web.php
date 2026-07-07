@@ -28,15 +28,11 @@ Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::clas
 Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\InvoiceController::class, 'getproduct'])->name('invoice.product');
 Route::get('admin/invoice/getproduct1' ,[App\Http\Controllers\InvoiceController::class, 'getproductvalue1'])->name('invoice.product1');
 Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');
-Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');
 Route::post('update-payment', [App\Http\Controllers\InvoiceController::class, 'updatePayment']);
 Route::get('paymenthistry', [App\Http\Controllers\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
 Route::get('vender', [App\Http\Controllers\InvoiceController::class, 'vender'])->name('invoice.vender');
 Route::post('invoicestore' ,[App\Http\Controllers\InvoiceController::class, 'store'])->name('invoice.store');
 Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\InvoiceController::class, 'details'])->name('invoice.details');
-Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');
-Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');
-Route::post('update-payment', [App\Http\Controllers\InvoiceController::class, 'updatePayment']);
 Route::get('inventrylist', [App\Http\Controllers\InventryController::class, 'inventrylist'])->name('invoice.inventrylist');
 Route::post('inventrystore', [App\Http\Controllers\InventryController::class, 'inventrystore'])->name('inventrystore');
 Route::post('quantityupdate', [App\Http\Controllers\InventryController::class, 'quantityupdate'])->name('quantityupdate');
@@ -65,8 +61,6 @@ Route::post('motor/store' ,[App\Http\Controllers\StanderconfiglistController::cl
 Route::post('gear/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'gearstore'])->name('gearstore');
 Route::post('rack/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'rackstore'])->name('rackstore');
 Route::post('Software/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'softwarestore'])->name('softwarestore');
-Route::get('cuttingway/{id}' ,[App\Http\Controllers\TechinalController::class, 'cuttingway'])->name('cuttingway');
-Route::get('cuttingway/{id}' ,[App\Http\Controllers\TechinalController::class, 'cuttingway'])->name('cuttingway');
 Route::get('fiberqutation/{id}' ,[App\Http\Controllers\QutationController::class, 'generatequtation'])->name('generatequtation');
 Route::post('fiberqutation/store' ,[App\Http\Controllers\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');
 Route::get('admin/listqutation' ,[App\Http\Controllers\QutationController::class, 'index'])->name('listqutation');

@@ -58,7 +58,7 @@ Qutation
                         </div>
                         <div class="col-md-3">
                         <label class="col-form-label" style="visibility: hidden;" for="basic-default-name">Quotation For</label><br>
-                        <input type="radio" id="html" name="fav_language" value="Without Canopy">
+                        <input type="radio" id="html-2" name="fav_language" value="Without Canopy">
                         <label class="col-form-label" for="basic-default-name">Without Canopy</label>
                         </div>
                       
@@ -136,37 +136,37 @@ Qutation
                      <tr>
                         <td>2</td>
                         <td>LASER POWER</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name ="inputpower"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-2" placeholder="John Doe" name ="inputpower"/></td>
                      </tr>
                      <tr>
                         <td>3</td>
                         <td>LASER SOURCE</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="cncspan" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-3" placeholder="John Doe" name="cncspan" /></td>
                      </tr>
                      <tr>
                         <td>4</td>
                         <td>MAX WORKING SPEED</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="cnslenght"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-4" placeholder="John Doe"  name="cnslenght"/></td>
                      </tr>
                      <tr>
                         <td>5</td>
                         <td>MAX CUTTING THICKNESS</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="cuttingrang"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-5" placeholder="John Doe"  name="cuttingrang"/></td>
                      </tr>
                      <tr>
                         <td>6</td>
                         <td>BLOWER (AIR EX)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  value ="200" name="liftingheight" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-6"  value ="200" name="liftingheight" /></td>
                      </tr>
                      <tr>
                         <td>7</td>
                         <td>POWER SUPPLY</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  value ="200"  name="headquantity"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-7"  value ="200"  name="headquantity"/></td>
                      </tr>
                      <tr>
                         <td>8</td>
                         <td>WEIGHT</td>
-                        <td><input type="text" class="form-control" id="basic-default-name"  value ="200"  name="headquantity"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-8"  value ="200"  name="headquantity"/></td>
                      </tr>
                     
                     
@@ -189,16 +189,16 @@ Qutation
                       <tr>
                         <td>1</td>
                         <td><input type="text" class="form-control" name="description" ></td>
-<td>                            <input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="amount" /></td>
+<td>                            <input type="text" class="form-control" id="basic-default-name-9" placeholder="John Doe" name="amount" /></td>
                      </tr>
                      <tr>
                         <td>2</td>
                         <td><input type="text" class="form-control" name="description1" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe"  name="amount1" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-10" placeholder="John Doe"  name="amount1" /></td>
                      </tr>
                      <td>3</td>
                         <td><input type="text" class="form-control" name="description2" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name="amount2"  /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-11" placeholder="John Doe" name="amount2"  /></td>
                      </tr>
                     
                     </tbody>

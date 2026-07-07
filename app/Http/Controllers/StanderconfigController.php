@@ -78,9 +78,9 @@ class StanderconfigController extends Controller
         Power::create($input);
         return view('standerconfig');
     } 
-    public function softerwereshow(Request $request) 
+    public function softerwereshow(Request $request)
     {
-        
+        // Route "softerwere.show" is registered but not yet wired to any view/logic; kept as a no-op stub.
     }
     }
    

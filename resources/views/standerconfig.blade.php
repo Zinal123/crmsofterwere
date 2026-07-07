@@ -338,7 +338,7 @@ Standerconfig
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Modal Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "modal" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-2"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Logo</label> 
@@ -376,11 +376,11 @@ Standerconfig
     </div>
 </div>
 
-<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Laser Cutting Machine</h5>
+                <h5 class="modal-title" id="exampleModalgrid1Label">Laser Cutting Machine</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -389,12 +389,12 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-3"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id1"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Modal Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "modal" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-4"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Logo</label> 
@@ -411,7 +411,7 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label> 
-                            <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-2" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
                     <br>
@@ -432,11 +432,11 @@ Standerconfig
     </div>
 </div>
 
-<div class="modal fade" id="exampleModalgrid2" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid2" tabindex="-1" aria-labelledby="exampleModalgrid2Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Focusing Laser Cutting Head</h5>
+                <h5 class="modal-title" id="exampleModalgrid2Label">Focusing Laser Cutting Head</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -445,12 +445,12 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-5"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id2"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Modal Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "modal" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-6"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Logo</label> 
@@ -467,7 +467,7 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label> 
-                            <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-3" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
                     
@@ -488,11 +488,11 @@ Standerconfig
         </div>
     </div>
 </div>
-<div class="modal fade" id="exampleModalgrid3" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid3" tabindex="-1" aria-labelledby="exampleModalgrid3Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">Power Source</h5>
+                <h5 class="modal-title" id="exampleModalgrid3Label">Power Source</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -501,12 +501,12 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-7"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id3"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Modal Name</label> 
-                            <input type="text" class="form-control" id="firstName"  name = "modal" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-8"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Logo</label> 
@@ -523,7 +523,7 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label> 
-                            <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-4" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
                     

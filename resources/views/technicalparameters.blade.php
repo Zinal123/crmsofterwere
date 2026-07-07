@@ -227,11 +227,11 @@ Standerconfig
     </div>
 </div>
 
-<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+<div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalgridLabel">CNC thinkness</h5>
+                <h5 class="modal-title" id="exampleModalgrid1Label">CNC thinkness</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -241,7 +241,7 @@ Standerconfig
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">CNC thinkness</label> 
                             <input type="text" class="form-control" id="product_id1"  name = "product_id" placeholder="Enter Product">
-                            <input type="text" class="form-control" id="firstName"  name = "cuttingthinks" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-2"  name = "cuttingthinks" placeholder="Enter Product">
                         </div>
                         
                     </div>

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
+    private const ERROR_MESSAGE = 'Something went wrong!';
+
     /**
      * Create a new controller instance.
      *
@@ -82,7 +84,7 @@ class HomeController extends Controller
             // ], 200); // Status code here
             return redirect()->back();
         } else {
-            Session::flash('message', 'Something went wrong!');
+            Session::flash('message', self::ERROR_MESSAGE);
             Session::flash('alert-class', 'alert-danger');
             // return response()->json([
             //     'isSuccess' => true,
@@ -117,11 +119,11 @@ class HomeController extends Controller
                     'Message' => "Password updated successfully!"
                 ], 200); // Status code here
             } else {
-                Session::flash('message', 'Something went wrong!');
+                Session::flash('message', self::ERROR_MESSAGE);
                 Session::flash('alert-class', 'alert-danger');
                 return response()->json([
                     'isSuccess' => true,
-                    'Message' => "Something went wrong!"
+                    'Message' => self::ERROR_MESSAGE
                 ], 200); // Status code here
             }
         }
