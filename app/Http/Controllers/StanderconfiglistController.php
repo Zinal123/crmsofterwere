@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use App\Models\Product;
+use App\Models\Motor;
+use App\Models\Gear;
+use App\Models\Rack;
+use App\Models\Softerwere1;
+
+
+
+
+
+class StanderconfiglistController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function softerwere(Request $request ,$id)
+    {
+     $softwere = Softerwere::where('product_id' ,$id)->get();
+     return view('standerconfiglist' ,compact('softwere'));
+    }
+    public function lasercutting(Request $request)
+    {
+     $Lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
+     return view('standerconfiglist' ,compact('Lasercutting'));
+    }
+    public function Focusing(Request $request)
+    {
+     $Focusing  = Fource::orderBy('id' ,'desc')->get();
+     return view('standerconfiglist.' ,compact('Focusing'));
+    }
+    public function power(Request $request)
+    {
+     $power = Power::orderBy('id' ,'desc')->get();
+     return view('standerconfiglist.' ,compact('Power'));
+    }
+    public function motorstore(Request $request)
+    {
+        $input = $request->all();
+        
+        Motor::create($input);
+        return view('standerconfiglist');
+    }
+    public function gearstore(Request $request)
+    {
+        $input = $request->all();
+        Gear::create($input);
+        return view('standerconfiglist');
+    }          
+    public function rackstore(Request $request)
+    {
+        $input = $request->all();
+        Rack::create($input);
+        return view('standerconfiglist');
+    }     
+    public function softwarestore(Request $request)
+    {
+        $input = $request->all();
+        Softerwere1::create($input);
+        return view('standerconfig');
+    }  
+    }
+   
+   
+
+    
+
+
+
