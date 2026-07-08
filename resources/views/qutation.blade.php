@@ -5,10 +5,10 @@
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
 <!--datatable css-->
-<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" integrity="sha384-Dv1j0mqPOKbG6R+/4/adHCn5JaMBLG3iu8uTXFBM2MjEZuKwtsyLedRcRMR0cq7P" crossorigin="anonymous" rel="stylesheet" type="text/css">
 <!--datatable responsive css-->
-<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"type="text/css">
-<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" integrity="sha384-yeqtDRnzRLecfhe1TzrbgNOTB74vG/UQ0vsFfHPCXe5rnFfjTj3GIfBHCMlUGCh5" crossorigin="anonymous" rel="stylesheet"type="text/css">
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" integrity="sha384-/m1O+MBcLoqe7amEwkvENLD+f6ePq8wBTHBWz+Kf1zp90kmGlto3IFhhNa9fZllu" crossorigin="anonymous" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ URL::asset('build/libs/filepond/filepond.min.css') }}" type="text/css" >
 <link rel="stylesheet"href="{{ URL::asset('build/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css') }}">
@@ -17,7 +17,7 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1')
-Qutation     
+Qutation
 @endslot
 @slot('title')
 
@@ -34,7 +34,7 @@ Qutation
   $motor =App\Models\Motor::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
   $gear = App\Models\Gear::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
   $rack = App\Models\Rack::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $softere = App\Models\Softerwere1::where('product_id' ,$product)->orderBy('id' ,'desc')->get();      
+  $softere = App\Models\Softerwere1::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
 
 ?>
 <div class="row">
@@ -50,7 +50,7 @@ Qutation
                 <form action="{{route('generatequtationstore')}}" method="POST">
                     @csrf
                     <div class ="row">
-                      <input type="hidden" class="form-control"placeholder="name@example.com"  name="product_id"/>  
+                      <input type="hidden" class="form-control"placeholder="name@example.com"  name="product_id"/>
                         <div class="col-md-3">
                         <label class="col-form-label" for="basic-default-name">Quotation For</label><br>
                         <input type="radio" id="html" name="fav_language" value="With Canopy">
@@ -68,46 +68,46 @@ Qutation
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Client Name</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="clientname"/>  
+                            <label class="col-form-label" for="basic-default-name">Client Name</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="clientname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Name</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyname"/>  
+                            <label class="col-form-label" for="basic-default-name">Company Name</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="companyname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">GST No.</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="gstno"/>  
+                            <label class="col-form-label" for="basic-default-name">GST No.</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="gstno"/>
                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Address</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyaddress"/>  
+                            <label class="col-form-label" for="basic-default-name">Company Address</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="companyaddress"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Select Bank</label><br>
-                            <input type="text" class="form-control" name="bank" value = "1" readonly/> 
+                            <input type="text" class="form-control" name="bank" value = "1" readonly/>
         
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Email Id</label><br>  
-                            <input type="email" class="form-control" name="email"/> 
+                            <label class="col-form-label" for="basic-default-name">Email Id</label><br>
+                            <input type="email" class="form-control" name="email"/>
                            </div>
                           
-                        </div> 
+                        </div>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">WhatsApp Number</label><br>  
-                            <input type="number" class="form-control"  name="phone"/>  
+                            <label class="col-form-label" for="basic-default-name">WhatsApp Number</label><br>
+                            <input type="number" class="form-control"  name="phone"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Date</label><br>  
-                            <input type="date" class="form-control" name ="date"/> 
+                            <label class="col-form-label" for="basic-default-name">Date</label><br>
+                            <input type="date" class="form-control" name ="date"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>  
-                            <input type="date" class="form-control"  name ="reminderdate"/> 
+                            <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>
+                            <input type="date" class="form-control"  name ="reminderdate"/>
                            </div>
                           
                         </div>
@@ -125,8 +125,8 @@ Qutation
                     <tbody class="table-border-bottom-0">
                       <tr>
                         <td>1</td>
-                        <td>Software Details</td>
-                        <td> <select class="form-select" aria-label="Multiple select example" name="softweredetails">
+                        <td id="qutation-select-label-1">Software Details</td>
+                        <td> <select class="form-select" aria-labelledby="qutation-select-label-1" name="softweredetails">
                          <option value ="0" selected>Open this select menu</option>
                          @foreach($softeredetails as $item)
                          <option value = "{{$item->id}}">{{$item->modal}}</option>
@@ -136,8 +136,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>2</td>
-                        <td>Laser Cutting Machine</td>
-                        <td>  <select class="form-select" aria-label="Multiple select example" name="	lasercutting">
+                        <td id="qutation-select-label-2">Laser Cutting Machine</td>
+                        <td>  <select class="form-select" aria-labelledby="qutation-select-label-2" name="lasercutting">
                         <option value ="0">Open this select menu</option>
                           @foreach($softeredetails as $item1)
                          <option value = "{{$item1->id}}">{{$item1->modal}}</option>
@@ -146,8 +146,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>3</td>
-                        <td>Focusing Laser Cutting Head</td>
-                        <td>  <select class="form-select"aria-label="Multiple select example" name="focus">
+                        <td id="qutation-select-label-3">Focusing Laser Cutting Head</td>
+                        <td>  <select class="form-select"aria-labelledby="qutation-select-label-3" name="focus">
                           <option  value ="0">Open this select menu</option>
                           @foreach($fource as $item)
                          <option value = "{{$item->id}}">{{$item->modal}}</option>
@@ -156,8 +156,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>4</td>
-                        <td>Power Source</td>
-                        <td>  <select class="form-select"aria-label="Multiple select example" name="power">
+                        <td id="qutation-select-label-4">Power Source</td>
+                        <td>  <select class="form-select"aria-labelledby="qutation-select-label-4" name="power">
                         <option  value ="0">Open this select menu</option>
                           @foreach($power as $item)
                          <option value = "{{$item->id}}">{{$item->modal}}</option>
@@ -185,8 +185,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>2</td>
-                        <td>Cutting Way</td>
-                        <td>  <select class="form-select"aria-label="Multiple select example" name="cuttingway">
+                        <td id="qutation-select-label-5">Cutting Way</td>
+                        <td>  <select class="form-select"aria-labelledby="qutation-select-label-5" name="cuttingway">
                         <option  value ="0">Open this select menu</option>
                           @foreach($cutting as $item)
                           <option value="{{$item->id}}">{{$item->cuttingway}}</option>
@@ -220,8 +220,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>8</td>
-                        <td>Cutting Thickess (mm)</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="cuttingthickess">
+                        <td id="qutation-select-label-6">Cutting Thickess (mm)</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-6" name="cuttingthickess">
                           <option value="0">Open this select menu</option>
                           @foreach($cnsthinks as $item)
                           <option value="{{$item->id}}">{{$item->cuttingthinks}}</option>
@@ -259,8 +259,8 @@ Qutation
                     <tbody class="table-border-bottom-0">
                       <tr>
                         <td>1</td>
-                        <td>Motor</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="motor">
+                        <td id="qutation-select-label-7">Motor</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-7" name="motor">
                         <option value="0">Open this select menu</option>
                           @foreach($motor as $item)
                           <option value="{{$item->id}}">{{$item->companyname}}</option>
@@ -269,8 +269,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>2</td>
-                        <td>Motor Type</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="motortype">
+                        <td id="qutation-select-label-8">Motor Type</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-8" name="motortype">
                         <option value="0">Open this select menu</option>
                           @foreach($motor as $item)
                           <option value="{{$item->id}}">{{$item->companyname}}</option>
@@ -279,8 +279,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>3</td>
-                        <td>Gear Box</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="gearbox">
+                        <td id="qutation-select-label-9">Gear Box</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-9" name="gearbox">
                         <option value="0">Open this select menu</option>
                           @foreach($gear as $item)
                           <option value="{{$item->id}}">{{$item->companyname}}</option>
@@ -289,8 +289,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>4</td>
-                        <td>Rack</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="rack">
+                        <td id="qutation-select-label-10">Rack</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-10" name="rack">
                         <option value="0">Open this select menu</option>
                           @foreach($rack as $item)
                           <option value="{{$item->id}}">{{$item->companyname}}</option>
@@ -299,8 +299,8 @@ Qutation
                      </tr>
                      <tr>
                         <td>5</td>
-                        <td>Software</td>
-                        <td><select class="form-select"aria-label="Multiple select example" name="software">
+                        <td id="qutation-select-label-11">Software</td>
+                        <td><select class="form-select"aria-labelledby="qutation-select-label-11" name="software">
                         <option value="0">Open this select menu</option>
                           @foreach($softere as $item)
                           <option value="{{$item->id}}">{{$item->companyname}}</option>

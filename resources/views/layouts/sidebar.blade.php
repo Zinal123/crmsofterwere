@@ -48,9 +48,6 @@
                             <li class="nav-item">
                     <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Payment history')</span></a>
                 </li>
-                <!--<li class="nav-item">-->
-                <!--    <a href="{{route('invoice.vender')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('vander')</span></a>-->
-                <!--</li>-->
                 <li class="nav-item">
                     <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invtery managemnet')</span></a>
                 </li>

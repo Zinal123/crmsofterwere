@@ -4,7 +4,7 @@
 <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
 <!-- Sweet Alert css-->
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" integrity="sha384-arH1uA5PLAeRKjGnbtLWJE0jM7h24iSP2roxuBnksKET0bXe6kn6KiH9V9d6S41t" crossorigin="anonymous"></script>
 
 @endsection
 @section('content')
@@ -15,7 +15,6 @@
 <?php
 $product = App\Models\Product::orderBy('id' ,'desc')->get();
 $bank = App\Models\Bank ::get();
-// $termandcondition = App\Models\Termandcondition::get();
 ?>
 <div class="row justify-content-center">
     <div class="col-xxl-12">
@@ -298,12 +297,12 @@ $bank = App\Models\Bank ::get();
                                     <td class="text-start">
                                         <div class="mb-2">
                                         <select class="form-select item" data-choices data-choices-sorting="true"  id = "productName-1" onchange="otherPayment1()">
-	                                     <option value ="0">Select product</option>
+                                     <option value ="0">Select product</option>
                                         @foreach($product  as $p)
                                         <option value ="{{$p->id}}">{{$p->product}}</option>
                                          @endforeach
-	
-	                                   </select>
+
+                                   </select>
                                             
                                         </div>
                                        
@@ -430,7 +429,7 @@ $bank = App\Models\Bank ::get();
                     <div class="mt-4">
                         <label for="exampleFormControlTextarea1" class="form-label text-muted text-uppercase fw-semibold">NOTES</label>
                        
-                                         <textarea class="form-control alert alert-info" id="exampleFormControlTextarea1" placeholder="Notes" rows="2" required >1)Payment must be made within due date of this invoice failling which interest will be charged 24% per annum from the date of supply of materials 
+                                         <textarea class="form-control alert alert-info" id="exampleFormControlTextarea1" placeholder="Notes" rows="2" required >1)Payment must be made within due date of this invoice failling which interest will be charged 24% per annum from the date of supply of materials
                             (2) Our responsibility ceases on delivery of goods to carriers or rail or transport.
                             (3) Goods once sold can not be taken back.
                             (4) All disputes are subject to Vadodara jurisdiction only.

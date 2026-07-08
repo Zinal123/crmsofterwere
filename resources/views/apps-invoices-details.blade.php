@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title') @lang('translation.details') @endsection
 @section('css')
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" integrity="sha384-/Gm+ur33q/W+9ANGYwB2Q4V0ZWApToOzRuA8md/1p9xMMxpqnlguMvk8QuEFWA1B" crossorigin="anonymous"></script>
 @endsection
 @section('content')
 @component('components.breadcrumb')
@@ -48,7 +48,7 @@ $number = $amount;
   $str = array_reverse($str);
   $result = implode('', $str);
   $points = ($point) ?
-    "." . $words[$point / 10] . " " . 
+    "." . $words[$point / 10] . " " .
           $words[$point = $point % 10] : '';
  
   ?>
@@ -74,7 +74,7 @@ $number = $amount;
                     <strong>Mobile-No </strong> :  91 - 7096487806,91 - 7096487807<br>
                     <strong>Email</strong> :info@oraclemachinetech.com.<br>
                     <strong>GST-NO</strong> :24AAIFO7039H1Z5,<br>
-                    <strong>PAN-No</strong>: AAIFO7039H. 
+                    <strong>PAN-No</strong>: AAIFO7039H.
                 </p>
               </div>
             </div>
@@ -199,7 +199,7 @@ $number = $amount;
                   </tr>
                   @endforeach
                    <tr>
-                    <td scope="row" colspan="2" class="text-uppercase text-end">
+                    <td colspan="2" class="text-uppercase text-end">
                       Total
                     </td>
                    
@@ -213,7 +213,7 @@ $number = $amount;
                   </tr>
                   <?php if($state == "Gujarat"){ ?>
                     <tr>
-                      <td scope="row" colspan="2" class="text-uppercase text-end">
+                      <td colspan="2" class="text-uppercase text-end">
                         IGST(18%)
                       </td>
                       <td class="text-end"></td>
@@ -224,7 +224,7 @@ $number = $amount;
                     </tr>
                   <?php } else { ?>
                     <tr>
-                      <td scope="row" colspan="2" class="text-uppercase text-end">
+                      <td colspan="2" class="text-uppercase text-end">
                         SGST(9%)
                       </td>
                       <td class="text-end"></td>
@@ -235,7 +235,7 @@ $number = $amount;
 
                     </tr>
                     <tr>
-                      <td scope="row" colspan="2" class="text-uppercase text-end">
+                      <td colspan="2" class="text-uppercase text-end">
                         CGST(9%)
                       </td>
                       <td class="text-end"></td>
@@ -247,7 +247,7 @@ $number = $amount;
                     </tr>
                   <?php } ?>
                   <tr>
-                    <td scope="row" colspan="2" class="text-uppercase text-end">
+                    <td colspan="2" class="text-uppercase text-end">
                      Round Of Total
                     </td>
                     <td class="text-end"></td>
@@ -259,7 +259,7 @@ $number = $amount;
                     
                   </tr>
                   <tr>
-                    <td scope="row" colspan="2" class="text-uppercase text-end">
+                    <td colspan="2" class="text-uppercase text-end">
                      Grand Total
                     </td>
                     <td class="text-end"></td>
@@ -357,7 +357,7 @@ $number = $amount;
 @section('script')
 <script src="{{ URL::asset('build/js/pages/invoicedetails.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha384-l7aOEgTYxgJ0nn2MziQWZCvuvJ2PtNcP05R4QwEoHW+kIS1gFpzupcQ7WhAdRKuq" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
 @endsection

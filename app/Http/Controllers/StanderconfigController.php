@@ -41,17 +41,16 @@ class StanderconfigController extends Controller
     }
     public function lasercutting(Request $request)
     {
-     $Lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
-     return view('standerconfig' ,compact('Lasercutting'));
+     $lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
+     return view('standerconfig' ,compact('lasercutting'));
     }
     public function Focusing(Request $request)
     {
-     $Focusing  = Fource::orderBy('id' ,'desc')->get();
-     return view('standerconfig.' ,compact('Focusing'));
+     $focusing  = Fource::orderBy('id' ,'desc')->get();
+     return view('standerconfig.' ,compact('focusing'));
     }
     public function power(Request $request)
     {
-     $power = Power::orderBy('id' ,'desc')->get();
      return view('standerconfig.' ,compact('Power'));
     }
     public function softerwerestore(Request $request)
@@ -65,19 +64,19 @@ class StanderconfigController extends Controller
         $input = $request->all();
         Lasercutting::create($input);
         return view('standerconfig');
-    }          
+    }
     public function focusingstore(Request $request)
     {
         $input = $request->all();
         Fource::create($input);
         return view('standerconfig');
-    }     
+    }
     public function powerstore(Request $request)
     {
         $input = $request->all();
         Power::create($input);
         return view('standerconfig');
-    } 
+    }
     public function softerwereshow(Request $request)
     {
         // Route "softerwere.show" is registered but not yet wired to any view/logic; kept as a no-op stub.

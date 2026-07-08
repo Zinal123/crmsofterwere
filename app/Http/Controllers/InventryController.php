@@ -10,7 +10,7 @@ class InventryController extends Controller
 {
   public function inventry()
   {
-     $product = Product::orderBy('id' ,'desc')->get(); 
+     $product = Product::orderBy('id' ,'desc')->get();
      return view('inventrylist' ,compact('product')) ;
   }
   public function inventrystore(Request $request)
@@ -24,8 +24,7 @@ class InventryController extends Controller
     $itemId = $request->input('id');
     $quantity = $request->input('quantity');
     $item = Invetry::find($itemId);
-    // $input2['quantity'] = $request->input('quantity');
-    if ($item) 
+    if ($item)
     {
                 // Calculate the new total paid amount by adding the new payment to the existing paid amount
                 $newquantity = $item->quantity  - $quantity;

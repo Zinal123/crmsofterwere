@@ -29,7 +29,7 @@ list view
                            
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
             <div class = "row">
                 <div class = "col-md-6" style="text-align:right;margin-left: 666px;">

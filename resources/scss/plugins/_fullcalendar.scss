@@ -69,7 +69,7 @@
     .fc-daygrid-day {
         &.fc-day-today {
             background-color: rgba($primary, 0.1);
-    
+
             .fc-daygrid-day-number {
                 background-color: $primary;
                 color: $white;
@@ -77,12 +77,6 @@
         }
     }
 
-    .fc-daygrid-day {
-        &.fc-day-today {
-            background-color: rgba($primary, 0.1);
-        }
-    }
-    
     .fc-timegrid-col {
         &.fc-day-today {
             background-color: rgba($primary, 0.1);

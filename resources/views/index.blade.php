@@ -1221,7 +1221,7 @@
                                 <div class="col">
                                     <div class="p-1">
                                         <div class="progress animated-progress progress-sm">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 50.16%" aria-valuenow="50.16" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 50.16%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1242,7 +1242,7 @@
                                 <div class="col">
                                     <div class="p-1">
                                         <div class="progress animated-progress progress-sm">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 29.32%" aria-valuenow="29.32" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 29.32%" aria-valuenow="29" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1263,7 +1263,7 @@
                                 <div class="col">
                                     <div class="p-1">
                                         <div class="progress animated-progress progress-sm">
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 18.12%" aria-valuenow="18.12" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 18.12%" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1284,7 +1284,7 @@
                                 <div class="col">
                                     <div class="p-1">
                                         <div class="progress animated-progress progress-sm">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 4.98%" aria-valuenow="4.98" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 4.98%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1306,7 +1306,7 @@
                                 <div class="col">
                                     <div class="p-1">
                                         <div class="progress animated-progress progress-sm">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 7.42%" aria-valuenow="7.42" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 7.42%" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>

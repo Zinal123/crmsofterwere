@@ -5,10 +5,10 @@
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
 <!--datatable css-->
-<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" integrity="sha384-Dv1j0mqPOKbG6R+/4/adHCn5JaMBLG3iu8uTXFBM2MjEZuKwtsyLedRcRMR0cq7P" crossorigin="anonymous" rel="stylesheet" type="text/css">
 <!--datatable responsive css-->
-<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"type="text/css">
-<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" integrity="sha384-yeqtDRnzRLecfhe1TzrbgNOTB74vG/UQ0vsFfHPCXe5rnFfjTj3GIfBHCMlUGCh5" crossorigin="anonymous" rel="stylesheet"type="text/css">
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" integrity="sha384-/m1O+MBcLoqe7amEwkvENLD+f6ePq8wBTHBWz+Kf1zp90kmGlto3IFhhNa9fZllu" crossorigin="anonymous" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ URL::asset('build/libs/filepond/filepond.min.css') }}" type="text/css" >
 <link rel="stylesheet"href="{{ URL::asset('build/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css') }}">
@@ -17,7 +17,7 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1')
-Qutation     
+Qutation
 @endslot
 @slot('title')
 
@@ -34,7 +34,7 @@ Qutation
   $motor =App\Models\Motor::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
   $gear = App\Models\Gear::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
   $rack = App\Models\Rack::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $softere = App\Models\Softerwere1::where('product_id' ,$product)->orderBy('id' ,'desc')->get();      
+  $softere = App\Models\Softerwere1::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
 
 ?>
 <div class="row">
@@ -50,7 +50,7 @@ Qutation
                 <form action="{{route('Co2quationstore')}}" method="POST">
                     @csrf
                     <div class ="row">
-                      <input type="hidden" class="form-control"placeholder="name@example.com"  name="product_id"/>  
+                      <input type="hidden" class="form-control"placeholder="name@example.com"  name="product_id"/>
                         <div class="col-md-3">
                         <label class="col-form-label" for="basic-default-name">Quotation For</label><br>
                         <input type="radio" id="html" name="fav_language" value="With Canopy">
@@ -68,50 +68,50 @@ Qutation
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Client Name</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="clientname"/>  
+                            <label class="col-form-label" for="basic-default-name">Client Name</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="clientname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Name</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyname"/>  
+                            <label class="col-form-label" for="basic-default-name">Company Name</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="companyname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">GST No.</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="gstno"/>  
+                            <label class="col-form-label" for="basic-default-name">GST No.</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="gstno"/>
                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Address</label><br>  
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyaddress"/>  
+                            <label class="col-form-label" for="basic-default-name">Company Address</label><br>
+                            <input type="text" class="form-control"placeholder="name@example.com" name="companyaddress"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Select Bank</label><br>
-                            <input type="text" class="form-control" name="bank" value = "1" readonly/> 
+                            <input type="text" class="form-control" name="bank" value = "1" readonly/>
         
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Email Id</label><br>  
-                            <input type="email" class="form-control" name="email"/> 
-                           </div>
-                          
-                        </div> 
-                        <div class="row">
-                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">WhatsApp Number</label><br>  
-                            <input type="number" class="form-control"  name="phone"/>  
-                           </div>
-                           <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Date</label><br>  
-                            <input type="date" class="form-control" name ="date"/> 
-                           </div>
-                           <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>  
-                            <input type="date" class="form-control"  name ="reminderdate"/> 
+                            <label class="col-form-label" for="basic-default-name">Email Id</label><br>
+                            <input type="email" class="form-control" name="email"/>
                            </div>
                           
                         </div>
-                        <br> 
+                        <div class="row">
+                            <div class="col-md-4">
+                            <label class="col-form-label" for="basic-default-name">WhatsApp Number</label><br>
+                            <input type="number" class="form-control"  name="phone"/>
+                           </div>
+                           <div class="col-md-4">
+                            <label class="col-form-label" for="basic-default-name">Date</label><br>
+                            <input type="date" class="form-control" name ="date"/>
+                           </div>
+                           <div class="col-md-4">
+                            <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>
+                            <input type="date" class="form-control"  name ="reminderdate"/>
+                           </div>
+                          
+                        </div>
+                        <br>
                        
                       
                     

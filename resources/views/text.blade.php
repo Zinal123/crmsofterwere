@@ -6,9 +6,9 @@
    .table1{
     margin-bottom: 0rem !important;
     padding: 0rem !important;
-   } 
+   }
 </style>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" integrity="sha384-/Gm+ur33q/W+9ANGYwB2Q4V0ZWApToOzRuA8md/1p9xMMxpqnlguMvk8QuEFWA1B" crossorigin="anonymous"></script>
 @endsection
 @section('content')
 @component('components.breadcrumb')
@@ -55,7 +55,7 @@ $number = $totalamountwithtax;
   $str = array_reverse($str);
   $result = implode('', $str);
   $points = ($point) ?
-    "." . $words[$point / 10] . " " . 
+    "." . $words[$point / 10] . " " .
           $words[$point = $point % 10] : '';
  
   ?>
@@ -112,7 +112,7 @@ $number = $totalamountwithtax;
                             
                             
                                
-                            </div> 
+                            </div>
                             
                         </div>
                         </div>
@@ -211,8 +211,8 @@ $number = $totalamountwithtax;
                         <div style  = "text-transform: capitalize;font-size: 13px;"> : {{$item1->address}}</div>
                         <div style  = "text-transform: capitalize;font-size: 13px;"> : {{$item1->phone}}</div>
                         <div style  = "text-transform: capitalize;font-size: 13px;"> : {{$item1->state}}</div>
-                        <div style  = "font-size: 13px;">: {{$item1->billinggst}}</div>	
-                        <div style  = "font-size: 13px;">: {{$item1->billingpan}}</div>	
+                        <div style  = "font-size: 13px;">: {{$item1->billinggst}}</div>
+                        <div style  = "font-size: 13px;">: {{$item1->billingpan}}</div>
                         
                         
                     </div>
@@ -264,7 +264,7 @@ $number = $totalamountwithtax;
                         <?php $i = 1; ?>
                         @foreach($invoiceproduct as $item3)
                       <tr>
-                        <td scope="row">{{$i++}}</td>
+                        <td>{{$i++}}</td>
                         <td style ="text-transform: capitalize;text-align:center">{{$item3->product}}</td>
                         <td>{{$item3->hsn}}</td>
                         <td>{{$item3->quantity}}</td>
@@ -366,7 +366,7 @@ $number = $totalamountwithtax;
 @section('script')
 <script src="{{ URL::asset('build/js/pages/invoicedetails.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha384-l7aOEgTYxgJ0nn2MziQWZCvuvJ2PtNcP05R4QwEoHW+kIS1gFpzupcQ7WhAdRKuq" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
 @endsection

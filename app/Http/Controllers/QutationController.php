@@ -51,11 +51,11 @@ class QutationController extends Controller
     {
       return view('queationpdf');
       
-    }      
+    }
     public function Co2quation($id)
     {
     return view('co2qutation');
-    }          
+    }
             
        
     }

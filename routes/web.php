@@ -45,7 +45,7 @@ Route::get('standerconfig/{id}' ,[App\Http\Controllers\ProductController::class,
 Route::get('TechnicalParameters/{id}' ,[App\Http\Controllers\ProductController::class, 'technicalparameters'])->name('TechnicalParameters');
 Route::get('standerconfiglist/{id}' ,[App\Http\Controllers\ProductController::class, 'standerconfiglist'])->name('standerconfiglist');
 Route::get('softerwere/{id}' ,[App\Http\Controllers\StanderconfigController::class, 'softerwere'])->name('softerwere');
-//standerconfig 
+//standerconfig
 Route::post('softerwere/store' ,[App\Http\Controllers\StanderconfigController::class, 'softerwerestore'])->name('softerwerestore');
 Route::post('cutting/store' ,[App\Http\Controllers\StanderconfigController::class, 'cuttingstore'])->name('cuttingstore');
 Route::post('focusing/store' ,[App\Http\Controllers\StanderconfigController::class, 'focusingstore'])->name('focusingstore');

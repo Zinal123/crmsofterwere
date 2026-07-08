@@ -42,17 +42,16 @@ class StanderconfiglistController extends Controller
     }
     public function lasercutting(Request $request)
     {
-     $Lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
-     return view('standerconfiglist' ,compact('Lasercutting'));
+     $lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
+     return view('standerconfiglist' ,compact('lasercutting'));
     }
     public function Focusing(Request $request)
     {
-     $Focusing  = Fource::orderBy('id' ,'desc')->get();
-     return view('standerconfiglist.' ,compact('Focusing'));
+     $focusing  = Fource::orderBy('id' ,'desc')->get();
+     return view('standerconfiglist.' ,compact('focusing'));
     }
     public function power(Request $request)
     {
-     $power = Power::orderBy('id' ,'desc')->get();
      return view('standerconfiglist.' ,compact('Power'));
     }
     public function motorstore(Request $request)
@@ -67,19 +66,19 @@ class StanderconfiglistController extends Controller
         $input = $request->all();
         Gear::create($input);
         return view('standerconfiglist');
-    }          
+    }
     public function rackstore(Request $request)
     {
         $input = $request->all();
         Rack::create($input);
         return view('standerconfiglist');
-    }     
+    }
     public function softwarestore(Request $request)
     {
         $input = $request->all();
         Softerwere1::create($input);
         return view('standerconfig');
-    }  
+    }
     }
    
    

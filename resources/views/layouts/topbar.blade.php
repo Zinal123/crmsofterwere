@@ -168,47 +168,47 @@
 
                         <!-- item-->
                         <a href="{{ url('index/en') }}" class="dropdown-item notify-item language py-2" data-lang="en" title="English">
-                            <img src="{{ URL::asset('build/images/flags/us.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/us.svg') }}" alt="US flag" class="me-2 rounded" height="20">
                             <span class="align-middle">English</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/sp') }}" class="dropdown-item notify-item language" data-lang="sp" title="Spanish">
-                            <img src="{{ URL::asset('build/images/flags/spain.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/spain.svg') }}" alt="Spain flag" class="me-2 rounded" height="20">
                             <span class="align-middle">Española</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/gr') }}" class="dropdown-item notify-item language" data-lang="gr" title="German">
-                            <img src="{{ URL::asset('build/images/flags/germany.svg') }}" alt="user-image" class="me-2 rounded" height="20"> <span class="align-middle">Deutsche</span>
+                            <img src="{{ URL::asset('build/images/flags/germany.svg') }}" alt="Germany flag" class="me-2 rounded" height="20"> <span class="align-middle">Deutsche</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/it') }}" class="dropdown-item notify-item language" data-lang="it" title="Italian">
-                            <img src="{{ URL::asset('build/images/flags/italy.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/italy.svg') }}" alt="Italy flag" class="me-2 rounded" height="20">
                             <span class="align-middle">Italiana</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/ru') }}" class="dropdown-item notify-item language" data-lang="ru" title="Russian">
-                            <img src="{{ URL::asset('build/images/flags/russia.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/russia.svg') }}" alt="Russia flag" class="me-2 rounded" height="20">
                             <span class="align-middle">русский</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/ch') }}" class="dropdown-item notify-item language" data-lang="ch" title="Chinese">
-                            <img src="{{ URL::asset('build/images/flags/china.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/china.svg') }}" alt="China flag" class="me-2 rounded" height="20">
                             <span class="align-middle">中国人</span>
                         </a>
 
                         <!-- item-->
                         <a href="{{ url('index/fr') }}" class="dropdown-item notify-item language" data-lang="fr" title="French">
-                            <img src="{{ URL::asset('build/images/flags/french.svg') }}" alt="user-image" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/french.svg') }}" alt="France flag" class="me-2 rounded" height="20">
                             <span class="align-middle">français</span>
                         </a>
                         <!-- item-->
                         <a href="{{ url('index/ae') }}" class="dropdown-item notify-item language" data-lang="ae" title="Arabic">
-                            <img src="{{URL::asset('build/images/flags/ae.svg')}}" alt="user-image" class="me-2 rounded" height="18">
+                            <img src="{{URL::asset('build/images/flags/ae.svg')}}" alt="UAE flag" class="me-2 rounded" height="18">
                             <span class="align-middle">Arabic</span>
                         </a>
                     </div>
@@ -500,7 +500,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check01">
+                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check01" aria-label="Select notification">
                                                     <label class="form-check-label" for="all-notification-check01"></label>
                                                 </div>
                                             </div>
@@ -524,7 +524,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check02">
+                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check02" aria-label="Select notification">
                                                     <label class="form-check-label" for="all-notification-check02"></label>
                                                 </div>
                                             </div>
@@ -549,7 +549,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check03">
+                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check03" aria-label="Select notification">
                                                     <label class="form-check-label" for="all-notification-check03"></label>
                                                 </div>
                                             </div>
@@ -572,7 +572,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check04">
+                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check04" aria-label="Select notification">
                                                     <label class="form-check-label" for="all-notification-check04"></label>
                                                 </div>
                                             </div>
@@ -605,7 +605,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check01">
+                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check01" aria-label="Select notification">
                                                     <label class="form-check-label" for="messages-notification-check01"></label>
                                                 </div>
                                             </div>
@@ -629,7 +629,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check02">
+                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check02" aria-label="Select notification">
                                                     <label class="form-check-label" for="messages-notification-check02"></label>
                                                 </div>
                                             </div>
@@ -653,7 +653,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check03">
+                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check03" aria-label="Select notification">
                                                     <label class="form-check-label" for="messages-notification-check03"></label>
                                                 </div>
                                             </div>
@@ -676,7 +676,7 @@
                                             </div>
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check04">
+                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check04" aria-label="Select notification">
                                                     <label class="form-check-label" for="messages-notification-check04"></label>
                                                 </div>
                                             </div>
@@ -721,7 +721,7 @@
                         <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$5971.67</b></span></a>
                         <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
                         <a class="dropdown-item" href="auth-lockscreen-basic"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
-                        <a class="dropdown-item " href="javascript:void();" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></a>
+                        <button type="button" class="dropdown-item " onclick="document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></button>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>

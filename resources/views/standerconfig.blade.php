@@ -5,11 +5,11 @@
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
   <!--datatable css-->
-  <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" integrity="sha384-Dv1j0mqPOKbG6R+/4/adHCn5JaMBLG3iu8uTXFBM2MjEZuKwtsyLedRcRMR0cq7P" crossorigin="anonymous" rel="stylesheet" type="text/css" />
   <!--datatable responsive css-->
-  <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+  <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" integrity="sha384-yeqtDRnzRLecfhe1TzrbgNOTB74vG/UQ0vsFfHPCXe5rnFfjTj3GIfBHCMlUGCh5" crossorigin="anonymous" rel="stylesheet"
       type="text/css" />
-  <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" integrity="sha384-/m1O+MBcLoqe7amEwkvENLD+f6ePq8wBTHBWz+Kf1zp90kmGlto3IFhhNa9fZllu" crossorigin="anonymous" rel="stylesheet" type="text/css" />
   <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ URL::asset('build/libs/filepond/filepond.min.css') }}" type="text/css" />
     <link rel="stylesheet"
@@ -27,7 +27,6 @@ Standerconfig
 @endcomponent
 
 <?php
- $id = $id;
  $softwere = App\Models\Softerwere::where('product_id' ,$id)->get();
  $Lasercutting = App\Models\Lasercutting::where('product_id' ,$id)->get();
  $Focusing  = App\Models\Fource::where('product_id' ,$id)->get();
@@ -332,21 +331,21 @@ Standerconfig
                     @csrf
                     <div class ="row">
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Company Name</label> 
+                            <label for="firstName" class="form-label">Company Name</label>
                             <input type="text" class="form-control" id="firstName"  name = "company" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Modal Name</label> 
+                            <label for="firstName" class="form-label">Modal Name</label>
                             <input type="text" class="form-control" id="firstName-2"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Logo</label> 
+                            <label for="firstName" class="form-label">Logo</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "logo" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">images</label> 
+                            <label for="firstName" class="form-label">images</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "image" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
@@ -354,7 +353,7 @@ Standerconfig
 
                     <div class ="row">
                         <div class ="col-md-12">
-                            <label for="firstName" class="form-label">Product Details</label> 
+                            <label for="firstName" class="form-label">Product Details</label>
                             <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
@@ -388,21 +387,21 @@ Standerconfig
                     @csrf
                     <div class ="row">
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Company Name</label> 
+                            <label for="firstName" class="form-label">Company Name</label>
                             <input type="text" class="form-control" id="firstName-3"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id1"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Modal Name</label> 
+                            <label for="firstName" class="form-label">Modal Name</label>
                             <input type="text" class="form-control" id="firstName-4"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Logo</label> 
+                            <label for="firstName" class="form-label">Logo</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "logo" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">images</label> 
+                            <label for="firstName" class="form-label">images</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "image" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
@@ -410,7 +409,7 @@ Standerconfig
 
                     <div class ="row">
                         <div class ="col-md-12">
-                            <label for="firstName" class="form-label">Product Details</label> 
+                            <label for="firstName" class="form-label">Product Details</label>
                             <textarea class="form-control bg-light border-0" id="companyAddress-2" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
@@ -444,21 +443,21 @@ Standerconfig
                     @csrf
                     <div class ="row">
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Company Name</label> 
+                            <label for="firstName" class="form-label">Company Name</label>
                             <input type="text" class="form-control" id="firstName-5"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id2"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Modal Name</label> 
+                            <label for="firstName" class="form-label">Modal Name</label>
                             <input type="text" class="form-control" id="firstName-6"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Logo</label> 
+                            <label for="firstName" class="form-label">Logo</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "logo" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">images</label> 
+                            <label for="firstName" class="form-label">images</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "image" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
@@ -466,7 +465,7 @@ Standerconfig
 
                     <div class ="row">
                         <div class ="col-md-12">
-                            <label for="firstName" class="form-label">Product Details</label> 
+                            <label for="firstName" class="form-label">Product Details</label>
                             <textarea class="form-control bg-light border-0" id="companyAddress-3" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
@@ -500,21 +499,21 @@ Standerconfig
                     @csrf
                     <div class ="row">
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Company Name</label> 
+                            <label for="firstName" class="form-label">Company Name</label>
                             <input type="text" class="form-control" id="firstName-7"  name = "companyname" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id3"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Modal Name</label> 
+                            <label for="firstName" class="form-label">Modal Name</label>
                             <input type="text" class="form-control" id="firstName-8"  name = "modal" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Logo</label> 
+                            <label for="firstName" class="form-label">Logo</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "logo" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
                         <div class ="col-md-3">
-                            <label for="firstName" class="form-label">images</label> 
+                            <label for="firstName" class="form-label">images</label>
                             <input type="file" class="filepond filepond-input-multiple" name = "image" multiple name="filepond"
                             data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
                         </div>
@@ -522,7 +521,7 @@ Standerconfig
 
                     <div class ="row">
                         <div class ="col-md-12">
-                            <label for="firstName" class="form-label">Product Details</label> 
+                            <label for="firstName" class="form-label">Product Details</label>
                             <textarea class="form-control bg-light border-0" id="companyAddress-4" rows="3" placeholder="Company Address" name = "details"></textarea>
                         </div>
                     </div>
@@ -550,12 +549,12 @@ Standerconfig
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" integrity="sha384-ficRBwtap/VLzILv81vIvgp30PoJYnlCm96tPpNYHXAf+h9SIThOZxxIzRUzbpAh" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js" integrity="sha384-jIAE3P7Re8BgMkT0XOtfQ6lzZgbDw/02WeRMJvXK3WMHBNynEx5xofqia1OHuGh0" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js" integrity="sha384-ziUH70yXeghwn7LIJvtjobzpllxs+w4FJL4/ssbFYWoYof46CveVyQ+GCaR1eTXj" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js" integrity="sha384-WeURKcdkISkUjHZ77+LXthyEWYJMabWHrb2WEz925E9WM6I+yjuZRvUu5l21xbGT" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js" integrity="sha384-mOGjUrCoMJ8/pGqc8SQHuJdYPrdB9cjSkiuLQbw6D7orbJyMkk6xYDlYtkEH051d" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js" integrity="sha384-0RqPR2pS8PZtdf2dUWHpI+Um4DsvovzRAZPEZg7lXp4/HhxUBq0Y8VPYBE902L4u" crossorigin="anonymous"></script>
 <script src="{{ URL::asset('build/libs/dropzone/dropzone-min.js') }}"></script>
     <script src="{{ URL::asset('build/libs/filepond/filepond.min.js') }}"></script>
     <script src="{{ URL::asset('build/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js') }}">
@@ -570,12 +569,12 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
 
     <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
    
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
     $('#modal1').click(function() {
         var password =  1
-     $('#product_id').val(password) 
+     $('#product_id').val(password)
        
 });
 });
@@ -584,7 +583,7 @@ $(document).ready(function(){
     $(document).ready(function(){
         $('#modal2').click(function() {
             var password =  1
-         $('#product_id1').val(password) 
+         $('#product_id1').val(password)
            
     });
     });
@@ -593,7 +592,7 @@ $(document).ready(function(){
         $(document).ready(function(){
             $('#modal3').click(function() {
                 var password =  1
-             $('#product_id2').val(password) 
+             $('#product_id2').val(password)
                
         });
         });
@@ -602,9 +601,9 @@ $(document).ready(function(){
             $(document).ready(function(){
                 $('#modal4').click(function() {
                     var password =  1
-                 $('#product_id3').val(password) 
+                 $('#product_id3').val(password)
                    
             });
             });
-            </script>      
+            </script>
 @endsection

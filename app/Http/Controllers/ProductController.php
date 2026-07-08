@@ -45,8 +45,8 @@ class ProductController extends Controller
     }
     public function standerconfig($id)
     {
-        $id = 'id';
-        return view('standerconfig' ,compact('id'));
+        $viewId = 'id';
+        return view('standerconfig' ,['id' => $viewId]);
     }
     public function technicalparameters($id)
     {
@@ -55,17 +55,17 @@ class ProductController extends Controller
     }
     public function standerconfiglist($id)
     {
-       
+
         return view('standerconfiglist');
-    } 
+    }
     public function delete($id)
     {
-        $cliente = product::find($id); 
+        $cliente = product::find($id);
         $cliente->delete(); //delete the client
-        $client = product::where('id',$id)->delete(); //delete the client_project relations which field client_id is the same that the client i just deleted.
+        product::where('id',$id)->delete(); //delete the client_project relations which field client_id is the same that the client i just deleted.
 
         return redirect()->route('product');
-    }       
+    }
                
             
        

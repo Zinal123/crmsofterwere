@@ -33,7 +33,7 @@ class TechinalController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function cuttingway(Request $request ,$id)                                                       
+    public function cuttingway(Request $request ,$id)
     {
      $cutting = Cutting::where('product_id' ,$id)->get();
      return view('standerconfig' ,compact('cutting'));
@@ -55,7 +55,7 @@ class TechinalController extends Controller
         $input = $request->all();
         Cnsthinks::create($input);
         return view('standerconfig');
-    }          
+    }
   
     }
    

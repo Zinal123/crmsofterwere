@@ -13,6 +13,7 @@ use App\Models\Bank;
 use App\Models\Invoice;
 use App\Models\Customer;
 use App\Models\Invoiceproduct;
+use App\Models\Paidamount;
 
 
 use App\Models\Termandcondition;
@@ -59,11 +60,11 @@ class InvoiceController extends Controller
         return response()->json([
             'isSuccess' => true,
             "product"=> $product,
-        ], 200); 
+        ], 200);
     }
     public function getproductvalue1(Request $request)
     {
-        $paymentType1 = $request->input('paymentType1'); 
+        $paymentType1 = $request->input('paymentType1');
         $product1 = Product ::where('id' ,$paymentType1)->get();
         $make = $product1[0]->make;
         $rate = $product1[0]->rate;
@@ -84,7 +85,7 @@ class InvoiceController extends Controller
            
         
         
-        ], 200); 
+        ], 200);
     }
     public function store(Request $request)
     {
@@ -134,8 +135,7 @@ class InvoiceController extends Controller
         $input1['shippingpan'] = $request->input('shipping_pan');
         
         
-        $customer = Customer::create($input1);
-        // $input2['invoice_id'] = $id;
+        Customer::create($input1);
         $product =$request->input('new_product_obj');
        
        
@@ -173,20 +173,20 @@ class InvoiceController extends Controller
             $customer = Customer::where('invoice_id' ,$id)->get();
             $state = $customer[0]->state;
             $invoice = Invoice::where('id' ,$id)->get();
-            $totalamountwithtax = $invoice[0]->	amountwithtax;
+            $totalamountwithtax = $invoice[0]->amountwithtax;
             $amount = $invoice[0]->amount;
             $roundof =ROUND($amount);
-            $sgstamount = 0; 
+            $sgstamount = 0;
             $cgstamount = 0;
-            $igsamount = 0; 
+            $igsamount = 0;
             if ($state != "Gujarat") {
                 $sgstamount = $totalamountwithtax * 0.09;
                 $cgstamount = $totalamountwithtax * 0.09;
             } else {
                 $igsamount = $totalamountwithtax*0.18;
             }
-            $invoiceproduct = Invoiceproduct::join('product', 'invoiceproduct.product_name', '=', 'product.id','left')->where('invoice_id' ,$id)->get(['invoiceproduct.*', 'product.product']);
-            return view('apps-invoices-details' ,compact('roundof','sgstamount','cgstamount','state','invoice' ,'customer','invoiceproduct' ,'totalamountwithtax','amount','igsamount')); 
+            $invoiceproduct = Invoiceproduct::join('product', 'invoiceproduct.product_name', '=', 'product.id','left')->where('invoice_id' ,$id)->get(['invoiceproduct.*', 'product.name as product']);
+            return view('apps-invoices-details' ,compact('roundof','sgstamount','cgstamount','state','invoice' ,'customer','invoiceproduct' ,'totalamountwithtax','amount','igsamount'));
         }
         public function updatePayment(Request $request)
         {
@@ -203,7 +203,7 @@ class InvoiceController extends Controller
             $input2['customer_id'] = $customer_id;
             $input2['paidAmount'] = $request->input('paidAmount');
             
-            $paidhistory = Paidamount::create($input2);
+            Paidamount::create($input2);
             if ($item) {
                 // Calculate the new total paid amount by adding the new payment to the existing paid amount
                 $newPaidAmount = $item->paidamount + $paidAmount;
@@ -227,18 +227,18 @@ class InvoiceController extends Controller
         public function paymenthistry()
         {
        
-        $Paidamount = Paidamount::join('paidamount', 'invoice.id', '=', 'paidamount.invoice_id','left')->
+        $paidamount = Paidamount::join('paidamount', 'invoice.id', '=', 'paidamount.invoice_id','left')->
         join('paidamount', 'customer.id', '=', 'paidamount.customer_id','left')->
         orderBy('id' ,'desc')->get(['.paidamount*', 'invoice.id as invoice_id','customer.id as customer_id' ,'customer.name as cname']);
         
-        return view('paymenthistry' ,compact('Paidamount')); 
+        return view('paymenthistry' ,compact('paidamount'));
         }
         public function vender()
         {
-        $Vender = Invoice::join('customer', 'invoice.customer_id', '=', 'customer.id','left')
+        $vender = Invoice::join('customer', 'invoice.customer_id', '=', 'customer.id','left')
             ->orderBy('invoice.id', 'desc')
             ->get(['invoice.*', 'invoice.invoice_id as invoice_id', 'customer.name as cname']);
-        return view('vender' ,compact('Vender')); 
+        return view('vender' ,compact('vender'));
         }
         
         

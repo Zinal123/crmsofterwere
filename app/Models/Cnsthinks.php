@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,9 +15,8 @@ class Cnsthinks extends Authenticatable
     protected $table = 'cnsthinks';
     protected $fillable = [
         'product_id',
-        'cnsthinks',
-       
-      
+        'cuttingthinks',
+
     ];
 
 

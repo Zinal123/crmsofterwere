@@ -23,7 +23,7 @@ class Invoice extends Authenticatable
         'date',
         'totalamountbeforetax',
         'amount',
-        'amountwithtax',       
+        'amountwithtax',
         'bankaccountnumber',
         'bankifsccode',
         'accountholder',
