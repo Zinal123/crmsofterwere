@@ -22,6 +22,8 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('roo
 //Update User Details
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
 Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
+Route::get('/co2quation/{id}' ,[App\Http\Controllers\QutationController::class,'Co2quation'])->name('co2quation');
+Route::post('/co2quationstore' ,[App\Http\Controllers\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 Route::get('apps-invoices-list' ,[App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
 Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::class, 'create'])->name('invoice.create');
@@ -51,9 +53,6 @@ Route::post('cutting/store' ,[App\Http\Controllers\StanderconfigController::clas
 Route::post('focusing/store' ,[App\Http\Controllers\StanderconfigController::class, 'focusingstore'])->name('focusingstore');
 Route::post('power/store' ,[App\Http\Controllers\StanderconfigController::class, 'powerstore'])->name('powerstore');
 Route::get('softerwere/show' ,[App\Http\Controllers\StanderconfigController::class, 'softerwereshow'])->name('softerwere.show');
-Route::get('cutting/show' ,[App\Http\Controllers\StanderconfigController::class, 'cuttingshow'])->name('cutting.show');
-Route::get('focusing/show' ,[App\Http\Controllers\StanderconfigController::class, 'focusingshow'])->name('focusing.show');
-Route::get('power/show' ,[App\Http\Controllers\StanderconfigController::class, 'powershow'])->name('power.show');
 Route::post('cuttingway/store' ,[App\Http\Controllers\TechinalController::class, 'cuttingwaystore'])->name('cuttingwaystore');
 Route::post('cncthinkness/store' ,[App\Http\Controllers\TechinalController::class, 'cncthinknessstore'])->name('cncthinknessstore');
 Route::get('cuttingway/{id}' ,[App\Http\Controllers\TechinalController::class, 'cuttingway'])->name('cuttingway');
@@ -65,8 +64,5 @@ Route::get('fiberqutation/{id}' ,[App\Http\Controllers\QutationController::class
 Route::post('fiberqutation/store' ,[App\Http\Controllers\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');
 Route::get('admin/listqutation' ,[App\Http\Controllers\QutationController::class, 'index'])->name('listqutation');
 Route::get('/printquation/{id}', [App\Http\Controllers\QutationController::class, 'print'])->name('quation.pdf');
-Route::get('/co2quation' ,[App\Http\Controllers\QutationController::class,'Co2quation'])->name('co2quation');
-Route::post('/co2quationstore' ,[App\Http\Controllers\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
-
 
 

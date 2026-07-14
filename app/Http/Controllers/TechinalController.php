@@ -48,13 +48,15 @@ class TechinalController extends Controller
     {
         $input = $request->all();
         Cutting::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('technicalparameters', compact('id'));
     }
     public function cncthinknessstore(Request $request)
     {
         $input = $request->all();
         Cnsthinks::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('technicalparameters', compact('id'));
     }
   
     }

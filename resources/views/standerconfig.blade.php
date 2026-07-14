@@ -410,7 +410,7 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" id="companyAddress-2" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-2" rows="3" placeholder="Company Address" name = "decription"></textarea>
                         </div>
                     </div>
                     <br>

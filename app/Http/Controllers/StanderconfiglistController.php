@@ -57,27 +57,31 @@ class StanderconfiglistController extends Controller
     public function motorstore(Request $request)
     {
         $input = $request->all();
-        
+
         Motor::create($input);
-        return view('standerconfiglist');
+        $id = $request->input('product_id');
+        return view('standerconfiglist', compact('id'));
     }
     public function gearstore(Request $request)
     {
         $input = $request->all();
         Gear::create($input);
-        return view('standerconfiglist');
+        $id = $request->input('product_id');
+        return view('standerconfiglist', compact('id'));
     }
     public function rackstore(Request $request)
     {
         $input = $request->all();
         Rack::create($input);
-        return view('standerconfiglist');
+        $id = $request->input('product_id');
+        return view('standerconfiglist', compact('id'));
     }
     public function softwarestore(Request $request)
     {
         $input = $request->all();
         Softerwere1::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('standerconfiglist', compact('id'));
     }
     }
    

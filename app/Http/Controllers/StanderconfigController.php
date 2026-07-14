@@ -57,25 +57,29 @@ class StanderconfigController extends Controller
     {
         $input = $request->all();
         Softerwere::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('standerconfig', compact('id'));
     }
     public function cuttingstore(Request $request)
     {
         $input = $request->all();
         Lasercutting::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('standerconfig', compact('id'));
     }
     public function focusingstore(Request $request)
     {
         $input = $request->all();
         Fource::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('standerconfig', compact('id'));
     }
     public function powerstore(Request $request)
     {
         $input = $request->all();
         Power::create($input);
-        return view('standerconfig');
+        $id = $request->input('product_id');
+        return view('standerconfig', compact('id'));
     }
     public function softerwereshow(Request $request)
     {

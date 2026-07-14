@@ -19,8 +19,8 @@ class Lasercutting extends Authenticatable
         'modal',
         'logo',
         'image',
-        'description',
-      
+        'decription',
+
     ];
 
 
