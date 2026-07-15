@@ -98,3 +98,22 @@
 <!-- Left Sidebar End -->
 <!-- Vertical Overlay-->
 <div class="vertical-overlay"></div>
+<script>
+    // These menu-expand links carry role="button" for assistive tech, which per
+    // WAI-ARIA authoring practices means they should also respond to the Space
+    // key. Native <a> elements already respond to Enter on their own (browser
+    // default), so only Space needs a synthetic click here - handling Enter
+    // too would double-fire the click. Purely additive - does not change
+    // existing click/collapse behavior.
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== ' ') {
+            return;
+        }
+        var target = event.target.closest('.nav-link[role="button"]');
+        if (!target) {
+            return;
+        }
+        event.preventDefault();
+        target.click();
+    });
+</script>

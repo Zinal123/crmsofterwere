@@ -389,22 +389,22 @@
                     <table class ="table table-bordered dt-responsive nowrap table-striped align-middle">
                         <tbody>
                             <tr>
-                                <td>Power</td>
+                                <th scope="row" style="text-align: left; font-weight: normal;">Power</th>
                                 <td>3 Phase AC 380V 50 Hz</td>
-                                
+
                             </tr>
                             <tr>
-                                <td>Protection Level of Total Power Supply</td>
+                                <th scope="row" style="text-align: left; font-weight: normal;">Protection Level of Total Power Supply</th>
                                 <td>IP 54</td>
-                                
+
                             </tr>
                             <tr>
-                                <td>Power voltage required </td>
+                                <th scope="row" style="text-align: left; font-weight: normal;">Power voltage required </th>
                                 <td>220V±5%,415V±5%</td>
-                                
+
                             </tr>
                         </tbody>
-                     
+
                     </table>
                 </div>
             </div>
@@ -645,6 +645,6 @@
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha384-l7aOEgTYxgJ0nn2MziQWZCvuvJ2PtNcP05R4QwEoHW+kIS1gFpzupcQ7WhAdRKuq" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
 
 @endsection
