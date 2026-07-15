@@ -25,14 +25,6 @@ Standerconfig
 
 @endslot
 @endcomponent
-<?php
-
- $id = 1;
- $Cnsthinks = App\Models\Cnsthinks::where('product_id' ,$id)->get();
- $Cutting = App\Models\Cutting::where('product_id' ,$id)->get();
-
- 
-?>
 
 <div class="row">
     <div class="col-lg-12">

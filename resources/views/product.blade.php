@@ -41,6 +41,16 @@ list view
                 <div>
                     <div class="table-responsive table-card">
                         <?php
+                        // NOT dead weight: GET /product is a single-segment path, so it is
+                        // currently intercepted by the catch-all route in routes/web.php
+                        // (registered before this route) and served via
+                        // HomeController::index(), which renders this view with no data at
+                        // all. This self-query is the only thing that makes the page work
+                        // today. Removing it breaks the page until that routing bug (tracked
+                        // separately, out of scope for this pass) is fixed. When the
+                        // controller *is* reached (e.g. once the routing bug is fixed), this
+                        // duplicates the identical query ProductController::index() already
+                        // runs — redundant but harmless.
                         $product = App\Models\Product::orderBy('id' ,'desc')->get();
                         ?>
                         <table class="table align-middle table-nowrap" id="invoiceTable">

@@ -24,15 +24,6 @@ Standerconfiglist
 
 @endslot
 @endcomponent
-<?php
-
- $id = 1;
- $Motor = App\Models\Motor::where('product_id' ,$id)->get();
- $Gear = App\Models\Gear::where('product_id' ,$id)->get();
- $Rack  = App\Models\Rack::where('product_id' ,$id)->get();
- $Softerwere1 = App\Models\Softerwere1::where('product_id' ,$id)->get();
- 
-?>
 
 <div class="row">
     <div class="col-lg-12">

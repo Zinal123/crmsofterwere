@@ -43,29 +43,29 @@ Route::middleware('auth')->group(function () {
     Route::post('inventrystore', [App\Http\Controllers\InventryController::class, 'inventrystore'])->name('inventrystore');
     Route::post('quantityupdate', [App\Http\Controllers\InventryController::class, 'quantityupdate'])->name('quantityupdate');
 
-    Route::get('product' ,[App\Http\Controllers\ProductController::class, 'index'])->name('product');
-    Route::post('productstore' ,[App\Http\Controllers\ProductController::class, 'productstore'])->name('productstore');
-    Route::get('productdelete/{id}' ,[App\Http\Controllers\ProductController::class, 'delete'])->name('product.delete');
+    Route::get('product' ,[App\Http\Controllers\Product\ProductController::class, 'index'])->name('product');
+    Route::post('productstore' ,[App\Http\Controllers\Product\ProductController::class, 'productstore'])->name('productstore');
+    Route::get('productdelete/{id}' ,[App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
 
-    Route::get('standerconfig/{id}' ,[App\Http\Controllers\ProductController::class, 'standerconfig'])->name('standerconfig');
-    Route::get('TechnicalParameters/{id}' ,[App\Http\Controllers\ProductController::class, 'technicalparameters'])->name('TechnicalParameters');
-    Route::get('standerconfiglist/{id}' ,[App\Http\Controllers\ProductController::class, 'standerconfiglist'])->name('standerconfiglist');
+    Route::get('standerconfig/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'standerconfig'])->name('standerconfig');
+    Route::get('TechnicalParameters/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'technicalparameters'])->name('TechnicalParameters');
+    Route::get('standerconfiglist/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'standerconfiglist'])->name('standerconfiglist');
 
-    Route::get('softerwere/{id}' ,[App\Http\Controllers\StanderconfigController::class, 'softerwere'])->name('softerwere');
-    Route::post('softerwere/store' ,[App\Http\Controllers\StanderconfigController::class, 'softerwerestore'])->name('softerwerestore');
-    Route::post('cutting/store' ,[App\Http\Controllers\StanderconfigController::class, 'cuttingstore'])->name('cuttingstore');
-    Route::post('focusing/store' ,[App\Http\Controllers\StanderconfigController::class, 'focusingstore'])->name('focusingstore');
-    Route::post('power/store' ,[App\Http\Controllers\StanderconfigController::class, 'powerstore'])->name('powerstore');
-    Route::get('softerwere/show' ,[App\Http\Controllers\StanderconfigController::class, 'softerwereshow'])->name('softerwere.show');
+    Route::get('softerwere/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softerwere'])->name('softerwere');
+    Route::post('softerwere/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softerwerestore'])->name('softerwerestore');
+    Route::post('cutting/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingstore'])->name('cuttingstore');
+    Route::post('focusing/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'focusingstore'])->name('focusingstore');
+    Route::post('power/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'powerstore'])->name('powerstore');
+    Route::get('softerwere/show' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softerwereshow'])->name('softerwere.show');
 
-    Route::post('cuttingway/store' ,[App\Http\Controllers\TechinalController::class, 'cuttingwaystore'])->name('cuttingwaystore');
-    Route::post('cncthinkness/store' ,[App\Http\Controllers\TechinalController::class, 'cncthinknessstore'])->name('cncthinknessstore');
-    Route::get('cuttingway/{id}' ,[App\Http\Controllers\TechinalController::class, 'cuttingway'])->name('cuttingway');
+    Route::post('cuttingway/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingwaystore'])->name('cuttingwaystore');
+    Route::post('cncthinkness/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cncthinknessstore'])->name('cncthinknessstore');
+    Route::get('cuttingway/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingway'])->name('cuttingway');
 
-    Route::post('motor/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'motorstore'])->name('motorstore');
-    Route::post('gear/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'gearstore'])->name('gearstore');
-    Route::post('rack/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'rackstore'])->name('rackstore');
-    Route::post('Software/store' ,[App\Http\Controllers\StanderconfiglistController::class, 'softwarestore'])->name('softwarestore');
+    Route::post('motor/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'motorstore'])->name('motorstore');
+    Route::post('gear/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'gearstore'])->name('gearstore');
+    Route::post('rack/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackstore'])->name('rackstore');
+    Route::post('Software/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softwarestore'])->name('softwarestore');
 
     Route::get('fiberqutation/{id}' ,[App\Http\Controllers\QutationController::class, 'generatequtation'])->name('generatequtation');
     Route::post('fiberqutation/store' ,[App\Http\Controllers\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');

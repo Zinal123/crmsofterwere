@@ -26,14 +26,6 @@ Standerconfig
 @endslot
 @endcomponent
 
-<?php
- $softwere = App\Models\Softerwere::where('product_id' ,$id)->get();
- $Lasercutting = App\Models\Lasercutting::where('product_id' ,$id)->get();
- $Focusing  = App\Models\Fource::where('product_id' ,$id)->get();
- $power = App\Models\Power::where('product_id' ,$id)->get();
- 
-?>
-
 <div class="row">
     <div class="col-lg-12">
         <div class="card" id="invoiceList">
