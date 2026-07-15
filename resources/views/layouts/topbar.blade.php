@@ -138,13 +138,13 @@
 
                 <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ URL::asset('build/images/flags/us.svg') }}" class="rounded" alt="Header Language" height="20">
+                        <img src="{{ URL::asset('build/images/flags/in.svg') }}" class="rounded" alt="Header Language" height="20">
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
 
                         <!-- item-->
                         <a href="{{ url('index/en') }}" class="dropdown-item notify-item language py-2" data-lang="en" title="English">
-                            <img src="{{ URL::asset('build/images/flags/us.svg') }}" alt="US flag" class="me-2 rounded" height="20">
+                            <img src="{{ URL::asset('build/images/flags/in.svg') }}" alt="India flag" class="me-2 rounded" height="20">
                             <span class="align-middle">English</span>
                         </a>
                     </div>
@@ -250,11 +250,11 @@
                                                     T-Shirts</a>
                                             </h6>
                                             <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>10 x $32</span>
+                                                Quantity: <span>10 x ₹32</span>
                                             </p>
                                         </div>
                                         <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">320</span></h5>
+                                            <h5 class="m-0 fw-normal">₹<span class="cart-item-price">320</span></h5>
                                         </div>
                                         <div class="ps-2">
                                             <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
@@ -270,11 +270,11 @@
                                                 <a href="apps-ecommerce-product-details" class="text-reset">Bentwood Chair</a>
                                             </h6>
                                             <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>5 x $18</span>
+                                                Quantity: <span>5 x ₹18</span>
                                             </p>
                                         </div>
                                         <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">89</span></h5>
+                                            <h5 class="m-0 fw-normal">₹<span class="cart-item-price">89</span></h5>
                                         </div>
                                         <div class="ps-2">
                                             <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
@@ -291,11 +291,11 @@
                                                     Borosil Paper Cup</a>
                                             </h6>
                                             <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>3 x $250</span>
+                                                Quantity: <span>3 x ₹250</span>
                                             </p>
                                         </div>
                                         <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">750</span></h5>
+                                            <h5 class="m-0 fw-normal">₹<span class="cart-item-price">750</span></h5>
                                         </div>
                                         <div class="ps-2">
                                             <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
@@ -312,11 +312,11 @@
                                                     Styled T-Shirt</a>
                                             </h6>
                                             <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>1 x $1250</span>
+                                                Quantity: <span>1 x ₹1250</span>
                                             </p>
                                         </div>
                                         <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$ <span class="cart-item-price">1250</span></h5>
+                                            <h5 class="m-0 fw-normal">₹ <span class="cart-item-price">1250</span></h5>
                                         </div>
                                         <div class="ps-2">
                                             <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
@@ -332,11 +332,11 @@
                                                 <a href="apps-ecommerce-product-details" class="text-reset">Stillbird Helmet</a>
                                             </h6>
                                             <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>2 x $495</span>
+                                                Quantity: <span>2 x ₹495</span>
                                             </p>
                                         </div>
                                         <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">990</span></h5>
+                                            <h5 class="m-0 fw-normal">₹<span class="cart-item-price">990</span></h5>
                                         </div>
                                         <div class="ps-2">
                                             <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
@@ -349,7 +349,7 @@
                             <div class="d-flex justify-content-between align-items-center pb-3">
                                 <h5 class="m-0 text-muted">Total:</h5>
                                 <div class="px-2">
-                                    <h5 class="m-0" id="cart-item-total">$1258.58</h5>
+                                    <h5 class="m-0" id="cart-item-total">₹1258.58</h5>
                                 </div>
                             </div>
 
@@ -654,7 +654,7 @@
                         <a class="dropdown-item" href="apps-tasks-kanban"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
                         <a class="dropdown-item" href="pages-faqs"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$5971.67</b></span></a>
+                        <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>₹5971.67</b></span></a>
                         <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
                         <a class="dropdown-item" href="auth-lockscreen-basic"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
                         <button type="button" class="dropdown-item " onclick="document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></button>
