@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 use App\Models\Product;
 use App\Models\Bank;
 use App\Models\Invoice;
 use App\Models\Customer;
 use App\Models\Invoiceproduct;
 use App\Models\Paidamount;
-
-
-use App\Models\Termandcondition;
 
 
 

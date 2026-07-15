@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
-use App\Models\Product;
 use  App\Models\Softerwere;
 use  App\Models\Lasercutting;
 use  App\Models\Fource;
 use  App\Models\Power;
-
-
-
 
 class StanderconfigController extends Controller
 {
@@ -28,20 +19,6 @@ class StanderconfigController extends Controller
     {
      $softwere = Softerwere::where('product_id' ,$id)->get();
      return view('standerconfig' ,compact('softwere'));
-    }
-    public function lasercutting(Request $request)
-    {
-     $lasercutting = Lasercutting::orderBy('id' ,'desc')->get();
-     return view('standerconfig' ,compact('lasercutting'));
-    }
-    public function Focusing(Request $request)
-    {
-     $focusing  = Fource::orderBy('id' ,'desc')->get();
-     return view('standerconfig.' ,compact('focusing'));
-    }
-    public function power(Request $request)
-    {
-     return view('standerconfig.' ,compact('Power'));
     }
     public function softerwerestore(Request $request)
     {
