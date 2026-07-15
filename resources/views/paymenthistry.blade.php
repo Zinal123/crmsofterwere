@@ -20,14 +20,6 @@ invoices
 list view
 @endslot
 @endcomponent
-<?php
-$Paidamount = App\Models\Paidamount::join('invoice', 'invoice.id', '=', 'paidamount.invoice_id', 'left')
-    ->join('customer', 'customer.id', '=', 'paidamount.customer_id', 'left')
-    ->orderBy('paidamount.id', 'desc')
-    ->get(['paidamount.*', 'invoice.id as invoice_id', 'customer.id as customer_id', 'customer.name as cname']);
-
-
-        ?>
  <!-- end row-->
 
 <div class="row">

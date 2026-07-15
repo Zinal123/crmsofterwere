@@ -19,6 +19,15 @@ Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang'
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
+// These 2 routes must be registered before the {any} catch-all below:
+// both are single URL segments, so without this ordering the catch-all
+// would intercept them first (see app/Http/Controllers/HomeController.php
+// @index) and skip both the real controller and this auth check entirely.
+Route::middleware('auth')->group(function () {
+    Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::class, 'create'])->name('invoice.create');
+    Route::get('paymenthistry', [App\Http\Controllers\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
+});
+
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
 //Update User Details & Auth-protected routes
@@ -29,12 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/co2quationstore' ,[App\Http\Controllers\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 
     Route::get('apps-invoices-list' ,[App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
-    Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::class, 'create'])->name('invoice.create');
     Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\InvoiceController::class, 'getproduct'])->name('invoice.product');
     Route::get('admin/invoice/getproduct1' ,[App\Http\Controllers\InvoiceController::class, 'getproductvalue1'])->name('invoice.product1');
     Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');
     Route::post('update-payment', [App\Http\Controllers\InvoiceController::class, 'updatePayment']);
-    Route::get('paymenthistry', [App\Http\Controllers\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
     Route::get('vender', [App\Http\Controllers\InvoiceController::class, 'vender'])->name('invoice.vender');
     Route::post('invoicestore' ,[App\Http\Controllers\InvoiceController::class, 'store'])->name('invoice.store');
     Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\InvoiceController::class, 'details'])->name('invoice.details');

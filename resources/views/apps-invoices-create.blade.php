@@ -12,10 +12,6 @@
 @slot('li_1') invoices @endslot
 @slot('title')Create Invoice @endslot
 @endcomponent
-<?php
-$product = App\Models\Product::orderBy('id' ,'desc')->get();
-$bank = App\Models\Bank ::get();
-?>
 <div class="row justify-content-center">
     <div class="col-xxl-12">
         <div class="card">
