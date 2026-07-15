@@ -1,0 +1,6 @@
+projectKey=crmsofterwere
+serverUrl=http://localhost:9000
+serverVersion=26.6.0.123539
+dashboardUrl=http://localhost:9000/dashboard?id=crmsofterwere
+ceTaskId=26f1c854-c3b9-44bc-ae2f-c45c3b9a14e8
+ceTaskUrl=http://localhost:9000/api/ce/task?id=26f1c854-c3b9-44bc-ae2f-c45c3b9a14e8

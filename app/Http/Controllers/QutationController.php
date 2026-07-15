@@ -23,15 +23,6 @@ use App\Models\Rack;
 use App\Models\Softerwere1;
 class QutationController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     public function index(Request $request)
     {
      $product = Quation::orderBy('id' ,'desc')->get();
