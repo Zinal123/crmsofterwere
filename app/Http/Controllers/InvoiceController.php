@@ -208,12 +208,12 @@ class InvoiceController extends Controller
         }
         public function paymenthistry()
         {
-       
-        $paidamount = Paidamount::join('paidamount', 'invoice.id', '=', 'paidamount.invoice_id','left')->
-        join('paidamount', 'customer.id', '=', 'paidamount.customer_id','left')->
-        orderBy('id' ,'desc')->get(['.paidamount*', 'invoice.id as invoice_id','customer.id as customer_id' ,'customer.name as cname']);
-        
-        return view('paymenthistry' ,compact('paidamount'));
+
+        $Paidamount = Paidamount::leftJoin('invoice', 'paidamount.invoice_id', '=', 'invoice.id')
+        ->leftJoin('customer', 'paidamount.customer_id', '=', 'customer.id')
+        ->orderBy('paidamount.id' ,'desc')->get(['paidamount.*', 'customer.name as cname']);
+
+        return view('paymenthistry' ,compact('Paidamount'));
         }
         public function vender()
         {

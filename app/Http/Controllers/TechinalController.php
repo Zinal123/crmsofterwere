@@ -20,7 +20,7 @@ class TechinalController extends Controller
     public function cuttingway(Request $request ,$id)
     {
      $cutting = Cutting::where('product_id' ,$id)->get();
-     return view('standerconfig' ,compact('cutting'));
+     return view('standerconfig' ,compact('cutting', 'id'));
     }
     public function cncthinkness(Request $request ,$id)
     {

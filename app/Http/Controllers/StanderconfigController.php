@@ -18,7 +18,7 @@ class StanderconfigController extends Controller
     public function softerwere(Request $request ,$id)
     {
      $softwere = Softerwere::where('product_id' ,$id)->get();
-     return view('standerconfig' ,compact('softwere'));
+     return view('standerconfig' ,compact('softwere', 'id'));
     }
     public function softerwerestore(Request $request)
     {

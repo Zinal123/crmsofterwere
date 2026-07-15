@@ -13,6 +13,7 @@ class Lasercutting extends Authenticatable
 
    
     protected $table = 'addlaser';
+    const UPDATED_AT = 'update_at';
     protected $fillable = [
         'company',
         'product_id',
