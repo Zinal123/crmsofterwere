@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/co2quationstore' ,[App\Http\Controllers\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 
     Route::get('apps-invoices-list' ,[App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
+    Route::get('apps-invoices-list/data' ,[App\Http\Controllers\InvoiceController::class, 'listData'])->name('invoice.data');
     Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\InvoiceController::class, 'getproduct'])->name('invoice.product');
     Route::get('admin/invoice/getproduct1' ,[App\Http\Controllers\InvoiceController::class, 'getproductvalue1'])->name('invoice.product1');
     Route::post('status/{id}' ,[App\Http\Controllers\InvoiceController::class, 'status'])->name('invoice.status');

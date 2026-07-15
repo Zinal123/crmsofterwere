@@ -26,6 +26,85 @@ class InvoiceController extends Controller
 
         return view('invoice' ,compact('invoice'));
     }
+
+    /**
+     * DataTables server-side data source for apps-invoices-list.blade.php.
+     * Mirrors the exact row query and per-cell HTML the view used to
+     * render itself, now paginated/filtered/sorted server-side instead
+     * of shipping every row to the browser on every request.
+     */
+    public function listData(Request $request)
+    {
+        $columns = ['invoice.id', 'customer.name', 'customer.phone', 'invoice.date', 'invoice.amount', 'invoice.paidamount', 'invoice.remaining_amount'];
+
+        $baseQuery = fn () => Invoice::join('customer', 'invoice.id', '=', 'customer.invoice_id', 'left');
+
+        $recordsTotal = $baseQuery()->count();
+
+        $query = $baseQuery()->select(['invoice.*', 'customer.name', 'customer.phone', 'customer.id as customer_id']);
+
+        $search = $request->input('search.value');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search, $columns) {
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'like', '%' . $search . '%');
+                }
+            });
+        }
+
+        $recordsFiltered = (clone $query)->count();
+
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderDir = $request->input('order.0.dir', 'desc') === 'asc' ? 'asc' : 'desc';
+        if ($orderColumnIndex !== null && isset($columns[$orderColumnIndex])) {
+            $query->orderBy($columns[$orderColumnIndex], $orderDir);
+        } else {
+            $query->orderBy('invoice.id', 'desc');
+        }
+
+        $start = max((int) $request->input('start', 0), 0);
+        $length = (int) $request->input('length', 10);
+        if ($length > 0) {
+            $query->skip($start)->take($length);
+        }
+
+        $rows = $query->get();
+
+        $data = $rows->map(function ($item) {
+            if ($item->amount == $item->paidamount) {
+                $statusHtml = '<span  class = "badge bg-success-subtle text-success text-uppercase">Paid</span>';
+                $paymentButton = '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-id="' . e($item->id) . '" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;">Payment</button>';
+            } else {
+                $statusHtml = '<span  class = "badge bg-warning-subtle text-warning text-uppercase">Pending</span>';
+                $paymentButton = '<button type="button" class="btn btn-sm btn-primary open-modal" data-id="' . e($item->id) . '" data-customer="' . e($item->customer_id) . '"data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Payment</button>';
+            }
+
+            $actionHtml = '<div class="d-flex gap-2">'
+                . '<div class="edit"><a href="' . route('invoice.details', $item->id) . '"><button class="btn btn-sm btn-success edit-item-btn">Details</button></a></div>'
+                . '<div class="remove">' . $paymentButton . '</div>'
+                . '</div>';
+
+            return [
+                $item->id,
+                $item->name,
+                $item->phone,
+                $item->date,
+                $item->amount,
+                $item->paidamount,
+                $item->remaining_amount,
+                $statusHtml,
+                $actionHtml,
+            ];
+        });
+
+        return response()->json([
+            'draw' => (int) $request->input('draw', 1),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
+    }
+
     public function create(Request $request)
     {
         $product = Product::orderBy('id' ,'desc')->get();

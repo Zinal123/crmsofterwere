@@ -20,11 +20,6 @@ invoices
 list view
 @endslot
 @endcomponent
-<?php
- $invoice = App\Models\Invoice::join('customer', 'invoice.id', '=', 'customer.invoice_id','left')->
-        orderBy('id' ,'desc')->get(['invoice.*', 'customer.name' ,'customer.phone','customer.id as customer_id']);
-
-?>
  <!-- end row-->
 
 <div class="row">
@@ -68,44 +63,6 @@ list view
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all" id="invoice-list-data">
-                                @foreach($invoice as $item)
-                                 <tr>
-                                  <td>{{$item->id}}</td>
-                                  <td>{{$item->name}}</td>
-                                  <td>{{$item->phone}}</td>
-                                  <td>{{$item->date}}</td>
-                                  <td>{{$item->amount}}</td>
-                                  <td>{{$item->paidamount}}</td>
-                                  <td>{{$item->remaining_amount}}</td>
-                                  <td>
-                                    @if($item->amount == $item->paidamount)
-                                        <span  class = "badge bg-success-subtle text-success text-uppercase">Paid</span>
-                                    @else
-                                        <span  class = "badge bg-warning-subtle text-warning text-uppercase">Pending</span>
-                                    @endif
-                                </td>
-                                <td>
-                                <div class="d-flex gap-2">
-                                    <div class="edit">
-                                        <a href="{{route('invoice.details' ,$item->id)}}"><button class="btn btn-sm btn-success edit-item-btn">Details</button></a>
-                                    </div>
-                                    <div class="remove">
-                                        @if($item->amount == $item->paidamount)
-                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-id="{{$item->id}}" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;">
-            Payment
-       </button> @else
-       <button type="button" class="btn btn-sm btn-primary open-modal" data-id="{{ $item->id }}" data-customer="{{ $item->customer_id}}"data-bs-toggle="modal" data-bs-target="#exampleModalgrid">
-        Payment
-    </button>
-                 @endif
-                                    </div>
-                                </div>
-                                </td>
-                                  
-
-                                 </tr>
-
-                                 @endforeach
                             </tbody>
                         </table>
                        
@@ -196,29 +153,40 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" integrity="sha384-UAA3vlTPq9dwxB61awBFhR7Y5uBFOKQWuZueu4C6uI48gjIoqI/OTmYWEYWZXbGR" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" integrity="sha384-HUHsYVOhSyHyZRTWv8zkbKVk7Xmg12CCNfKEUJ7cSuW/22Lz3BITd3Om6QeiXICb" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" integrity="sha384-v9EFJbsxLXyYar8TvBV8zu5USBoaOC+ZB57GzCmQiWfgDIjS+wANZMP5gjwMLwGv" crossorigin="anonymous"></script>
-<script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
 <script>
-   
 document.addEventListener('DOMContentLoaded', function() {
-    // Listen for click events on buttons with the 'open-modal' class
-    const buttons = document.querySelectorAll('.open-modal');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Get the data-id from the clicked button
-            const itemId = this.getAttribute('data-id');
-            const customer_id = this.getAttribute('data-customer');
-            
-            
-            // Set the value of the input field in the modal to the item ID
-            document.getElementById('itemIdInput').value = itemId;
-            document.getElementById('customerInput').value = customer_id;
+    new DataTable('#example', {
+        serverSide: true,
+        ajax: '{{ route("invoice.data") }}',
+        columns: [
+            { data: 0, orderable: true, searchable: true },
+            { data: 1, orderable: true, searchable: true },
+            { data: 2, orderable: true, searchable: true },
+            { data: 3, orderable: true, searchable: true },
+            { data: 4, orderable: true, searchable: true },
+            { data: 5, orderable: true, searchable: true },
+            { data: 6, orderable: true, searchable: true },
+            { data: 7, orderable: false, searchable: false },
+            { data: 8, orderable: false, searchable: false }
+        ]
+    });
+});
 
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    // Delegated so it also fires for rows the DataTables AJAX call adds after page load,
+    // not just rows present at DOMContentLoaded time.
+    document.addEventListener('click', function(event) {
+        const button = event.target.closest('.open-modal');
+        if (!button) {
+            return;
+        }
+        const itemId = button.getAttribute('data-id');
+        const customer_id = button.getAttribute('data-customer');
+
+        document.getElementById('itemIdInput').value = itemId;
+        document.getElementById('customerInput').value = customer_id;
     });
 });
 
