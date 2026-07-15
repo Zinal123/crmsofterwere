@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Traits\HandlesAvatarUpload;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +24,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    use HandlesAvatarUpload;
 
     /**
      * Where to redirect users after registration.
@@ -65,18 +67,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $avatarName = null;
         if (request()->has('avatar')) {
-            $avatar = request()->file('avatar');
-            $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
-            $avatarPath = public_path('/images/');
-            $avatar->move($avatarPath, $avatarName);
+            $avatarName = $this->storeAvatar(request()->file('avatar'));
         }
 
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' =>  $avatarName,
+            'avatar' => $avatarName,
         ]);
     }
 }

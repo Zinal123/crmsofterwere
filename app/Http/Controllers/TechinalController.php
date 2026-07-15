@@ -36,17 +36,11 @@ class TechinalController extends Controller
  
     public function cuttingwaystore(Request $request)
     {
-        $input = $request->all();
-        Cutting::create($input);
-        $id = $request->input('product_id');
-        return view('technicalparameters', compact('id'));
+        return $this->storeConfigRecord($request, Cutting::class, 'technicalparameters');
     }
     public function cncthinknessstore(Request $request)
     {
-        $input = $request->all();
-        Cnsthinks::create($input);
-        $id = $request->input('product_id');
-        return view('technicalparameters', compact('id'));
+        return $this->storeConfigRecord($request, Cnsthinks::class, 'technicalparameters');
     }
   
     }

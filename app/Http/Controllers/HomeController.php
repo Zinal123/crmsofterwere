@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\HandlesAvatarUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
+    use HandlesAvatarUpload;
     private const ERROR_MESSAGE = 'Something went wrong!';
 
     /**
@@ -57,11 +59,7 @@ class HomeController extends Controller
         $user->email = $request->get('email');
 
         if ($request->file('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
-            $avatarPath = public_path('/images/');
-            $avatar->move($avatarPath, $avatarName);
-            $user->avatar =  $avatarName;
+            $user->avatar = $this->storeAvatar($request->file('avatar'));
         }
 
         $user->update();
