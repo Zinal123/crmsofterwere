@@ -194,24 +194,24 @@ $number = $amount;
                     <td class="text-center">{{$item3->hsn}}</td>
                     <td class="text-center">{{$item3->unit}}</td>
                     <td class="text-center">{{$item3->quantity}}</td>
-                    <td class="text-center">{{number_format($item3->rate, 2, '.', ',')}}</td>
-                    <td class="text-center">{{number_format($item3->total, 2, '.', ',')}}</td>
+                    <td class="text-center">{{\App\Support\IndianNumber::format($item3->rate)}}</td>
+                    <td class="text-center">{{\App\Support\IndianNumber::format($item3->total)}}</td>
                   </tr>
                   @endforeach
                    <tr>
                     <td colspan="2" class="text-uppercase text-end">
                       Total
                     </td>
-                   
+
                     <td class="text-end"></td>
                     <td class="text-end"></td>
                     <td class="text-end"></td>
                     <td class="text-end"></td>
                     @foreach($invoice as $item4)
-                    <td class="text-center">{{ number_format($item4->amountwithtax, 2, '.', ',') }}</td>
+                    <td class="text-center">{{ \App\Support\IndianNumber::format($item4->amountwithtax) }}</td>
                     @endforeach
                   </tr>
-                  <?php if($state == "Gujarat"){ ?>
+                  <?php if($state != "Gujarat"){ ?>
                     <tr>
                       <td colspan="2" class="text-uppercase text-end">
                         IGST(18%)
@@ -220,7 +220,7 @@ $number = $amount;
                       <td class="text-end"></td>
                       <td class="text-end"></td>
                       <td class="text-end"></td>
-                      <td class="text-center">{{ number_format($igsamount, 2, '.', ',') }}</td>
+                      <td class="text-center">{{ \App\Support\IndianNumber::format($igsamount) }}</td>
                     </tr>
                   <?php } else { ?>
                     <tr>
@@ -231,7 +231,7 @@ $number = $amount;
                       <td class="text-end"></td>
                       <td class="text-end"></td>
                       <td class="text-end"></td>
-                      <td class="text-center">{{number_format($sgstamount, 2, '.', ',')}}</td>
+                      <td class="text-center">{{\App\Support\IndianNumber::format($sgstamount)}}</td>
 
                     </tr>
                     <tr>
@@ -242,8 +242,8 @@ $number = $amount;
                       <td class="text-end"></td>
                       <td class="text-end"></td>
                       <td class="text-end"></td>
-                      <td class="text-center">{{ number_format($cgstamount, 2, '.', ',') }}</td>
-                      
+                      <td class="text-center">{{ \App\Support\IndianNumber::format($cgstamount) }}</td>
+
                     </tr>
                   <?php } ?>
                   <tr>
@@ -254,9 +254,9 @@ $number = $amount;
                     <td class="text-end"></td>
                     <td class="text-end"></td>
                     <td class="text-end"></td>
-                    <td class="text-center">{{ number_format($roundof, 2, '.', ',') }}</td>
-                  
-                    
+                    <td class="text-center">{{ \App\Support\IndianNumber::format($roundof) }}</td>
+
+
                   </tr>
                   <tr>
                     <td colspan="2" class="text-uppercase text-end">
@@ -267,7 +267,7 @@ $number = $amount;
                     <td class="text-end"></td>
                     <td class="text-end"></td>
                     @foreach($invoice as $item4)
-                    <td class="text-center">{{ number_format($item4->amount, 2, '.', ',') }}</td>
+                    <td class="text-center">{{ \App\Support\IndianNumber::format($item4->amount) }}</td>
                     @endforeach
                     
                   </tr>

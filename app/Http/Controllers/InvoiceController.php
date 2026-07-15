@@ -88,10 +88,10 @@ class InvoiceController extends Controller
                 $item->id,
                 $item->name,
                 $item->phone,
-                $item->date,
-                $item->amount,
-                $item->paidamount,
-                $item->remaining_amount,
+                $item->date ? date('d-M-y', strtotime($item->date)) : $item->date,
+                \App\Support\IndianNumber::format($item->amount),
+                \App\Support\IndianNumber::format($item->paidamount),
+                \App\Support\IndianNumber::format($item->remaining_amount),
                 $statusHtml,
                 $actionHtml,
             ];
@@ -240,7 +240,7 @@ class InvoiceController extends Controller
             $sgstamount = 0;
             $cgstamount = 0;
             $igsamount = 0;
-            if ($state != "Gujarat") {
+            if ($state == "Gujarat") {
                 $sgstamount = $totalamountwithtax * 0.09;
                 $cgstamount = $totalamountwithtax * 0.09;
             } else {
