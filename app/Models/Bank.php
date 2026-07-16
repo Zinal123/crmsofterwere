@@ -18,6 +18,7 @@ class Bank extends Authenticatable
      * @var string[]
      */
     protected $table  ="bank";
+    const UPDATED_AT = 'update_at';
     protected $fillable = [
         'bankholdername',
         'bankaccountnumber',
