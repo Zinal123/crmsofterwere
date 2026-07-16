@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\User;
 use App\Traits\HandlesAvatarUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
@@ -30,7 +33,25 @@ class HomeController extends Controller
 
     public function root()
     {
-        return view('index');
+        $totalRevenue = Invoice::sum('amountwithtax');
+        $totalInvoices = Invoice::count();
+        $totalCustomers = Customer::count();
+        $pendingPayments = Invoice::sum('remaining_amount');
+
+        $topProducts = DB::table('invoiceproduct')
+            ->join('product', 'invoiceproduct.product_name', '=', 'product.id')
+            ->select('product.id', 'product.name', DB::raw('SUM(invoiceproduct.quantity) as total_qty'), DB::raw('SUM(invoiceproduct.totalamount) as total_revenue'))
+            ->groupBy('product.id', 'product.name')
+            ->orderByDesc('total_revenue')
+            ->limit(5)
+            ->get();
+
+        $recentInvoices = Invoice::join('customer', 'invoice.id', '=', 'customer.invoice_id')
+            ->orderByDesc('invoice.id')
+            ->limit(10)
+            ->get(['invoice.*', 'customer.name as customer_name']);
+
+        return view('index', compact('totalRevenue', 'totalInvoices', 'totalCustomers', 'pendingPayments', 'topProducts', 'recentInvoices'));
     }
 
     /*Language Translation*/
