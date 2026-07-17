@@ -21,10 +21,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $invoice = Invoice::join('customer', 'invoice.id', '=', 'customer.invoice_id','left')->
-        orderBy('id' ,'desc')->get(['invoice.*', 'customer.name' ,'customer.mobile']);
-
-        return view('invoice' ,compact('invoice'));
+        return view('apps-invoices-list');
     }
 
     /**
@@ -150,6 +147,8 @@ class InvoiceController extends Controller
     }
     public function store(Request $request)
     {
+        $request->validate(['placesupply' => 'required|string|max:255']);
+
         $input['invoice_id'] =$request->input('invoice_id');
         $input['date'] = $request->input('invoice_date');
         $input['paycondition'] = $request->input('paycondition');
@@ -165,7 +164,7 @@ class InvoiceController extends Controller
         $input['bankifsccode'] = $request->input('payment_details_card_ifsc_code');
         $input['bankname'] = $request->input('payment_details_bank_name');
         $input['bankbranchname'] = $request->input('payment_details_branch_name');
-        $input['note'] = $request->input('notes');
+        $input['notes'] = $request->input('notes');
         $input['totalamountbeforetax'] = $request->input('order_summary_cart_totalbeforetax');
         $input['amount'] = $request->input('order_summary_cart_amount');
         $input['amountwithtax'] = $request->input('order_summary_cart_total');
@@ -296,10 +295,7 @@ class InvoiceController extends Controller
         }
         public function vender()
         {
-        $vender = Invoice::join('customer', 'invoice.customer_id', '=', 'customer.id','left')
-            ->orderBy('invoice.id', 'desc')
-            ->get(['invoice.*', 'invoice.invoice_id as invoice_id', 'customer.name as cname']);
-        return view('vender' ,compact('vender'));
+        return view('vender');
         }
         
         

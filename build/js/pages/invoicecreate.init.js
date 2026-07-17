@@ -803,6 +803,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     success: function(res) {
                         window.location.href = "https://cms.oraclemachinetech.com/apps-invoices-list";
 
+                    },
+                    error: function(xhr) {
+                        var message = (xhr.responseJSON && xhr.responseJSON.message) || "Something went wrong while saving the invoice. Please check the form and try again.";
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unable to save invoice',
+                            text: message
+                        });
                     }
                 });
 
