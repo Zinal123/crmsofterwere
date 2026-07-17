@@ -21,7 +21,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->text('avatar');
+            // Nullable: the live DB's `avatar` column is `varchar(255) DEFAULT NULL`,
+            // not NOT NULL as this migration originally declared - the schema drifted
+            // from this file at some point. User::$fillable also doesn't include
+            // 'avatar'/'email_verified_at', so the seed insert below silently drops
+            // both via mass assignment; not fixed here to avoid scope creep into the
+            // auth system - documented as a known pre-existing quirk.
+            $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

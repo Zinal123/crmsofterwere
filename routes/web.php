@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('paymenthistry', [App\Http\Controllers\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
     Route::get('apps-invoices-list' ,[App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
     Route::get('vender', [App\Http\Controllers\InvoiceController::class, 'vender'])->name('invoice.vender');
-    Route::get('inventrylist', [App\Http\Controllers\InventryController::class, 'inventry'])->name('invoice.inventrylist');
+    Route::get('inventrylist', [App\Http\Controllers\Inventory\InventryController::class, 'inventry'])->name('invoice.inventrylist');
 });
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
@@ -47,8 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::post('invoicestore' ,[App\Http\Controllers\InvoiceController::class, 'store'])->name('invoice.store');
     Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\InvoiceController::class, 'details'])->name('invoice.details');
 
-    Route::post('inventrystore', [App\Http\Controllers\InventryController::class, 'inventrystore'])->name('inventrystore');
-    Route::post('quantityupdate', [App\Http\Controllers\InventryController::class, 'quantityupdate'])->name('quantityupdate');
+    Route::post('inventrystore', [App\Http\Controllers\Inventory\InventryController::class, 'inventrystore'])->name('inventrystore');
+    Route::post('quantityupdate', [App\Http\Controllers\Inventory\InventryController::class, 'quantityupdate'])->name('quantityupdate');
 
     Route::get('product' ,[App\Http\Controllers\Product\ProductController::class, 'index'])->name('product');
     Route::post('productstore' ,[App\Http\Controllers\Product\ProductController::class, 'productstore'])->name('productstore');
