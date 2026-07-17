@@ -38,19 +38,27 @@
                     </a>
                     
                 </li> <!-- end Dashboard Menu -->
+                @can('products.view')
                 <li class="nav-item">
                     <a href="{{route('product')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Product')</span></a>
                 </li>
+                @endcan
+                @can('invoices.view')
                 <li class="nav-item">
                     <a href="{{route('invoice')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invoice')</span></a>
                 </li>
-                   </li>
-                            <li class="nav-item">
+                @endcan
+                @can('payment-history.view')
+                <li class="nav-item">
                     <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Payment history')</span></a>
                 </li>
+                @endcan
+                @can('inventory.view')
                 <li class="nav-item">
                     <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invtery managemnet')</span></a>
                 </li>
+                @endcan
+                @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Fiber Laser Cutting')
                     </a>
@@ -65,29 +73,37 @@
                             <li class="nav-item">
                                 <a href="{{route('standerconfiglist',1)}}" class="nav-link">@lang('translation.Standerd Config')</a>
                             </li>
+                            @can('quotations.view')
                             <li class="nav-item">
                                 <a href="{{route('generatequtation',1)}}" class="nav-link">@lang('translation.Quation')</a>
-                         
-                    
+                            </li>
+                            @endcan
                         </ul>
                     </div>
                 </li>
+                @endcan
+                @can('quotations.view')
                 <li class="nav-item">
                     <a href="{{route('co2quation',1)}}" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Co2 Laser Cutting')
                     </a>
-                    
-                    
                 </li>
                 <li class="nav-item">
                     <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Quation')</span></a>
                 </li>
-               
-                
-
-                
-
-
-             
+                @endcan
+                @canany(['admin.manage-roles', 'admin.manage-users'])
+                <li class="menu-title"><span>Admin</span></li>
+                @can('admin.manage-roles')
+                <li class="nav-item">
+                    <a href="{{ route('admin.roles.index') }}" class="nav-link"><i class="ri-shield-user-line"></i><span>Roles & Permissions</span></a>
+                </li>
+                @endcan
+                @can('admin.manage-users')
+                <li class="nav-item">
+                    <a href="{{ route('admin.users.index') }}" class="nav-link"><i class="ri-user-settings-line"></i><span>Users</span></a>
+                </li>
+                @endcan
+                @endcanany
 
             </ul>
         </div>
