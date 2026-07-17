@@ -85,6 +85,12 @@ Route::middleware('auth')->group(function () {
         Route::post('admin/roles/{roleId}/toggle-permission', [App\Http\Controllers\Admin\RoleController::class, 'togglePermission'])->name('admin.roles.togglePermission');
         Route::delete('admin/roles/{id}', [App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
     });
+
+    Route::middleware('permission:admin.manage-users')->group(function () {
+        Route::get('admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+        Route::post('admin/users', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.users.store');
+        Route::put('admin/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
+    });
 });
 
 
