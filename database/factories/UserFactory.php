@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -22,6 +23,14 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'is_active' => true,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (\App\Models\User $user) {
+            (new RolesAndPermissionsSeeder())->run();
+            $user->assignRole('Owner');
+        });
     }
 
     /**

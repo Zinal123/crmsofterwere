@@ -24,11 +24,14 @@ class UserModelRolesTest extends TestCase
 
     public function test_user_permission_check_reflects_role_permissions(): void
     {
+        // Uses a role other than 'Owner' because Task 2's UserFactory::configure()
+        // hook now seeds 'Owner' with every permission; a custom, restricted
+        // permission subset needs a role the seeder doesn't touch.
         $user = User::factory()->create();
-        $role = Role::findOrCreate('Owner');
+        $role = Role::findOrCreate('Manager');
         Permission::findOrCreate('invoices.view');
         $role->givePermissionTo('invoices.view');
-        $user->assignRole('Owner');
+        $user->syncRoles(['Manager']);
 
         $this->assertTrue($user->can('invoices.view'));
         $this->assertFalse($user->can('invoices.create'));
