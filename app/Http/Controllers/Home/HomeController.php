@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Home;
 
-use App\Models\Customer;
-use App\Models\Invoice;
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Services\Home\DashboardService;
+use App\Services\Home\UserProfileService;
 use App\Traits\HandlesAvatarUpload;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
@@ -17,6 +14,12 @@ class HomeController extends Controller
 {
     use HandlesAvatarUpload;
     private const ERROR_MESSAGE = 'Something went wrong!';
+
+    public function __construct(
+        private DashboardService $dashboardService,
+        private UserProfileService $profileService,
+    ) {
+    }
 
     /**
      * Show the application dashboard.
@@ -33,25 +36,7 @@ class HomeController extends Controller
 
     public function root()
     {
-        $totalRevenue = Invoice::sum('amountwithtax');
-        $totalInvoices = Invoice::count();
-        $totalCustomers = Customer::count();
-        $pendingPayments = Invoice::sum('remaining_amount');
-
-        $topProducts = DB::table('invoiceproduct')
-            ->join('product', 'invoiceproduct.product_name', '=', 'product.id')
-            ->select('product.id', 'product.name', DB::raw('SUM(invoiceproduct.quantity) as total_qty'), DB::raw('SUM(invoiceproduct.totalamount) as total_revenue'))
-            ->groupBy('product.id', 'product.name')
-            ->orderByDesc('total_revenue')
-            ->limit(5)
-            ->get();
-
-        $recentInvoices = Invoice::join('customer', 'invoice.id', '=', 'customer.invoice_id')
-            ->orderByDesc('invoice.id')
-            ->limit(10)
-            ->get(['invoice.*', 'customer.name as customer_name']);
-
-        return view('index', compact('totalRevenue', 'totalInvoices', 'totalCustomers', 'pendingPayments', 'topProducts', 'recentInvoices'));
+        return view('index', $this->dashboardService->getDashboardViewData());
     }
 
     /*Language Translation*/
@@ -75,32 +60,17 @@ class HomeController extends Controller
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:1024'],
         ]);
 
-        $user = User::find($id);
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
+        $avatarPath = $request->file('avatar') ? $this->storeAvatar($request->file('avatar')) : null;
+        $user = $this->profileService->updateProfile($id, $request->get('name'), $request->get('email'), $avatarPath);
 
-        if ($request->file('avatar')) {
-            $user->avatar = $this->storeAvatar($request->file('avatar'));
-        }
-
-        $user->update();
         if ($user) {
             Session::flash('message', 'User Details Updated successfully!');
             Session::flash('alert-class', 'alert-success');
-            // return response()->json([
-            //     'isSuccess' => true,
-            //     'Message' => "User Details Updated successfully!"
-            // ], 200); // Status code here
             return redirect()->back();
         } else {
             Session::flash('message', self::ERROR_MESSAGE);
             Session::flash('alert-class', 'alert-danger');
-            // return response()->json([
-            //     'isSuccess' => true,
-            //     'Message' => "Something went wrong!"
-            // ], 200); // Status code here
             return redirect()->back();
-
         }
     }
 
@@ -111,29 +81,27 @@ class HomeController extends Controller
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
-        if (!(Hash::check($request->get('current_password'), Auth::user()->password))) {
+        if (!$this->profileService->isCurrentPasswordCorrect($request->get('current_password'))) {
             return response()->json([
                 'isSuccess' => false,
                 'Message' => "Your Current password does not matches with the password you provided. Please try again."
-            ], 200); // Status code
+            ], 200);
         } else {
-            $user = User::find($id);
-            $user->password = Hash::make($request->get('password'));
-            $user->update();
+            $user = $this->profileService->updatePassword($id, $request->get('password'));
             if ($user) {
                 Session::flash('message', 'Password updated successfully!');
                 Session::flash('alert-class', 'alert-success');
                 return response()->json([
                     'isSuccess' => true,
                     'Message' => "Password updated successfully!"
-                ], 200); // Status code here
+                ], 200);
             } else {
                 Session::flash('message', self::ERROR_MESSAGE);
                 Session::flash('alert-class', 'alert-danger');
                 return response()->json([
                     'isSuccess' => true,
                     'Message' => self::ERROR_MESSAGE
-                ], 200); // Status code here
+                ], 200);
             }
         }
     }

@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 //Language Translation
-Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang']);
+Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, 'lang']);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
+Route::get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
 // These 5 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
-// would intercept them first (see app/Http/Controllers/HomeController.php
+// would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
 Route::middleware('auth')->group(function () {
     Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::class, 'create'])->name('invoice.create');
@@ -31,12 +31,12 @@ Route::middleware('auth')->group(function () {
     Route::get('inventrylist', [App\Http\Controllers\Inventory\InventryController::class, 'inventry'])->name('invoice.inventrylist');
 });
 
-Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
+Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])->name('index');
 
 //Update User Details & Auth-protected routes
 Route::middleware('auth')->group(function () {
-    Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
-    Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
+    Route::post('/update-profile/{id}', [App\Http\Controllers\Home\HomeController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('/update-password/{id}', [App\Http\Controllers\Home\HomeController::class, 'updatePassword'])->name('updatePassword');
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation');
     Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 
