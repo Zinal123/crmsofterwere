@@ -27,15 +27,15 @@ Extend Velzon's existing design foundation rather than replace it. Two alternati
 
 ## Design tokens
 
-**Colors** — no new palette. Codify semantic usage rules for Velzon's existing Bootstrap variables, since the audit found these violated repeatedly:
+**Colors** — Velzon's existing Bootstrap variables (`$success`/`$warning`/`$danger`/`$primary`/`$info`) are the starting point, not a hard boundary. Where they genuinely serve consistency and legibility, adjust the underlying SCSS values (e.g. a shade with better contrast for badge text, or a friendlier warning tone) rather than treating the current hex values as fixed — this is a one-time change in `_variables.scss`/`custom.scss` that every component then inherits, not a per-view override. The binding rule is the semantic mapping below, not the specific hex codes:
 
 | Semantic role | Color | Use for |
 |---|---|---|
-| Success | `$success` (`#0ab39c`, green) | Positive states (Paid, Active, Completed) **and all Create/Add actions** |
-| Warning | `$warning` (`#f7b84b`, yellow) | Needs-attention states (Pending, Low Stock) |
-| Danger | `$danger` (`#f06548`, red) | Negative/destructive only (Inactive, Delete, Errors, Overdue) — never for additive actions |
-| Primary | `$primary` (`#405189`, indigo) | Main navigation, primary Save/Submit actions |
-| Info | `$info` (`#299cdb`, cyan) | Neutral in-progress/informational states |
+| Success | green | Positive states (Paid, Active, Completed) **and all Create/Add actions** |
+| Warning | yellow/amber | Needs-attention states (Pending, Low Stock) |
+| Danger | red | Negative/destructive only (Inactive, Delete, Errors, Overdue) — never for additive actions |
+| Primary | indigo/blue | Main navigation, primary Save/Submit actions |
+| Info | cyan | Neutral in-progress/informational states |
 
 This directly fixes: "Create Invoice" currently using `btn-danger` (a destructive color for an additive action), and the Active/Inactive badge using `danger` while Pending uses `warning` with no documented rule connecting them.
 
@@ -47,11 +47,11 @@ This directly fixes: "Create Invoice" currently using `btn-danger` (a destructiv
 
 **Spacing** — no new scale (Bootstrap's 0–5 spacing utilities, 0.25rem increments, already in use throughout). Codify consistent application: card padding, gap between toolbar action buttons, and card-to-card vertical rhythm on a page, all standardized to specific existing utility classes (documented in the component partials themselves, not as a separate abstract rule — see Components below).
 
-**Icons** — standardize on Remix Icon (`ri-*`) for all CRM feature views (already dominant). Migrate `mdi-*`/`bx-*` icons in `layouts/topbar.blade.php` and the `auth-*`/`error` templates to `ri-*` equivalents (direct equivalents exist for every icon currently in use: search, moon/sun toggle, shopping bag, category, close).
+**Icons** — standardize on Remix Icon (`ri-*`) as the one system for all CRM feature views (already dominant, and it has the broadest coverage of the three sets currently mixed in). Migrate `mdi-*`/`bx-*` icons in `layouts/topbar.blade.php` and the `auth-*`/`error` templates to `ri-*` equivalents. Icon choice per action is a usability decision, not just "whatever's already there": pick the icon a non-technical shop-floor or accounts-desk user would recognize fastest (e.g. a plus-in-circle for Create, a pencil for Edit, a trash bin for Delete, a checkmark-circle for Paid/Complete, a clock for Pending) — consistent metaphor across every module, not just consistent icon *set*.
 
 ## Component library
 
-New Blade components under `resources/views/components/ui/`, each replacing a pattern currently copy-pasted with variations across modules:
+New Blade components under `resources/views/components/ui/`, each replacing a pattern currently copy-pasted with variations across modules. Buttons and colors here are likewise not locked to Bootstrap's stock `.btn-*`/`.badge` appearance if a small adjustment (padding, corner radius, font-weight, a tuned color shade) makes actions easier to tell apart at a glance — the component is the single place that change gets made, so it never re-fragments across modules the way the current 5 button styles did.
 
 - **`<x-ui.button>`** — props: `variant` (success/primary/danger/secondary), `size` (sm/md), `icon` (optional `ri-*` class), slot for label. Every "Create X" action becomes `<x-ui.button variant="success" icon="ri-add-line">Create Invoice</x-ui.button>`, fixing the 5-treatment inconsistency in one place.
 - **`<x-ui.status-badge>`** — props: `status` (text), `variant` (success/warning/danger/info, following the semantic table above), `icon` (required — enforces the "never color alone" rule by construction, not convention). Replaces the raw `<span class="badge bg-success-subtle...">` strings currently hand-written in `InvoiceService.php` and `admin/users.blade.php`.
