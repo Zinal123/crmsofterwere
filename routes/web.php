@@ -78,6 +78,13 @@ Route::middleware('auth')->group(function () {
     Route::post('fiberqutation/store' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');
     Route::get('admin/listqutation' ,[App\Http\Controllers\Quotation\QutationController::class, 'index'])->name('listqutation');
     Route::get('/printquation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'print'])->name('quation.pdf');
+
+    Route::middleware('permission:admin.manage-roles')->group(function () {
+        Route::get('admin/roles', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.roles.index');
+        Route::post('admin/roles', [App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.roles.store');
+        Route::post('admin/roles/{roleId}/toggle-permission', [App\Http\Controllers\Admin\RoleController::class, 'togglePermission'])->name('admin.roles.togglePermission');
+        Route::delete('admin/roles/{id}', [App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
+    });
 });
 
 
