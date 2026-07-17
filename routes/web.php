@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 //Language Translation
 Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, 'lang']);
 
