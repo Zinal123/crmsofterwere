@@ -4,7 +4,7 @@
 
 **Goal:** Give this Laravel 10 CRM a database-backed, dynamically-configurable role/permission system (Owner + Worker seed roles, more creatable via UI), an admin screen to manage roles/permissions and users, and route-level enforcement across every existing module — replacing the current state where every logged-in user has identical unrestricted access.
 
-**Architecture:** `spatie/laravel-permission` (no Teams feature) as the RBAC foundation, wired into the existing Controller → Service → Repository pattern via a new `Admin` domain (`RoleController`, `UserController`). Every existing route gets `permission:` middleware matching a fixed 24-permission list grouped by module. Sidebar links are wrapped in `@can(...)`.
+**Architecture:** `spatie/laravel-permission` (no Teams feature) as the RBAC foundation, wired into the existing Controller → Service → Repository pattern via a new `Admin` domain (`RoleController`, `UserController`). Every existing route gets `permission:` middleware matching a fixed 19-permission list grouped by module. Sidebar links are wrapped in `@can(...)`.
 
 **Tech Stack:** Laravel 10, PHP 8.1+, spatie/laravel-permission ^6.0, MySQL (live) + sqlite (`.env.testing`, `RefreshDatabase`), Blade + Bootstrap 5 (existing Velzon template conventions), jQuery for AJAX (matching existing app patterns, e.g. `quantityupdate`).
 
@@ -24,7 +24,7 @@
   admin.manage-roles
   admin.manage-users
   ```
-- Owner role: all 24 permissions. Worker role: zero permissions (job-tracking permissions attached to it in a future, separate feature).
+- Owner role: all 19 permissions. Worker role: zero permissions (job-tracking permissions attached to it in a future, separate feature).
 - `RefreshDatabase` + spatie/laravel-permission has a known gotcha: Spatie caches loaded permissions across the whole PHPUnit process, but `RefreshDatabase` rolls back per-test via a DB transaction — stale cache from an earlier test can leak into a later one. Every task that touches permissions resets the cache in `setUp()` (Task 1 adds this once, globally, to the base `TestCase`).
 
 ---
@@ -249,7 +249,7 @@ RefreshDatabase + Spatie caching gotcha in later tests."
 
 **Interfaces:**
 - Consumes: `Role`/`Permission` models from Task 1's installed package.
-- Produces: `RolesAndPermissionsSeeder::PERMISSIONS` (public array constant, the single source of truth for the 24 permission names — Task 4/5/6 route middleware and Task 4's matrix UI both read from this instead of re-declaring the list). `RolesAndPermissionsSeeder::run()` is idempotent (safe to call repeatedly). `User::factory()` now creates users with the `Owner` role and every permission already assigned (matches current reality — one access level today), via a `configure()` afterCreating hook.
+- Produces: `RolesAndPermissionsSeeder::PERMISSIONS` (public array constant, the single source of truth for the 19 permission names — Task 4/5/6 route middleware and Task 4's matrix UI both read from this instead of re-declaring the list). `RolesAndPermissionsSeeder::run()` is idempotent (safe to call repeatedly). `User::factory()` now creates users with the `Owner` role and every permission already assigned (matches current reality — one access level today), via a `configure()` afterCreating hook.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -273,7 +273,7 @@ class RolesAndPermissionsSeederTest extends TestCase
     {
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(24, Permission::all());
+        $this->assertCount(19, Permission::all());
         $this->assertTrue(Permission::where('name', 'invoices.view')->exists());
         $this->assertTrue(Permission::where('name', 'admin.manage-roles')->exists());
     }
@@ -284,7 +284,7 @@ class RolesAndPermissionsSeederTest extends TestCase
 
         $owner = Role::findByName('Owner');
 
-        $this->assertCount(24, $owner->permissions);
+        $this->assertCount(19, $owner->permissions);
     }
 
     public function test_worker_role_gets_no_permissions(): void
@@ -301,7 +301,7 @@ class RolesAndPermissionsSeederTest extends TestCase
         (new RolesAndPermissionsSeeder())->run();
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(24, Permission::all());
+        $this->assertCount(19, Permission::all());
         $this->assertCount(2, Role::all());
     }
 
@@ -430,7 +430,7 @@ Expected: all previously-passing tests (24 from before this feature) still pass 
 git add database/seeders/RolesAndPermissionsSeeder.php database/seeders/DatabaseSeeder.php database/factories/UserFactory.php tests/Feature/RolesAndPermissionsSeederTest.php
 git commit -m "Add RolesAndPermissionsSeeder; UserFactory now assigns Owner role
 
-Single source of truth for the 24-permission list. UserFactory's
+Single source of truth for the 19-permission list. UserFactory's
 afterCreating hook keeps every existing and new test working once
 permission middleware is added in a later task, without each test
 needing to know about roles."
@@ -1791,7 +1791,7 @@ Expected: the two new migrations (Spatie's permission tables, `is_active` column
 ```bash
 php artisan db:seed --class=RolesAndPermissionsSeeder
 ```
-Expected: creates the 24 permissions and Owner/Worker roles on the live DB (idempotent — safe if run again later).
+Expected: creates the 19 permissions and Owner/Worker roles on the live DB (idempotent — safe if run again later).
 
 - [ ] **Step 4: One-time: assign Owner role to the 3 existing real accounts**
 

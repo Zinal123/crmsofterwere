@@ -78,7 +78,7 @@ Per-action, grouped by existing module — only for modules that exist today:
 | Admin: Roles | `admin.manage-roles` |
 | Admin: Users | `admin.manage-users` |
 
-24 permissions total. Job-tracking permissions are deliberately excluded (see header note).
+19 permissions total. Job-tracking permissions are deliberately excluded (see header note).
 
 ## Seed roles
 
