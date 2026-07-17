@@ -18,6 +18,11 @@ class EloquentProductRepository implements ProductRepositoryInterface
         return $this->tenantScope->apply(Product::orderBy('id', 'desc'))->get();
     }
 
+    public function find($id): ?Product
+    {
+        return $this->tenantScope->apply(Product::query())->find($id);
+    }
+
     public function create(array $data): Product
     {
         return Product::create($data);

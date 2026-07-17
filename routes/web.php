@@ -24,10 +24,10 @@ Route::get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name
 // would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
 Route::middleware('auth')->group(function () {
-    Route::get('apps-invoices-create' ,[App\Http\Controllers\InvoiceController::class, 'create'])->name('invoice.create');
-    Route::get('paymenthistry', [App\Http\Controllers\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
-    Route::get('apps-invoices-list' ,[App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
-    Route::get('vender', [App\Http\Controllers\InvoiceController::class, 'vender'])->name('invoice.vender');
+    Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create');
+    Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry');
+    Route::get('apps-invoices-list' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'index'])->name('invoice');
+    Route::get('vender', [App\Http\Controllers\Invoice\InvoiceController::class, 'vender'])->name('invoice.vender');
     Route::get('inventrylist', [App\Http\Controllers\Inventory\InventryController::class, 'inventry'])->name('invoice.inventrylist');
 });
 
@@ -40,12 +40,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation');
     Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 
-    Route::get('apps-invoices-list/data' ,[App\Http\Controllers\InvoiceController::class, 'listData'])->name('invoice.data');
-    Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\InvoiceController::class, 'getproduct'])->name('invoice.product');
-    Route::get('admin/invoice/getproduct1' ,[App\Http\Controllers\InvoiceController::class, 'getproductvalue1'])->name('invoice.product1');
-    Route::post('update-payment', [App\Http\Controllers\InvoiceController::class, 'updatePayment']);
-    Route::post('invoicestore' ,[App\Http\Controllers\InvoiceController::class, 'store'])->name('invoice.store');
-    Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\InvoiceController::class, 'details'])->name('invoice.details');
+    Route::get('apps-invoices-list/data' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'listData'])->name('invoice.data');
+    Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'getproduct'])->name('invoice.product');
+    Route::get('admin/invoice/getproduct1' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'getproductvalue1'])->name('invoice.product1');
+    Route::post('update-payment', [App\Http\Controllers\Invoice\InvoiceController::class, 'updatePayment']);
+    Route::post('invoicestore' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'store'])->name('invoice.store');
+    Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'details'])->name('invoice.details');
 
     Route::post('inventrystore', [App\Http\Controllers\Inventory\InventryController::class, 'inventrystore'])->name('inventrystore');
     Route::post('quantityupdate', [App\Http\Controllers\Inventory\InventryController::class, 'quantityupdate'])->name('quantityupdate');

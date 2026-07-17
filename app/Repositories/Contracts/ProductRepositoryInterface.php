@@ -9,6 +9,8 @@ interface ProductRepositoryInterface
 {
     public function allOrderedByLatest(): Collection;
 
+    public function find($id): ?Product;
+
     public function create(array $data): Product;
 
     public function delete($id): void;
