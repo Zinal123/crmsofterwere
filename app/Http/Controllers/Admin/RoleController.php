@@ -31,14 +31,22 @@ class RoleController extends Controller
 
     public function togglePermission(Request $request, $roleId)
     {
-        $granted = $this->service->togglePermission($roleId, $request->input('permission'));
+        try {
+            $granted = $this->service->togglePermission($roleId, $request->input('permission'));
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return response()->json(['granted' => $granted]);
     }
 
     public function destroy($id)
     {
-        $this->service->deleteRole($id);
+        try {
+            $this->service->deleteRole($id);
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('admin.roles.index')->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.roles.index')->with('success', 'Role deleted.');
     }
