@@ -17,7 +17,7 @@ Auth::routes();
 //Language Translation
 Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, 'lang']);
 
-Route::get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
+Route::middleware('auth')->get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
 // These 5 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
