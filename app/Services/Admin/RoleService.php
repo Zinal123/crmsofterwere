@@ -41,7 +41,7 @@ class RoleService
             throw new \InvalidArgumentException('The Owner role cannot be deleted.');
         }
 
-        if ($role->users()->count() > 0) {
+        if ($this->repository->hasAssignedUsers($id)) {
             throw new \InvalidArgumentException('This role has users assigned to it. Reassign those users before deleting the role.');
         }
 

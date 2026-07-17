@@ -27,4 +27,9 @@ class EloquentRoleRepository implements RoleRepositoryInterface
     {
         Role::find($id)?->delete();
     }
+
+    public function hasAssignedUsers($roleId): bool
+    {
+        return Role::find($roleId)?->users()->exists() ?? false;
+    }
 }

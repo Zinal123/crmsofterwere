@@ -60,9 +60,6 @@ class UserService
             return false;
         }
 
-        return User::role('Owner')
-            ->where('is_active', true)
-            ->where('id', '!=', $user->id)
-            ->doesntExist();
+        return !$this->repository->hasOtherActiveOwner($user->id);
     }
 }

@@ -14,4 +14,6 @@ interface UserRepositoryInterface
     public function create(array $data): User;
 
     public function save(User $user): void;
+
+    public function hasOtherActiveOwner($excludeUserId): bool;
 }

@@ -32,4 +32,12 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         $user->save();
     }
+
+    public function hasOtherActiveOwner($excludeUserId): bool
+    {
+        return $this->tenantScope->apply(User::role('Owner'))
+            ->where('is_active', true)
+            ->where('id', '!=', $excludeUserId)
+            ->exists();
+    }
 }
