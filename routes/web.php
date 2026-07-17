@@ -37,8 +37,8 @@ Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware('auth')->group(function () {
     Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
-    Route::get('/co2quation/{id}' ,[App\Http\Controllers\QutationController::class,'Co2quation'])->name('co2quation');
-    Route::post('/co2quationstore' ,[App\Http\Controllers\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
+    Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation');
+    Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore');
 
     Route::get('apps-invoices-list/data' ,[App\Http\Controllers\InvoiceController::class, 'listData'])->name('invoice.data');
     Route::get('admin/invoice/getproductvalue' ,[App\Http\Controllers\InvoiceController::class, 'getproduct'])->name('invoice.product');
@@ -74,10 +74,10 @@ Route::middleware('auth')->group(function () {
     Route::post('rack/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackstore'])->name('rackstore');
     Route::post('Software/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softwarestore'])->name('softwarestore');
 
-    Route::get('fiberqutation/{id}' ,[App\Http\Controllers\QutationController::class, 'generatequtation'])->name('generatequtation');
-    Route::post('fiberqutation/store' ,[App\Http\Controllers\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');
-    Route::get('admin/listqutation' ,[App\Http\Controllers\QutationController::class, 'index'])->name('listqutation');
-    Route::get('/printquation/{id}', [App\Http\Controllers\QutationController::class, 'print'])->name('quation.pdf');
+    Route::get('fiberqutation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtation'])->name('generatequtation');
+    Route::post('fiberqutation/store' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtationstore'])->name('generatequtationstore');
+    Route::get('admin/listqutation' ,[App\Http\Controllers\Quotation\QutationController::class, 'index'])->name('listqutation');
+    Route::get('/printquation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'print'])->name('quation.pdf');
 });
 
 

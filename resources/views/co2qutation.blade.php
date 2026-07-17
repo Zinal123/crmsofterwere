@@ -23,20 +23,6 @@ Qutation
 
 @endslot
 @endcomponent
-<?php
-  $product = 1;
-  $softeredetails = App\Models\Softerwere::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $lasercutting = App\Models\Lasercutting::where('product_id' ,1)->orderBy('id' ,'desc')->get('modal');
-  $fource = App\Models\Fource::where('product_id' ,$product)->orderBy('id' ,'desc')->get('modal');
-  $power= App\Models\Power::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $cutting= App\Models\Cutting::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $cnsthinks = App\Models\Cnsthinks::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $motor =App\Models\Motor::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $gear = App\Models\Gear::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $rack = App\Models\Rack::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-  $softere = App\Models\Softerwere1::where('product_id' ,$product)->orderBy('id' ,'desc')->get();
-
-?>
 <div class="row">
     <div class="col-lg-12">
         <div class="card" id="invoiceList">
