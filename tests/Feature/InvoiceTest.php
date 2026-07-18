@@ -89,6 +89,17 @@ class InvoiceTest extends TestCase
         $response->assertSee('ri-time-line', false);
     }
 
+    public function test_invoice_list_datatable_has_processing_and_language_config(): void
+    {
+        $user = \App\Models\User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice'));
+
+        $response->assertOk();
+        $response->assertSee('processing: true', false);
+        $response->assertSee('emptyTable', false);
+    }
+
     public function test_invoicestore_creates_invoice_customer_and_products(): void
     {
         $user = User::factory()->create();

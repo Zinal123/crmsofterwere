@@ -138,6 +138,7 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
 document.addEventListener('DOMContentLoaded', function() {
     new DataTable('#example', {
         serverSide: true,
+        processing: true,
         ajax: '{{ route("invoice.data") }}',
         columns: [
             { data: 0, orderable: true, searchable: true },
@@ -149,7 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
             { data: 6, orderable: true, searchable: true },
             { data: 7, orderable: false, searchable: false },
             { data: 8, orderable: false, searchable: false }
-        ]
+        ],
+        language: {
+            processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+            emptyTable: 'No invoices yet.',
+            zeroRecords: 'No matching invoices found.',
+            search: 'Search invoices:',
+        }
     });
 });
 
