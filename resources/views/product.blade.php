@@ -25,15 +25,15 @@ list view
                     <h5 class="card-title mb-0 flex-grow-1">Invoices</h5>
                     <div class="flex-shrink-0">
                         <div class="d-flex gap-2 flex-wrap">
-                            <button class="btn btn-primary" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                           
+                            <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected products" />
+
                         </div>
                     </div>
                 </div>
             </div>
             <div class = "row">
                 <div class = "col-md-6" style="text-align:right;margin-left: 666px;">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Product</button>
+                <x-ui.button variant="success" size="sm" icon="ri-add-line" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Product</x-ui.button>
                 </div>
             </div>
            <br>

@@ -22,7 +22,7 @@ Roles & Permissions
                     <div class="mb-2">
                         <input type="text" class="form-control" name="name" placeholder="Role name" required>
                     </div>
-                    <button type="submit" class="btn btn-success">Create</button>
+                    <x-ui.button type="submit" variant="success" icon="ri-add-line">Create Role</x-ui.button>
                 </form>
             </div>
         </div>

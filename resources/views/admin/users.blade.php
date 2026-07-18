@@ -40,7 +40,7 @@ Users
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success">Create User</button>
+                    <x-ui.button type="submit" variant="success" icon="ri-add-line">Create User</x-ui.button>
                 </form>
             </div>
         </div>

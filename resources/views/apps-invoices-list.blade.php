@@ -30,8 +30,8 @@ list view
                     <h5 class="card-title mb-0 flex-grow-1">Invoices</h5>
                     <div class="flex-shrink-0">
                         <div class="d-flex gap-2 flex-wrap">
-                            <button class="btn btn-primary" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                            <a href="{{route('invoice.create')}}" class="btn btn-danger"><i class="ri-add-line align-bottom me-1"></i> Create Invoice</a>
+                            <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected invoices" />
+                            <a href="{{route('invoice.create')}}" class="btn btn-success"><i class="ri-add-line align-bottom me-1"></i> Create Invoice</a>
                         </div>
                     </div>
                 </div>
