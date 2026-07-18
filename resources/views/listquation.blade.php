@@ -26,17 +26,9 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card" id="invoiceList">
-            <div class="card-header border-0">
-                <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Qutation</h5>
-                    
-                </div>
-            </div>
-            <div class="card-body bg-light-subtle border border-dashed border-start-0 border-end-0">
-                <div class="row">
-                 <div class = "col-lg-12">
-                    <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+        <x-ui.data-table-card title="Quotations">
+            <div class="table-responsive">
+                <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                     style="width:100%">
                     <thead>
                         <tr>
@@ -69,12 +61,8 @@
                         @endforeach
                     </tbody>
                 </table>
-                 </div>
-                   
-                </div> <!-- end row-->
             </div>
-           
-        </div>
+        </x-ui.data-table-card>
 
     </div>
     <!--end col-->

@@ -24,24 +24,13 @@ list view
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card" id="invoiceList">
-            <div class="card-header border-0">
-                <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Invoices</h5>
-                    <div class="flex-shrink-0">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected invoices" />
-                            <a href="{{route('invoice.create')}}" class="btn btn-success"><i class="ri-add-line align-bottom me-1"></i> Create Invoice</a>
-                        </div>
-                    </div>
-                </div>
+        <x-ui.data-table-card title="Invoices" :create-route="route('invoice.create')" create-label="Create Invoice">
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected invoices" />
             </div>
-           
-            <div class="card-body">
-                <div>
-                    <div class="table-responsive table-card">
-                        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                        style="width:100%">
+            <div class="table-responsive">
+                <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                style="width:100%">
                             <thead class="text-muted">
                                 <tr>
                                     
@@ -64,15 +53,11 @@ list view
                             </thead>
                             <tbody class="list form-check-all" id="invoice-list-data">
                             </tbody>
-                        </table>
-                       
-                        
-                    </div>
-                    
-                </div>
+                </table>
+            </div>
 
-                <!-- Modal -->
-                <x-ui.confirm-modal record-type="invoice" />
+            <!-- Modal -->
+            <x-ui.confirm-modal record-type="invoice" />
                 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -106,9 +91,8 @@ list view
                         </div>
                     </div>
                 </div>
-                <!--end modal -->
-            </div>
-        </div>
+            <!--end modal -->
+        </x-ui.data-table-card>
 
     </div>
     <!--end col-->

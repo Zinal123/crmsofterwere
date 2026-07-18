@@ -34,29 +34,14 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card" id="invoiceList">
-            <div class="card-header border-0">
-                <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">inventrylist</h5>
-                    <div class="flex-shrink-0">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected items" />
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class = "row">
-                <div class = "col-md-6" style="text-align:right;margin-left: 666px;">
+        <x-ui.data-table-card title="Inventory">
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected items" />
                 <x-ui.button variant="success" icon="ri-add-line" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Inventry</x-ui.button>
-                </div>
             </div>
-           <br>
-            <div class="card-body">
-                <div>
-                    <div class="table-responsive table-card">
-                        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                        style="width:100%">
+            <div class="table-responsive">
+                <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                style="width:100%">
                             <thead class="text-muted">
                                 <tr>
                                     
@@ -96,15 +81,11 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
                                  </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                       
-                        
-                    </div>
-                    
-                </div>
+                </table>
+            </div>
 
-                <!-- Modal -->
-                <x-ui.confirm-modal record-type="inventory item" />
+            <!-- Modal -->
+            <x-ui.confirm-modal record-type="inventory item" />
                 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -190,8 +171,7 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+        </x-ui.data-table-card>
 
     </div>
     <!--end col-->

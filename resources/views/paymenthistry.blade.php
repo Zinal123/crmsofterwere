@@ -24,24 +24,13 @@ list view
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card" id="invoiceList">
-            <div class="card-header border-0">
-                <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Payment histry</h5>
-                    <div class="flex-shrink-0">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <button class="btn btn-primary" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                            
-                        </div>
-                    </div>
-                </div>
+        <x-ui.data-table-card title="Payment History">
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                <button class="btn btn-primary" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
             </div>
-           
-            <div class="card-body">
-                <div>
-                    <div class="table-responsive table-card">
-                        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                        style="width:100%">
+            <div class="table-responsive">
+                <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                style="width:100%">
                             <thead class="text-muted">
                                 <tr>
                                     
@@ -70,15 +59,11 @@ list view
                                  </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                       
-                        
-                    </div>
-                    
-                </div>
+                </table>
+            </div>
 
-                <!-- Modal -->
-                <div class="modal fade flip" id="deleteOrder" tabindex="-1" aria-labelledby="deleteOrderLabel" aria-hidden="true">
+            <!-- Modal -->
+            <div class="modal fade flip" id="deleteOrder" tabindex="-1" aria-labelledby="deleteOrderLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-body p-5 text-center">
@@ -131,9 +116,8 @@ list view
                         </div>
                     </div>
                 </div>
-                <!--end modal -->
-            </div>
-        </div>
+            <!--end modal -->
+        </x-ui.data-table-card>
 
     </div>
     <!--end col-->
