@@ -14,6 +14,7 @@ class JobController extends Controller
         private JobService $service,
         private MachineService $machineService,
         private JobRepositoryInterface $repository,
+        private \App\Services\Job\JobPhotoService $photoService,
     ) {
     }
 
@@ -151,5 +152,27 @@ class JobController extends Controller
         }
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job resumed.');
+    }
+
+    public function storePhoto(Request $request, $id)
+    {
+        $data = $request->validate([
+            'photo' => 'required|image|max:10240',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+        ]);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+        abort_unless($job->assigned_to === $request->user()->id || $request->user()->can('jobs.assign'), 403);
+
+        $this->photoService->upload(
+            $job,
+            $request->user(),
+            $request->file('photo'),
+            isset($data['latitude']) ? (float) $data['latitude'] : null,
+            isset($data['longitude']) ? (float) $data['longitude'] : null,
+        );
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Photo uploaded.');
     }
 }

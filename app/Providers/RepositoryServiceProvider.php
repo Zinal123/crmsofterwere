@@ -6,6 +6,7 @@ use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\DashboardRepositoryInterface;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
+use App\Repositories\Contracts\JobPhotoRepositoryInterface;
 use App\Repositories\Contracts\JobRepositoryInterface;
 use App\Repositories\Contracts\MachineRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
@@ -17,6 +18,7 @@ use App\Repositories\Eloquent\EloquentBankRepository;
 use App\Repositories\Eloquent\EloquentDashboardRepository;
 use App\Repositories\Eloquent\EloquentInventoryRepository;
 use App\Repositories\Eloquent\EloquentInvoiceRepository;
+use App\Repositories\Eloquent\EloquentJobPhotoRepository;
 use App\Repositories\Eloquent\EloquentJobRepository;
 use App\Repositories\Eloquent\EloquentMachineRepository;
 use App\Repositories\Eloquent\EloquentProductConfigRepository;
@@ -41,5 +43,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, EloquentRoleRepository::class);
         $this->app->bind(MachineRepositoryInterface::class, EloquentMachineRepository::class);
         $this->app->bind(JobRepositoryInterface::class, EloquentJobRepository::class);
+        $this->app->bind(JobPhotoRepositoryInterface::class, EloquentJobPhotoRepository::class);
     }
 }

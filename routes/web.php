@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::post('jobs/{id}/start', [App\Http\Controllers\Job\JobController::class, 'start'])->name('jobs.start')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/hold', [App\Http\Controllers\Job\JobController::class, 'hold'])->name('jobs.hold')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/resume', [App\Http\Controllers\Job\JobController::class, 'resume'])->name('jobs.resume')->middleware('permission:jobs.view-own|jobs.view-all');
+    Route::post('jobs/{id}/photos', [App\Http\Controllers\Job\JobController::class, 'storePhoto'])->name('jobs.photos.store')->middleware('permission:jobs.view-own|jobs.view-all');
 });
 
 
