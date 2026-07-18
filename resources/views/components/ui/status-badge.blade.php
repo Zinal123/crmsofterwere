@@ -1,3 +1,6 @@
+{{-- Server-side raw-HTML contexts (e.g. DataTables AJAX payloads) that can't
+     use Blade component syntax should mirror this exact output via
+     App\Support\StatusBadge::render() - keep both in sync if either changes. --}}
 @php
     if (empty($icon)) {
         throw new \InvalidArgumentException('<x-ui.status-badge> requires an icon prop - status must never be color-only.');
