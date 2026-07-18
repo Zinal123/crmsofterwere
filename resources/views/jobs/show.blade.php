@@ -68,6 +68,67 @@
                 @endif
             @endif
 
+            @can('jobs.approve')
+                @if($job->status === 'pending_approval')
+                    <div class="d-flex gap-2 my-3">
+                        <form action="{{ route('jobs.approve', $job->id) }}" method="POST">
+                            @csrf
+                            <x-ui.button variant="success" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Approve job">Approve</x-ui.button>
+                        </form>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectJobModal">
+                            <i class="ri-close-circle-line"></i> Reject
+                        </button>
+                    </div>
+                    <div class="modal fade" id="rejectJobModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="{{ route('jobs.reject', $job->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header"><h5 class="modal-title">Reject Job</h5></div>
+                                    <div class="modal-body">
+                                        <label class="form-label" for="reject-reason">Reason (required)</label>
+                                        <textarea id="reject-reason" name="rejection_reason" class="form-control" required></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-ui.button>
+                                        <x-ui.button variant="danger" type="submit">Confirm Reject</x-ui.button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endcan
+
+            @can('jobs.assign')
+                @if(in_array($job->status, ['assigned', 'in_progress', 'on_hold']))
+                    <form action="{{ route('jobs.reassign', $job->id) }}" method="POST" class="d-flex gap-2 align-items-end my-3">
+                        @csrf
+                        <div>
+                            <label class="form-label" for="reassign-to">Reassign to</label>
+                            <select id="reassign-to" name="assigned_to" class="form-select">
+                                @foreach($workers as $worker)
+                                    <option value="{{ $worker->id }}" @selected($worker->id === $job->assigned_to)>{{ $worker->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <x-ui.button variant="secondary" type="submit" icon="ri-user-shared-line" ariaLabel="Reassign job">Reassign</x-ui.button>
+                    </form>
+                @endif
+            @endcan
+
+            @can('jobs.view-all')
+                <h6 class="mt-4">Audit Trail</h6>
+                <ul class="list-group">
+                    @foreach($job->auditLogs()->orderBy('created_at')->get() as $log)
+                        <li class="list-group-item">
+                            <strong>{{ $log->user->name }}</strong> &mdash; {{ $log->description }}
+                            <span class="text-muted small float-end">{{ $log->created_at->format('d M Y, H:i') }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endcan
+
             <h6 class="mt-4">Photos</h6>
             <div class="row g-2">
                 @forelse($job->photos as $photo)

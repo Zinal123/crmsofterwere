@@ -71,7 +71,9 @@ class JobController extends Controller
             403
         );
 
-        return view('jobs.show', compact('job'));
+        $workers = $this->userRepository->byRole('Worker');
+
+        return view('jobs.show', compact('job', 'workers'));
     }
 
     public function approve(Request $request, $id)

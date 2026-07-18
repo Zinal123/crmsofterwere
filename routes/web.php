@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('product' ,[App\Http\Controllers\Product\ProductController::class, 'index'])->name('product')->middleware('permission:products.view');
     Route::get('machines', [App\Http\Controllers\Job\MachineController::class, 'index'])->name('machines.index')->middleware('permission:jobs.manage-machines');
     Route::get('jobs', [App\Http\Controllers\Job\JobController::class, 'index'])->name('jobs.index')->middleware('permission:jobs.view-own|jobs.view-all');
+    Route::get('jobs-pending-approval', [App\Http\Controllers\Job\JobController::class, 'pendingApproval'])->name('jobs.pending-approval')->middleware('permission:jobs.approve');
 });
 
 Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])->name('index');
@@ -101,7 +102,6 @@ Route::middleware('auth')->group(function () {
     Route::get('jobs/create', [App\Http\Controllers\Job\JobController::class, 'create'])->name('jobs.create')->middleware('permission:jobs.create|jobs.assign');
     Route::post('jobs', [App\Http\Controllers\Job\JobController::class, 'store'])->name('jobs.store')->middleware('permission:jobs.create|jobs.assign');
     Route::get('jobs/{id}', [App\Http\Controllers\Job\JobController::class, 'show'])->name('jobs.show')->middleware('permission:jobs.view-own|jobs.view-all');
-    Route::get('jobs-pending-approval', [App\Http\Controllers\Job\JobController::class, 'pendingApproval'])->name('jobs.pending-approval')->middleware('permission:jobs.approve');
     Route::post('jobs/{id}/approve', [App\Http\Controllers\Job\JobController::class, 'approve'])->name('jobs.approve')->middleware('permission:jobs.approve');
     Route::post('jobs/{id}/reject', [App\Http\Controllers\Job\JobController::class, 'reject'])->name('jobs.reject')->middleware('permission:jobs.approve');
     Route::post('jobs/{id}/start', [App\Http\Controllers\Job\JobController::class, 'start'])->name('jobs.start')->middleware('permission:jobs.view-own|jobs.view-all');

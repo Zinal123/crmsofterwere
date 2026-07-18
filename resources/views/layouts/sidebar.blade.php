@@ -65,6 +65,13 @@
                     </a>
                 </li>
                 @endcan
+                @can('jobs.approve')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('jobs.pending-approval') }}">
+                        <i class="ri-inbox-line"></i> <span>Pending Approval</span>
+                    </a>
+                </li>
+                @endcan
                 @can('jobs.manage-machines')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('machines.index') }}">
