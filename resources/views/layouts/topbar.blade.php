@@ -35,8 +35,8 @@
                 <form class="app-search d-none d-md-block">
                     <div class="position-relative">
                         <input type="text" class="form-control" placeholder="Search..." autocomplete="off" id="search-options" value="">
-                        <span class="mdi mdi-magnify search-widget-icon"></span>
-                        <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none" id="search-close-options"></span>
+                        <span class="ri-search-line search-widget-icon"></span>
+                        <span class="ri-close-circle-line search-widget-icon search-widget-icon-close d-none" id="search-close-options"></span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
                         <div data-simplebar style="max-height: 320px;">
@@ -46,8 +46,8 @@
                             </div>
 
                             <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="index" class="btn btn-soft-secondary btn-sm rounded-pill">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="index" class="btn btn-soft-secondary btn-sm rounded-pill">buttons <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="index" class="btn btn-soft-secondary btn-sm rounded-pill">how to setup <i class="ri-search-line ms-1"></i></a>
+                                <a href="index" class="btn btn-soft-secondary btn-sm rounded-pill">buttons <i class="ri-search-line ms-1"></i></a>
                             </div>
                             <!-- item-->
                             <div class="dropdown-header mt-2">
@@ -122,14 +122,14 @@
 
                 <div class="dropdown d-md-none topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bx bx-search fs-22"></i>
+                        <i class="ri-search-line fs-22"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-search-dropdown">
                         <form class="p-3">
                             <div class="form-group m-0">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
-                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                    <button class="btn btn-primary" type="submit"><i class="ri-search-line"></i></button>
                                 </div>
                             </div>
                         </form>
@@ -152,7 +152,7 @@
 
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class='bx bx-category-alt fs-22'></i>
+                        <i class='ri-apps-2-line fs-22'></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg p-0 dropdown-menu-end">
                         <div class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border">
@@ -215,7 +215,7 @@
 
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" id="page-header-cart-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                        <i class='bx bx-shopping-bag fs-22'></i>
+                        <i class='ri-shopping-bag-3-line fs-22'></i>
                         <span class="position-absolute topbar-badge cartitem-badge fs-10 translate-middle badge rounded-pill bg-info">5</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart" aria-labelledby="page-header-cart-dropdown">
@@ -235,7 +235,7 @@
                                 <div class="text-center empty-cart" id="empty-cart">
                                     <div class="avatar-md mx-auto my-3">
                                         <div class="avatar-title bg-info-subtle text-info fs-36 rounded-circle">
-                                            <i class='bx bx-cart'></i>
+                                            <i class='ri-shopping-cart-2-line'></i>
                                         </div>
                                     </div>
                                     <h5 class="mb-3">Your Cart is Empty!</h5>
@@ -362,19 +362,19 @@
 
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
-                        <i class='bx bx-fullscreen fs-22'></i>
+                        <i class='ri-fullscreen-line fs-22'></i>
                     </button>
                 </div>
 
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
-                        <i class='bx bx-moon fs-22'></i>
+                        <i class='ri-moon-line fs-22'></i>
                     </button>
                 </div>
 
                 <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                        <i class='bx bx-bell fs-22'></i>
+                        <i class='ri-notification-3-line fs-22'></i>
                         <span class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">3<span class="visually-hidden">unread messages</span></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
@@ -420,7 +420,7 @@
                                         <div class="d-flex">
                                             <div class="avatar-xs me-3 flex-shrink-0">
                                                 <span class="avatar-title bg-info-subtle text-info rounded-circle fs-16">
-                                                    <i class="bx bx-badge-check"></i>
+                                                    <i class="ri-checkbox-circle-line"></i>
                                                 </span>
                                             </div>
                                             <div class="flex-grow-1">
@@ -431,7 +431,7 @@
                                                     </h6>
                                                 </a>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> Just 30 sec ago</span>
+                                                    <span><i class="ri-time-line"></i> Just 30 sec ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -455,7 +455,7 @@
                                                         graph 🔔.</p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 48 min ago</span>
+                                                    <span><i class="ri-time-line"></i> 48 min ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -471,7 +471,7 @@
                                         <div class="d-flex">
                                             <div class="avatar-xs me-3 flex-shrink-0">
                                                 <span class="avatar-title bg-danger-subtle text-danger rounded-circle fs-16">
-                                                    <i class='bx bx-message-square-dots'></i>
+                                                    <i class='ri-chat-3-line'></i>
                                                 </span>
                                             </div>
                                             <div class="flex-grow-1">
@@ -480,7 +480,7 @@
                                                     </h6>
                                                 </a>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 2 hrs ago</span>
+                                                    <span><i class="ri-time-line"></i> 2 hrs ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -503,7 +503,7 @@
                                                     <p class="mb-1">We talked about a project on linkedin.</p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 4 hrs ago</span>
+                                                    <span><i class="ri-time-line"></i> 4 hrs ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -536,7 +536,7 @@
                                                     <p class="mb-1">We talked about a project on linkedin.</p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 30 min ago</span>
+                                                    <span><i class="ri-time-line"></i> 30 min ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -560,7 +560,7 @@
                                                         graph 🔔.</p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 2 hrs ago</span>
+                                                    <span><i class="ri-time-line"></i> 2 hrs ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -584,7 +584,7 @@
                                                     </p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 10 hrs ago</span>
+                                                    <span><i class="ri-time-line"></i> 10 hrs ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -607,7 +607,7 @@
                                                     <p class="mb-1">We talked about a project on linkedin.</p>
                                                 </div>
                                                 <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 3 days ago</span>
+                                                    <span><i class="ri-time-line"></i> 3 days ago</span>
                                                 </p>
                                             </div>
                                             <div class="px-2 fs-15">
@@ -649,15 +649,15 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">Welcome Anna!</h6>
-                        <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
-                        <a class="dropdown-item" href="apps-chat"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
-                        <a class="dropdown-item" href="apps-tasks-kanban"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
-                        <a class="dropdown-item" href="pages-faqs"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
+                        <a class="dropdown-item" href="pages-profile"><i class="ri-user-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+                        <a class="dropdown-item" href="apps-chat"><i class="ri-message-3-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
+                        <a class="dropdown-item" href="apps-tasks-kanban"><i class="ri-calendar-check-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
+                        <a class="dropdown-item" href="pages-faqs"><i class="ri-lifebuoy-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>₹5971.67</b></span></a>
-                        <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
-                        <a class="dropdown-item" href="auth-lockscreen-basic"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
-                        <button type="button" class="dropdown-item " onclick="document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></button>
+                        <a class="dropdown-item" href="pages-profile"><i class="ri-wallet-3-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>₹5971.67</b></span></a>
+                        <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="ri-settings-3-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
+                        <a class="dropdown-item" href="auth-lockscreen-basic"><i class="ri-lock-line text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
+                        <button type="button" class="dropdown-item " onclick="document.getElementById('logout-form').submit();"><i class="ri-logout-box-line font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></button>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>

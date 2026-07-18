@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-success-subtle rounded fs-3">
-                                        <i class="bx bx-rupee text-success"></i>
+                                        <i class="ri-money-rupee-circle-line text-success"></i>
                                     </span>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-info-subtle rounded fs-3">
-                                        <i class="bx bx-shopping-bag text-info"></i>
+                                        <i class="ri-shopping-bag-3-line text-info"></i>
                                     </span>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                        <i class="bx bx-user-circle text-warning"></i>
+                                        <i class="ri-user-line text-warning"></i>
                                     </span>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="bx bx-wallet text-primary"></i>
+                                        <i class="ri-wallet-3-line text-primary"></i>
                                     </span>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                                 <div class="dropdown card-header-dropdown">
                                     <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="fw-semibold text-uppercase fs-12">Sort by:
-                                        </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span>
+                                        </span><span class="text-muted">Today<i class="ri-arrow-down-s-line ms-1"></i></span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <a class="dropdown-item" href="#">Today</a>
@@ -335,7 +335,7 @@
                                 <div class="flex-shrink-0">
                                     <div class="avatar-xs acitivity-avatar">
                                         <div class="avatar-title rounded-circle bg-secondary">
-                                            <i class="mdi mdi-sale fs-14"></i>
+                                            <i class="ri-price-tag-3-line fs-14"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -365,7 +365,7 @@
                                 <div class="flex-shrink-0">
                                     <div class="avatar-xs acitivity-avatar">
                                         <div class="avatar-title rounded-circle bg-secondary">
-                                            <i class="mdi mdi-sale fs-14"></i>
+                                            <i class="ri-price-tag-3-line fs-14"></i>
                                         </div>
                                     </div>
                                 </div>
