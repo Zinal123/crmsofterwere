@@ -73,10 +73,10 @@ class InvoiceService
 
         $data = $rows->map(function ($item) {
             if ($item->amount == $item->paidamount) {
-                $statusHtml = '<span  class = "badge bg-success-subtle text-success text-uppercase">Paid</span>';
+                $statusHtml = \App\Support\StatusBadge::render('Paid', 'success', 'ri-checkbox-circle-line');
                 $paymentButton = '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-id="' . e($item->id) . '" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;">Payment</button>';
             } else {
-                $statusHtml = '<span  class = "badge bg-warning-subtle text-warning text-uppercase">Pending</span>';
+                $statusHtml = \App\Support\StatusBadge::render('Pending', 'warning', 'ri-time-line');
                 $paymentButton = '<button type="button" class="btn btn-sm btn-primary open-modal" data-id="' . e($item->id) . '" data-customer="' . e($item->customer_id) . '"data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Payment</button>';
             }
 

@@ -61,9 +61,11 @@ Users
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->pluck('name')->first() ?? '-' }}</td>
                             <td>
-                                <span class="badge {{ $user->is_active ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
-                                    {{ $user->is_active ? 'Active' : 'Inactive' }}
-                                </span>
+                                <x-ui.status-badge
+                                    :status="$user->is_active ? 'Active' : 'Inactive'"
+                                    :variant="$user->is_active ? 'success' : 'danger'"
+                                    :icon="$user->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
+                                />
                             </td>
                             <td>
                                 <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="d-flex gap-1">

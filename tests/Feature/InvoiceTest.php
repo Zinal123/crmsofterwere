@@ -74,6 +74,21 @@ class InvoiceTest extends TestCase
         $response->assertSee('Paid');
     }
 
+    public function test_datatable_status_badge_uses_icon_and_correct_color(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        $invoice = \App\Models\Invoice::factory()->create(['amount' => 100000, 'paidamount' => 100000]);
+        \App\Models\Customer::factory()->create(['invoice_id' => $invoice->id]);
+        $pendingInvoice = \App\Models\Invoice::factory()->create(['amount' => 50000, 'paidamount' => 0]);
+        \App\Models\Customer::factory()->create(['invoice_id' => $pendingInvoice->id]);
+
+        $response = $this->actingAs($user)->get(route('invoice.data'));
+
+        $response->assertOk();
+        $response->assertSee('ri-checkbox-circle-line', false);
+        $response->assertSee('ri-time-line', false);
+    }
+
     public function test_invoicestore_creates_invoice_customer_and_products(): void
     {
         $user = User::factory()->create();

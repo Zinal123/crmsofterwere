@@ -28,6 +28,18 @@ class UserTest extends TestCase
         $response->assertSee('Existing Owner');
     }
 
+    public function test_users_page_shows_status_badge_with_icon(): void
+    {
+        $owner = \App\Models\User::factory()->create();
+        \App\Models\User::factory()->create(['is_active' => false]);
+
+        $response = $this->actingAs($owner)->get(route('admin.users.index'));
+
+        $response->assertOk();
+        $response->assertSee('ri-checkbox-circle-line', false);
+        $response->assertSee('ri-close-circle-line', false);
+    }
+
     public function test_owner_can_create_a_worker_with_a_temporary_password(): void
     {
         $owner = User::factory()->create();
