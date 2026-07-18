@@ -814,7 +814,7 @@ $this->app->bind(MachineRepositoryInterface::class, EloquentMachineRepository::c
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $user = User::factory()->create();
-        $user->assignRole('Worker');
+        $user->syncRoles(['Worker']);
 
         $response = $this->actingAs($user)->get(route('machines.index'));
 
@@ -1075,7 +1075,7 @@ class JobCreationTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $user = User::factory()->create();
-        $user->assignRole('Worker');
+        $user->syncRoles(['Worker']);
 
         return $user;
     }
@@ -1402,7 +1402,7 @@ class JobApprovalTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'pending_approval']);
 
         $response = $this->actingAs($worker)->post(route('jobs.approve', $job->id));
@@ -1549,7 +1549,7 @@ class JobStatusTransitionTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'assigned', 'assigned_to' => $worker->id]);
 
         return [$worker, $job];
@@ -1570,7 +1570,7 @@ class JobStatusTransitionTest extends TestCase
     {
         [, $job] = $this->assignedWorker();
         $otherWorker = User::factory()->create();
-        $otherWorker->assignRole('Worker');
+        $otherWorker->syncRoles(['Worker']);
 
         $response = $this->actingAs($otherWorker)->post(route('jobs.start', $job->id));
 
@@ -1790,7 +1790,7 @@ class JobPhotoUploadTest extends TestCase
         Storage::fake('public');
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
         $file = UploadedFile::fake()->image('proof.jpg', 2000, 1500);
 
@@ -1816,7 +1816,7 @@ class JobPhotoUploadTest extends TestCase
         Storage::fake('public');
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
         $file = UploadedFile::fake()->image('proof.jpg', 800, 600);
 
@@ -2102,7 +2102,7 @@ class JobCompletionTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
         JobPhoto::create([
             'job_id' => $job->id,
@@ -2132,7 +2132,7 @@ class JobCompletionTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
 
         $response = $this->actingAs($worker)->postJson(route('jobs.complete', $job->id), [
@@ -2288,7 +2288,7 @@ class JobReassignmentTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'assigned', 'assigned_to' => $worker->id]);
         $newWorker = User::factory()->create();
 
@@ -2860,7 +2860,7 @@ class JobWorkerUiTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         Job::factory()->create(['created_by' => $worker->id, 'assigned_to' => $worker->id, 'status' => 'rejected', 'title' => 'Rejected Job Alpha', 'rejection_reason' => 'Not authorized']);
 
         $response = $this->actingAs($worker)->get(route('jobs.index'));
@@ -2874,7 +2874,7 @@ class JobWorkerUiTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $otherWorker = User::factory()->create();
         Job::factory()->create(['created_by' => $otherWorker->id, 'assigned_to' => $otherWorker->id, 'title' => 'Someone Elses Job']);
 
@@ -2888,7 +2888,7 @@ class JobWorkerUiTest extends TestCase
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $worker = User::factory()->create();
-        $worker->assignRole('Worker');
+        $worker->syncRoles(['Worker']);
         $job = Job::factory()->create(['status' => 'assigned', 'assigned_to' => $worker->id]);
 
         $response = $this->actingAs($worker)->get(route('jobs.show', $job->id));
