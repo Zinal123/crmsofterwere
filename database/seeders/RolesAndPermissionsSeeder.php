@@ -18,6 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'quotations.view', 'quotations.create', 'quotations.download-pdf',
         'admin.manage-roles',
         'admin.manage-users',
+        'jobs.view-own', 'jobs.create', 'jobs.view-all', 'jobs.approve', 'jobs.assign', 'jobs.manage-machines',
     ];
 
     public function run(): void
@@ -29,6 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $owner = Role::findOrCreate('Owner');
         $owner->syncPermissions(self::PERMISSIONS);
 
-        Role::findOrCreate('Worker');
+        $worker = Role::findOrCreate('Worker');
+        $worker->syncPermissions(['jobs.view-own', 'jobs.create']);
     }
 }

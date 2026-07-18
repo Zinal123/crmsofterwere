@@ -12,11 +12,11 @@ class RolesAndPermissionsSeederTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_seeder_creates_all_19_permissions(): void
+    public function test_seeder_creates_all_25_permissions(): void
     {
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(19, Permission::all());
+        $this->assertCount(25, Permission::all());
         $this->assertTrue(Permission::where('name', 'invoices.view')->exists());
         $this->assertTrue(Permission::where('name', 'admin.manage-roles')->exists());
     }
@@ -27,16 +27,16 @@ class RolesAndPermissionsSeederTest extends TestCase
 
         $owner = Role::findByName('Owner');
 
-        $this->assertCount(19, $owner->permissions);
+        $this->assertCount(25, $owner->permissions);
     }
 
-    public function test_worker_role_gets_no_permissions(): void
+    public function test_worker_role_gets_only_its_two_job_permissions(): void
     {
         (new RolesAndPermissionsSeeder())->run();
 
         $worker = Role::findByName('Worker');
 
-        $this->assertCount(0, $worker->permissions);
+        $this->assertCount(2, $worker->permissions);
     }
 
     public function test_seeder_is_idempotent(): void
@@ -44,7 +44,7 @@ class RolesAndPermissionsSeederTest extends TestCase
         (new RolesAndPermissionsSeeder())->run();
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(19, Permission::all());
+        $this->assertCount(25, Permission::all());
         $this->assertCount(2, Role::all());
     }
 

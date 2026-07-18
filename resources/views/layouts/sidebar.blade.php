@@ -58,6 +58,13 @@
                     <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invtery managemnet')</span></a>
                 </li>
                 @endcan
+                @can('jobs.manage-machines')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('machines.index') }}">
+                        <i class="ri-tools-line"></i> <span>Machines</span>
+                    </a>
+                </li>
+                @endcan
                 @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Fiber Laser Cutting')
