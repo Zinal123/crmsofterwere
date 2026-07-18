@@ -23,6 +23,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         return $this->tenantScope->apply(User::with('roles'))->orderBy('name')->get();
     }
 
+    public function byRole(string $role): Collection
+    {
+        return $this->tenantScope->apply(User::role($role))->orderBy('name')->get();
+    }
+
     public function create(array $data): User
     {
         return User::create($data);

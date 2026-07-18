@@ -11,6 +11,8 @@ interface UserRepositoryInterface
 
     public function allWithRoles(): Collection;
 
+    public function byRole(string $role): Collection;
+
     public function create(array $data): User;
 
     public function save(User $user): void;

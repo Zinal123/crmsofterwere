@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Job;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\JobRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Job\JobService;
 use App\Services\Job\MachineService;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class JobController extends Controller
         private MachineService $machineService,
         private JobRepositoryInterface $repository,
         private \App\Services\Job\JobPhotoService $photoService,
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 
@@ -31,6 +33,7 @@ class JobController extends Controller
         return view('jobs.create', [
             'machines' => $this->machineService->list(),
             'canAssign' => $request->user()->can('jobs.assign'),
+            'workers' => $this->userRepository->byRole('Worker'),
         ]);
     }
 

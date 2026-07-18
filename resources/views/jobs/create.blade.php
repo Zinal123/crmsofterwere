@@ -46,7 +46,7 @@
                         <label class="form-label" for="job-assign">Assign to Worker (skips approval)</label>
                         <select id="job-assign" name="assigned_to" class="form-select">
                             <option value="">-- Leave blank to submit as your own request --</option>
-                            @foreach(\App\Models\User::role('Worker')->get() as $worker)
+                            @foreach($workers as $worker)
                                 <option value="{{ $worker->id }}">{{ $worker->name }}</option>
                             @endforeach
                         </select>
