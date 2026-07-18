@@ -104,6 +104,9 @@ Route::middleware('auth')->group(function () {
     Route::get('jobs-pending-approval', [App\Http\Controllers\Job\JobController::class, 'pendingApproval'])->name('jobs.pending-approval')->middleware('permission:jobs.approve');
     Route::post('jobs/{id}/approve', [App\Http\Controllers\Job\JobController::class, 'approve'])->name('jobs.approve')->middleware('permission:jobs.approve');
     Route::post('jobs/{id}/reject', [App\Http\Controllers\Job\JobController::class, 'reject'])->name('jobs.reject')->middleware('permission:jobs.approve');
+    Route::post('jobs/{id}/start', [App\Http\Controllers\Job\JobController::class, 'start'])->name('jobs.start')->middleware('permission:jobs.view-own|jobs.view-all');
+    Route::post('jobs/{id}/hold', [App\Http\Controllers\Job\JobController::class, 'hold'])->name('jobs.hold')->middleware('permission:jobs.view-own|jobs.view-all');
+    Route::post('jobs/{id}/resume', [App\Http\Controllers\Job\JobController::class, 'resume'])->name('jobs.resume')->middleware('permission:jobs.view-own|jobs.view-all');
 });
 
 

@@ -103,4 +103,53 @@ class JobController extends Controller
     {
         return view('jobs.pending-approval', ['jobs' => $this->repository->pendingApproval()]);
     }
+
+    public function start(Request $request, $id)
+    {
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->start($job, $request->user());
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()]);
+        }
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Job started.');
+    }
+
+    public function hold(Request $request, $id)
+    {
+        $data = $request->validate(['on_hold_reason' => 'required|string|max:1000']);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->hold($job, $request->user(), $data['on_hold_reason']);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()]);
+        }
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Job put on hold.');
+    }
+
+    public function resume(Request $request, $id)
+    {
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->resume($job, $request->user());
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()]);
+        }
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Job resumed.');
+    }
 }

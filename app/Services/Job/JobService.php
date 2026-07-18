@@ -101,4 +101,54 @@ class JobService
 
         return $job;
     }
+
+    private function assertActorCanAct(Job $job, User $actor): void
+    {
+        if ($actor->id !== $job->assigned_to && ! $actor->can('jobs.assign')) {
+            throw new \Illuminate\Auth\Access\AuthorizationException('You are not assigned to this job.');
+        }
+    }
+
+    public function start(Job $job, User $actor): Job
+    {
+        $this->assertActorCanAct($job, $actor);
+        if ($job->status !== 'assigned') {
+            throw new \InvalidArgumentException('Only an assigned job can be started.');
+        }
+
+        $job->status = 'in_progress';
+        $this->repository->save($job);
+        $this->auditLogger->log($job, $actor, 'status_changed', 'Status changed from Assigned to In Progress', ['from' => 'assigned', 'to' => 'in_progress']);
+
+        return $job;
+    }
+
+    public function hold(Job $job, User $actor, string $reason): Job
+    {
+        $this->assertActorCanAct($job, $actor);
+        if ($job->status !== 'in_progress') {
+            throw new \InvalidArgumentException('Only an in-progress job can be put on hold.');
+        }
+
+        $job->status = 'on_hold';
+        $job->on_hold_reason = $reason;
+        $this->repository->save($job);
+        $this->auditLogger->log($job, $actor, 'on_hold', "Job put on hold: {$reason}", ['from' => 'in_progress', 'to' => 'on_hold']);
+
+        return $job;
+    }
+
+    public function resume(Job $job, User $actor): Job
+    {
+        $this->assertActorCanAct($job, $actor);
+        if ($job->status !== 'on_hold') {
+            throw new \InvalidArgumentException('Only an on-hold job can be resumed.');
+        }
+
+        $job->status = 'in_progress';
+        $this->repository->save($job);
+        $this->auditLogger->log($job, $actor, 'resumed', 'Job resumed from hold', ['from' => 'on_hold', 'to' => 'in_progress']);
+
+        return $job;
+    }
 }
