@@ -192,4 +192,19 @@ class JobController extends Controller
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job marked complete.');
     }
+
+    public function reassign(Request $request, $id)
+    {
+        $data = $request->validate(['assigned_to' => 'required|exists:users,id']);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->reassign($job, $request->user(), (int) $data['assigned_to']);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Job reassigned.');
+    }
 }

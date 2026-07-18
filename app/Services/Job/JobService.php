@@ -171,4 +171,22 @@ class JobService
 
         return $job;
     }
+
+    public function reassign(Job $job, User $manager, int $newAssigneeId): Job
+    {
+        if (! in_array($job->status, ['assigned', 'in_progress', 'on_hold'], true)) {
+            throw new \InvalidArgumentException('Only an assigned, in-progress, or on-hold job can be reassigned.');
+        }
+
+        $previousAssignee = $job->assigned_to;
+        $job->assigned_to = $newAssigneeId;
+        $this->repository->save($job);
+
+        $this->auditLogger->log($job, $manager, 'reassigned', "{$manager->name} reassigned the job.", [
+            'from_user_id' => $previousAssignee,
+            'to_user_id' => $newAssigneeId,
+        ]);
+
+        return $job;
+    }
 }
