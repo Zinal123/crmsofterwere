@@ -65,4 +65,40 @@ class JobService
 
         return $job;
     }
+
+    public function approve(Job $job, User $manager, ?int $reassignTo = null): Job
+    {
+        if ($job->status !== 'pending_approval') {
+            throw new \InvalidArgumentException('Only a pending-approval job can be approved.');
+        }
+
+        $job->status = 'assigned';
+        $job->decided_by = $manager->id;
+        $job->decided_at = now();
+        if ($reassignTo) {
+            $job->assigned_to = $reassignTo;
+        }
+        $this->repository->save($job);
+
+        $this->auditLogger->log($job, $manager, 'approved', "{$manager->name} approved the job request.");
+
+        return $job;
+    }
+
+    public function reject(Job $job, User $manager, string $reason): Job
+    {
+        if ($job->status !== 'pending_approval') {
+            throw new \InvalidArgumentException('Only a pending-approval job can be rejected.');
+        }
+
+        $job->status = 'rejected';
+        $job->decided_by = $manager->id;
+        $job->decided_at = now();
+        $job->rejection_reason = $reason;
+        $this->repository->save($job);
+
+        $this->auditLogger->log($job, $manager, 'rejected', "{$manager->name} rejected the job request: {$reason}");
+
+        return $job;
+    }
 }

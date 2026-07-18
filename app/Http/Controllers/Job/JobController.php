@@ -69,4 +69,38 @@ class JobController extends Controller
 
         return view('jobs.show', compact('job'));
     }
+
+    public function approve(Request $request, $id)
+    {
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->approve($job, $request->user(), $request->input('assigned_to'));
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()]);
+        }
+
+        return redirect()->route('jobs.pending-approval')->with('success', 'Job approved.');
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $data = $request->validate(['rejection_reason' => 'required|string|max:1000']);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->reject($job, $request->user(), $data['rejection_reason']);
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()]);
+        }
+
+        return redirect()->route('jobs.pending-approval')->with('success', 'Job rejected.');
+    }
+
+    public function pendingApproval()
+    {
+        return view('jobs.pending-approval', ['jobs' => $this->repository->pendingApproval()]);
+    }
 }
