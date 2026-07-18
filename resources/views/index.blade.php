@@ -150,6 +150,47 @@
                 </div><!-- end col -->
             </div> <!-- end row-->
 
+            @can('jobs.view-all')
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-0">Jobs Completed Today</p>
+                            <h4 class="mb-0">{{ $jobStats['completed_today'] }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-0">Pending Approval</p>
+                            <h4 class="mb-0">{{ $jobStats['pending_approval'] }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-0">Pending Completion</p>
+                            <h4 class="mb-0">{{ $jobStats['pending_completion'] }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-0">Jobs by Worker (Today)</p>
+                            @forelse($jobStats['by_worker'] as $workerName => $count)
+                                <p class="mb-0 small">{{ $workerName }}: {{ $count }}</p>
+                            @empty
+                                <p class="mb-0 small text-muted">No completions yet today.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endcan
+
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
