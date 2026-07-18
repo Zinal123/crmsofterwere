@@ -58,6 +58,13 @@
                     <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invtery managemnet')</span></a>
                 </li>
                 @endcan
+                @can('jobs.view-own')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('jobs.index') }}">
+                        <i class="ri-briefcase-4-line"></i> <span>Jobs</span>
+                    </a>
+                </li>
+                @endcan
                 @can('jobs.manage-machines')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('machines.index') }}">
