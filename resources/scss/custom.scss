@@ -5,3 +5,40 @@ Website: https://themesbrand.com/
 Contact: support@themesbrand.com
 File: Custom Css File
 */
+
+/*
+================================================================================
+Oracle Machine Tech CRM — Design Token Reference
+================================================================================
+This file documents the app-level semantic rules layered on top of Velzon's
+existing Bootstrap variables (see resources/scss/_variables.scss for the
+actual color/typography values — this file does not redefine them). Every
+new Blade component under resources/views/components/ui/ follows these
+rules; retrofitted views should too as they're touched.
+
+COLOR SEMANTICS (map to Bootstrap's existing $success/$warning/$danger/
+$primary/$info, defined in _variables.scss):
+  success (green)  -> positive states (Paid, Active, Completed) AND all
+                       Create/Add actions. Never use danger or primary for
+                       a non-destructive "add" action.
+  warning (yellow)  -> needs-attention states (Pending, Low Stock).
+  danger  (red)     -> negative/destructive ONLY (Inactive, Delete, Errors,
+                       Overdue). Never for additive actions.
+  primary (indigo)  -> main navigation, primary Save/Submit actions.
+  info    (cyan)    -> neutral in-progress/informational states.
+
+TYPOGRAPHY (existing Velzon fs-* utilities, no new scale):
+  Page title       -> h4.fs-22.fw-semibold.ff-secondary
+  Card/section title -> h5.card-title.mb-0
+  Metadata/secondary -> fs-11–fs-12 + text-muted
+
+SPACING: Bootstrap's existing 0–5 utility scale (0.25rem increments).
+  Toolbar button gap -> gap-2
+  Card vertical rhythm -> mb-3 between stacked cards on one page
+
+ICONS: Remix Icon (ri-*) is the single icon set for all CRM feature views
+and shared chrome (topbar, error pages). Do not introduce mdi-* or bx-*
+in new code — see docs/superpowers/plans/2026-07-17-design-system.md
+Task 5 for the migration of existing mdi-*/bx-* usage.
+================================================================================
+*/
