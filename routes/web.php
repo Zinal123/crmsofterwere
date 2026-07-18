@@ -110,6 +110,8 @@ Route::middleware('auth')->group(function () {
     Route::post('jobs/{id}/photos', [App\Http\Controllers\Job\JobController::class, 'storePhoto'])->name('jobs.photos.store')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/complete', [App\Http\Controllers\Job\JobController::class, 'complete'])->name('jobs.complete')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/reassign', [App\Http\Controllers\Job\JobController::class, 'reassign'])->name('jobs.reassign')->middleware('permission:jobs.assign');
+
+    Route::post('push-subscriptions', [App\Http\Controllers\Job\PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
 });
 
 

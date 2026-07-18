@@ -1,3 +1,19 @@
+@auth
+<div id="push-subscribe-banner" data-vapid-key="{{ config('webpush.vapid.public_key') }}" class="alert alert-info d-flex justify-content-between align-items-center m-0 rounded-0" style="display:none">
+    <span><i class="ri-notification-3-line"></i> Enable notifications for job updates?</span>
+    <span>
+        <x-ui.button variant="primary" size="sm" data-push-enable type="button">Enable</x-ui.button>
+        <x-ui.button variant="secondary" size="sm" data-push-dismiss type="button" icon="ri-close-line" ariaLabel="Dismiss">Not now</x-ui.button>
+    </span>
+</div>
+<script>
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+        var banner = document.getElementById('push-subscribe-banner');
+        if (banner) { banner.style.display = 'flex'; }
+    }
+</script>
+<script src="{{ asset('build/js/push-subscribe.js') }}"></script>
+@endauth
 <header id="page-topbar">
     <div class="layout-width">
         <div class="navbar-header">
