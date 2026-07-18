@@ -4,6 +4,7 @@ namespace App\Services\Job;
 
 use App\Models\Job;
 use App\Models\User;
+use App\Notifications\JobDecisionNotification;
 use App\Repositories\Contracts\JobRepositoryInterface;
 
 class JobService
@@ -82,6 +83,8 @@ class JobService
 
         $this->auditLogger->log($job, $manager, 'approved', "{$manager->name} approved the job request.");
 
+        $job->assignee?->notify(new JobDecisionNotification($job, 'approved'));
+
         return $job;
     }
 
@@ -98,6 +101,8 @@ class JobService
         $this->repository->save($job);
 
         $this->auditLogger->log($job, $manager, 'rejected', "{$manager->name} rejected the job request: {$reason}");
+
+        $job->assignee?->notify(new JobDecisionNotification($job, 'rejected'));
 
         return $job;
     }
