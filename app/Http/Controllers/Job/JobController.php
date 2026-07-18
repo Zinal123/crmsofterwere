@@ -175,4 +175,21 @@ class JobController extends Controller
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Photo uploaded.');
     }
+
+    public function complete(Request $request, $id)
+    {
+        $data = $request->validate(['completion_notes' => 'required|string|max:2000']);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+
+        try {
+            $this->service->complete($job, $request->user(), $data['completion_notes']);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Job marked complete.');
+    }
 }

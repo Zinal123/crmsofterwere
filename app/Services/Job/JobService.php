@@ -151,4 +151,24 @@ class JobService
 
         return $job;
     }
+
+    public function complete(Job $job, User $actor, string $notes): Job
+    {
+        $this->assertActorCanAct($job, $actor);
+        if ($job->status !== 'in_progress') {
+            throw new \InvalidArgumentException('Only an in-progress job can be completed.');
+        }
+        if (! $job->photos()->exists()) {
+            throw new \InvalidArgumentException('At least one proof photo is required to complete a job.');
+        }
+
+        $job->status = 'completed';
+        $job->completion_notes = $notes;
+        $job->completed_at = now();
+        $this->repository->save($job);
+
+        $this->auditLogger->log($job, $actor, 'completed', "{$actor->name} marked the job complete.", ['from' => 'in_progress', 'to' => 'completed']);
+
+        return $job;
+    }
 }
