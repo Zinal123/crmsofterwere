@@ -31,10 +31,9 @@ Roles & Permissions
 
 <div class="row mt-3">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header"><h5 class="card-title mb-0">Permission Matrix</h5></div>
-            <div class="card-body table-responsive">
-                <table class="table table-bordered align-middle">
+        <x-ui.data-table-card title="Roles & Permissions">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle" id="roles-matrix-table">
                     <thead>
                         <tr>
                             <th>Permission</th>
@@ -70,13 +69,24 @@ Roles & Permissions
                     </tbody>
                 </table>
             </div>
-        </div>
+        </x-ui.data-table-card>
     </div>
 </div>
 @endsection
 
 @section('script')
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    new DataTable('#roles-matrix-table', {
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+    });
+});
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.permission-toggle').forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {

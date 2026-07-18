@@ -47,10 +47,9 @@ Users
     </div>
 
     <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header"><h5 class="card-title mb-0">All Users</h5></div>
-            <div class="card-body table-responsive">
-                <table class="table align-middle">
+        <x-ui.data-table-card title="Users">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle" id="users-table">
                     <thead>
                         <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>
                     </thead>
@@ -87,7 +86,24 @@ Users
                     </tbody>
                 </table>
             </div>
-        </div>
+        </x-ui.data-table-card>
     </div>
 </div>
+@endsection
+
+@section('script')
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    new DataTable('#users-table', {
+        language: {
+            emptyTable: 'No users yet.',
+            zeroRecords: 'No matching users found.',
+            search: 'Search users:',
+        }
+    });
+});
+</script>
 @endsection
