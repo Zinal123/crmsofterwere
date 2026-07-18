@@ -20,8 +20,11 @@ class ProductController extends Controller
 
     public function productstore(Request $request)
     {
+        $request->validate(['name' => 'required|string|max:255']);
+
         $this->service->create($request->all());
-        return redirect()->route('product');
+
+        return redirect()->route('product')->with('success', 'Product created successfully.');
     }
 
     public function delete($id)

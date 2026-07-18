@@ -16,6 +16,12 @@ list view
 @endslot
 @endcomponent
 
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="ri-checkbox-circle-line align-middle me-1"></i>{{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
 <div class="row">
     <div class="col-lg-12">
@@ -181,5 +187,6 @@ list view
 <script src="{{ URL::asset('build/libs/list.pagination.js/list.pagination.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/pages/invoiceslist.init.js') }}"></script>
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/ui-notify.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
