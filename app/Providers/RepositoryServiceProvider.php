@@ -16,6 +16,7 @@ use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\SalaryPaymentRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAttendanceRepository;
 use App\Repositories\Eloquent\EloquentBankRepository;
@@ -31,6 +32,7 @@ use App\Repositories\Eloquent\EloquentProductConfigRepository;
 use App\Repositories\Eloquent\EloquentProductRepository;
 use App\Repositories\Eloquent\EloquentQuotationRepository;
 use App\Repositories\Eloquent\EloquentRoleRepository;
+use App\Repositories\Eloquent\EloquentSalaryPaymentRepository;
 use App\Repositories\Eloquent\EloquentUserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -53,5 +55,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeRepositoryInterface::class, EloquentEmployeeRepository::class);
         $this->app->bind(EmployeeDocumentRepositoryInterface::class, EloquentEmployeeDocumentRepository::class);
         $this->app->bind(AttendanceRepositoryInterface::class, EloquentAttendanceRepository::class);
+        $this->app->bind(SalaryPaymentRepositoryInterface::class, EloquentSalaryPaymentRepository::class);
     }
 }
