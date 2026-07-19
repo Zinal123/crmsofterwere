@@ -20,21 +20,21 @@ Users
                 <form action="{{ route('admin.users.store') }}" method="POST">
                     @csrf
                     <div class="mb-2">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" required>
+                        <label class="form-label" for="create-user-name">Name</label>
+                        <input id="create-user-name" type="text" class="form-control" name="name" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" required>
+                        <label class="form-label" for="create-user-email">Email</label>
+                        <input id="create-user-email" type="email" class="form-control" name="email" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Temporary Password</label>
-                        <input type="text" class="form-control" name="password" minlength="8" required>
+                        <label class="form-label" for="create-user-password">Temporary Password</label>
+                        <input id="create-user-password" type="text" class="form-control" name="password" minlength="8" required>
                         <div class="form-text">Share this with the user directly. They can change it after logging in via their profile page.</div>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Role</label>
-                        <select class="form-select" name="role" required>
+                        <label class="form-label" for="create-user-role">Role</label>
+                        <select id="create-user-role" class="form-select" name="role" required>
                             @foreach($roles as $role)
                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                             @endforeach

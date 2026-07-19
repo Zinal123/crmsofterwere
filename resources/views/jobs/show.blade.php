@@ -143,7 +143,7 @@
             <div class="row g-2">
                 @forelse($job->photos as $photo)
                     <div class="col-6 col-md-3">
-                        <img src="{{ asset('storage/' . $photo->path) }}" class="img-fluid rounded">
+                        <img src="{{ asset('storage/' . $photo->path) }}" class="img-fluid rounded" alt="Job completion">
                         @if($photo->location_captured)
                             <a href="{{ $photo->map_link }}" target="_blank" class="small d-block">{{ $photo->address ?? 'View location' }}</a>
                         @else
