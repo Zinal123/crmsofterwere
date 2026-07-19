@@ -79,6 +79,20 @@
                     </a>
                 </li>
                 @endcan
+                @can('employees.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('employees.index') }}">
+                        <i class="ri-team-line"></i> <span>Employees</span>
+                    </a>
+                </li>
+                @endcan
+                @can('attendance.manage')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('attendance.mark') }}">
+                        <i class="ri-calendar-check-line"></i> <span>Attendance</span>
+                    </a>
+                </li>
+                @endcan
                 @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Fiber Laser Cutting')
