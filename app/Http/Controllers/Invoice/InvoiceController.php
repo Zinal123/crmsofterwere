@@ -49,7 +49,11 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['placesupply' => 'required|string|max:255']);
+        $request->validate([
+            'placesupply' => 'required|string|max:255',
+            'billing_state' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Support\IndianStates::LIST)],
+            'shipping_state' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Support\IndianStates::LIST)],
+        ]);
 
         $this->service->createInvoiceWithDetails($request);
 

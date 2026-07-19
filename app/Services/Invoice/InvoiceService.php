@@ -6,6 +6,7 @@ use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Support\IndianNumber;
+use App\Support\IndianStates;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -187,14 +188,15 @@ class InvoiceService
         $cgstamount = 0;
         $igsamount = 0;
 
-        if ($state == "Gujarat") {
-            $sgstamount = $totalamountwithtax * 0.09;
-            $cgstamount = $totalamountwithtax * 0.09;
-        } else {
-            $igsamount = $totalamountwithtax * 0.18;
-        }
-
         $invoiceproduct = $this->repository->getInvoiceProductsWithProductName($id);
+        $totalGstAmount = (float) $invoiceproduct->sum('gstamount');
+
+        if ($state === IndianStates::HOME_STATE) {
+            $sgstamount = $totalGstAmount / 2;
+            $cgstamount = $totalGstAmount / 2;
+        } else {
+            $igsamount = $totalGstAmount;
+        }
 
         return compact('roundof', 'sgstamount', 'cgstamount', 'state', 'invoice', 'customer', 'invoiceproduct', 'totalamountwithtax', 'amount', 'igsamount');
     }

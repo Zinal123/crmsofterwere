@@ -110,6 +110,7 @@ class InvoiceTest extends TestCase
             'placesupply' => 'Gujarat',
             'billing_address_full_name' => 'Test Customer',
             'billing_state' => 'Gujarat',
+            'shipping_state' => 'Gujarat',
             'order_summary_cart_total' => 50000,
             'order_summary_cart_amount' => 50000,
             'new_product_obj' => [
@@ -154,12 +155,13 @@ class InvoiceTest extends TestCase
         $user = User::factory()->create();
         $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000]);
         Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'gst' => 18, 'gstamount' => 18000]);
 
         $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
 
         $response->assertOk();
-        $response->assertViewHas('sgstamount', 118000 * 0.09);
-        $response->assertViewHas('cgstamount', 118000 * 0.09);
+        $response->assertViewHas('sgstamount', 9000.0);
+        $response->assertViewHas('cgstamount', 9000.0);
         $response->assertViewHas('igsamount', 0);
     }
 
@@ -168,13 +170,57 @@ class InvoiceTest extends TestCase
         $user = User::factory()->create();
         $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000]);
         Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Maharashtra']);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'gst' => 18, 'gstamount' => 18000]);
 
         $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
 
         $response->assertOk();
-        $response->assertViewHas('igsamount', 118000 * 0.18);
+        $response->assertViewHas('igsamount', 18000.0);
         $response->assertViewHas('sgstamount', 0);
         $response->assertViewHas('cgstamount', 0);
+    }
+
+    public function test_invoice_details_sums_mixed_gst_rates_across_line_items(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 123000]);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'gst' => 5, 'gstamount' => 5000]);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'gst' => 18, 'gstamount' => 18000]);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        // 5000 + 18000 = 23000 total GST, split 50/50 for an intra-state (Gujarat) sale.
+        $response->assertViewHas('sgstamount', 11500.0);
+        $response->assertViewHas('cgstamount', 11500.0);
+        $response->assertViewHas('igsamount', 0);
+    }
+
+    public function test_invoicestore_rejects_a_state_not_in_the_indian_states_list(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('invoice.store'), [
+            'invoice_id' => 'INV-TEST-003',
+            'placesupply' => 'Gujarat',
+            'billing_state' => 'Not A Real State',
+            'shipping_state' => 'Gujarat',
+            'order_summary_cart_total' => 50000,
+            'order_summary_cart_amount' => 50000,
+            'new_product_obj' => [
+                [
+                    'product_name' => $product->id,
+                    'gst' => 18,
+                    'withtax' => 9000,
+                    'total' => 59000,
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('invoice', ['invoice_id' => 'INV-TEST-003']);
     }
 
     public function test_updatepayment_updates_paid_and_remaining_amount(): void
