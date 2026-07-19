@@ -19,12 +19,12 @@ Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, '
 
 Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
-// These 10 routes must be registered before the {any} catch-all below:
+// These 11 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
 // would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
 // (invoice.create, invoice.histry, invoice, invoice.vender, invoice.inventrylist, product,
-// machines.index, jobs.index, jobs.pending-approval, employees.index)
+// machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark)
 Route::middleware('auth')->group(function () {
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
     Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry')->middleware('permission:payment-history.view');
@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('jobs', [App\Http\Controllers\Job\JobController::class, 'index'])->name('jobs.index')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::get('jobs-pending-approval', [App\Http\Controllers\Job\JobController::class, 'pendingApproval'])->name('jobs.pending-approval')->middleware('permission:jobs.approve');
     Route::get('employees', [App\Http\Controllers\Workforce\EmployeeController::class, 'index'])->name('employees.index')->middleware('permission:employees.view');
+    Route::get('attendance', [App\Http\Controllers\Workforce\AttendanceController::class, 'mark'])->name('attendance.mark')->middleware('permission:attendance.manage');
 });
 
 Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])->name('index');
@@ -50,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::put('employees/{id}', [App\Http\Controllers\Workforce\EmployeeController::class, 'update'])->name('employees.update')->middleware('permission:employees.manage');
     Route::post('employees/{id}/deactivate', [App\Http\Controllers\Workforce\EmployeeController::class, 'deactivate'])->name('employees.deactivate')->middleware('permission:employees.manage');
     Route::post('employees/{id}/documents', [App\Http\Controllers\Workforce\EmployeeController::class, 'storeDocument'])->name('employees.documents.store')->middleware('permission:employees.manage');
+    Route::post('attendance', [App\Http\Controllers\Workforce\AttendanceController::class, 'store'])->name('attendance.store')->middleware('permission:attendance.manage');
 
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation')->middleware('permission:quotations.view');
     Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore')->middleware('permission:quotations.create');
