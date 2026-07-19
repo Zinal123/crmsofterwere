@@ -27,8 +27,7 @@ class QutationController extends Controller
 
     public function generatequtationstore(Request $request)
     {
-        $this->service->create($request->all());
-        return redirect()->route('listqutation')->with('success', 'Your message has been sent successfully!');
+        return $this->storeQuotation($request);
     }
 
     public function print()
@@ -41,5 +40,23 @@ class QutationController extends Controller
         // $id is accepted but unused, matching pre-existing behavior - see
         // QuotationService::getQuotationFormViewData().
         return view('co2qutation', $this->service->getQuotationFormViewData());
+    }
+
+    public function Co2quationstore(Request $request)
+    {
+        // co2qutation.blade.php posts to the same `quationform` table (via
+        // the same Quation model/fillable list) as the fiber quotation
+        // form, just with a different subset of fields filled in
+        // (description/amount/description1/... instead of the
+        // fiber-specific config selects) - no CO2-specific persistence
+        // logic is needed, so this shares storeQuotation() with the
+        // fiber form's store action.
+        return $this->storeQuotation($request);
+    }
+
+    private function storeQuotation(Request $request)
+    {
+        $this->service->create($request->all());
+        return redirect()->route('listqutation')->with('success', 'Your message has been sent successfully!');
     }
 }

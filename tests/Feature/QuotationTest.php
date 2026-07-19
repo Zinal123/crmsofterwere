@@ -70,6 +70,27 @@ class QuotationTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_co2quationstore_creates_a_quotation(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('Co2quationstore'), [
+            'product_id' => 1,
+            'clientname' => 'CO2 Test Client',
+            'companyname' => 'CO2 Test Co',
+            'description' => 'CO2 laser unit',
+            'amount' => '500000',
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $this->assertDatabaseHas('quationform', [
+            'clientname' => 'CO2 Test Client',
+            'companyname' => 'CO2 Test Co',
+            'description' => 'CO2 laser unit',
+            'amount' => '500000',
+        ]);
+    }
+
     public function test_printquation_pdf_page_renders(): void
     {
         $user = User::factory()->create();
