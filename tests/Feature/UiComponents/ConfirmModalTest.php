@@ -10,37 +10,44 @@ class ConfirmModalTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_invoice_list_page_still_has_delete_modal_with_correct_ids(): void
+    private const REMOVED_DELETE_MODAL_ID = 'id="deleteOrder"';
+
+    /**
+     * <x-ui.confirm-modal> (#deleteOrder / #delete-record / #deleteRecord-close)
+     * was removed from Invoices/Inventory/Product: nothing on any of these
+     * pages ever opened it (no data-bs-target="#deleteOrder" trigger existed;
+     * single-item delete is a plain unconfirmed GET link, bulk-delete was
+     * removed separately - see CreateButtonConsistencyTest). It was dead
+     * markup on all three pages since it was first added. This test now
+     * locks in its absence.
+     */
+    public function test_invoice_list_page_has_no_dead_delete_modal(): void
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('invoice'));
 
         $response->assertOk();
-        $response->assertSee('id="deleteOrder"', false);
-        $response->assertSee('id="delete-record"', false);
-        $response->assertSee('id="deleteRecord-close"', false);
+        $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
     }
 
-    public function test_inventory_list_page_still_has_delete_modal_with_correct_ids(): void
+    public function test_inventory_list_page_has_no_dead_delete_modal(): void
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('invoice.inventrylist'));
 
         $response->assertOk();
-        $response->assertSee('id="deleteOrder"', false);
-        $response->assertSee('id="delete-record"', false);
+        $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
     }
 
-    public function test_product_list_page_still_has_delete_modal_with_correct_ids(): void
+    public function test_product_list_page_has_no_dead_delete_modal(): void
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('product'));
 
         $response->assertOk();
-        $response->assertSee('id="deleteOrder"', false);
-        $response->assertSee('id="delete-record"', false);
+        $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
     }
 }

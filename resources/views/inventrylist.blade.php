@@ -36,7 +36,6 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
     <div class="col-lg-12">
         <x-ui.data-table-card title="Inventory">
             <div class="d-flex gap-2 flex-wrap mb-3">
-                <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected items" />
                 <x-ui.button variant="success" icon="ri-add-line" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Inventry</x-ui.button>
             </div>
             <div class="table-responsive">
@@ -85,7 +84,6 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
             </div>
 
             <!-- Modal -->
-            <x-ui.confirm-modal record-type="inventory item" />
                 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -179,10 +177,6 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
 <!--end row-->
 @endsection
 @section('script')
-<script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
-<script src="{{ URL::asset('build/libs/list.pagination.js/list.pagination.min.js') }}"></script>
-{{-- <script src="{{ URL::asset('build/js/pages/invoiceslist.init.js') }}"></script> --}}
-
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

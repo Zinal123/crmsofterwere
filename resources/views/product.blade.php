@@ -27,7 +27,6 @@ list view
     <div class="col-lg-12">
         <x-ui.data-table-card title="Products">
             <div class="d-flex gap-2 flex-wrap mb-3">
-                <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected products" />
                 <x-ui.button variant="success" size="sm" icon="ri-add-line" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Product</x-ui.button>
             </div>
             <div class="table-responsive">
@@ -87,9 +86,6 @@ list view
                 </table>
             </div>
 
-            <!-- Modal -->
-            <x-ui.confirm-modal record-type="product" />
-            <!--end modal -->
         </x-ui.data-table-card>
 
     </div>
@@ -147,11 +143,6 @@ list view
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" integrity="sha384-Dv1j0mqPOKbG6R+/4/adHCn5JaMBLG3iu8uTXFBM2MjEZuKwtsyLedRcRMR0cq7P" crossorigin="anonymous" rel="stylesheet" type="text/css" />
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" integrity="sha384-ficRBwtap/VLzILv81vIvgp30PoJYnlCm96tPpNYHXAf+h9SIThOZxxIzRUzbpAh" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js" integrity="sha384-jIAE3P7Re8BgMkT0XOtfQ6lzZgbDw/02WeRMJvXK3WMHBNynEx5xofqia1OHuGh0" crossorigin="anonymous"></script>
-{{-- invoiceslist.init.js is kept (unlike other migrated pages) because it defines
-     deleteMultiple() and the #delete-record click handler that this page's
-     bulk-delete button and delete-confirmation modal (Task 4) still rely on.
-     Only its list.js pagination init becomes unused here, not its handlers. --}}
-<script src="{{ URL::asset('build/js/pages/invoiceslist.init.js') }}"></script>
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/ui-notify.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>

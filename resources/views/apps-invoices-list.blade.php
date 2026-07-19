@@ -25,9 +25,6 @@ list view
 <div class="row">
     <div class="col-lg-12">
         <x-ui.data-table-card title="Invoices" :create-route="route('invoice.create')" create-label="Create Invoice">
-            <div class="d-flex gap-2 flex-wrap mb-3">
-                <x-ui.button variant="primary" icon="ri-delete-bin-2-line" id="remove-actions" onclick="deleteMultiple()" ariaLabel="Delete selected invoices" />
-            </div>
             <div class="table-responsive">
                 <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width:100%">
@@ -57,7 +54,6 @@ list view
             </div>
 
             <!-- Modal -->
-            <x-ui.confirm-modal record-type="invoice" />
                 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -100,10 +96,6 @@ list view
 <!--end row-->
 @endsection
 @section('script')
-<script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
-<script src="{{ URL::asset('build/libs/list.pagination.js/list.pagination.min.js') }}"></script>
-{{-- <script src="{{ URL::asset('build/js/pages/invoiceslist.init.js') }}"></script> --}}
-
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
