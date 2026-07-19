@@ -38,4 +38,16 @@ class AttendanceController extends Controller
 
         return redirect()->route('attendance.mark', ['date' => $data['date']])->with('success', 'Attendance saved.');
     }
+
+    public function register(Request $request, $employee)
+    {
+        $employeeModel = $this->employeeService->find($employee);
+        abort_if(! $employeeModel, 404);
+
+        $year = (int) $request->input('year', now()->year);
+        $month = (int) $request->input('month', now()->month);
+        $attendanceRows = $this->service->forEmployeeAndMonth((int) $employee, $year, $month);
+
+        return view('attendance.register', ['employee' => $employeeModel, 'attendanceRows' => $attendanceRows, 'year' => $year, 'month' => $month]);
+    }
 }
