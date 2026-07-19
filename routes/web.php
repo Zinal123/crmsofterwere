@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('employees/{id}/edit', [App\Http\Controllers\Workforce\EmployeeController::class, 'edit'])->name('employees.edit')->middleware('permission:employees.manage');
     Route::put('employees/{id}', [App\Http\Controllers\Workforce\EmployeeController::class, 'update'])->name('employees.update')->middleware('permission:employees.manage');
     Route::post('employees/{id}/deactivate', [App\Http\Controllers\Workforce\EmployeeController::class, 'deactivate'])->name('employees.deactivate')->middleware('permission:employees.manage');
+    Route::post('employees/{id}/documents', [App\Http\Controllers\Workforce\EmployeeController::class, 'storeDocument'])->name('employees.documents.store')->middleware('permission:employees.manage');
 
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation')->middleware('permission:quotations.view');
     Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore')->middleware('permission:quotations.create');

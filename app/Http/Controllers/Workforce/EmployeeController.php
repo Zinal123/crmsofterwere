@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    public function __construct(private EmployeeService $service)
-    {
+    public function __construct(
+        private EmployeeService $service,
+        private \App\Services\Workforce\EmployeeDocumentService $documentService,
+    ) {
     }
 
     public function index()
@@ -75,5 +77,20 @@ class EmployeeController extends Controller
         $this->service->deactivate($id);
 
         return redirect()->route('employees.index')->with('success', 'Employee deactivated.');
+    }
+
+    public function storeDocument(Request $request, $id)
+    {
+        $data = $request->validate([
+            'document_type' => 'required|in:aadhar,pan,driving_license,voter_id,other',
+            'document_number' => 'nullable|string|max:100',
+            'document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ]);
+        $employee = $this->service->find($id);
+        abort_if(! $employee, 404);
+
+        $this->documentService->upload($employee, $request->user(), $request->file('document'), $data['document_type'], $data['document_number'] ?? null);
+
+        return redirect()->route('employees.edit', $employee->id)->with('success', 'Document uploaded.');
     }
 }
