@@ -14,6 +14,7 @@
             <form action="{{ route('attendance.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="date" value="{{ $date }}">
+                <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
@@ -47,6 +48,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
                 @if($employees->isNotEmpty())
                     <x-ui.button variant="success" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Save attendance">Save Attendance</x-ui.button>
                 @endif

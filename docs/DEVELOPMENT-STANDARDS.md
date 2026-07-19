@@ -112,3 +112,23 @@ on:
 - No speculative features, config flags, or generalization for hypothetical future needs. Build
   what's asked; the `TenantScope` seam is the one deliberate exception (a cheap, explicit hook
   for a confirmed future need — multi-tenancy — not a general "just in case" abstraction).
+
+## 8. Responsive markup checklist
+
+The base layout (Velzon's sidebar/topbar/viewport meta) and every legacy DataTables-driven list
+page are already responsive — a 2026-07-19 full-app audit found the only regressions came from
+newer hand-written views skipping patterns the rest of the app already follows. Apply these to
+every new table or form view:
+
+- **Always wrap `<table>` in `<div class="table-responsive">...</div>`**, or use DataTables (which
+  handles this itself) for anything with more than a couple of columns. A bare `<table>` with no
+  wrapper will overflow the viewport on a phone with no way to reach the clipped columns.
+- **Never hardcode pixel widths on table cells** (`style="width: 696px"` etc.). Let columns size to
+  content/percentage inside the `.table-responsive` wrapper. A large enough sum of fixed-px column
+  widths breaks the layout on desktop too, not just mobile.
+- **Use Bootstrap's `col-*` grid classes for form layout**, not bare `<div>`s in a flex-wrap
+  container. `col-md-*` collapses to full-width below the `md` breakpoint automatically; flex-wrap
+  divs with no explicit column width wrap unpredictably instead of deliberately.
+- The base layout, viewport meta tag, and sidebar/topbar mobile-collapse behavior are stock Velzon
+  — don't modify them to "fix" a responsiveness issue; the issue is almost always in the page's own
+  markup, not the shell.

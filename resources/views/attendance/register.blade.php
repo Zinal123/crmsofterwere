@@ -5,6 +5,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ $employee->name }} — Attendance Register ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>
+            <div class="table-responsive">
             <table class="table table-bordered">
                 <thead><tr><th>Date</th><th>Status</th><th>Overtime Hours</th></tr></thead>
                 <tbody>
@@ -19,6 +20,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>

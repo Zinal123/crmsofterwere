@@ -3,6 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <x-ui.data-table-card title="Employees" :create-route="route('employees.create')" create-label="Add Employee">
+        <div class="table-responsive">
         <table class="table table-bordered align-middle">
             <thead>
                 <tr>
@@ -42,6 +43,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </x-ui.data-table-card>
 </div>
 @endsection

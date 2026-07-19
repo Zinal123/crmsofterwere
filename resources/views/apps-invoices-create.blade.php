@@ -269,9 +269,9 @@
                                 <tr class="table-active">
                                     <th scope="col" style="width: 50px;">#</th>
                                     <th scope="col">Product Details</th>
-                                    <th scope="col" style="width: 696px;">HSN</th>
-                                    <th scope="col" style="width: 696px;">Unit</th>
-                                    <th scope="col" style="width: 696px;">
+                                    <th scope="col">HSN</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">
                                         <div class="d-flex currency-select input-light align-items-center">
                                             Rate
                                             <select class="form-selectborder-0 bg-light" data-choices data-choices-search-false id="choices-payment-currency" onchange="otherPayment()">
@@ -279,11 +279,11 @@
                                             </select>
                                         </div>
                                     </th>
-                                    <th scope="col" style="width: 696px;">Quantity</th>
-                                    <th scope="col" style="width: 300px;">Total</th>
-                                    <th scope="col" style="width: 300px;">GST</th>
-                                    <th scope="col" style="width: 300px;">GST Amount</th>
-                                    <th scope="col" style="width: 300px;">Total Amount</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">GST</th>
+                                    <th scope="col">GST Amount</th>
+                                    <th scope="col">Total Amount</th>
                                     <th scope="col" class="text-end" style="width: 105px;"></th>
                                 </tr>
                             </thead>

@@ -23,6 +23,7 @@
     <div class="card mt-3">
         <div class="card-body">
             <h5 class="card-title">Payments This Month</h5>
+            <div class="table-responsive">
             <table class="table table-bordered">
                 <thead><tr><th>Date</th><th>Amount</th><th>Note</th></tr></thead>
                 <tbody>
@@ -37,22 +38,25 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
 
-            <form action="{{ route('employees.payments.store', $employee->id) }}" method="POST" class="d-flex gap-2 flex-wrap align-items-end mt-3">
+            <form action="{{ route('employees.payments.store', $employee->id) }}" method="POST" class="row g-2 align-items-end mt-1">
                 @csrf
-                <div>
+                <div class="col-md-3">
                     <label class="form-label" for="payment-date">Date</label>
                     <input id="payment-date" type="date" name="date" class="form-control" value="{{ now()->toDateString() }}" required>
                 </div>
-                <div>
+                <div class="col-md-3">
                     <label class="form-label" for="payment-amount">Amount (₹)</label>
                     <input id="payment-amount" type="number" step="0.01" name="amount" class="form-control" required>
                 </div>
-                <div>
+                <div class="col-md-4">
                     <label class="form-label" for="payment-note">Note</label>
                     <input id="payment-note" type="text" name="note" class="form-control">
                 </div>
-                <x-ui.button variant="success" type="submit" icon="ri-add-line" ariaLabel="Record payment">Record Payment</x-ui.button>
+                <div class="col-md-2">
+                    <x-ui.button variant="success" type="submit" icon="ri-add-line" ariaLabel="Record payment">Record Payment</x-ui.button>
+                </div>
             </form>
         </div>
     </div>
