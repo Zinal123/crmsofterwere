@@ -42,7 +42,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryInterface
 
     public function deactivate($id): Employee
     {
-        $employee = Employee::findOrFail($id);
+        $employee = $this->tenantScope->apply(Employee::query())->findOrFail($id);
         $employee->is_active = false;
         $employee->save();
 

@@ -29,8 +29,12 @@
                         </td>
                         <td>
                             <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                            @can('attendance.view')
                             <a href="{{ route('attendance.register', $employee->id) }}" class="btn btn-sm btn-secondary">Attendance</a>
+                            @endcan
+                            @can('payroll.view')
                             <a href="{{ route('employees.payroll', $employee->id) }}" class="btn btn-sm btn-success">Payroll</a>
+                            @endcan
                         </td>
                     </tr>
                 @empty
