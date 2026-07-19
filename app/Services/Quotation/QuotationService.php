@@ -26,15 +26,13 @@ class QuotationService
     }
 
     /**
-     * Pre-existing bug, preserved: the quotation form (fiber and CO2 both)
-     * always shows product_id=1's config data, regardless of the route's
-     * {id} - the original inline-PHP view code this replaces hardcoded
-     * `$product = 1` and never read the route parameter either.
+     * Fixed 2026-07-19: previously hardcoded $productId = 1 regardless of
+     * the caller's route {id} - both the fiber and CO2 quotation forms
+     * always showed product_id=1's config data no matter which product
+     * the quotation was actually for. Now uses the real product ID.
      */
-    public function getQuotationFormViewData(): array
+    public function getQuotationFormViewData($productId): array
     {
-        $productId = 1;
-
         return [
             'softeredetails' => $this->productConfigRepository->getSoftware($productId),
             'lasercutting' => $this->productConfigRepository->getLaserCutting($productId),

@@ -295,7 +295,7 @@
                                         <select class="form-select item" data-choices data-choices-sorting="true"  id = "productName-1" onchange="otherPayment1()">
                                      <option value ="0">Select product</option>
                                         @foreach($product  as $p)
-                                        <option value ="{{$p->id}}">{{$p->product}}</option>
+                                        <option value ="{{$p->id}}">{{$p->name}}</option>
                                          @endforeach
 
                                    </select>

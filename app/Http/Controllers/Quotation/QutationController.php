@@ -20,9 +20,7 @@ class QutationController extends Controller
 
     public function generatequtation($id)
     {
-        // $id is accepted but unused, matching pre-existing behavior - see
-        // QuotationService::getQuotationFormViewData().
-        return view('qutation', $this->service->getQuotationFormViewData());
+        return view('qutation', $this->service->getQuotationFormViewData($id));
     }
 
     public function generatequtationstore(Request $request)
@@ -37,9 +35,7 @@ class QutationController extends Controller
 
     public function Co2quation($id)
     {
-        // $id is accepted but unused, matching pre-existing behavior - see
-        // QuotationService::getQuotationFormViewData().
-        return view('co2qutation', $this->service->getQuotationFormViewData());
+        return view('co2qutation', $this->service->getQuotationFormViewData($id));
     }
 
     public function Co2quationstore(Request $request)

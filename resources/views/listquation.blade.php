@@ -46,7 +46,7 @@
                         <tr>
                             
                             <td>{{$item->id}}</td>
-                            <td>{{$item->name}}</td>
+                            <td>{{$item->clientname}}</td>
 
                             <td>{{$item->email}}</td>
                             <td>{{$item->phone}}</td>

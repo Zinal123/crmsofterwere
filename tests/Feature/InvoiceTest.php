@@ -18,17 +18,16 @@ class InvoiceTest extends TestCase
     public function test_create_page_renders_with_products_and_banks(): void
     {
         $user = User::factory()->create();
-        // Pre-existing bug, preserved: the product dropdown renders
+        // Fixed 2026-07-19: the product dropdown previously rendered
         // $p->product, but Product has no `product` column (only `name`) -
-        // so the option text is always blank. Bank fields do render
-        // correctly since $bank->bankname etc. are real columns.
+        // so the option text was always blank. Now uses $p->name.
         Product::factory()->create(['name' => 'Fiber Laser Cutting Machine']);
         Bank::create(['bankholdername' => 'Oracle Machine Tech', 'bankname' => 'HDFC Bank']);
 
         $response = $this->actingAs($user)->get(route('invoice.create'));
 
         $response->assertOk();
-        $response->assertDontSee('Fiber Laser Cutting Machine');
+        $response->assertSee('Fiber Laser Cutting Machine');
         $response->assertSee('HDFC Bank');
     }
 
