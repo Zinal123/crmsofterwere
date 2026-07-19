@@ -78,11 +78,12 @@ class JobController extends Controller
 
     public function approve(Request $request, $id)
     {
+        $data = $request->validate(['assigned_to' => 'nullable|exists:users,id']);
         $job = $this->repository->find($id);
         abort_if(! $job, 404);
 
         try {
-            $this->service->approve($job, $request->user(), $request->input('assigned_to'));
+            $this->service->approve($job, $request->user(), $data['assigned_to'] ?? null);
         } catch (\InvalidArgumentException $e) {
             return back()->withErrors(['status' => $e->getMessage()]);
         }
@@ -170,13 +171,17 @@ class JobController extends Controller
         abort_if(! $job, 404);
         abort_unless($job->assigned_to === $request->user()->id || $request->user()->can('jobs.assign'), 403);
 
-        $this->photoService->upload(
-            $job,
-            $request->user(),
-            $request->file('photo'),
-            isset($data['latitude']) ? (float) $data['latitude'] : null,
-            isset($data['longitude']) ? (float) $data['longitude'] : null,
-        );
+        try {
+            $this->photoService->upload(
+                $job,
+                $request->user(),
+                $request->file('photo'),
+                isset($data['latitude']) ? (float) $data['latitude'] : null,
+                isset($data['longitude']) ? (float) $data['longitude'] : null,
+            );
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Photo uploaded.');
     }

@@ -132,9 +132,27 @@
                                     @forelse ($jobNotifications as $notification)
                                         <div class="text-reset notification-item d-block dropdown-item position-relative">
                                             <div class="d-flex">
+                                                @php
+                                                    $notifVariant = match ($notification->data['decision']) {
+                                                        'approved' => 'success',
+                                                        'rejected' => 'danger',
+                                                        default => 'info', // assigned / reassigned
+                                                    };
+                                                    $notifIcon = match ($notification->data['decision']) {
+                                                        'approved' => 'ri-checkbox-circle-line',
+                                                        'rejected' => 'ri-close-circle-line',
+                                                        default => 'ri-user-shared-line', // assigned / reassigned
+                                                    };
+                                                    $notifText = match ($notification->data['decision']) {
+                                                        'approved' => 'Job request approved.',
+                                                        'rejected' => 'Job request rejected.',
+                                                        'reassigned' => 'Job reassigned to you.',
+                                                        default => 'Job assigned to you.',
+                                                    };
+                                                @endphp
                                                 <div class="avatar-xs me-3 flex-shrink-0">
-                                                    <span class="avatar-title {{ $notification->data['decision'] === 'approved' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-circle fs-16">
-                                                        <i class="{{ $notification->data['decision'] === 'approved' ? 'ri-checkbox-circle-line' : 'ri-close-circle-line' }}"></i>
+                                                    <span class="avatar-title bg-{{ $notifVariant }}-subtle text-{{ $notifVariant }} rounded-circle fs-16">
+                                                        <i class="{{ $notifIcon }}"></i>
                                                     </span>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -143,7 +161,7 @@
                                                     </a>
                                                     <div class="fs-13 text-muted">
                                                         <p class="mb-1">
-                                                            Job request {{ $notification->data['decision'] }}.
+                                                            {{ $notifText }}
                                                             @if ($notification->data['decision'] === 'rejected' && ! empty($notification->data['reason']))
                                                                 Reason: {{ $notification->data['reason'] }}
                                                             @endif

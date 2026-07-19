@@ -58,6 +58,21 @@ class JobApprovalTest extends TestCase
         $this->assertEquals('pending_approval', $job->fresh()->status);
     }
 
+    public function test_approve_rejects_a_nonexistent_reassign_target(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $job = Job::factory()->create(['status' => 'pending_approval']);
+
+        $response = $this->actingAs($owner)->postJson(route('jobs.approve', $job->id), [
+            'assigned_to' => 999999,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals('pending_approval', $job->fresh()->status);
+    }
+
     public function test_worker_cannot_approve(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

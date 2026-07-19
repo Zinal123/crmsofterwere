@@ -40,6 +40,21 @@ class JobPhotoUploadTest extends TestCase
         $this->assertDatabaseHas('job_audit_logs', ['job_id' => $job->id, 'action' => 'photo_uploaded']);
     }
 
+    public function test_upload_fails_when_job_is_not_in_progress(): void
+    {
+        Storage::fake('public');
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['status' => 'assigned', 'assigned_to' => $worker->id]);
+        $file = UploadedFile::fake()->image('proof.jpg', 800, 600);
+
+        $response = $this->actingAs($worker)->postJson(route('jobs.photos.store', $job->id), ['photo' => $file]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('job_photos', ['job_id' => $job->id]);
+    }
+
     public function test_upload_without_gps_is_flagged_not_silently_dropped(): void
     {
         Storage::fake('public');

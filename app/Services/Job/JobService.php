@@ -4,6 +4,7 @@ namespace App\Services\Job;
 
 use App\Models\Job;
 use App\Models\User;
+use App\Notifications\JobAssignedNotification;
 use App\Notifications\JobDecisionNotification;
 use App\Repositories\Contracts\JobRepositoryInterface;
 
@@ -63,6 +64,8 @@ class JobService
         ]);
 
         $this->auditLogger->log($job, $creator, 'created', "{$creator->name} assigned a new job to worker #{$data['assigned_to']}: {$job->title}");
+
+        $job->assignee?->notify(new JobAssignedNotification($job, 'assigned'));
 
         return $job;
     }
@@ -191,6 +194,8 @@ class JobService
             'from_user_id' => $previousAssignee,
             'to_user_id' => $newAssigneeId,
         ]);
+
+        $job->assignee?->notify(new JobAssignedNotification($job, 'reassigned'));
 
         return $job;
     }

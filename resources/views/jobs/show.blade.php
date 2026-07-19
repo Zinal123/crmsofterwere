@@ -8,8 +8,18 @@
                 <h4>{{ $job->title }}</h4>
                 <x-ui.status-badge
                     :status="ucfirst(str_replace('_', ' ', $job->status))"
-                    variant="info"
-                    icon="ri-briefcase-line" />
+                    :variant="match($job->status) {
+                        'completed' => 'success',
+                        'rejected' => 'danger',
+                        'on_hold' => 'warning',
+                        default => 'info',
+                    }"
+                    :icon="match($job->status) {
+                        'completed' => 'ri-checkbox-circle-line',
+                        'rejected' => 'ri-close-circle-line',
+                        'on_hold' => 'ri-pause-circle-line',
+                        default => 'ri-time-line',
+                    }" />
             </div>
             <p>{{ $job->description }}</p>
             <p class="text-muted">{{ $job->machine->name ?? $job->site_name }} &middot; Priority: {{ ucfirst($job->priority) }}</p>

@@ -22,6 +22,10 @@ class JobPhotoService
 
     public function upload(Job $job, User $uploader, UploadedFile $file, ?float $lat, ?float $lng): JobPhoto
     {
+        if ($job->status !== 'in_progress') {
+            throw new \InvalidArgumentException('Proof photos can only be uploaded while a job is in progress.');
+        }
+
         $diskPath = 'job-photos/' . $job->id . '/' . uniqid('photo_', true) . '.jpg';
         $this->compressor->compress($file, $diskPath);
 
