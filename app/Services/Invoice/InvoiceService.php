@@ -27,6 +27,7 @@ class InvoiceService
         return [
             'product' => $this->productRepository->allOrderedByLatest(),
             'bank' => $this->bankRepository->all(),
+            'states' => IndianStates::LIST,
         ];
     }
 

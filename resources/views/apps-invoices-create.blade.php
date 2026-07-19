@@ -187,9 +187,14 @@
                                     </div>
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control bg-light border-0" id="billingstate" placeholder="State" required />
+                                <select class="form-select bg-light border-0" id="billingstate" required>
+                                    <option value="">Select State</option>
+                                    @foreach($states as $stateOption)
+                                        <option value="{{ $stateOption }}">{{ $stateOption }}</option>
+                                    @endforeach
+                                </select>
                                 <div class="invalid-feedback">
-                                    Please enter a State
+                                    Please select a State
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -238,9 +243,14 @@
                                         </div>
                                     </div>
                                     <div class="mb-2">
-                                        <input type="text" class="form-control bg-light border-0" id="shippingstate" placeholder="State" required />
+                                        <select class="form-select bg-light border-0" id="shippingstate" required>
+                                            <option value="">Select State</option>
+                                            @foreach($states as $stateOption)
+                                                <option value="{{ $stateOption }}">{{ $stateOption }}</option>
+                                            @endforeach
+                                        </select>
                                         <div class="invalid-feedback">
-                                            Please enter a State
+                                            Please select a State
                                         </div>
                                     </div>
                                     <div class="mb-2">
@@ -327,8 +337,13 @@
                                         
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control  bg-light border-0 gst" id="gst-1" step="0.01" placeholder="0.00"  readonly="readonly" value = "18" />
-                                        
+                                        <select class="form-select bg-light border-0 gst" id="gst-1">
+                                            <option value="0">0%</option>
+                                            <option value="5">5%</option>
+                                            <option value="12">12%</option>
+                                            <option value="18" selected>18%</option>
+                                            <option value="28">28%</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <input type="text" class="form-control  bg-light border-0 withtax" id="withtax-1" step="0.01" placeholder="0.00"  readonly="readonly"  />

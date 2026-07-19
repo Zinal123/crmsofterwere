@@ -208,7 +208,13 @@ function new_link() {
         "</td>" +
         '<td class="text-end">' +
         "<div>" +
-        '<input type="text" class="form-control bg-light border-0 gst" id="gst-' + count + '"  placeholder="$0.00" value ="18" >' +
+        '<select class="form-select bg-light border-0 gst" id="gst-' + count + '">' +
+        '<option value="0">0%</option>' +
+        '<option value="5">5%</option>' +
+        '<option value="12">12%</option>' +
+        '<option value="18" selected>18%</option>' +
+        '<option value="28">28%</option>' +
+        "</select>" +
         "</div>" +
         "</td>" +
         '<td class="text-end">' +
@@ -366,7 +372,9 @@ function updateQuantity(amount, itemQuntity, priceselection) {
     var linePrice = amount * itemQuntity;
     linePrice = linePrice.toFixed(2);
     priceselection.value = linePrice;
-    taxableamount = linePrice * 0.18;
+    var gstSelect = document.getElementById('gst-' + count + '');
+    var lineGstRate = gstSelect ? (parseFloat(gstSelect.value) / 100) : 0.18;
+    taxableamount = linePrice * lineGstRate;
     taxableamount1 = taxableamount.toFixed(2);
     taxableamount2 = paymentSign + taxableamount1;
     const num1 = parseInt(linePrice);

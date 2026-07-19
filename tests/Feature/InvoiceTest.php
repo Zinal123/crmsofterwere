@@ -29,6 +29,12 @@ class InvoiceTest extends TestCase
         $response->assertOk();
         $response->assertSee('Fiber Laser Cutting Machine');
         $response->assertSee('HDFC Bank');
+        // Pan-India GST Engine: state dropdown replaces free-text input,
+        // per-line GST select replaces the readonly-18-only field.
+        $response->assertSee('<option value="Gujarat">Gujarat</option>', false);
+        $response->assertSee('<option value="Maharashtra">Maharashtra</option>', false);
+        $response->assertSee('id="gst-1"', false);
+        $response->assertDontSee('readonly="readonly" value = "18"', false);
     }
 
     public function test_getproduct_returns_product_list_json(): void
