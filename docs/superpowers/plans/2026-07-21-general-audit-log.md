@@ -1752,7 +1752,8 @@ git commit -m "feat(audit): wire Inventory domain into the audit trail"
 ### Task 9: Admin domain — `User` model + manual Role logging
 
 **Files:**
-- Modify: `app/Models/User.php` (apply trait, exclude password)
+- Modify: `app/Models/User.php` (add `$auditStatusFields` only — `Auditable`/`$auditExcept` already
+  landed in Task 1, see the correction note below)
 - Modify: `app/Services/Admin/UserService.php` (manual log call for role assignment)
 - Modify: `app/Services/Admin/RoleService.php` (manual log calls for role create/delete/permission
   toggle — this is the "Role is a vendor class" gap from the design spec)
@@ -1765,11 +1766,16 @@ git commit -m "feat(audit): wire Inventory domain into the audit trail"
 - Consumes: `AuditLogService::log()` (Task 2) — this is the first task that calls it directly from
   a service, rather than relying purely on the automatic trait.
 
-**Context:** This is the one domain with the design spec's documented manual-logging exception.
-`User`'s own column changes (`is_active`, `name`, `email`) are auto-captured by the trait once
-applied — only role assignment (a pivot-table change, invisible to `getDirty()`) and anything
-about the `Role` model itself (a vendor class, `Spatie\Permission\Models\Role`, that the trait
-cannot be attached to) need a manual call.
+**Correction, read before starting:** Task 1's own brief test
+(`test_excluded_field_logs_the_change_with_no_values`) turned out to require `User` to already
+carry `Auditable` — the plan had a genuine internal contradiction (that test can't pass with only
+`Bank` audited, per Task 1's own Step 10 pass requirement). Task 1's implementer correctly applied
+`use Auditable;` and `protected $auditExcept = ['password'];` to `app/Models/User.php` already, to
+make its own brief's test pass. **Do not re-apply the trait or re-add `$auditExcept` — both
+already exist.** This task's only remaining change to that file is adding
+`$auditStatusFields` (Step 4 below), which Task 1 correctly didn't add since nothing in its own
+scope needed it. The rest of this task (permission, UI, `UserService`/`RoleService` changes) is
+unaffected and unchanged.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1851,15 +1857,14 @@ Expected: FAIL
 Append `'admin.view-audit',` to `PERMISSIONS`; replace every `38` with `39` in
 `tests/Feature/RolesAndPermissionsSeederTest.php`.
 
-- [ ] **Step 4: Apply the trait to `User`, excluding the password**
+- [ ] **Step 4: Add status-field special-casing to `User`**
 
-In `app/Models/User.php`, add `use App\Support\Auditing\Auditable;` to the imports, change
-`use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions;` to
-`use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions, Auditable;`, and add
-this property right after the class's opening `use` line:
+`app/Models/User.php` already has `Auditable` applied and `protected $auditExcept = ['password'];`
+(added ahead of schedule in Task 1 — see the correction note above). It's still missing the
+`is_active` status-field special-casing every other domain in this plan has (Employee, Machine).
+Add this property immediately after the existing `protected $auditExcept = ['password'];` line:
 
 ```php
-    protected $auditExcept = ['password'];
     protected $auditStatusFields = ['is_active'];
 ```
 
