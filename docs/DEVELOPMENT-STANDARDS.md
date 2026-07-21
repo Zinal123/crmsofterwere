@@ -132,3 +132,32 @@ every new table or form view:
 - The base layout, viewport meta tag, and sidebar/topbar mobile-collapse behavior are stock Velzon
   — don't modify them to "fix" a responsiveness issue; the issue is almost always in the page's own
   markup, not the shell.
+
+## 9. Audit logging — `Auditable` trait
+
+Every model with a real create/update/delete UI should `use App\Support\Auditing\Auditable;`
+(established 2026-07-21, `docs/superpowers/specs/2026-07-21-general-audit-log-design.md`). It
+auto-logs `created`/`updated`/`deleted` Eloquent events to the polymorphic `audit_logs` table — no
+controller/service changes needed for the common case.
+
+- Add `protected $auditExcept = [...]` for fields that should never have their values logged
+  (passwords, tokens) — the change is still recorded (field name, no old/new values), just not the
+  content.
+- Add `protected $auditStatusFields = [...]` for boolean "is this active" columns (`is_active`,
+  etc.) so they log as `activated`/`deactivated` instead of a generic `true`/`false` field diff.
+- Register any new model in `Relation::morphMap()` (`app/Providers/AppServiceProvider.php`) so
+  `audit_logs.auditable_type` stores a short readable alias instead of the full class name — and
+  add its `.view-audit` permission + a matching entry in
+  `AuditLogService::TYPE_PERMISSIONS` (`app/Services/Auditing/AuditLogService.php`) so the shared
+  `<x-ui.audit-trail>` (one record per page) or `<x-ui.audit-trail-modal>` (list pages, History
+  button per row) components can gate access correctly.
+- Only two exceptions need a manual `AuditLogService::log(...)` call instead of the automatic
+  trait: many-to-many relationship changes (the trait only sees column changes, not pivot-table
+  writes — see `UserService::updateRoleAndStatus()`'s role-assignment logging), and vendor-class
+  models the trait can't be attached to (see `RoleService`'s calls for Spatie's `Role` model).
+- **Caution if you're registering `Relation::morphMap()` for a model that already has an unrelated
+  polymorphic relation elsewhere** (discovered during this feature: `User`'s new `'user'` alias
+  changed `subscribable_type` on the pre-existing `push_subscriptions`/webpush table too, since
+  morph-map registration is global per class, not scoped to one relation). Check for this before
+  adding a new map entry, and normalize any existing stored values with a small data migration if
+  needed (see `2026_07_21_000002_normalize_push_subscription_morph_type.php` for the pattern).
