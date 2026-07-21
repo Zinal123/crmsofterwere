@@ -8,10 +8,18 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 use Spatie\Permission\Traits\HasRoles;
+use App\Support\Auditing\Auditable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions, Auditable;
+
+    /**
+     * Fields whose changes are logged without values (e.g. sensitive/secret data).
+     *
+     * @var array<int, string>
+     */
+    protected $auditExcept = ['password'];
 
     /**
      * The attributes that are mass assignable.

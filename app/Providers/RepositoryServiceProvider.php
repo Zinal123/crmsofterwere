@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\Contracts\AttendanceRepositoryInterface;
+use App\Repositories\Contracts\AuditLogRepositoryInterface;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\DashboardRepositoryInterface;
 use App\Repositories\Contracts\EmployeeDocumentRepositoryInterface;
@@ -19,6 +20,7 @@ use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\SalaryPaymentRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAttendanceRepository;
+use App\Repositories\Eloquent\EloquentAuditLogRepository;
 use App\Repositories\Eloquent\EloquentBankRepository;
 use App\Repositories\Eloquent\EloquentDashboardRepository;
 use App\Repositories\Eloquent\EloquentEmployeeDocumentRepository;
@@ -56,5 +58,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeDocumentRepositoryInterface::class, EloquentEmployeeDocumentRepository::class);
         $this->app->bind(AttendanceRepositoryInterface::class, EloquentAttendanceRepository::class);
         $this->app->bind(SalaryPaymentRepositoryInterface::class, EloquentSalaryPaymentRepository::class);
+        $this->app->bind(AuditLogRepositoryInterface::class, EloquentAuditLogRepository::class);
     }
 }
