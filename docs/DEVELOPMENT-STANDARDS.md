@@ -151,6 +151,14 @@ controller/service changes needed for the common case.
   `AuditLogService::TYPE_PERMISSIONS` (`app/Services/Auditing/AuditLogService.php`) so the shared
   `<x-ui.audit-trail>` (one record per page) or `<x-ui.audit-trail-modal>` (list pages, History
   button per row) components can gate access correctly.
+- **Deploy requirement, easy to miss:** a new `.view-audit` permission added to
+  `RolesAndPermissionsSeeder::PERMISSIONS` does not exist in any real database until the seeder is
+  actually re-run there — `php artisan db:seed --class=RolesAndPermissionsSeeder` (idempotent, safe
+  to re-run). Skipping this doesn't error; the History button/Audit section for that domain just
+  silently fails the `@can(...)` check and never appears, for every role including Owner. This bit
+  this exact feature during its own final verification (permission count went from 31 to 40 in code
+  but stayed at 25 in the live local DB until the seeder was re-run) — the same "seeder must be
+  re-run, adding to the array alone does nothing" gotcha documented for the Job Tracking module.
 - Only two exceptions need a manual `AuditLogService::log(...)` call instead of the automatic
   trait: many-to-many relationship changes (the trait only sees column changes, not pivot-table
   writes — see `UserService::updateRoleAndStatus()`'s role-assignment logging), and vendor-class
