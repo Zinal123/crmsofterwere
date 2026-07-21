@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Support\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, Auditable;
+
+    protected $auditStatusFields = ['is_active'];
 
     protected $fillable = [
         'name', 'phone', 'email', 'address', 'emergency_contact_name', 'emergency_contact_phone',

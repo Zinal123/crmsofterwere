@@ -60,5 +60,14 @@
             </form>
         </div>
     </div>
+
+    @can('employees.view-audit')
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Audit Trail</h5>
+            <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('employee', $employee->id)" />
+        </div>
+    </div>
+    @endcan
 </div>
 @endsection

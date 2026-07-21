@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('attendance/{employee}/register', [App\Http\Controllers\Workforce\AttendanceController::class, 'register'])->name('attendance.register')->middleware('permission:attendance.view');
     Route::get('employees/{employee}/payroll', [App\Http\Controllers\Workforce\PayrollController::class, 'show'])->name('employees.payroll')->middleware('permission:payroll.view');
     Route::post('employees/{employee}/payments', [App\Http\Controllers\Workforce\PayrollController::class, 'storePayment'])->name('employees.payments.store')->middleware('permission:payroll.manage-payments');
+    Route::get('audit-logs/{type}/{id}', [App\Http\Controllers\Auditing\AuditLogController::class, 'forRecord'])->name('audit-logs.for-record');
 
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation')->middleware('permission:quotations.view');
     Route::post('/co2quationstore' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quationstore'])->name('Co2quationstore')->middleware('permission:quotations.create');
