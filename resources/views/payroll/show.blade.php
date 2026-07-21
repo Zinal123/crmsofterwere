@@ -25,16 +25,21 @@
             <h5 class="card-title">Payments This Month</h5>
             <div class="table-responsive">
             <table class="table table-bordered">
-                <thead><tr><th>Date</th><th>Amount</th><th>Note</th></tr></thead>
+                <thead><tr><th>Date</th><th>Amount</th><th>Note</th><th></th></tr></thead>
                 <tbody>
                     @forelse($payments as $payment)
                         <tr>
                             <td>{{ $payment->date->toDateString() }}</td>
                             <td>{{ $payment->amount }}</td>
                             <td>{{ $payment->note }}</td>
+                            <td>
+                                @can('payroll.view-audit')
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-salary_payment" data-audit-id="{{ $payment->id }}">History</button>
+                                @endcan
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="3"><x-ui.empty-state icon="ri-money-rupee-circle-line" message="No payments recorded this month yet." /></td></tr>
+                        <tr><td colspan="4"><x-ui.empty-state icon="ri-money-rupee-circle-line" message="No payments recorded this month yet." /></td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -61,4 +66,8 @@
         </div>
     </div>
 </div>
+
+@can('payroll.view-audit')
+    <x-ui.audit-trail-modal type="salary_payment" />
+@endcan
 @endsection
