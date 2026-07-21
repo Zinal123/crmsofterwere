@@ -75,6 +75,11 @@ $product = App\Models\Product::orderBy('id' ,'desc')->get();
                                         Quantity Update
                                     </button>
                                     </div>
+                                    @can('inventory.view-audit')
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-inventory" data-audit-id="{{ $item->id }}">
+                                        History
+                                    </button>
+                                    @endcan
                                     </div>
                                     </td>
                                  </tr>
@@ -270,5 +275,8 @@ document.getElementById('paymentForm').addEventListener('submit', function(event
 
     </script>
 
-   
+@can('inventory.view-audit')
+    <x-ui.audit-trail-modal type="inventory" />
+@endcan
+
 @endsection

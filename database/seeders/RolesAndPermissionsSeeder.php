@@ -11,7 +11,7 @@ class RolesAndPermissionsSeeder extends Seeder
     public const PERMISSIONS = [
         'dashboard.view',
         'products.view', 'products.create', 'products.delete', 'products.manage-config',
-        'inventory.view', 'inventory.create', 'inventory.update',
+        'inventory.view', 'inventory.create', 'inventory.update', 'inventory.view-audit',
         'invoices.view', 'invoices.create', 'invoices.view-details', 'invoices.record-payment',
         'vendors.view',
         'payment-history.view',
