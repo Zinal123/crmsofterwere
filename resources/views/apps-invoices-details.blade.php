@@ -347,12 +347,15 @@ $number = $amount;
         </div>
       </div>
  </div>
- 
-   
-    
-  
-     
-        
+
+ @can('invoices.view-audit')
+ <div class="card mt-3 d-print-none">
+     <div class="card-body">
+         <h5 class="card-title">Audit Trail</h5>
+         <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('invoice', $invoice[0]->id)" />
+     </div>
+ </div>
+ @endcan
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/js/pages/invoicedetails.js') }}"></script>
