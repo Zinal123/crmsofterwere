@@ -70,7 +70,13 @@ list view
                                     <i class="ri-more-fill align-middle"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-
+                                    @can('products.view-audit')
+                                    <li>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}">
+                                            <i class="ri-history-line align-bottom me-2 text-muted"></i> History
+                                        </a>
+                                    </li>
+                                    @endcan
                                     <li>
                                         <a class="dropdown-item remove-item-btn" href="{{route('product.delete' ,$item->id)}}">
                                             <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
@@ -138,6 +144,9 @@ list view
         </div>
     </div>
 </div>
+@can('products.view-audit')
+    <x-ui.audit-trail-modal type="product" />
+@endcan
 @endsection
 @section('script')
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" integrity="sha384-Dv1j0mqPOKbG6R+/4/adHCn5JaMBLG3iu8uTXFBM2MjEZuKwtsyLedRcRMR0cq7P" crossorigin="anonymous" rel="stylesheet" type="text/css" />
