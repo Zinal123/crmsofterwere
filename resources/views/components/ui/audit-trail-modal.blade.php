@@ -20,7 +20,10 @@ document.getElementById('auditTrailModal-{{ $type }}').addEventListener('show.bs
     body.innerHTML = '<p class="text-muted mb-0">Loading…</p>';
 
     fetch('{{ url('audit-logs/' . $type) }}/' + recordId)
-        .then(function (response) { return response.text(); })
+        .then(function (response) {
+            if (!response.ok) { throw new Error('HTTP ' + response.status); }
+            return response.text();
+        })
         .then(function (html) { body.innerHTML = html; })
         .catch(function () { body.innerHTML = '<p class="text-danger mb-0">Failed to load history.</p>'; });
 });
