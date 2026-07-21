@@ -19,7 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'admin.manage-roles',
         'admin.manage-users',
         'jobs.view-own', 'jobs.create', 'jobs.view-all', 'jobs.approve', 'jobs.assign', 'jobs.manage-machines',
-        'employees.view', 'employees.manage', 'attendance.view', 'attendance.manage', 'payroll.view', 'payroll.manage-payments',
+        'employees.view', 'employees.manage', 'attendance.view', 'attendance.manage', 'attendance.view-audit', 'payroll.view', 'payroll.manage-payments',
         'employees.view-audit',
     ];
 

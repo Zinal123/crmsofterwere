@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
+    use Auditable;
+
     protected $fillable = ['employee_id', 'date', 'status', 'overtime_hours', 'marked_by'];
 
     protected $casts = [
