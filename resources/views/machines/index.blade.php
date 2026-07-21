@@ -22,12 +22,15 @@
                                 icon="{{ $machine->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line' }}" />
                         </td>
                         <td>
-                            <form action="{{ route('machines.toggle', $machine->id) }}" method="POST">
+                            <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 <x-ui.button variant="secondary" size="sm" type="submit">
                                     {{ $machine->is_active ? 'Disable' : 'Enable' }}
                                 </x-ui.button>
                             </form>
+                            @can('machines.view-audit')
+                            <x-ui.button variant="secondary" size="sm" type="button" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}">History</x-ui.button>
+                            @endcan
                         </td>
                     </tr>
                 @empty
@@ -48,4 +51,7 @@
         </div>
     </div>
 </div>
+@can('machines.view-audit')
+    <x-ui.audit-trail-modal type="machine" />
+@endcan
 @endsection

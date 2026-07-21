@@ -16,7 +16,7 @@ class RolesAndPermissionsSeederTest extends TestCase
     {
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(39, Permission::all());
+        $this->assertCount(40, Permission::all());
         $this->assertTrue(Permission::where('name', 'invoices.view')->exists());
         $this->assertTrue(Permission::where('name', 'admin.manage-roles')->exists());
     }
@@ -27,7 +27,7 @@ class RolesAndPermissionsSeederTest extends TestCase
 
         $owner = Role::findByName('Owner');
 
-        $this->assertCount(39, $owner->permissions);
+        $this->assertCount(40, $owner->permissions);
     }
 
     public function test_worker_role_gets_only_its_two_job_permissions(): void
@@ -44,7 +44,7 @@ class RolesAndPermissionsSeederTest extends TestCase
         (new RolesAndPermissionsSeeder())->run();
         (new RolesAndPermissionsSeeder())->run();
 
-        $this->assertCount(39, Permission::all());
+        $this->assertCount(40, Permission::all());
         $this->assertCount(2, Role::all());
     }
 
