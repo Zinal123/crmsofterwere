@@ -55,7 +55,11 @@
                                    <button type="button" class="btn btn-danger" id = "delete" data-bs-toggle="modal" data-id="{{$item->id}}">
                                      Delete
                                    </button>
-                                    
+                                   @can('quotations.view-audit')
+                                   <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}">
+                                     History
+                                   </button>
+                                   @endcan
                             </td>
                         </tr>
                         @endforeach
@@ -98,8 +102,12 @@
 
     <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
-    
-      
-  
+
+
+
+
+@can('quotations.view-audit')
+    <x-ui.audit-trail-modal type="quotation" />
+@endcan
 
 @endsection

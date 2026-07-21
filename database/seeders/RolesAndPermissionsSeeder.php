@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'payroll.view-audit',
         'invoices.view-audit',
         'products.view-audit',
+        'quotations.view-audit',
     ];
 
     public function run(): void
