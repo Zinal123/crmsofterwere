@@ -4,13 +4,16 @@ namespace App\Services\Admin;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\Auditing\AuditLogService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function __construct(private UserRepositoryInterface $repository)
-    {
+    public function __construct(
+        private UserRepositoryInterface $repository,
+        private AuditLogService $auditLog,
+    ) {
     }
 
     public function listAllWithRoles(): Collection
@@ -45,6 +48,12 @@ class UserService
 
         if (($losingOwnerRole || $beingDeactivated) && $this->isLastActiveOwner($user)) {
             throw new \InvalidArgumentException('At least one active Owner must remain. Assign another user the Owner role before changing or deactivating this one.');
+        }
+
+        $oldRole = $user->roles->pluck('name')->first();
+
+        if ($oldRole !== $roleName) {
+            $this->auditLog->log($user, 'updated', 'role', $oldRole, $roleName);
         }
 
         $user->syncRoles([$roleName]);

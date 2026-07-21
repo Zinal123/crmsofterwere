@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Services\Auditing\AuditLogService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
@@ -10,8 +11,10 @@ use Spatie\Permission\Models\Role;
 
 class RoleService
 {
-    public function __construct(private RoleRepositoryInterface $repository)
-    {
+    public function __construct(
+        private RoleRepositoryInterface $repository,
+        private AuditLogService $auditLog,
+    ) {
     }
 
     public function listRolesWithPermissions(): Collection
@@ -26,7 +29,10 @@ class RoleService
 
     public function createRole(string $name): Role
     {
-        return $this->repository->create($name);
+        $role = $this->repository->create($name);
+        $this->auditLog->log($role, 'created');
+
+        return $role;
     }
 
     public function deleteRole($id): void
@@ -45,6 +51,7 @@ class RoleService
             throw new \InvalidArgumentException('This role has users assigned to it. Reassign those users before deleting the role.');
         }
 
+        $this->auditLog->log($role, 'deleted');
         $this->repository->delete($id);
     }
 
@@ -64,10 +71,12 @@ class RoleService
 
         if ($role->hasPermissionTo($permissionName)) {
             $role->revokePermissionTo($permissionName);
+            $this->auditLog->log($role, 'updated', 'permission', $permissionName, null);
             return false;
         }
 
         $role->givePermissionTo($permissionName);
+        $this->auditLog->log($role, 'updated', 'permission', null, $permissionName);
         return true;
     }
 }

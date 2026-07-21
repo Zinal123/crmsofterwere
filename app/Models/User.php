@@ -20,6 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $auditExcept = ['password'];
+    protected $auditStatusFields = ['is_active'];
 
     /**
      * The attributes that are mass assignable.

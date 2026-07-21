@@ -80,6 +80,9 @@ Users
                                         {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                     </button>
                                 </form>
+                                @can('admin.view-audit')
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-1" data-bs-toggle="modal" data-bs-target="#auditTrailModal-user" data-audit-id="{{ $user->id }}">History</button>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach
@@ -89,6 +92,9 @@ Users
         </x-ui.data-table-card>
     </div>
 </div>
+@can('admin.view-audit')
+    <x-ui.audit-trail-modal type="user" />
+@endcan
 @endsection
 
 @section('script')
