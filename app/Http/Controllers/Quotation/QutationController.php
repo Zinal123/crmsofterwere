@@ -52,7 +52,58 @@ class QutationController extends Controller
 
     private function storeQuotation(Request $request)
     {
-        $this->service->create($request->all());
+        $data = $request->validate($this->validationRules());
+        $this->service->create($data);
         return redirect()->route('listqutation')->with('success', 'Your message has been sent successfully!');
+    }
+
+    /**
+     * Types/lengths mirror database/migrations/2026_07_10_000018_create_quationform_table.php
+     * exactly - every column here is nullable in the schema, so this only rejects data that
+     * would otherwise crash the insert (wrong type, too long), it doesn't newly require
+     * anything that was previously optional.
+     */
+    private function validationRules(): array
+    {
+        return [
+            'product_id' => 'nullable|integer',
+            'clientname' => 'nullable|string|max:255',
+            'companyname' => 'nullable|string|max:255',
+            'gstno' => 'nullable|string|max:255',
+            'companyaddress' => 'nullable|string|max:255',
+            'bank' => 'nullable|integer',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'date' => 'nullable|date',
+            'reminderdate' => 'nullable|date',
+            'softweredetails' => 'nullable|integer',
+            'lasercutting' => 'nullable|integer',
+            'focus' => 'nullable|integer',
+            'power' => 'nullable|integer',
+            'inputpower' => 'nullable|string|max:255',
+            'cuttingway' => 'nullable|integer',
+            'cncspan' => 'nullable|string|max:255',
+            'cnslenght' => 'nullable|string|max:255',
+            'cuttingrang' => 'nullable|string|max:255',
+            'liftingheight' => 'nullable|string|max:255',
+            'headquantity' => 'nullable|string|max:255',
+            'cuttingthickess' => 'nullable|integer',
+            'strokespeed' => 'nullable|string|max:255',
+            'cuttingspeed' => 'nullable|string|max:255',
+            'drive' => 'nullable|string|max:255',
+            'motor' => 'nullable|integer',
+            'motortype' => 'nullable|integer',
+            'gearbox' => 'nullable|integer',
+            'rack' => 'nullable|integer',
+            'software' => 'nullable|integer',
+            'description' => 'nullable|string',
+            'description1' => 'nullable|string',
+            'description2' => 'nullable|string',
+            'amount' => 'nullable|string|max:255',
+            'amount1' => 'nullable|string|max:255',
+            'amount2' => 'nullable|string|max:255',
+            'optionparthyscope' => 'nullable|string',
+            'note' => 'nullable|string',
+        ];
     }
 }

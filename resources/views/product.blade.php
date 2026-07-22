@@ -16,13 +16,6 @@ list view
 @endslot
 @endcomponent
 
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="ri-checkbox-circle-line align-middle me-1"></i>{{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
 <div class="row">
     <div class="col-lg-12">
         <x-ui.data-table-card title="Products">
@@ -106,12 +99,15 @@ list view
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('productstore')}}" method="POST">
+                <form action="{{route('productstore')}}" method="POST" onsubmit="this.querySelector('button[type=submit]').disabled = true;">
                     @csrf
                     <div class="col-xxl-6">
                             <div>
                                 <label for="firstName" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="firstName"  name = "name" placeholder="Enter Product">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="firstName"  name = "name" value="{{ old('name') }}" placeholder="Enter Product">
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="lastName" class="form-label">unit</label>
@@ -164,6 +160,13 @@ document.addEventListener('DOMContentLoaded', function () {
             search: 'Search products:',
         }
     });
+
+    @if($errors->has('name'))
+        // Validation failed on the last submit - the inline error markup is
+        // already in the DOM, but the modal containing the form is closed by
+        // default, so without this the user never sees why nothing saved.
+        new bootstrap.Modal(document.getElementById('exampleModalgrid')).show();
+    @endif
 });
 </script>
 @endsection

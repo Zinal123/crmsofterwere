@@ -25,16 +25,30 @@ class InventryController extends Controller
 
     public function inventrystore(Request $request)
     {
+        // `product_id` required: a missing one previously created an orphan
+        // inventory row with no linked product. `vandername`/`rate` weren't
+        // part of any reported finding and are left as-is.
+        $request->validate([
+            'product_id' => 'required|integer|exists:product,id',
+            'quantity' => 'nullable|integer',
+        ]);
+
         $this->service->create($request->all());
         return redirect()->route('invoice.inventrylist');
     }
 
     public function quantityupdate(Request $request)
     {
-        $found = $this->service->reduceQuantity(
-            $request->input('id'),
-            $request->input('quantity')
-        );
+        $data = $request->validate([
+            'id' => 'required|integer|exists:invetry,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        try {
+            $found = $this->service->reduceQuantity($data['id'], $data['quantity']);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         if ($found) {
             return response()->json(['success' => true]);

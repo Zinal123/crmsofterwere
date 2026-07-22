@@ -53,6 +53,25 @@ class AttendanceTest extends TestCase
         $this->assertDatabaseHas('attendances', ['employee_id' => $employee->id, 'status' => 'present', 'overtime_hours' => 2]);
     }
 
+    public function test_invalid_status_returns_a_human_readable_message(): void
+    {
+        // Regression test: this used to return the raw "The selected
+        // rows.0.status is invalid." message, leaking internal dot-notation
+        // field paths to the end user.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+
+        $response = $this->actingAs($owner)->postJson(route('attendance.store'), [
+            'date' => '2026-07-19',
+            'rows' => [['employee_id' => $employee->id, 'status' => 'on_vacation', 'overtime_hours' => 0]],
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonFragment(['rows.0.status' => ['Status must be one of: Present, Absent, Half Day, Leave.']]);
+    }
+
     public function test_worker_cannot_mark_attendance(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

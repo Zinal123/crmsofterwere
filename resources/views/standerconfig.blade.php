@@ -377,7 +377,7 @@ Standerconfig
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="firstName-3"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-3"  name = "company" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id1"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">

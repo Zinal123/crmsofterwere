@@ -32,6 +32,11 @@ class AttendanceController extends Controller
             'rows.*.employee_id' => 'required|exists:employees,id',
             'rows.*.status' => 'required|in:present,absent,half_day,leave',
             'rows.*.overtime_hours' => 'nullable|numeric|min:0',
+        ], [
+            'rows.*.status.required' => 'Please select a status for every employee.',
+            'rows.*.status.in' => 'Status must be one of: Present, Absent, Half Day, Leave.',
+            'rows.*.employee_id.exists' => 'One of the submitted employees could not be found.',
+            'rows.*.overtime_hours.numeric' => 'Overtime hours must be a number.',
         ]);
 
         $this->service->markForDate($data['date'], $data['rows'], $request->user());

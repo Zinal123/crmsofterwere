@@ -33,7 +33,13 @@ class InventoryService
             return false;
         }
 
-        $this->repository->updateQuantity($item, $item->quantity - $requestedQuantity);
+        $newQuantity = $item->quantity - $requestedQuantity;
+
+        if ($newQuantity < 0) {
+            throw new \InvalidArgumentException('Cannot reduce quantity below zero (current stock: ' . $item->quantity . ').');
+        }
+
+        $this->repository->updateQuantity($item, $newQuantity);
 
         return true;
     }

@@ -98,4 +98,50 @@ class QuotationTest extends TestCase
 
         $response->assertOk();
     }
+
+    public function test_generatequtationstore_saves_a_real_10_digit_phone_number(): void
+    {
+        // Regression test: quationform.phone was a 32-bit `integer` column
+        // (max ~2.1 billion) - any real Indian mobile number (>= 6 billion)
+        // overflowed it and 500'd on MySQL. Fixed to `string` via
+        // 2026_07_22_000001_change_quationform_phone_to_string.php.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'Real Phone Client',
+            'phone' => '9998887776',
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $this->assertDatabaseHas('quationform', [
+            'clientname' => 'Real Phone Client',
+            'phone' => '9998887776',
+        ]);
+    }
+
+    public function test_generatequtationstore_rejects_an_oversized_field_with_a_clean_422(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => str_repeat('A', 300),
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('quationform', ['clientname' => str_repeat('A', 300)]);
+    }
+
+    public function test_generatequtationstore_rejects_a_non_numeric_product_id_with_a_clean_422(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('generatequtationstore'), [
+            'product_id' => 'not-a-number',
+            'clientname' => 'Bad Product Id Client',
+        ]);
+
+        $response->assertStatus(422);
+    }
 }

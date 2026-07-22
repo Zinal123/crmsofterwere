@@ -37,6 +37,12 @@
                     <div class="card mt-4">
 
                         <div class="card-body p-4">
+                            @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="ri-error-warning-line align-middle me-1"></i>{{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            @endif
                             <div class="text-center mt-2">
                                 <h5 class="text-primary">Welcome Back !</h5>
                                 <p class="text-muted">Sign in to continue.</p>

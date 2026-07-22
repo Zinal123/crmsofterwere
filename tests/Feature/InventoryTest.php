@@ -59,4 +59,47 @@ class InventoryTest extends TestCase
         $response->assertJson(['success' => true]);
         $this->assertEquals(15, $item->fresh()->quantity);
     }
+
+    public function test_quantityupdate_rejects_a_reduction_that_would_go_negative(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+        $item = Invetry::factory()->create(['product_id' => $product->id, 'quantity' => 20]);
+
+        $response = $this->actingAs($user)->postJson(route('quantityupdate'), [
+            'id' => $item->id,
+            'quantity' => 10000,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals(20, $item->fresh()->quantity);
+    }
+
+    public function test_quantityupdate_rejects_a_negative_quantity_input(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+        $item = Invetry::factory()->create(['product_id' => $product->id, 'quantity' => 20]);
+
+        $response = $this->actingAs($user)->postJson(route('quantityupdate'), [
+            'id' => $item->id,
+            'quantity' => -5,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals(20, $item->fresh()->quantity);
+    }
+
+    public function test_inventrystore_rejects_a_missing_product_id(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('inventrystore'), [
+            'quantity' => 10,
+            'vandername' => 'No Product Vendor',
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('invetry', ['vandername' => 'No Product Vendor']);
+    }
 }
