@@ -2,130 +2,71 @@
 @section('title')
 @lang('translation.signin')
 @endsection
+@section('css')
+@include('auth.partials.styles')
+@endsection
 @section('content')
-<div class="auth-page-wrapper pt-5">
-    <!-- auth page bg -->
-    <div class="auth-one-bg-position auth-one-bg"  id="auth-particles">
-        <div class="bg-overlay"></div>
+<div class="oms-auth">
+    <a href="{{ route('root') }}" class="oms-auth-logo">
+        <img src="{{ URL::asset('build/images/oracallogo.png') }}" alt="Oracle Machine Tech">
+    </a>
+    <p class="oms-auth-tagline">CNC &amp; Laser Cutting Management</p>
 
-        <div class="shape">
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
-                <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
-            </svg>
+    <div class="oms-auth-card">
+        @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="ri-error-warning-line align-middle me-1"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        @endif
+
+        <div class="oms-auth-badge"><i class="ri-shield-check-line"></i></div>
+        <div class="oms-auth-card-header mb-4">
+            <h5 class="mb-1">Welcome back</h5>
+            <p class="text-muted mb-0">Sign in to continue.</p>
+        </div>
+
+        <form action="{{ route('login') }}" method="POST">
+            @csrf
+            <div class="mb-3">
+                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                <div class="oms-input-group">
+                    <i class="ri-user-line oms-input-icon"></i>
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" id="username" name="email" placeholder="Enter username">
+                </div>
+                @error('email')
+                    <span class="invalid-feedback d-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-baseline gap-1">
+                    <label class="form-label mb-0" for="password-input">Password <span class="text-danger">*</span></label>
+                    <a href="{{ route('password.update') }}" class="text-muted small">Forgot password?</a>
+                </div>
+                <div class="position-relative auth-pass-inputgroup oms-input-group mt-1">
+                    <i class="ri-lock-2-line oms-input-icon"></i>
+                    <input type="password" class="form-control password-input pe-5 @error('password') is-invalid @enderror" name="password" placeholder="Enter password" id="password-input">
+                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                    @error('password')
+                        <span class="invalid-feedback d-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button class="btn btn-success w-100" type="submit">Sign In</button>
+            </div>
+        </form>
     </div>
 
-    <!-- auth page content -->
-    <div class="auth-page-content">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center mt-sm-5 mb-4 text-white-50">
-                        <div>
-                            <a href="index" class="d-inline-block auth-logo">
-                                <img src="{{ URL::asset('build/images/logo2.png')}}" alt="" height="20">
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-
-            <div class="row justify-content-center">
-                <div class="col-md-8 col-lg-6 col-xl-5">
-                    <div class="card mt-4">
-
-                        <div class="card-body p-4">
-                            @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="ri-error-warning-line align-middle me-1"></i>{{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            @endif
-                            <div class="text-center mt-2">
-                                <h5 class="text-primary">Welcome Back !</h5>
-                                <p class="text-muted">Sign in to continue.</p>
-                            </div>
-                            <div class="p-2 mt-4">
-                                <form action="{{ route('login') }}" method="POST">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" id="username" name="email" placeholder="Enter username">
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <div class="float-end">
-                                            <a href="{{ route('password.update') }}" class="text-muted">Forgot password?</a>
-                                        </div>
-                                        <label class="form-label" for="password-input">Password <span class="text-danger">*</span></label>
-                                        <div class="position-relative auth-pass-inputgroup mb-3">
-                                            <input type="password" class="form-control password-input pe-5 @error('password') is-invalid @enderror" name="password" placeholder="Enter password" id="password-input">
-                                            <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    
-
-                                    <div class="mt-4">
-                                        <button class="btn btn-success w-100" type="submit">Sign In</button>
-                                    </div>
-
-                                    {{-- <div class="mt-4 text-center">
-                                        <div class="signin-other-title">
-                                            <h5 class="fs-13 mb-4 title">Sign In with</h5>
-                                        </div>
-                                        <div>
-                                            <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button>
-                                            <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
-                                            <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
-                                            <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
-                                        </div>
-                                    </div> --}}
-                                </form>
-                            </div>
-                        </div>
-                        <!-- end card body -->
-                    </div>
-                    <!-- end card -->
-
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
-    </div>
-    <!-- end auth page content -->
-
-    <!-- footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <p class="mb-0 text-muted">&copy; <script>document.write(new Date().getFullYear())</script> Velzon. Crafted with <i class="ri-heart-fill text-danger"></i> by Themesbrand</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- end Footer -->
+    <p class="oms-auth-footer mb-0">&copy; {{ date('Y') }} Oracle Machine Tech. All rights reserved.</p>
 </div>
 @endsection
 @section('script')
-<script src="{{ URL::asset('build/libs/particles.js/particles.js') }}"></script>
-<script src="{{ URL::asset('build/js/pages/particles.app.js') }}"></script>
 <script src="{{ URL::asset('build/js/pages/password-addon.init.js') }}"></script>
-
 @endsection

@@ -231,7 +231,7 @@ class NavigationConsistencyTest extends TestCase
         $response = $this->actingAs($this->owner())->get(route('root'));
 
         $response->assertOk();
-        $response->assertSee('ri-shopping-bag-line', false);
+        $response->assertSee('ri-price-tag-3-line', false);
         $response->assertSee('ri-bill-line', false);
         $response->assertSee('ri-wallet-2-line', false);
         $response->assertSee('ri-archive-line', false);

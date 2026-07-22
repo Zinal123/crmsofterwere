@@ -3,21 +3,21 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index" class="logo logo-dark">
+        <a href="{{ route('root') }}" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ URL::asset('build/images/logo-sm.png') }}" alt="" height="22">
+                <img src="{{ URL::asset('build/images/logo.png') }}" alt="Oracle Machine Tech" height="28">
             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('build/images/logo-dark.png') }}" alt="" height="17">
+                <img src="{{ URL::asset('build/images/oracallogo.png') }}" alt="Oracle Machine Tech" height="26">
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="index" class="logo logo-light">
+        <a href="{{ route('root') }}" class="logo logo-light">
             <span class="logo-sm">
-                <img src="{{ URL::asset('build/images/logo-sm.png') }}" alt="" height="22">
+                <img src="{{ URL::asset('build/images/logo.png') }}" alt="Oracle Machine Tech" height="28">
             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="17">
+                <img src="{{ URL::asset('build/images/logo2.png') }}" alt="Oracle Machine Tech" height="26">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -34,13 +34,13 @@
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span>@lang('translation.dashboards')</span>
+                        <i class="ri-dashboard-3-line"></i> <span>@lang('translation.dashboards')</span>
                     </a>
                     
                 </li> <!-- end Dashboard Menu -->
                 @can('products.view')
                 <li class="nav-item">
-                    <a href="{{route('product')}}" class="nav-link"><i class="ri-shopping-bag-line"></i><span>@lang('Product')</span></a>
+                    <a href="{{route('product')}}" class="nav-link"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
                 </li>
                 @endcan
                 @can('invoices.view')
@@ -95,7 +95,8 @@
                 @endcan
                 @can('products.manage-config')
                 <li class="nav-item">
-                    <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Fiber Laser Cutting')
+                    <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
+                        <i class="ri-flashlight-line"></i> <span>@lang('Fiber Laser Cutting')</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarEcommerce">
                         <ul class="nav nav-sm flex-column">
@@ -119,7 +120,8 @@
                 @endcan
                 @can('quotations.view')
                 <li class="nav-item">
-                    <a href="{{route('co2quation',1)}}" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">@lang('Co2 Laser Cutting')
+                    <a href="{{route('co2quation',1)}}" class="nav-link">
+                        <i class="ri-radar-line"></i> <span>@lang('Co2 Laser Cutting')</span>
                     </a>
                 </li>
                 <li class="nav-item">
