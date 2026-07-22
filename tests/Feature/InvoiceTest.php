@@ -248,6 +248,25 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('paidamount', ['invoice_id' => $invoice->id, 'paidAmount' => 40000]);
     }
 
+    public function test_datatable_endpoint_escapes_html_in_customer_name_and_phone(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 100000]);
+        Customer::factory()->create([
+            'invoice_id' => $invoice->id,
+            'name' => '<script>alert(1)</script>',
+            'phone' => '<img src=x onerror=alert(1)>',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('invoice.data'));
+
+        $response->assertOk();
+        $response->assertDontSee('<script>alert(1)</script>', false);
+        $response->assertDontSee('<img src=x onerror=alert(1)>', false);
+        $response->assertSee('&lt;script&gt;alert(1)&lt;\/script&gt;', false);
+        $response->assertSee('&lt;img src=x onerror=alert(1)&gt;', false);
+    }
+
     public function test_paymenthistry_page_renders_with_seeded_payments(): void
     {
         $user = User::factory()->create();

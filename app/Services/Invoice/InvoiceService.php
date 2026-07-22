@@ -89,8 +89,8 @@ class InvoiceService
 
             return [
                 $item->id,
-                $item->name,
-                $item->phone,
+                e($item->name),
+                e($item->phone),
                 $item->date ? date('d-M-y', strtotime($item->date)) : $item->date,
                 IndianNumber::format($item->amount),
                 IndianNumber::format($item->paidamount),
