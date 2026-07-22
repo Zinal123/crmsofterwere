@@ -40,22 +40,22 @@
                 </li> <!-- end Dashboard Menu -->
                 @can('products.view')
                 <li class="nav-item">
-                    <a href="{{route('product')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Product')</span></a>
+                    <a href="{{route('product')}}" class="nav-link"><i class="ri-shopping-bag-line"></i><span>@lang('Product')</span></a>
                 </li>
                 @endcan
                 @can('invoices.view')
                 <li class="nav-item">
-                    <a href="{{route('invoice')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invoice')</span></a>
+                    <a href="{{route('invoice')}}" class="nav-link"><i class="ri-bill-line"></i><span>@lang('Invoice')</span></a>
                 </li>
                 @endcan
                 @can('payment-history.view')
                 <li class="nav-item">
-                    <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Payment history')</span></a>
+                    <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
                 </li>
                 @endcan
                 @can('inventory.view')
                 <li class="nav-item">
-                    <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Invtery managemnet')</span></a>
+                    <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-archive-line"></i><span>@lang('Invtery managemnet')</span></a>
                 </li>
                 @endcan
                 @can('jobs.view-own')
@@ -123,7 +123,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-dashboard-2-line"></i><span>@lang('Quation')</span></a>
+                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('Quation')</span></a>
                 </li>
                 @endcan
                 @canany(['admin.manage-roles', 'admin.manage-users'])

@@ -8,6 +8,7 @@
 @slot('li_1') invoices @endslot
 @slot('title') Invoice Details @endslot
 @endcomponent
+<x-ui.back-link :route="route('invoice')" label="Back to Invoices" class="d-print-none" />
 <?php
 $number = $amount;
    $no = floor($number);
@@ -351,7 +352,7 @@ $number = $amount;
  @can('invoices.view-audit')
  <div class="card mt-3 d-print-none">
      <div class="card-body">
-         <h5 class="card-title">Audit Trail</h5>
+         <h5 class="card-title">History</h5>
          <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('invoice', $invoice[0]->id)" />
      </div>
  </div>

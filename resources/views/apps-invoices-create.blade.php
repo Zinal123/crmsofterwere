@@ -12,6 +12,7 @@
 @slot('li_1') invoices @endslot
 @slot('title')Create Invoice @endslot
 @endcomponent
+<x-ui.back-link :route="route('invoice')" label="Back to Invoices" />
 <div class="row justify-content-center">
     <div class="col-xxl-12">
         <div class="card">

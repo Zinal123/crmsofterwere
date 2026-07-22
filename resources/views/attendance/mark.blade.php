@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('root')" label="Back to Dashboard" />
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">

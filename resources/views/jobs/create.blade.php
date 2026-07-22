@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('jobs.index')" label="Back to Jobs" />
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ $canAssign ? 'Request or Assign a Job' : 'Request a Job' }}</h5>

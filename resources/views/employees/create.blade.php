@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('employees.index')" label="Back to Employees" />
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Add Employee</h5>

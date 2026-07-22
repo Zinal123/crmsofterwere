@@ -25,6 +25,7 @@ Standerconfiglist
 @endslot
 @endcomponent
 
+<x-ui.back-link :route="route('product')" label="Back to Products" />
 <div class="row">
     <div class="col-lg-12">
         <div class="card" id="invoiceList">

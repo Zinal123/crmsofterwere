@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('employees.index')" label="Back to Employees" />
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ $employee->name }} — Attendance Register ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>

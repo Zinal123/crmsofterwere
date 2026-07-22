@@ -23,6 +23,7 @@ Qutation
 
 @endslot
 @endcomponent
+<x-ui.back-link :route="route('listqutation')" label="Back to Quotations" />
 <div class="row">
     <div class="col-lg-12">
         <div class="card" id="invoiceList">

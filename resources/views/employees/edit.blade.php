@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('employees.index')" label="Back to Employees" />
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Edit Employee — {{ $employee->name }}</h5>
@@ -64,7 +65,7 @@
     @can('employees.view-audit')
     <div class="card mt-3">
         <div class="card-body">
-            <h5 class="card-title">Audit Trail</h5>
+            <h5 class="card-title">History</h5>
             <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('employee', $employee->id)" />
         </div>
     </div>

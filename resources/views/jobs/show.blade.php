@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <x-ui.back-link :route="route('jobs.index')" label="Back to Jobs" />
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-start">
@@ -128,7 +129,7 @@
             @endcan
 
             @can('jobs.view-all')
-                <h6 class="mt-4">Audit Trail</h6>
+                <h6 class="mt-4">History</h6>
                 <ul class="list-group">
                     @foreach($job->auditLogs()->orderBy('created_at')->get() as $log)
                         <li class="list-group-item">
