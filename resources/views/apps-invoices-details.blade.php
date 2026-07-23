@@ -349,6 +349,69 @@ $number = $amount;
       </div>
  </div>
 
+ @php
+     $paidAmountRecords = \App\Models\Paidamount::where('invoice_id', $invoice[0]->id)->orderByDesc('created_at')->get();
+ @endphp
+
+ @can('invoices.record-payment')
+ <div class="card mt-3 d-print-none">
+     <div class="card-body">
+         <h5 class="card-title">Payments</h5>
+
+         <div class="row mb-3">
+             <div class="col-md-4">
+                 <p class="text-muted mb-1">Invoice Total</p>
+                 <h5 class="mb-0">{{ \App\Support\IndianNumber::format($invoice[0]->amount) }}</h5>
+             </div>
+             <div class="col-md-4">
+                 <p class="text-muted mb-1">Paid</p>
+                 <h5 class="mb-0 text-success">{{ \App\Support\IndianNumber::format($invoice[0]->paidamount) }}</h5>
+             </div>
+             <div class="col-md-4">
+                 <p class="text-muted mb-1">Remaining</p>
+                 <h5 class="mb-0 {{ $invoice[0]->remaining_amount > 0 ? 'text-danger' : 'text-success' }}">{{ \App\Support\IndianNumber::format($invoice[0]->remaining_amount) }}</h5>
+             </div>
+         </div>
+
+         <div id="invoice-payment-error"></div>
+
+         @if($invoice[0]->remaining_amount > 0)
+         <form id="invoice-payment-form" class="d-flex gap-2 align-items-end mb-3" data-invoice-id="{{ $invoice[0]->id }}" data-customer-id="{{ $customer[0]->id }}">
+             @csrf
+             <div>
+                 <label class="form-label mb-0" for="invoice-paid-amount">Add Payment (₹)</label>
+                 <input type="number" min="0.01" max="99999999.99" step="0.01" class="form-control" id="invoice-paid-amount" required>
+             </div>
+             <button type="submit" class="btn btn-success" id="invoice-payment-submit">
+                 <i class="ri-add-line align-bottom me-1"></i> Record Payment
+             </button>
+         </form>
+         @endif
+
+         <div class="table-responsive">
+             <table class="table table-sm table-bordered align-middle mb-0">
+                 <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Amount</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     @forelse($paidAmountRecords as $paidAmountRecord)
+                     <tr>
+                         <td>{{ $paidAmountRecord->created_at->format('d M Y, H:i') }}</td>
+                         <td>{{ \App\Support\IndianNumber::format($paidAmountRecord->paidAmount) }}</td>
+                     </tr>
+                     @empty
+                     <tr><td colspan="2"><x-ui.empty-state icon="ri-wallet-3-line" message="No payments recorded yet." /></td></tr>
+                     @endforelse
+                 </tbody>
+             </table>
+         </div>
+     </div>
+ </div>
+ @endcan
+
  @can('invoices.view-audit')
  @php
      // Merges the invoice's own trail with its sub-records (customer, line
@@ -360,7 +423,7 @@ $number = $amount;
      foreach ($invoiceproduct as $invoiceProductLine) {
          $invoiceHistoryLogs = $invoiceHistoryLogs->merge($auditService->forRecord('invoiceproduct', $invoiceProductLine->id));
      }
-     foreach (\App\Models\Paidamount::where('invoice_id', $invoice[0]->id)->get() as $paidAmountRecord) {
+     foreach ($paidAmountRecords as $paidAmountRecord) {
          $invoiceHistoryLogs = $invoiceHistoryLogs->merge($auditService->forRecord('paidamount', $paidAmountRecord->id));
      }
      $invoiceHistoryLogs = $invoiceHistoryLogs->sortByDesc('created_at')->values();
@@ -375,6 +438,57 @@ $number = $amount;
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/js/pages/invoicedetails.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('invoice-payment-form');
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var submitBtn = document.getElementById('invoice-payment-submit');
+        var errorBox = document.getElementById('invoice-payment-error');
+        var amountInput = document.getElementById('invoice-paid-amount');
+
+        errorBox.innerHTML = '';
+        submitBtn.disabled = true;
+
+        fetch('/update-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                id: form.dataset.invoiceId,
+                customer_id: form.dataset.customerId,
+                paidAmount: amountInput.value,
+            }),
+        })
+            .then(function (response) { return response.json().then(function (data) { return { status: response.status, data: data }; }); })
+            .then(function (result) {
+                if (result.status === 200 && result.data.success) {
+                    location.reload();
+                    return;
+                }
+
+                var message = 'Could not record the payment. Please check the amount and try again.';
+                if (result.status === 422 && result.data.errors && result.data.errors.paidAmount) {
+                    message = result.data.errors.paidAmount[0];
+                }
+                errorBox.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' + message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                submitBtn.disabled = false;
+            })
+            .catch(function () {
+                errorBox.innerHTML = '<div class="alert alert-danger" role="alert">Something went wrong. Please try again.</div>';
+                submitBtn.disabled = false;
+            });
+    });
+});
+</script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha384-l7aOEgTYxgJ0nn2MziQWZCvuvJ2PtNcP05R4QwEoHW+kIS1gFpzupcQ7WhAdRKuq" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>

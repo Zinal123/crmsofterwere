@@ -67,11 +67,16 @@ class InvoiceController extends Controller
 
     public function updatePayment(Request $request)
     {
-        $success = $this->service->recordPayment([
-            'id' => $request->input('id'),
-            'customer_id' => $request->input('customer_id'),
-            'paidAmount' => $request->input('paidAmount'),
+        // Bounded rather than just "numeric": a raw, unbounded value here is
+        // exactly how a QA fuzz-test payload (67978778979789) once corrupted
+        // a real invoice's paid/remaining totals.
+        $data = $request->validate([
+            'id' => 'required|integer|exists:invoice,id',
+            'customer_id' => 'required|integer|exists:customer,id',
+            'paidAmount' => 'required|numeric|min:0.01|max:99999999.99',
         ]);
+
+        $success = $this->service->recordPayment($data);
 
         if ($success) {
             return response()->json(['success' => true]);

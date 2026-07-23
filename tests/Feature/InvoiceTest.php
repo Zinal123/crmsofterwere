@@ -275,6 +275,88 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('paidamount', ['invoice_id' => $invoice->id, 'paidAmount' => 40000]);
     }
 
+    public function test_updatepayment_rejects_an_absurdly_large_amount(): void
+    {
+        // Regression test: a QA fuzz-test payload once slipped an
+        // unbounded value (67978778979789) straight through with no
+        // validation, corrupting a real invoice's paid/remaining totals.
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 0, 'remaining_amount' => 100000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => 67978778979789,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals(0, $invoice->fresh()->paidamount);
+    }
+
+    public function test_updatepayment_rejects_a_negative_amount(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 0, 'remaining_amount' => 100000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => -500,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals(0, $invoice->fresh()->paidamount);
+    }
+
+    public function test_invoice_details_page_shows_payment_form_and_history_when_unpaid(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000, 'paidamount' => 40000, 'remaining_amount' => 60000]);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        \App\Models\Paidamount::create(['invoice_id' => $invoice->id, 'customer_id' => 1, 'paidAmount' => 40000]);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee('id="invoice-payment-form"', false);
+        $response->assertSee('Record Payment');
+    }
+
+    public function test_invoice_details_page_hides_payment_form_when_fully_paid(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000, 'paidamount' => 100000, 'remaining_amount' => 0]);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertDontSee('id="invoice-payment-form"', false);
+    }
+
+    public function test_recording_a_payment_from_the_invoice_details_page_updates_totals(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000, 'paidamount' => 0, 'remaining_amount' => 100000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => 30000,
+        ]);
+
+        $response->assertOk();
+        $response->assertJson(['success' => true]);
+
+        $detailsResponse = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+        $detailsResponse->assertOk();
+        $detailsResponse->assertSee(\App\Support\IndianNumber::format(30000), false);
+        $detailsResponse->assertSee(\App\Support\IndianNumber::format(70000), false);
+    }
+
     public function test_datatable_endpoint_escapes_html_in_customer_name_and_phone(): void
     {
         $user = User::factory()->create();
