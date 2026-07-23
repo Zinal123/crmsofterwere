@@ -63,10 +63,20 @@
     </div>
 
     @can('employees.view-audit')
+    @php
+        // Merges the employee's own trail with their uploaded documents' trails
+        // so the full history of "this employee" is visible in one place.
+        $auditService = app(\App\Services\Auditing\AuditLogService::class);
+        $employeeHistoryLogs = $auditService->forRecord('employee', $employee->id);
+        foreach ($employee->documents as $employeeDocument) {
+            $employeeHistoryLogs = $employeeHistoryLogs->merge($auditService->forRecord('employee_document', $employeeDocument->id));
+        }
+        $employeeHistoryLogs = $employeeHistoryLogs->sortByDesc('created_at')->values();
+    @endphp
     <div class="card mt-3">
         <div class="card-body">
             <h5 class="card-title">History</h5>
-            <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('employee', $employee->id)" />
+            <x-ui.audit-trail :logs="$employeeHistoryLogs" />
         </div>
     </div>
     @endcan

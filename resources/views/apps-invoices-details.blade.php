@@ -350,10 +350,25 @@ $number = $amount;
  </div>
 
  @can('invoices.view-audit')
+ @php
+     // Merges the invoice's own trail with its sub-records (customer, line
+     // items, payments) so the full history of "this invoice" is visible in
+     // one place, instead of only the top-level Invoice record's changes.
+     $auditService = app(\App\Services\Auditing\AuditLogService::class);
+     $invoiceHistoryLogs = $auditService->forRecord('invoice', $invoice[0]->id);
+     $invoiceHistoryLogs = $invoiceHistoryLogs->merge($auditService->forRecord('customer', $customer[0]->id));
+     foreach ($invoiceproduct as $invoiceProductLine) {
+         $invoiceHistoryLogs = $invoiceHistoryLogs->merge($auditService->forRecord('invoiceproduct', $invoiceProductLine->id));
+     }
+     foreach (\App\Models\Paidamount::where('invoice_id', $invoice[0]->id)->get() as $paidAmountRecord) {
+         $invoiceHistoryLogs = $invoiceHistoryLogs->merge($auditService->forRecord('paidamount', $paidAmountRecord->id));
+     }
+     $invoiceHistoryLogs = $invoiceHistoryLogs->sortByDesc('created_at')->values();
+ @endphp
  <div class="card mt-3 d-print-none">
      <div class="card-body">
          <h5 class="card-title">History</h5>
-         <x-ui.audit-trail :logs="app(\App\Services\Auditing\AuditLogService::class)->forRecord('invoice', $invoice[0]->id)" />
+         <x-ui.audit-trail :logs="$invoiceHistoryLogs" />
      </div>
  </div>
  @endcan

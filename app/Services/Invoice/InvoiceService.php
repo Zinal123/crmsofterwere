@@ -163,14 +163,14 @@ class InvoiceService
                     $this->repository->createInvoiceProduct([
                         'invoice_id' => $id,
                         'product_name' => $productLine['product_name'],
-                        'hsn' => $productLine['hsn'],
-                        'unit' => $productLine['unit'],
-                        'rate' => $productLine['product_rate'],
-                        'quantity' => $productLine['product_qty'],
-                        'total' => $productLine['product_price'],
-                        'gst' => $productLine['gst'],
-                        'gstamount' => $productLine['withtax'],
-                        'totalamount' => $productLine['total'],
+                        'hsn' => $productLine['hsn'] ?? null,
+                        'unit' => $productLine['unit'] ?? null,
+                        'rate' => $productLine['product_rate'] ?? null,
+                        'quantity' => $productLine['product_qty'] ?? null,
+                        'total' => $productLine['product_price'] ?? null,
+                        'gst' => $productLine['gst'] ?? null,
+                        'gstamount' => $productLine['withtax'] ?? null,
+                        'totalamount' => $productLine['total'] ?? null,
                     ]);
                 }
             }

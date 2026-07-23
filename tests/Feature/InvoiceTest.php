@@ -141,6 +141,33 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('invoiceproduct', ['product_name' => $product->id, 'hsn' => '8456']);
     }
 
+    public function test_invoicestore_accepts_a_product_line_missing_optional_fields(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        // Only product_name is present - hsn/unit/product_rate/product_qty/product_price/gst/withtax/total
+        // are all missing, which previously threw an unhandled "Undefined array key" 500
+        // instead of just leaving those columns null (all nullable in the schema).
+        $response = $this->actingAs($user)->postJson(route('invoice.store'), [
+            'invoice_id' => 'INV-TEST-004',
+            'placesupply' => 'Gujarat',
+            'billing_state' => 'Gujarat',
+            'shipping_state' => 'Gujarat',
+            'order_summary_cart_total' => 50000,
+            'order_summary_cart_amount' => 50000,
+            'new_product_obj' => [
+                [
+                    'product_name' => $product->id,
+                ],
+            ],
+        ]);
+
+        $response->assertOk();
+        $response->assertJson(['isSuccess' => true]);
+        $this->assertDatabaseHas('invoiceproduct', ['product_name' => $product->id, 'hsn' => null]);
+    }
+
     public function test_invoicestore_fails_validation_without_placesupply(): void
     {
         $user = User::factory()->create();

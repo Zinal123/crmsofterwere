@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class JobPhoto extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'job_id', 'uploaded_by', 'path', 'latitude', 'longitude',
         'location_captured', 'map_link', 'address', 'captured_at',

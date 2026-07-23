@@ -59,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
             'inventory' => \App\Models\Invetry::class,
             'user' => \App\Models\User::class,
             'machine' => \App\Models\Machine::class,
+            'job_photo' => \App\Models\JobPhoto::class,
             'bank' => \App\Models\Bank::class,
             'role' => \Spatie\Permission\Models\Role::class,
         ]);

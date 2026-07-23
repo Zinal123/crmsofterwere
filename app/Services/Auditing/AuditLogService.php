@@ -34,6 +34,7 @@ class AuditLogService
         'inventory' => 'inventory.view-audit',
         'user' => 'admin.view-audit',
         'machine' => 'machines.view-audit',
+        'job_photo' => 'jobs.view-audit',
     ];
 
     public function __construct(private AuditLogRepositoryInterface $repository)
