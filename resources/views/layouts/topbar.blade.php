@@ -39,47 +39,16 @@
                     </a>
                 </div>
 
-                <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
+                <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
                     <span class="hamburger-icon">
                         <span></span>
                         <span></span>
                         <span></span>
                     </span>
                 </button>
-
-                <!-- App Search-->
-                <form class="app-search d-none d-md-block" onsubmit="return false;">
-                    <div class="position-relative">
-                        <input type="text" class="form-control" placeholder="Search products, invoices, employees..." autocomplete="off" id="search-options" value="">
-                        <span class="ri-search-line search-widget-icon"></span>
-                        <span class="ri-close-circle-line search-widget-icon search-widget-icon-close d-none" id="search-close-options"></span>
-                    </div>
-                    <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
-                        <div data-simplebar style="max-height: 320px;" id="search-results-container">
-                            <x-ui.empty-state icon="ri-search-line" message="Type at least 2 characters to search." />
-                        </div>
-                    </div>
-                </form>
             </div>
 
             <div class="d-flex align-items-center">
-
-                <div class="dropdown d-md-none topbar-head-dropdown header-item">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-search-line fs-22"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-search-dropdown">
-                        <form class="p-3" onsubmit="return false;">
-                            <div class="form-group m-0">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search..." aria-label="Search" id="search-options-mobile">
-                                    <button class="btn btn-primary" type="button"><i class="ri-search-line"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                        <div style="max-height: 320px; overflow-y: auto;" id="search-results-container-mobile"></div>
-                    </div>
-                </div>
 
                 <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -230,116 +199,3 @@
 </div>
 </div><!-- /.modal -->
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    function renderMessage(container, message) {
-        container.innerHTML =
-            '<div class="text-center p-4">' +
-            '<i class="ri-search-line display-6 text-muted"></i>' +
-            '<p class="text-muted mb-0 mt-2">' + message + '</p>' +
-            '</div>';
-    }
-
-    function escapeHtml(value) {
-        var div = document.createElement('div');
-        div.textContent = value == null ? '' : String(value);
-        return div.innerHTML;
-    }
-
-    function renderResults(container, results) {
-        var groups = Object.keys(results);
-        if (groups.length === 0) {
-            renderMessage(container, 'No matching records found.');
-            return;
-        }
-        var html = '';
-        groups.forEach(function (group) {
-            html += '<h6 class="mb-1 px-3 pt-2 text-muted text-uppercase fs-11">' + escapeHtml(group) + '</h6>';
-            results[group].forEach(function (item) {
-                html += '<a href="' + escapeHtml(item.url) + '" class="dropdown-item search-result-item py-2">' +
-                    '<span class="d-block fw-medium">' + escapeHtml(item.title) + '</span>' +
-                    (item.subtitle ? '<span class="d-block small text-muted">' + escapeHtml(item.subtitle) + '</span>' : '') +
-                    '</a>';
-            });
-        });
-        container.innerHTML = html;
-    }
-
-    function wireSearch(inputId, containerId, dropdownEl, closeBtn) {
-        var input = document.getElementById(inputId);
-        var container = document.getElementById(containerId);
-        if (!input || !container) {
-            return;
-        }
-
-        var debounceTimer = null;
-
-        input.addEventListener('input', function () {
-            var query = input.value.trim();
-
-            if (dropdownEl) {
-                if (query.length > 0) {
-                    dropdownEl.classList.add('show');
-                    if (closeBtn) closeBtn.classList.remove('d-none');
-                } else {
-                    dropdownEl.classList.remove('show');
-                    if (closeBtn) closeBtn.classList.add('d-none');
-                }
-            }
-
-            clearTimeout(debounceTimer);
-
-            if (query.length === 0) {
-                return;
-            }
-
-            if (query.length < 2) {
-                renderMessage(container, 'Type at least 2 characters to search.');
-                return;
-            }
-
-            renderMessage(container, 'Searching...');
-
-            debounceTimer = setTimeout(function () {
-                fetch('{{ route("search.results") }}?q=' + encodeURIComponent(query), {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                })
-                    .then(function (res) { return res.json(); })
-                    .then(function (data) {
-                        renderResults(container, data.results || {});
-                    })
-                    .catch(function () {
-                        renderMessage(container, 'Search failed. Please try again.');
-                    });
-            }, 300);
-        });
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function () {
-                input.value = '';
-                if (dropdownEl) dropdownEl.classList.remove('show');
-                closeBtn.classList.add('d-none');
-                renderMessage(container, 'Type at least 2 characters to search.');
-            });
-        }
-    }
-
-    wireSearch(
-        'search-options',
-        'search-results-container',
-        document.getElementById('search-dropdown'),
-        document.getElementById('search-close-options')
-    );
-    wireSearch('search-options-mobile', 'search-results-container-mobile', null, null);
-
-    var desktopDropdown = document.getElementById('search-dropdown');
-    var desktopInput = document.getElementById('search-options');
-    if (desktopDropdown && desktopInput) {
-        document.addEventListener('click', function (e) {
-            if (!desktopDropdown.contains(e.target) && e.target !== desktopInput) {
-                desktopDropdown.classList.remove('show');
-            }
-        });
-    }
-});
-</script>

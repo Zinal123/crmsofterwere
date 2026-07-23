@@ -14,16 +14,12 @@
         --vz-twocolumn-menu-iconview-bg: #332822;
     }
 
-    /* Sidebar collapse/expand toggle in the topbar - give it the brand
-       accent and a proper button affordance instead of bare floating lines. */
-    .topnav-hamburger {
-        border-radius: .5rem;
-        background-color: rgba(194, 65, 12, .08);
-        transition: background-color .15s ease;
-    }
-
-    .topnav-hamburger:hover {
-        background-color: rgba(194, 65, 12, .16);
+    /* Sidebar collapse/expand toggle in the topbar - matches the other
+       ghost-secondary circular icon buttons in the topbar (transparent
+       idle state, tinted on hover), just recolored to the brand accent. */
+    .topnav-hamburger:hover,
+    .topnav-hamburger:focus {
+        background-color: rgba(194, 65, 12, .12) !important;
     }
 
     .hamburger-icon span {
