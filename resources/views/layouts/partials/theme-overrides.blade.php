@@ -29,4 +29,12 @@
     .hamburger-icon span {
         background-color: #c2410c;
     }
+
+    /* Velzon's default page-content top padding leaves a large empty gap
+       above the page-title bar on every page (measured ~55px on this
+       layout). Pull the title bar up closer to the fixed topbar while
+       keeping it clear of it (topbar is 71px tall). */
+    .page-title-box {
+        margin-top: -68px;
+    }
 </style>

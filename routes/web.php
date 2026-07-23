@@ -43,6 +43,7 @@ Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])-
 
 //Update User Details & Auth-protected routes
 Route::middleware('auth')->group(function () {
+    Route::get('search/results', [App\Http\Controllers\Search\SearchController::class, 'results'])->name('search.results');
     Route::post('/update-profile/{id}', [App\Http\Controllers\Home\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\Home\HomeController::class, 'updatePassword'])->name('updatePassword');
     Route::get('employees/create', [App\Http\Controllers\Workforce\EmployeeController::class, 'create'])->name('employees.create')->middleware('permission:employees.manage');

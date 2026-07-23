@@ -57,25 +57,15 @@ list view
                         <td>{{$item->rate}}</td>
 
                             <td>
-                            <div class="dropdown d-inline-block">
-                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ri-more-fill align-middle"></i>
+                            <div class="d-flex gap-2">
+                                @can('products.view-audit')
+                                <button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}">
+                                    <i class="ri-history-line align-bottom me-1"></i> History
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    @can('products.view-audit')
-                                    <li>
-                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}">
-                                            <i class="ri-history-line align-bottom me-2 text-muted"></i> History
-                                        </a>
-                                    </li>
-                                    @endcan
-                                    <li>
-                                        <a class="dropdown-item remove-item-btn" href="{{route('product.delete' ,$item->id)}}">
-                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
+                                @endcan
+                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product? This cannot be undone.');">
+                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                </a>
                             </div>
                         </td>
                         </tr>
