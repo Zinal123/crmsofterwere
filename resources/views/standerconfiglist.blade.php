@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-@lang('Standerconfig')
+Standard Config List
 @endsection
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
@@ -18,7 +18,7 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1')
-Standerconfiglist
+Standard Config List
 @endslot
 @slot('title')
 
@@ -31,7 +31,7 @@ Standerconfiglist
         <div class="card" id="invoiceList">
             <div class="card-header border-0">
                 <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Standerconfig list</h5>
+                    <h5 class="card-title mb-0 flex-grow-1">Standard Config List</h5>
                     
                 </div>
             </div>

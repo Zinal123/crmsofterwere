@@ -40,27 +40,17 @@
                 </li> <!-- end Dashboard Menu -->
                 @endcan
 
-                @can('products.view')
+                @canany(['products.view', 'products.manage-config'])
                 <li class="menu-title"><span>Masters</span></li>
+                @can('products.view')
                 <li class="nav-item">
                     <a href="{{route('product')}}" class="nav-link"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
-                </li>
-                @endcan
-
-                @canany(['products.manage-config', 'quotations.view'])
-                <li class="menu-title"><span>Quotations</span></li>
-                @can('quotations.view')
-                <li class="nav-item">
-                    <a href="{{route('generatequtation',1)}}" class="nav-link"><i class="ri-quill-pen-line"></i><span>@lang('Quotation')</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('All Quotations')</span></a>
                 </li>
                 @endcan
                 @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
-                        <i class="ri-settings-3-line"></i> <span>@lang('Fiber Config')</span>
+                        <i class="ri-settings-3-line"></i> <span>@lang('Fiber Machine Config')</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarEcommerce">
                         <ul class="nav nav-sm flex-column">
@@ -78,6 +68,16 @@
                 </li>
                 @endcan
                 @endcanany
+
+                @can('quotations.view')
+                <li class="menu-title"><span>Quotations</span></li>
+                <li class="nav-item">
+                    <a href="{{route('generatequtation',1)}}" class="nav-link"><i class="ri-quill-pen-line"></i><span>@lang('Quotation')</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('All Quotations')</span></a>
+                </li>
+                @endcan
 
                 @canany(['invoices.view', 'payment-history.view'])
                 <li class="menu-title"><span>Sales</span></li>
