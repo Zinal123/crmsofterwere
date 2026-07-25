@@ -772,5 +772,4 @@
 <script src="{{ URL::asset('build/libs/swiper/swiper-bundle.min.js')}}"></script>
 <!-- dashboard init: still needed for the reviews swiper + right-sidebar toggle button, even though its chart-init calls now no-op safely against the removed chart containers -->
 <script src="{{ URL::asset('build/js/pages/dashboard-ecommerce.init.js') }}"></script>
-<script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

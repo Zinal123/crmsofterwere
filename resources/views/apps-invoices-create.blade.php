@@ -466,7 +466,6 @@
 <script src="{{ URL::asset('build/libs/cleave.js/cleave.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/pages/invoicecreate.init.js') }}"></script>
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
-<script src="{{ URL::asset('build/js/app.js') }}"></script>
 
 
 @endsection

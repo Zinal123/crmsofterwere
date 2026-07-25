@@ -236,7 +236,6 @@ list view
 @section('script')
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/ui-notify.js') }}"></script>
-<script src="{{ URL::asset('build/js/app.js') }}"></script>
 
 {{-- This block only needs bootstrap (already loaded globally) - kept
      independent of the DataTables/jQuery block below so a CDN hiccup there
