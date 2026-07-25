@@ -28,9 +28,15 @@ class QutationController extends Controller
         return $this->storeQuotation($request);
     }
 
-    public function print()
+    public function print($id)
     {
-        return view('queationpdf');
+        return view('queationpdf', $this->service->getQuotationPdfData($id));
+    }
+
+    public function delete($id)
+    {
+        $this->service->delete($id);
+        return redirect()->route('listqutation')->with('success', 'Quotation deleted.');
     }
 
     public function Co2quation($id)

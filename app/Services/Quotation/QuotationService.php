@@ -3,6 +3,7 @@
 namespace App\Services\Quotation;
 
 use App\Models\Quation;
+use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,12 +14,48 @@ class QuotationService
     public function __construct(
         private QuotationRepositoryInterface $repository,
         private ProductConfigRepositoryInterface $productConfigRepository,
+        private BankRepositoryInterface $bankRepository,
     ) {
     }
 
     public function list(): Collection
     {
         return $this->repository->allOrderedByLatest();
+    }
+
+    public function delete(int $id): void
+    {
+        $this->repository->delete($id);
+    }
+
+    /**
+     * Resolves every dropdown selection stored on the quotation (just IDs)
+     * back to its real config record, so the PDF can show what was actually
+     * picked instead of the hardcoded, unrelated content it used to ship
+     * with. Falls back to product_id 1 (the one real Fiber machine) only
+     * when the quotation has no product_id at all - legacy rows saved
+     * before the create-form's hidden product_id field was ever populated.
+     */
+    public function getQuotationPdfData(int $id): array
+    {
+        $quotation = $this->repository->findWithDetails($id);
+        $productId = $quotation->product_id ?: 1;
+
+        return [
+            'quotation' => $quotation,
+            'bank' => $quotation->bank ? $this->bankRepository->find($quotation->bank) : null,
+            'software' => $this->productConfigRepository->getSoftware($productId)->firstWhere('id', $quotation->softweredetails),
+            'lasercuttingMachine' => $this->productConfigRepository->getLaserCutting($productId)->firstWhere('id', $quotation->lasercutting),
+            'focus' => $this->productConfigRepository->getFocusing($productId)->firstWhere('id', $quotation->focus),
+            'power' => $this->productConfigRepository->getPower($productId)->firstWhere('id', $quotation->power),
+            'cuttingWay' => $this->productConfigRepository->getCuttingWay($productId)->firstWhere('id', $quotation->cuttingway),
+            'cuttingThickness' => $this->productConfigRepository->getCncThickness($productId)->firstWhere('id', $quotation->cuttingthickess),
+            'motor' => $this->productConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motor),
+            'motorType' => $this->productConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motortype),
+            'gear' => $this->productConfigRepository->getGear($productId)->firstWhere('id', $quotation->gearbox),
+            'rack' => $this->productConfigRepository->getRack($productId)->firstWhere('id', $quotation->rack),
+            'software1' => $this->productConfigRepository->getSoftware1($productId)->firstWhere('id', $quotation->software),
+        ];
     }
 
     /**
@@ -62,6 +99,7 @@ class QuotationService
             'gear' => $this->productConfigRepository->getGear($productId),
             'rack' => $this->productConfigRepository->getRack($productId),
             'softere' => $this->productConfigRepository->getSoftware1($productId),
+            'bank' => $this->bankRepository->all(),
         ];
     }
 }

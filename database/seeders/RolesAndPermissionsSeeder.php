@@ -15,7 +15,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'invoices.view', 'invoices.create', 'invoices.view-details', 'invoices.record-payment',
         'vendors.view',
         'payment-history.view',
-        'quotations.view', 'quotations.create', 'quotations.download-pdf',
+        'quotations.view', 'quotations.create', 'quotations.download-pdf', 'quotations.delete',
         'admin.manage-roles',
         'admin.manage-users',
         'jobs.view-own', 'jobs.create', 'jobs.view-all', 'jobs.approve', 'jobs.assign', 'jobs.manage-machines', 'machines.view-audit', 'jobs.view-audit',

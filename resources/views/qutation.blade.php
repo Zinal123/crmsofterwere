@@ -85,9 +85,13 @@ Qutation
                             <input type="text" class="form-control" placeholder="Enter company address" name="companyaddress"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Select Bank</label><br>
-                            <input type="text" class="form-control" name="bank" value = "1" readonly/>
-
+                            <label class="col-form-label" for="quotation-bank">Select Bank</label><br>
+                            <select class="form-select" id="quotation-bank" name="bank">
+                                <option value="">-- Select bank --</option>
+                                @foreach($bank as $bankOption)
+                                <option value="{{ $bankOption->id }}">{{ $bankOption->bankname }}</option>
+                                @endforeach
+                            </select>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Email Id</label><br>

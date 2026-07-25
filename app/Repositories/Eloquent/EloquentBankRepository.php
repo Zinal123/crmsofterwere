@@ -17,4 +17,9 @@ class EloquentBankRepository implements BankRepositoryInterface
     {
         return $this->tenantScope->apply(Bank::query())->get();
     }
+
+    public function find(int $id): ?Bank
+    {
+        return Bank::find($id);
+    }
 }

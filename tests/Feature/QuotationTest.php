@@ -220,13 +220,45 @@ class QuotationTest extends TestCase
         ]);
     }
 
-    public function test_printquation_pdf_page_renders(): void
+    public function test_printquation_pdf_page_renders_with_the_real_quotation_data(): void
+    {
+        // Regression test: this page used to be a fully static, hardcoded
+        // letter for a different company entirely (wrong name, address,
+        // phone, email) that never actually looked at which quotation was
+        // requested. print() now fetches the real Quation and shows its
+        // real client info, pricing items, and company branding.
+        $user = User::factory()->create();
+        $quotation = Quation::create([
+            'product_id' => 1,
+            'clientname' => 'PDF Test Client',
+            'companyname' => 'PDF Test Company',
+            'companyaddress' => '123 Test Street',
+            'gstno' => 'GSTTEST123',
+            'bank' => 1,
+        ]);
+        $quotation->items()->create(['description' => 'Machine unit', 'amount' => '250000']);
+
+        $response = $this->actingAs($user)->get(route('quation.pdf', $quotation->id));
+
+        $response->assertOk();
+        $response->assertSee('PDF Test Client');
+        $response->assertSee('PDF Test Company');
+        $response->assertSee('123 Test Street');
+        $response->assertSee('GSTTEST123');
+        $response->assertSee('Machine unit');
+        $response->assertSee(\App\Support\IndianNumber::format(250000));
+        $response->assertSee('info@oraclemachinetech.com');
+        $response->assertDontSee('technolinksolution', false);
+        $response->assertDontSee('JALASAI ENTERPRISES', false);
+    }
+
+    public function test_printquation_pdf_page_returns_404_for_a_missing_quotation(): void
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('quation.pdf', 1));
+        $response = $this->actingAs($user)->get(route('quation.pdf', 999999));
 
-        $response->assertOk();
+        $response->assertNotFound();
     }
 
     public function test_generatequtationstore_saves_a_real_10_digit_phone_number(): void

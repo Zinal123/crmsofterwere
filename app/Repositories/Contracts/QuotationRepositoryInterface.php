@@ -13,4 +13,8 @@ interface QuotationRepositoryInterface
     public function create(array $data): Quation;
 
     public function createItem(int $quotationId, array $item): QuotationItem;
+
+    public function delete(int $id): void;
+
+    public function findWithDetails(int $id): Quation;
 }

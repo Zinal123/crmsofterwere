@@ -32,4 +32,14 @@ class EloquentQuotationRepository implements QuotationRepositoryInterface
             'amount' => $item['amount'] ?? null,
         ]);
     }
+
+    public function delete(int $id): void
+    {
+        Quation::findOrFail($id)->delete();
+    }
+
+    public function findWithDetails(int $id): Quation
+    {
+        return Quation::with('items')->findOrFail($id);
+    }
 }
