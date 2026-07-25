@@ -72,10 +72,7 @@
                 @can('quotations.view')
                 <li class="menu-title"><span>Quotations</span></li>
                 <li class="nav-item">
-                    <a href="{{route('generatequtation',1)}}" class="nav-link"><i class="ri-quill-pen-line"></i><span>@lang('Quotation')</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('All Quotations')</span></a>
+                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('Quotations')</span></a>
                 </li>
                 @endcan
 
