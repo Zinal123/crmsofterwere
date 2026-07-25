@@ -69,6 +69,55 @@ class QuotationTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_generatequtation_page_shows_both_fiber_and_co2_sections_with_fiber_selected_by_default(): void
+    {
+        // The Fiber and Co2 quotation forms were merged into one page with a
+        // Machine Type toggle - both field sections must be present in the
+        // markup (JS shows/hides them), with Fiber checked by default since
+        // this is the route the sidebar's single "Quotation" link uses.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+
+        $response->assertOk();
+        $response->assertSee('Standard Configuration List');
+        $response->assertSee('WORKING AREA');
+        $response->assertSee('id="quotation-type-fiber" name="quotation_type" value="fiber" checked', false);
+        $response->assertSee('id="quotation-type-co2" name="quotation_type" value="co2" >', false);
+    }
+
+    public function test_co2quation_page_defaults_to_co2_type_selected(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('co2quation', 2));
+
+        $response->assertOk();
+        $response->assertSee('id="quotation-type-co2" name="quotation_type" value="co2" checked', false);
+        $response->assertSee('id="quotation-type-fiber" name="quotation_type" value="fiber" >', false);
+    }
+
+    public function test_generatequtationstore_saves_the_notes_field(): void
+    {
+        // Regression test: the Notes <textarea> in both source forms had no
+        // name attribute, so anything typed there was silently discarded on
+        // submit despite the quationform.note column existing. Fixed as part
+        // of the Fiber/Co2 merge by adding name="note".
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'Notes Test Client',
+            'note' => 'Customer wants delivery within 2 weeks.',
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $this->assertDatabaseHas('quationform', [
+            'clientname' => 'Notes Test Client',
+            'note' => 'Customer wants delivery within 2 weeks.',
+        ]);
+    }
+
     public function test_co2quationstore_creates_a_quotation(): void
     {
         $user = User::factory()->create();

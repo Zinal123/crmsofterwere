@@ -20,7 +20,7 @@ class QutationController extends Controller
 
     public function generatequtation($id)
     {
-        return view('qutation', $this->service->getQuotationFormViewData($id));
+        return view('qutation', array_merge($this->service->getQuotationFormViewData($id), ['defaultType' => 'fiber']));
     }
 
     public function generatequtationstore(Request $request)
@@ -35,7 +35,7 @@ class QutationController extends Controller
 
     public function Co2quation($id)
     {
-        return view('co2qutation', $this->service->getQuotationFormViewData($id));
+        return view('qutation', array_merge($this->service->getQuotationFormViewData($id), ['defaultType' => 'co2']));
     }
 
     public function Co2quationstore(Request $request)

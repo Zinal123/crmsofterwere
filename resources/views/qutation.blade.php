@@ -30,14 +30,27 @@ Qutation
             <div class="card-header border-0">
                 <div class="d-flex align-items-center">
                     <h5 class="card-title mb-0 flex-grow-1">Qutation</h5>
-                    
+
                 </div>
             </div>
             <div class="card-body bg-light-subtle border border-dashed border-start-0 border-end-0">
                 <form action="{{route('generatequtationstore')}}" method="POST">
                     @csrf
+                    <input type="hidden" name="product_id" id="quotation-product-id" value="{{ $defaultType === 'co2' ? 2 : 1 }}"/>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="col-form-label" for="quotation-type-fiber">Machine Type</label><br>
+                            <input type="radio" id="quotation-type-fiber" name="quotation_type" value="fiber" @checked($defaultType !== 'co2')>
+                            <label class="col-form-label" for="quotation-type-fiber">Fiber Laser Cutting</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label" style="visibility: hidden;" for="quotation-type-co2">Machine Type</label><br>
+                            <input type="radio" id="quotation-type-co2" name="quotation_type" value="co2" @checked($defaultType === 'co2')>
+                            <label class="col-form-label" for="quotation-type-co2">Co2 Laser Cutting</label>
+                        </div>
+                    </div>
+                    <br>
                     <div class ="row">
-                      <input type="hidden" class="form-control"placeholder="name@example.com"  name="product_id"/>
                         <div class="col-md-3">
                         <label class="col-form-label" for="basic-default-name">Quotation For</label><br>
                         <input type="radio" id="html" name="fav_language" value="With Canopy">
@@ -48,9 +61,9 @@ Qutation
                         <input type="radio" id="html-2" name="fav_language" value="Without Canopy">
                         <label class="col-form-label" for="basic-default-name">Without Canopy</label>
                         </div>
-                      
-                   
-                        
+
+
+
                         </div>
                         <br>
                         <div class="row">
@@ -75,13 +88,13 @@ Qutation
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Select Bank</label><br>
                             <input type="text" class="form-control" name="bank" value = "1" readonly/>
-        
+
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Email Id</label><br>
                             <input type="email" class="form-control" name="email"/>
                            </div>
-                          
+
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -96,9 +109,11 @@ Qutation
                             <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>
                             <input type="date" class="form-control"  name ="reminderdate"/>
                            </div>
-                          
+
                         </div>
                         <br>
+
+                        <div id="fiber-fields" @if($defaultType === 'co2') style="display:none;" @endif>
                         <h5 class="mb-0">Standard Configuration</h5>
                         <table class="table">
                     <thead>
@@ -106,7 +121,7 @@ Qutation
                         <th>SR.No</th>
                         <th>Make and Modal</th>
                         <th>Select</th>
-                        
+
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -161,7 +176,7 @@ Qutation
                         <th>SR.No</th>
                         <th>Make and Modal</th>
                         <th>Select</th>
-                        
+
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -240,7 +255,7 @@ Qutation
                         <th>SR.No</th>
                         <th>Accessory</th>
                         <th>Select</th>
-                        
+
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -294,11 +309,71 @@ Qutation
                           @endforeach
                         </select></td>
                      </tr>
-                    
+
                     </tbody>
-                    
+
                   </table>
                   <br>
+                  </div>
+
+                  <div id="co2-fields" @if($defaultType !== 'co2') style="display:none;" @endif>
+                  <h5 class="mb-0">Standard Technical Parameters</h5>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>SR.No</th>
+                        <th>Make and Modal</th>
+                        <th>Select</th>
+
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <tr>
+                        <td>1</td>
+                        <td>WORKING AREA</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name" placeholder="John Doe" name ="inputpower"/></td>
+                     </tr>
+                     <tr>
+                        <td>2</td>
+                        <td>LASER POWER</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-2" placeholder="John Doe" name ="inputpower"/></td>
+                     </tr>
+                     <tr>
+                        <td>3</td>
+                        <td>LASER SOURCE</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-3" placeholder="John Doe" name="cncspan" /></td>
+                     </tr>
+                     <tr>
+                        <td>4</td>
+                        <td>MAX WORKING SPEED</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-4" placeholder="John Doe"  name="cnslenght"/></td>
+                     </tr>
+                     <tr>
+                        <td>5</td>
+                        <td>MAX CUTTING THICKNESS</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-5" placeholder="John Doe"  name="cuttingrang"/></td>
+                     </tr>
+                     <tr>
+                        <td>6</td>
+                        <td>BLOWER (AIR EX)</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-6"  value ="200" name="liftingheight" /></td>
+                     </tr>
+                     <tr>
+                        <td>7</td>
+                        <td>POWER SUPPLY</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-7"  value ="200"  name="headquantity"/></td>
+                     </tr>
+                     <tr>
+                        <td>8</td>
+                        <td>WEIGHT</td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-8"  value ="200"  name="headquantity"/></td>
+                     </tr>
+
+                    </tbody>
+                  </table>
+                  <br>
+                  </div>
+
                   <h5 class="mb-0">Pricing</h5>
                   <table class="table">
                     <thead>
@@ -306,7 +381,7 @@ Qutation
                         <th>SR.No</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        
+
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -324,20 +399,20 @@ Qutation
                         <td><input type="text" class="form-control" name="description2" ></td>
                         <td><input type="text" class="form-control" id="basic-default-name-12" placeholder="John Doe" name="amount2"  /></td>
                      </tr>
-                    
+
                     </tbody>
                   </table>
                    <div class ="row">
                     <div class="col-md-12">
                     <label class="col-sm-2 col-form-label" for="basic-default-email">Optional And Party's Scopr</label><br>
-                    
-                   
+
+
                    </div>
                    <div class ="row">
                     <div class="col-md-12">
                     <label class="col-sm-2 col-form-label" for="basic-default-email">Notes</label><br>
-                    <textarea id="editor"></textarea>
-                   
+                    <textarea id="editor" name="note"></textarea>
+
                    </div>
                    <br>
                    <div class="row justify-content-end">
@@ -354,7 +429,41 @@ Qutation
     tinymce.init({
       selector: 'textarea#editor',
     });
-  </script>
 
+    (function () {
+        var fiberRadio = document.getElementById('quotation-type-fiber');
+        var co2Radio = document.getElementById('quotation-type-co2');
+        var fiberFields = document.getElementById('fiber-fields');
+        var co2Fields = document.getElementById('co2-fields');
+        var productIdInput = document.getElementById('quotation-product-id');
+
+        function setFieldsDisabled(container, disabled) {
+            container.querySelectorAll('input, select, textarea').forEach(function (el) {
+                el.disabled = disabled;
+            });
+        }
+
+        function applyType(type) {
+            if (type === 'co2') {
+                fiberFields.style.display = 'none';
+                co2Fields.style.display = '';
+                setFieldsDisabled(fiberFields, true);
+                setFieldsDisabled(co2Fields, false);
+                productIdInput.value = 2;
+            } else {
+                fiberFields.style.display = '';
+                co2Fields.style.display = 'none';
+                setFieldsDisabled(fiberFields, false);
+                setFieldsDisabled(co2Fields, true);
+                productIdInput.value = 1;
+            }
+        }
+
+        fiberRadio.addEventListener('change', function () { if (this.checked) applyType('fiber'); });
+        co2Radio.addEventListener('change', function () { if (this.checked) applyType('co2'); });
+
+        applyType('{{ $defaultType === 'co2' ? 'co2' : 'fiber' }}');
+    })();
+</script>
 
 @endsection

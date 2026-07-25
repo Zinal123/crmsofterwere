@@ -49,10 +49,18 @@
 
                 @canany(['products.manage-config', 'quotations.view'])
                 <li class="menu-title"><span>Quotations</span></li>
+                @can('quotations.view')
+                <li class="nav-item">
+                    <a href="{{route('generatequtation',1)}}" class="nav-link"><i class="ri-quill-pen-line"></i><span>@lang('Quotation')</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('translation.Quation')</span></a>
+                </li>
+                @endcan
                 @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
-                        <i class="ri-flashlight-line"></i> <span>@lang('Fiber Laser Cutting')</span>
+                        <i class="ri-settings-3-line"></i> <span>@lang('Fiber Config')</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarEcommerce">
                         <ul class="nav nav-sm flex-column">
@@ -65,23 +73,8 @@
                             <li class="nav-item">
                                 <a href="{{route('standerconfiglist',1)}}" class="nav-link">@lang('translation.Standerd Config')</a>
                             </li>
-                            @can('quotations.view')
-                            <li class="nav-item">
-                                <a href="{{route('generatequtation',1)}}" class="nav-link">@lang('translation.Quation')</a>
-                            </li>
-                            @endcan
                         </ul>
                     </div>
-                </li>
-                @endcan
-                @can('quotations.view')
-                <li class="nav-item">
-                    <a href="{{route('co2quation',2)}}" class="nav-link">
-                        <i class="ri-radar-line"></i> <span>@lang('Co2 Laser Cutting')</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('Quation')</span></a>
                 </li>
                 @endcan
                 @endcanany
