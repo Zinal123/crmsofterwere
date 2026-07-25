@@ -53,7 +53,12 @@ class QutationController extends Controller
     private function storeQuotation(Request $request)
     {
         $data = $request->validate($this->validationRules());
-        $this->service->create($data);
+        $items = $request->validate([
+            'items' => 'nullable|array',
+            'items.*.description' => 'nullable|string|max:255',
+            'items.*.amount' => 'nullable|string|max:255',
+        ])['items'] ?? [];
+        $this->service->create($data, $items);
         return redirect()->route('listqutation')->with('success', 'Your message has been sent successfully!');
     }
 

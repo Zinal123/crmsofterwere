@@ -12,7 +12,6 @@
 <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ URL::asset('build/libs/filepond/filepond.min.css') }}" type="text/css" >
 <link rel="stylesheet"href="{{ URL::asset('build/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css') }}">
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 @endsection
 @section('content')
 @component('components.breadcrumb')
@@ -69,21 +68,21 @@ Qutation
                         <div class="row">
                             <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Client Name</label><br>
-                            <input type="text" class="form-control"placeholder="name@example.com" name="clientname"/>
+                            <input type="text" class="form-control" placeholder="Enter client name" name="clientname"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Company Name</label><br>
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyname"/>
+                            <input type="text" class="form-control" placeholder="Enter company name" name="companyname"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">GST No.</label><br>
-                            <input type="text" class="form-control"placeholder="name@example.com" name="gstno"/>
+                            <input type="text" class="form-control" placeholder="Enter GST number" name="gstno"/>
                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Company Address</label><br>
-                            <input type="text" class="form-control"placeholder="name@example.com" name="companyaddress"/>
+                            <input type="text" class="form-control" placeholder="Enter company address" name="companyaddress"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="basic-default-name">Select Bank</label><br>
@@ -141,7 +140,7 @@ Qutation
                         <td id="qutation-select-label-2">Laser Cutting Machine</td>
                         <td>  <select class="form-select" aria-labelledby="qutation-select-label-2" name="lasercutting">
                         <option value ="0">Open this select menu</option>
-                          @foreach($softeredetails as $item1)
+                          @foreach($lasercutting as $item1)
                          <option value = "{{$item1->id}}">{{$item1->modal}}</option>
                           @endforeach
                         </select></td>
@@ -183,7 +182,7 @@ Qutation
                       <tr>
                         <td>1</td>
                         <td>Input Power</td>
-                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" name ="inputpower"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name" placeholder="e.g. 3 Phase, 415V" name ="inputpower"/></td>
                      </tr>
                      <tr>
                         <td>2</td>
@@ -198,17 +197,17 @@ Qutation
                      <tr>
                         <td>3</td>
                         <td>CNC Span (mm)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name-2" placeholder="John Doe" name="cncspan" /></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-2" placeholder="e.g. 3000" name="cncspan" /></td>
                      </tr>
                      <tr>
                         <td>4</td>
                         <td>CNC Length (mm)</td>
-                        <td><input type="text" class="form-control" id="basic-default-name-3" placeholder="John Doe"  name="cnslenght"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-3" placeholder="e.g. 1500"  name="cnslenght"/></td>
                      </tr>
                      <tr>
                         <td>5</td>
                         <td>Effective Cutting Range</td>
-                        <td><input type="text" class="form-control" id="basic-default-name-4" placeholder="John Doe"  name="cuttingrang"/></td>
+                        <td><input type="text" class="form-control" id="basic-default-name-4" placeholder="e.g. 3000 x 1500 mm"  name="cuttingrang"/></td>
                      </tr>
                      <tr>
                         <td>6</td>
@@ -331,27 +330,27 @@ Qutation
                       <tr>
                         <td>1</td>
                         <td>WORKING AREA</td>
-                        <td><input type="text" class="form-control" id="co2-basic-default-name" placeholder="John Doe" name ="inputpower"/></td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name" placeholder="e.g. 1300 x 900 mm" name ="inputpower"/></td>
                      </tr>
                      <tr>
                         <td>2</td>
                         <td>LASER POWER</td>
-                        <td><input type="text" class="form-control" id="co2-basic-default-name-2" placeholder="John Doe" name ="inputpower"/></td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-2" placeholder="e.g. 130W" name ="inputpower"/></td>
                      </tr>
                      <tr>
                         <td>3</td>
                         <td>LASER SOURCE</td>
-                        <td><input type="text" class="form-control" id="co2-basic-default-name-3" placeholder="John Doe" name="cncspan" /></td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-3" placeholder="e.g. RECI" name="cncspan" /></td>
                      </tr>
                      <tr>
                         <td>4</td>
                         <td>MAX WORKING SPEED</td>
-                        <td><input type="text" class="form-control" id="co2-basic-default-name-4" placeholder="John Doe"  name="cnslenght"/></td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-4" placeholder="e.g. 600 mm/s"  name="cnslenght"/></td>
                      </tr>
                      <tr>
                         <td>5</td>
                         <td>MAX CUTTING THICKNESS</td>
-                        <td><input type="text" class="form-control" id="co2-basic-default-name-5" placeholder="John Doe"  name="cuttingrang"/></td>
+                        <td><input type="text" class="form-control" id="co2-basic-default-name-5" placeholder="e.g. 20mm"  name="cuttingrang"/></td>
                      </tr>
                      <tr>
                         <td>6</td>
@@ -375,34 +374,38 @@ Qutation
                   </div>
 
                   <h5 class="mb-0">Pricing</h5>
-                  <table class="table">
+                  <table class="table" id="pricing-table">
                     <thead>
                       <tr>
                         <th>SR.No</th>
                         <th>Description</th>
                         <th>Amount</th>
-
+                        <th></th>
                       </tr>
                     </thead>
-                    <tbody class="table-border-bottom-0">
+                    <tbody class="table-border-bottom-0" id="pricing-rows">
                       <tr>
-                        <td>1</td>
-                        <td><input type="text" class="form-control" name="description" ></td>
-<td>                            <input type="text" class="form-control" id="basic-default-name-10" placeholder="John Doe" name="amount" /></td>
+                        <td class="pricing-row-number">1</td>
+                        <td><input type="text" class="form-control" placeholder="e.g. Machine unit price" name="items[0][description]"></td>
+                        <td><input type="text" class="form-control" placeholder="Enter amount" name="items[0][amount]"></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                      <tr>
-                        <td>2</td>
-                        <td><input type="text" class="form-control" name="description1" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name-11" placeholder="John Doe"  name="amount1" /></td>
+                        <td class="pricing-row-number">2</td>
+                        <td><input type="text" class="form-control" placeholder="e.g. Installation charges" name="items[1][description]"></td>
+                        <td><input type="text" class="form-control" placeholder="Enter amount" name="items[1][amount]"></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
-                     <td>3</td>
-                        <td><input type="text" class="form-control" name="description2" ></td>
-                        <td><input type="text" class="form-control" id="basic-default-name-12" placeholder="John Doe" name="amount2"  /></td>
+                     <tr>
+                        <td class="pricing-row-number">3</td>
+                        <td><input type="text" class="form-control" placeholder="e.g. Transport charges" name="items[2][description]"></td>
+                        <td><input type="text" class="form-control" placeholder="Enter amount" name="items[2][amount]"></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
-
                     </tbody>
                   </table>
-                   <div class ="row">
+                  <button type="button" class="btn btn-soft-secondary btn-sm" id="pricing-add-row"><i class="ri-add-line align-bottom me-1"></i> Add Row</button>
+                   <div class ="row mt-3">
                     <div class="col-md-12">
                     <label class="col-sm-2 col-form-label" for="basic-default-email">Optional And Party's Scopr</label><br>
 
@@ -410,8 +413,8 @@ Qutation
                    </div>
                    <div class ="row">
                     <div class="col-md-12">
-                    <label class="col-sm-2 col-form-label" for="basic-default-email">Notes</label><br>
-                    <textarea id="editor" name="note"></textarea>
+                    <label class="col-sm-2 col-form-label" for="quotation-notes">Notes</label><br>
+                    <textarea id="quotation-notes" name="note" class="form-control" rows="4"></textarea>
 
                    </div>
                    <br>
@@ -426,9 +429,41 @@ Qutation
     </div>
 </div>
 <script>
-    tinymce.init({
-      selector: 'textarea#editor',
-    });
+    (function () {
+        var rowsBody = document.getElementById('pricing-rows');
+        var addRowBtn = document.getElementById('pricing-add-row');
+        var rowIndex = rowsBody.querySelectorAll('tr').length;
+
+        function renumberRows() {
+            rowsBody.querySelectorAll('tr').forEach(function (row, i) {
+                row.querySelector('.pricing-row-number').textContent = i + 1;
+            });
+        }
+
+        addRowBtn.addEventListener('click', function () {
+            var row = document.createElement('tr');
+            row.innerHTML =
+                '<td class="pricing-row-number"></td>' +
+                '<td><input type="text" class="form-control" placeholder="Description" name="items[' + rowIndex + '][description]"></td>' +
+                '<td><input type="text" class="form-control" placeholder="Enter amount" name="items[' + rowIndex + '][amount]"></td>' +
+                '<td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>';
+            rowsBody.appendChild(row);
+            rowIndex++;
+            renumberRows();
+        });
+
+        rowsBody.addEventListener('click', function (event) {
+            var removeBtn = event.target.closest('.pricing-remove-row');
+            if (!removeBtn) {
+                return;
+            }
+            if (rowsBody.querySelectorAll('tr').length <= 1) {
+                return;
+            }
+            removeBtn.closest('tr').remove();
+            renumberRows();
+        });
+    })();
 
     (function () {
         var fiberRadio = document.getElementById('quotation-type-fiber');

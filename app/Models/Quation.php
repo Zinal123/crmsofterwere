@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -53,9 +54,11 @@ class Quation extends Authenticatable
         'amount2',
         'optionparthyscope',
         'note',
-      
+
     ];
 
-
-    
+    public function items(): HasMany
+    {
+        return $this->hasMany(QuotationItem::class, 'quotation_id');
+    }
 }

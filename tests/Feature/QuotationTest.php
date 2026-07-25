@@ -60,6 +60,54 @@ class QuotationTest extends TestCase
         ]);
     }
 
+    public function test_generatequtationstore_saves_an_unbounded_number_of_pricing_line_items(): void
+    {
+        // Regression test: the pricing table used to have exactly 3 fixed
+        // description/amount column pairs with no way to add more. Line
+        // items now live in their own quotation_items table, so a quote can
+        // carry any number of rows - here, 5, more than the old ceiling.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'Many Items Client',
+            'items' => [
+                ['description' => 'Machine unit', 'amount' => '500000'],
+                ['description' => 'Installation', 'amount' => '10000'],
+                ['description' => 'Transport', 'amount' => '5000'],
+                ['description' => 'Training', 'amount' => '2000'],
+                ['description' => 'Annual maintenance', 'amount' => '15000'],
+            ],
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $quotation = Quation::where('clientname', 'Many Items Client')->firstOrFail();
+        $this->assertCount(5, $quotation->items);
+        $this->assertDatabaseHas('quotation_items', [
+            'quotation_id' => $quotation->id,
+            'description' => 'Annual maintenance',
+            'amount' => '15000',
+        ]);
+    }
+
+    public function test_generatequtationstore_skips_blank_pricing_rows(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'Blank Row Client',
+            'items' => [
+                ['description' => 'Machine unit', 'amount' => '500000'],
+                ['description' => '', 'amount' => ''],
+            ],
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $quotation = Quation::where('clientname', 'Blank Row Client')->firstOrFail();
+        $this->assertCount(1, $quotation->items);
+    }
+
     public function test_co2quation_page_renders(): void
     {
         $user = User::factory()->create();
@@ -84,6 +132,39 @@ class QuotationTest extends TestCase
         $response->assertSee('WORKING AREA');
         $response->assertSee('id="quotation-type-fiber" name="quotation_type" value="fiber" checked', false);
         $response->assertSee('id="quotation-type-co2" name="quotation_type" value="co2" >', false);
+    }
+
+    public function test_generatequtation_laser_cutting_dropdown_uses_its_own_master_data(): void
+    {
+        // Regression test: the "Laser Cutting Machine" dropdown looped over
+        // $softeredetails (the Software Details dropdown's own data) instead
+        // of $lasercutting, so it always showed Software options even though
+        // a distinct Lasercutting master (with its own "Laser Controller"
+        // config screen) already existed and was already being passed to
+        // the view unused.
+        $user = User::factory()->create();
+        \App\Models\Softerwere::create(['product_id' => 1, 'modal' => 'Software-Only-Option']);
+        \App\Models\Lasercutting::create(['product_id' => 1, 'modal' => 'Laser-Controller-Option']);
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+
+        $response->assertOk();
+        $response->assertSee('Laser-Controller-Option');
+    }
+
+    public function test_generatequtation_page_has_no_tinymce_dependency(): void
+    {
+        // Regression test: the Notes field used a TinyMCE CDN build with no
+        // API key, which showed a "valid API key required" banner and put
+        // the editor into read-only mode - Notes was effectively unusable.
+        // Replaced with a plain textarea.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+
+        $response->assertOk();
+        $response->assertDontSee('tinymce', false);
+        $response->assertSee('id="quotation-notes"', false);
     }
 
     public function test_co2quation_page_defaults_to_co2_type_selected(): void

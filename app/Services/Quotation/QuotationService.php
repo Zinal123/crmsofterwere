@@ -6,6 +6,7 @@ use App\Models\Quation;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class QuotationService
 {
@@ -20,9 +21,26 @@ class QuotationService
         return $this->repository->allOrderedByLatest();
     }
 
-    public function create(array $data): Quation
+    /**
+     * $items is an array of ['description' => ..., 'amount' => ...] pairs -
+     * as many as the pricing table's "Add Row" button produced client-side,
+     * not capped at the 3 legacy description/amount/description1/... columns.
+     */
+    public function create(array $data, array $items = []): Quation
     {
-        return $this->repository->create($data);
+        return DB::transaction(function () use ($data, $items) {
+            $quotation = $this->repository->create($data);
+
+            foreach ($items as $item) {
+                if (blank($item['description'] ?? null) && blank($item['amount'] ?? null)) {
+                    continue;
+                }
+
+                $this->repository->createItem($quotation->id, $item);
+            }
+
+            return $quotation;
+        });
     }
 
     /**
