@@ -554,7 +554,7 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
 <script>
 $(document).ready(function(){
     $('#modal1').click(function() {
-        var password =  1
+        var password = {{ (int) $id }};
      $('#product_id').val(password)
        
 });
@@ -563,7 +563,7 @@ $(document).ready(function(){
 <script>
     $(document).ready(function(){
         $('#modal2').click(function() {
-            var password =  1
+            var password = {{ (int) $id }};
          $('#product_id1').val(password)
            
     });
@@ -572,7 +572,7 @@ $(document).ready(function(){
     <script>
         $(document).ready(function(){
             $('#modal3').click(function() {
-                var password =  1
+                var password = {{ (int) $id }};
              $('#product_id2').val(password)
                
         });
@@ -581,7 +581,7 @@ $(document).ready(function(){
         <script>
             $(document).ready(function(){
                 $('#modal4').click(function() {
-                    var password =  1
+                    var password = {{ (int) $id }};
                  $('#product_id3').val(password)
                    
             });

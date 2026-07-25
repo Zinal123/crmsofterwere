@@ -76,7 +76,7 @@
                 @endcan
                 @can('quotations.view')
                 <li class="nav-item">
-                    <a href="{{route('co2quation',1)}}" class="nav-link">
+                    <a href="{{route('co2quation',2)}}" class="nav-link">
                         <i class="ri-radar-line"></i> <span>@lang('Co2 Laser Cutting')</span>
                     </a>
                 </li>

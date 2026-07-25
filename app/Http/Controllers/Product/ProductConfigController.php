@@ -14,26 +14,17 @@ class ProductConfigController extends Controller
 
     public function standerconfig($id)
     {
-        // Pre-existing bug, intentionally preserved: this route has always
-        // passed the literal string "id" instead of the real route
-        // parameter, so this page never actually filters by the URL's
-        // product id. Not fixed here per the no-behavior-change constraint;
-        // tracked as a known issue for a future dedicated bug-fix pass.
-        return view('standerconfig', $this->service->getConfigViewData('id'));
+        return view('standerconfig', $this->service->getConfigViewData((int) $id));
     }
 
     public function standerconfiglist($id)
     {
-        // Pre-existing bug, intentionally preserved: this page has always
-        // hardcoded product_id=1 regardless of the URL parameter.
-        return view('standerconfiglist', $this->service->getStanderconfigListViewData(1));
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData((int) $id));
     }
 
     public function technicalparameters($id)
     {
-        // Pre-existing bug, intentionally preserved: same hardcoded-1
-        // behavior as standerconfiglist() above.
-        return view('technicalparameters', $this->service->getTechnicalParamsViewData(1));
+        return view('technicalparameters', $this->service->getTechnicalParamsViewData((int) $id));
     }
 
     public function softerwere(Request $request, $id)
