@@ -139,6 +139,37 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('invoice', ['invoice_id' => 'INV-TEST-001']);
         $this->assertDatabaseHas('customer', ['name' => 'Test Customer']);
         $this->assertDatabaseHas('invoiceproduct', ['product_name' => $product->id, 'hsn' => '8456']);
+        // Regression: remaining_amount previously stayed NULL until the first
+        // payment was recorded, which hid the "Record Payment" form (gated on
+        // remaining_amount > 0) on a brand-new, unpaid invoice.
+        $this->assertDatabaseHas('invoice', ['invoice_id' => 'INV-TEST-001', 'paidamount' => 0, 'remaining_amount' => 50000]);
+    }
+
+    public function test_a_freshly_created_invoice_shows_the_record_payment_button(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        $this->actingAs($user)->post(route('invoice.store'), [
+            'invoice_id' => 'INV-TEST-005',
+            'invoice_date' => '2026-07-17',
+            'placesupply' => 'Gujarat',
+            'billing_address_full_name' => 'Fresh Invoice Customer',
+            'billing_state' => 'Gujarat',
+            'shipping_state' => 'Gujarat',
+            'order_summary_cart_total' => 50000,
+            'order_summary_cart_amount' => 50000,
+            'new_product_obj' => [
+                ['product_name' => $product->id],
+            ],
+        ]);
+
+        $invoice = Invoice::where('invoice_id', 'INV-TEST-005')->firstOrFail();
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee('id="invoice-payment-form"', false);
     }
 
     public function test_invoicestore_accepts_a_product_line_missing_optional_fields(): void

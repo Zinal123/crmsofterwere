@@ -130,6 +130,12 @@ class InvoiceService
             $input['totalamountbeforetax'] = $request->input('order_summary_cart_totalbeforetax');
             $input['amount'] = $request->input('order_summary_cart_amount');
             $input['amountwithtax'] = $request->input('order_summary_cart_total');
+            // Without these, a new invoice's remaining_amount stays NULL until
+            // the first payment is recorded - which hides the invoice details
+            // page's "Record Payment" form (gated on remaining_amount > 0) for
+            // every invoice until someone finds another way to record one.
+            $input['paidamount'] = 0;
+            $input['remaining_amount'] = $request->input('order_summary_cart_amount');
             $input['companyaddress'] = $request->input('company_details_companyAddress');
             $input['companyphone'] = $request->input('company_details_contact_no');
             $input['companywebsite'] = $request->input('company_details_Website');
