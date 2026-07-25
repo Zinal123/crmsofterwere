@@ -206,11 +206,17 @@ document.getElementById('paymentForm').addEventListener('submit', function(event
                 modal.hide();
                 location.reload();
             } else {
-                // Show SweetAlert error message
+                // Show SweetAlert error message. Server-side validation
+                // (e.g. a payment that would exceed the remaining balance)
+                // comes back as data.errors.paidAmount[0]; fall back to a
+                // generic message for anything else.
+                const message = (data.errors && data.errors.paidAmount && data.errors.paidAmount[0])
+                    || data.message
+                    || 'There was an issue updating the payment. Please try again.';
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'There was an issue updating the payment. Please try again.',
+                    text: message,
                 });
             }
         })

@@ -216,6 +216,24 @@ class InvoiceService
 
         $item = $this->repository->findInvoice($itemId);
 
+        if (!$item) {
+            return false;
+        }
+
+        $newPaidAmount = (float) $item->paidamount + (float) $paidAmount;
+        $remainingAmount = (float) $item->amount - $newPaidAmount;
+
+        // Guards the same invariant the max:99999999.99 rule guards against
+        // fuzzed input for: paidamount + remaining_amount must never exceed
+        // the invoice amount. A prior corrupted invoice (see InvoiceTest's
+        // "absurdly large amount" regression test) showed how easily a bad
+        // single payment can push remaining_amount negative.
+        if ($remainingAmount < 0) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'paidAmount' => ['This payment of ' . IndianNumber::format($paidAmount) . ' exceeds the remaining balance of ' . IndianNumber::format($item->remaining_amount) . '.'],
+            ]);
+        }
+
         $this->repository->createPaidAmount([
             'invoice_id' => $itemId,
             'customer_id' => $customerId,
@@ -224,19 +242,12 @@ class InvoiceService
             'reference_number' => $data['reference_number'] ?? null,
         ]);
 
-        if ($item) {
-            $newPaidAmount = $item->paidamount + $paidAmount;
-            $remainingAmount = $item->amount - $newPaidAmount;
+        $item->paidamount = $newPaidAmount;
+        $item->remaining_amount = $remainingAmount;
 
-            $item->paidamount = $newPaidAmount;
-            $item->remaining_amount = $remainingAmount;
+        $this->repository->saveInvoice($item);
 
-            $this->repository->saveInvoice($item);
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     public function getPaymentHistory(): Collection

@@ -367,6 +367,45 @@ class InvoiceTest extends TestCase
         $this->assertEquals(0, $invoice->fresh()->paidamount);
     }
 
+    public function test_updatepayment_rejects_a_payment_that_would_exceed_the_remaining_balance(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 70000, 'remaining_amount' => 30000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => 30000.01,
+            'payment_method' => 'cash',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('paidAmount');
+        $this->assertEquals(70000, $invoice->fresh()->paidamount);
+        $this->assertEquals(30000, $invoice->fresh()->remaining_amount);
+        $this->assertDatabaseMissing('paidamount', ['invoice_id' => $invoice->id, 'paidAmount' => 30000.01]);
+    }
+
+    public function test_updatepayment_allows_a_payment_that_exactly_settles_the_remaining_balance(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 70000, 'remaining_amount' => 30000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => 30000,
+            'payment_method' => 'cash',
+        ]);
+
+        $response->assertOk();
+        $response->assertJson(['success' => true]);
+        $this->assertEquals(100000, $invoice->fresh()->paidamount);
+        $this->assertEquals(0, $invoice->fresh()->remaining_amount);
+    }
+
     public function test_invoice_details_page_shows_payment_form_and_history_when_unpaid(): void
     {
         $user = User::factory()->create();
