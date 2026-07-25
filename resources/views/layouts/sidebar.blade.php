@@ -32,62 +32,23 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
+                @can('dashboard.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('root') }}">
                         <i class="ri-dashboard-3-line"></i> <span>@lang('translation.dashboards')</span>
                     </a>
-                    
                 </li> <!-- end Dashboard Menu -->
+                @endcan
+
                 @can('products.view')
+                <li class="menu-title"><span>Masters</span></li>
                 <li class="nav-item">
                     <a href="{{route('product')}}" class="nav-link"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
                 </li>
                 @endcan
-                @can('invoices.view')
-                <li class="nav-item">
-                    <a href="{{route('invoice')}}" class="nav-link"><i class="ri-bill-line"></i><span>@lang('Invoice')</span></a>
-                </li>
-                @endcan
-                @can('payment-history.view')
-                <li class="nav-item">
-                    <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
-                </li>
-                @endcan
-                @can('jobs.view-own')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('jobs.index') }}">
-                        <i class="ri-briefcase-4-line"></i> <span>Jobs</span>
-                    </a>
-                </li>
-                @endcan
-                @can('jobs.approve')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('jobs.pending-approval') }}">
-                        <i class="ri-inbox-line"></i> <span>Pending Approval</span>
-                    </a>
-                </li>
-                @endcan
-                @can('jobs.manage-machines')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('machines.index') }}">
-                        <i class="ri-tools-line"></i> <span>Machines</span>
-                    </a>
-                </li>
-                @endcan
-                @can('employees.view')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('employees.index') }}">
-                        <i class="ri-team-line"></i> <span>Employees</span>
-                    </a>
-                </li>
-                @endcan
-                @can('attendance.manage')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('attendance.mark') }}">
-                        <i class="ri-calendar-check-line"></i> <span>Attendance</span>
-                    </a>
-                </li>
-                @endcan
+
+                @canany(['products.manage-config', 'quotations.view'])
+                <li class="menu-title"><span>Quotations</span></li>
                 @can('products.manage-config')
                 <li class="nav-item">
                     <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
@@ -123,6 +84,61 @@
                     <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('Quation')</span></a>
                 </li>
                 @endcan
+                @endcanany
+
+                @canany(['invoices.view', 'payment-history.view'])
+                <li class="menu-title"><span>Sales</span></li>
+                @can('invoices.view')
+                <li class="nav-item">
+                    <a href="{{route('invoice')}}" class="nav-link"><i class="ri-bill-line"></i><span>@lang('Invoice')</span></a>
+                </li>
+                @endcan
+                @can('payment-history.view')
+                <li class="nav-item">
+                    <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
+                </li>
+                @endcan
+                @endcanany
+
+                @canany(['jobs.view-own', 'jobs.approve', 'jobs.manage-machines', 'employees.view', 'attendance.manage'])
+                <li class="menu-title"><span>Workforce</span></li>
+                @can('jobs.view-own')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('jobs.index') }}">
+                        <i class="ri-briefcase-4-line"></i> <span>Jobs</span>
+                    </a>
+                </li>
+                @endcan
+                @can('jobs.approve')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('jobs.pending-approval') }}">
+                        <i class="ri-inbox-line"></i> <span>Pending Approval</span>
+                    </a>
+                </li>
+                @endcan
+                @can('jobs.manage-machines')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('machines.index') }}">
+                        <i class="ri-tools-line"></i> <span>Machines</span>
+                    </a>
+                </li>
+                @endcan
+                @can('employees.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('employees.index') }}">
+                        <i class="ri-team-line"></i> <span>Employees</span>
+                    </a>
+                </li>
+                @endcan
+                @can('attendance.manage')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('attendance.mark') }}">
+                        <i class="ri-calendar-check-line"></i> <span>Attendance</span>
+                    </a>
+                </li>
+                @endcan
+                @endcanany
+
                 @canany(['admin.manage-roles', 'admin.manage-users'])
                 <li class="menu-title"><span>Admin</span></li>
                 @can('admin.manage-roles')

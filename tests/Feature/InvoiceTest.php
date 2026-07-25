@@ -479,7 +479,7 @@ class InvoiceTest extends TestCase
     public function test_paymenthistry_page_renders_with_seeded_payments(): void
     {
         $user = User::factory()->create();
-        $invoice = Invoice::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 0, 'remaining_amount' => 100000]);
         Customer::factory()->create(['invoice_id' => $invoice->id, 'name' => 'Precision CNC Works']);
 
         $this->actingAs($user)->post('/update-payment', [
