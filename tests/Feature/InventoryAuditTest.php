@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Invetry;
+use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,14 +43,15 @@ class InventoryAuditTest extends TestCase
         $response->assertSee('4');
     }
 
-    public function test_inventory_list_has_a_history_trigger_per_row(): void
+    public function test_product_page_has_a_stock_history_trigger_per_tracked_row(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);
         $owner = User::factory()->create();
         $owner->assignRole('Owner');
-        $item = Invetry::create(['product_id' => 1, 'quantity' => 5]);
+        $product = Product::factory()->create();
+        $item = Invetry::create(['product_id' => $product->id, 'quantity' => 5]);
 
-        $response = $this->actingAs($owner)->get(route('invoice.inventrylist'));
+        $response = $this->actingAs($owner)->get(route('product'));
 
         $response->assertOk();
         $response->assertSee('data-audit-id="' . $item->id . '"', false);

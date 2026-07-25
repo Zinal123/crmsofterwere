@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Invetry;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Support\Tenancy\TenantScope;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentInventoryRepository implements InventoryRepositoryInterface
 {
@@ -26,5 +27,13 @@ class EloquentInventoryRepository implements InventoryRepositoryInterface
     {
         $item->quantity = $newQuantity;
         $item->save();
+    }
+
+    public function allKeyedByProductId(): Collection
+    {
+        return $this->tenantScope->apply(Invetry::query())
+            ->whereNotNull('product_id')
+            ->get()
+            ->keyBy('product_id');
     }
 }

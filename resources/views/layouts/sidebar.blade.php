@@ -53,11 +53,6 @@
                     <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
                 </li>
                 @endcan
-                @can('inventory.view')
-                <li class="nav-item">
-                    <a href="{{route('invoice.inventrylist')}}" class="nav-link"><i class="ri-archive-line"></i><span>@lang('Invtery managemnet')</span></a>
-                </li>
-                @endcan
                 @can('jobs.view-own')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('jobs.index') }}">

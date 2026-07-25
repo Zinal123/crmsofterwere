@@ -12,16 +12,41 @@ class InventoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_inventry_page_renders_with_seeded_products(): void
+    public function test_old_inventory_list_route_redirects_to_the_merged_product_page(): void
     {
+        // Product and Inventory were merged into one page - this route is
+        // kept only so old bookmarks/links to /inventrylist don't 404.
         $user = User::factory()->create();
-        $product = Product::factory()->create(['name' => 'Fiber Laser Cutting Machine']);
-        Invetry::factory()->create(['product_id' => $product->id, 'quantity' => 10]);
 
         $response = $this->actingAs($user)->get(route('invoice.inventrylist'));
 
+        $response->assertRedirect(route('product'));
+    }
+
+    public function test_product_page_shows_stock_quantity_for_a_tracked_product(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create(['name' => 'Fiber Laser Cutting Machine']);
+        Invetry::factory()->create(['product_id' => $product->id, 'quantity' => 10, 'vandername' => 'Acme Supplies']);
+
+        $response = $this->actingAs($user)->get(route('product'));
+
         $response->assertOk();
         $response->assertSee('Fiber Laser Cutting Machine');
+        $response->assertSee('10');
+        $response->assertSee('Acme Supplies');
+    }
+
+    public function test_product_page_shows_not_tracked_for_a_product_with_no_inventory(): void
+    {
+        $user = User::factory()->create();
+        Product::factory()->create(['name' => 'Untracked Widget']);
+
+        $response = $this->actingAs($user)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('Untracked Widget');
+        $response->assertSee('Not tracked');
     }
 
     public function test_inventrystore_creates_a_new_inventory_row(): void
@@ -36,7 +61,7 @@ class InventoryTest extends TestCase
             'rate' => 500,
         ]);
 
-        $response->assertRedirect(route('invoice.inventrylist'));
+        $response->assertRedirect(route('product'));
         $this->assertDatabaseHas('invetry', [
             'product_id' => $product->id,
             'quantity' => 25,

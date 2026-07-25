@@ -1,0 +1,90 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Invetry;
+use App\Models\Product;
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ProductInventoryMergeTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private function owner(): User
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        return $owner;
+    }
+
+    public function test_creating_a_product_with_quantity_also_creates_its_inventory_row(): void
+    {
+        $response = $this->actingAs($this->owner())->post(route('productstore'), [
+            'name' => 'Precision Nozzle',
+            'rate' => 750,
+            'quantity' => 40,
+            'vandername' => 'Precitec India',
+        ]);
+
+        $response->assertRedirect(route('product'));
+        $product = Product::where('name', 'Precision Nozzle')->firstOrFail();
+        $this->assertDatabaseHas('invetry', [
+            'product_id' => $product->id,
+            'quantity' => 40,
+            'vandername' => 'Precitec India',
+        ]);
+    }
+
+    public function test_creating_a_product_without_quantity_creates_no_inventory_row(): void
+    {
+        $response = $this->actingAs($this->owner())->post(route('productstore'), [
+            'name' => 'Fiber Laser Cutting Machine 2000W',
+            'rate' => 900000,
+        ]);
+
+        $response->assertRedirect(route('product'));
+        $product = Product::where('name', 'Fiber Laser Cutting Machine 2000W')->firstOrFail();
+        $this->assertDatabaseMissing('invetry', ['product_id' => $product->id]);
+    }
+
+    public function test_product_page_shows_add_stock_button_only_for_untracked_products(): void
+    {
+        $owner = $this->owner();
+        $trackedProduct = Product::factory()->create(['name' => 'Tracked Product']);
+        Invetry::factory()->create(['product_id' => $trackedProduct->id]);
+        $untrackedProduct = Product::factory()->create(['name' => 'Untracked Product']);
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('data-product-id="' . $untrackedProduct->id . '"', false);
+        $response->assertDontSee('data-product-id="' . $trackedProduct->id . '"', false);
+    }
+
+    public function test_product_page_shows_update_qty_button_only_for_tracked_products(): void
+    {
+        $owner = $this->owner();
+        $trackedProduct = Product::factory()->create();
+        $item = Invetry::factory()->create(['product_id' => $trackedProduct->id]);
+        Product::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('open-update-qty-modal', false);
+        $response->assertSee('data-id="' . $item->id . '"', false);
+    }
+
+    public function test_sidebar_no_longer_shows_a_separate_inventory_menu_item(): void
+    {
+        $response = $this->actingAs($this->owner())->get(route('root'));
+
+        $response->assertOk();
+        $response->assertDontSee('Invtery managemnet');
+    }
+}

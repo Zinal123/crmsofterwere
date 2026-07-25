@@ -14,13 +14,10 @@ class InventryController extends Controller
 
     public function inventry()
     {
-        // The view (inventrylist.blade.php) re-queries both $Invetry and
-        // $product itself via inline PHP, so this passed-in $product is
-        // never actually used - pre-existing dead data, preserved as-is
-        // rather than fixed here (same pattern as apps-invoices-list and
-        // vender before their route-shadowing fix).
-        $product = $this->service->getProductList();
-        return view('inventrylist', compact('product'));
+        // Product and Inventory are now one combined page (stock quantity
+        // shows inline on the product list) - this route is kept only so
+        // old bookmarks/links to /inventrylist don't 404.
+        return redirect()->route('product');
     }
 
     public function inventrystore(Request $request)
@@ -34,7 +31,7 @@ class InventryController extends Controller
         ]);
 
         $this->service->create($request->all());
-        return redirect()->route('invoice.inventrylist');
+        return redirect()->route('product')->with('success', 'Stock added.');
     }
 
     public function quantityupdate(Request $request)

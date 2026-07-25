@@ -226,15 +226,17 @@ class NavigationConsistencyTest extends TestCase
 
     // --- Fix 4: sidebar icons no longer collide on the generic dashboard icon ---
 
-    public function test_sidebar_gives_product_invoice_payment_history_inventory_and_quotation_distinct_icons(): void
+    public function test_sidebar_gives_product_invoice_payment_history_and_quotation_distinct_icons(): void
     {
+        // Inventory management was merged into the Product page (no longer
+        // a separate sidebar item), so ri-archive-line is no longer asserted
+        // here - see ProductInventoryMergeTest for the merged page itself.
         $response = $this->actingAs($this->owner())->get(route('root'));
 
         $response->assertOk();
         $response->assertSee('ri-price-tag-3-line', false);
         $response->assertSee('ri-bill-line', false);
         $response->assertSee('ri-wallet-2-line', false);
-        $response->assertSee('ri-archive-line', false);
         $response->assertSee('ri-file-list-3-line', false);
     }
 }

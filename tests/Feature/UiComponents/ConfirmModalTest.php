@@ -31,15 +31,8 @@ class ConfirmModalTest extends TestCase
         $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
     }
 
-    public function test_inventory_list_page_has_no_dead_delete_modal(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->get(route('invoice.inventrylist'));
-
-        $response->assertOk();
-        $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
-    }
+    // Inventory management was merged into the product page - this check
+    // is now covered by test_product_list_page_has_no_dead_delete_modal.
 
     public function test_product_list_page_has_no_dead_delete_modal(): void
     {

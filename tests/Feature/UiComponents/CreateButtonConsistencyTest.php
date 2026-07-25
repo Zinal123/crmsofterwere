@@ -23,15 +23,9 @@ class CreateButtonConsistencyTest extends TestCase
         $response->assertDontSee('btn-danger" href="' . route('invoice.create'), false);
     }
 
-    public function test_inventory_create_button_uses_success_variant(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->get(route('invoice.inventrylist'));
-
-        $response->assertOk();
-        $response->assertSee('Create Inventry');
-    }
+    // Inventory management was merged into the product page - the standalone
+    // "Create Inventory" button no longer exists (stock is now added inline
+    // per product row, or via the Create Product form's optional fields).
 
     public function test_product_create_button_uses_success_variant(): void
     {
@@ -59,9 +53,8 @@ class CreateButtonConsistencyTest extends TestCase
         $invoiceResponse = $this->actingAs($user)->get(route('invoice'));
         $invoiceResponse->assertDontSee(self::REMOVED_BULK_DELETE_ONCLICK, false);
 
-        $inventoryResponse = $this->actingAs($user)->get(route('invoice.inventrylist'));
-        $inventoryResponse->assertDontSee(self::REMOVED_BULK_DELETE_ONCLICK, false);
-
+        // route('invoice.inventrylist') now just redirects into route('product') -
+        // covered by the productResponse assertion below.
         $productResponse = $this->actingAs($user)->get(route('product'));
         $productResponse->assertDontSee(self::REMOVED_BULK_DELETE_ONCLICK, false);
     }

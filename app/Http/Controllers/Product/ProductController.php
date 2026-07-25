@@ -14,15 +14,22 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $product = $this->service->list();
+        $product = $this->service->listWithInventory();
         return view('product', compact('product'));
     }
 
     public function productstore(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'rate' => 'nullable|numeric|min:0',
+            'unit' => 'nullable|string|max:255',
+            'make' => 'nullable|string|max:255',
+            'quantity' => 'nullable|integer|min:0',
+            'vandername' => 'nullable|string|max:255',
+        ]);
 
-        $this->service->create($request->all());
+        $this->service->createWithInventory($data);
 
         return redirect()->route('product')->with('success', 'Product created successfully.');
     }

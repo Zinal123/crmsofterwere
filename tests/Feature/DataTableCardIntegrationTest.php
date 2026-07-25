@@ -25,13 +25,13 @@ class DataTableCardIntegrationTest extends TestCase
         $response->assertSee('Invoices');
     }
 
-    public function test_inventory_list_uses_shared_card_shell_and_still_shows_data(): void
+    public function test_product_list_uses_shared_card_shell_and_still_shows_inventory_data(): void
     {
         $user = User::factory()->create();
         $product = \App\Models\Product::factory()->create(['name' => 'Shell Test Product']);
         \App\Models\Invetry::factory()->create(['product_id' => $product->id]);
 
-        $response = $this->actingAs($user)->get(route('invoice.inventrylist'));
+        $response = $this->actingAs($user)->get(route('product'));
 
         $response->assertOk();
         $response->assertSee('card-header border-0', false);

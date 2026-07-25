@@ -4,20 +4,11 @@ namespace App\Services\Inventory;
 
 use App\Models\Invetry;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
-use App\Repositories\Contracts\ProductRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 
 class InventoryService
 {
-    public function __construct(
-        private InventoryRepositoryInterface $repository,
-        private ProductRepositoryInterface $productRepository,
-    ) {
-    }
-
-    public function getProductList(): Collection
+    public function __construct(private InventoryRepositoryInterface $repository)
     {
-        return $this->productRepository->allOrderedByLatest();
     }
 
     public function create(array $data): Invetry
