@@ -29,7 +29,7 @@
                             @csrf
                             <div class="modal-header"><h5 class="modal-title">Reject "{{ $job->title }}"</h5></div>
                             <div class="modal-body">
-                                <label class="form-label" for="rejection-reason-{{ $job->id }}">Reason (required)</label>
+                                <label class="form-label" for="rejection-reason-{{ $job->id }}">Reason <span class="text-danger">*</span></label>
                                 <textarea id="rejection-reason-{{ $job->id }}" name="rejection_reason" class="form-control" required></textarea>
                             </div>
                             <div class="modal-footer">

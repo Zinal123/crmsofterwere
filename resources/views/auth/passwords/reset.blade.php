@@ -56,7 +56,7 @@
                                         @csrf
                                         <input type="hidden" name="token" value="{{ $token }}">
                                         <div class="mb-3">
-                                            <label for="useremail" class="form-label">Email</label>
+                                            <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="useremail" name="email" placeholder="Enter email" value="{{ $email ?? old('email') }}" id="email">
                                             @error('email')
                                             <span class="invalid-feedback" role="alert">
@@ -66,7 +66,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="userpassword">Password</label>
+                                            <label for="userpassword">Password <span class="text-danger">*</span></label>
                                             <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="userpassword" placeholder="Enter password">
                                             @error('password')
                                             <span class="invalid-feedback" role="alert">
@@ -76,7 +76,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="userpassword">Confirm Password</label>
+                                            <label for="password-confirm">Confirm Password <span class="text-danger">*</span></label>
                                             <input id="password-confirm" type="password" name="password_confirmation" class="form-control" placeholder="Enter confirm password">
                                         </div>
 

@@ -40,7 +40,7 @@
             <form action="{{ route('employees.documents.store', $employee->id) }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 flex-wrap align-items-end">
                 @csrf
                 <div>
-                    <label class="form-label" for="doc-type">Document Type</label>
+                    <label class="form-label" for="doc-type">Document Type <span class="text-danger">*</span></label>
                     <select id="doc-type" name="document_type" class="form-select" required>
                         <option value="aadhar">Aadhar</option>
                         <option value="pan">PAN</option>
@@ -54,7 +54,7 @@
                     <input id="doc-number" type="text" name="document_number" class="form-control">
                 </div>
                 <div>
-                    <label class="form-label" for="doc-file">File (image or PDF)</label>
+                    <label class="form-label" for="doc-file">File (image or PDF) <span class="text-danger">*</span></label>
                     <input id="doc-file" type="file" name="document" accept="image/*,application/pdf" class="form-control" required>
                 </div>
                 <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload document">Upload</x-ui.button>

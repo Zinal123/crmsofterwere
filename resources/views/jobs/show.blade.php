@@ -56,7 +56,7 @@
                 @if($job->status === 'in_progress')
                     <div class="card border">
                         <div class="card-body">
-                            <h6>Add Proof Photo</h6>
+                            <h6>Add Proof Photo <span class="text-danger">*</span></h6>
                             <form id="photo-upload-form" action="{{ route('jobs.photos.store', $job->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="file" name="photo" accept="image/*" capture="environment" required class="form-control mb-2">
@@ -71,7 +71,7 @@
                     @if($job->photos->isNotEmpty())
                         <form action="{{ route('jobs.complete', $job->id) }}" method="POST" class="mt-3">
                             @csrf
-                            <label class="form-label" for="completion-notes">Completion Notes</label>
+                            <label class="form-label" for="completion-notes">Completion Notes <span class="text-danger">*</span></label>
                             <textarea id="completion-notes" name="completion_notes" class="form-control mb-2" required></textarea>
                             <x-ui.button variant="success" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Complete job">Complete Job</x-ui.button>
                         </form>
@@ -97,7 +97,7 @@
                                     @csrf
                                     <div class="modal-header"><h5 class="modal-title">Reject Job</h5></div>
                                     <div class="modal-body">
-                                        <label class="form-label" for="reject-reason">Reason (required)</label>
+                                        <label class="form-label" for="reject-reason">Reason <span class="text-danger">*</span></label>
                                         <textarea id="reject-reason" name="rejection_reason" class="form-control" required></textarea>
                                     </div>
                                     <div class="modal-footer">
@@ -116,7 +116,7 @@
                     <form action="{{ route('jobs.reassign', $job->id) }}" method="POST" class="d-flex gap-2 align-items-end my-3">
                         @csrf
                         <div>
-                            <label class="form-label" for="reassign-to">Reassign to</label>
+                            <label class="form-label" for="reassign-to">Reassign to <span class="text-danger">*</span></label>
                             <select id="reassign-to" name="assigned_to" class="form-select">
                                 @foreach($workers as $worker)
                                     <option value="{{ $worker->id }}" @selected($worker->id === $job->assigned_to)>{{ $worker->name }}</option>
@@ -165,7 +165,7 @@
                     @csrf
                     <div class="modal-header"><h5 class="modal-title">Put Job On Hold</h5></div>
                     <div class="modal-body">
-                        <label class="form-label" for="on-hold-reason">Reason (required)</label>
+                        <label class="form-label" for="on-hold-reason">Reason <span class="text-danger">*</span></label>
                         <textarea id="on-hold-reason" name="on_hold_reason" class="form-control" required></textarea>
                     </div>
                     <div class="modal-footer">

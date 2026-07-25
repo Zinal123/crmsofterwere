@@ -20,20 +20,20 @@ Users
                 <form action="{{ route('admin.users.store') }}" method="POST">
                     @csrf
                     <div class="mb-2">
-                        <label class="form-label" for="create-user-name">Name</label>
+                        <label class="form-label" for="create-user-name">Name <span class="text-danger">*</span></label>
                         <input id="create-user-name" type="text" class="form-control" name="name" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="create-user-email">Email</label>
+                        <label class="form-label" for="create-user-email">Email <span class="text-danger">*</span></label>
                         <input id="create-user-email" type="email" class="form-control" name="email" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="create-user-password">Temporary Password</label>
+                        <label class="form-label" for="create-user-password">Temporary Password <span class="text-danger">*</span></label>
                         <input id="create-user-password" type="text" class="form-control" name="password" minlength="8" required>
                         <div class="form-text">Share this with the user directly. They can change it after logging in via their profile page.</div>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="create-user-role">Role</label>
+                        <label class="form-label" for="create-user-role">Role <span class="text-danger">*</span></label>
                         <select id="create-user-role" class="form-select" name="role" required>
                             @foreach($roles as $role)
                                 <option value="{{ $role->name }}">{{ $role->name }}</option>

@@ -9,7 +9,7 @@
             <form action="{{ route('jobs.store') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label" for="job-title">Title</label>
+                    <label class="form-label" for="job-title">Title <span class="text-danger">*</span></label>
                     <input id="job-title" type="text" name="title" class="form-control" required>
                 </div>
                 <div class="mb-3">

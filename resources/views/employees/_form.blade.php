@@ -1,10 +1,10 @@
 <div class="row">
     <div class="col-md-6 mb-3">
-        <label class="form-label" for="employee-name">Name</label>
+        <label class="form-label" for="employee-name">Name <span class="text-danger">*</span></label>
         <input id="employee-name" type="text" name="name" class="form-control" value="{{ old('name', $employee->name ?? '') }}" required>
     </div>
     <div class="col-md-6 mb-3">
-        <label class="form-label" for="employee-phone">Phone</label>
+        <label class="form-label" for="employee-phone">Phone <span class="text-danger">*</span></label>
         <input id="employee-phone" type="text" name="phone" class="form-control" value="{{ old('phone', $employee->phone ?? '') }}" required>
     </div>
     <div class="col-md-6 mb-3">
@@ -20,7 +20,7 @@
         <input id="employee-designation" type="text" name="designation" class="form-control" value="{{ old('designation', $employee->designation ?? '') }}">
     </div>
     <div class="col-md-6 mb-3">
-        <label class="form-label" for="employee-joining-date">Joining Date</label>
+        <label class="form-label" for="employee-joining-date">Joining Date <span class="text-danger">*</span></label>
         <input id="employee-joining-date" type="date" name="joining_date" class="form-control" value="{{ old('joining_date', isset($employee) ? $employee->joining_date->toDateString() : '') }}" required>
     </div>
     <div class="col-md-6 mb-3">
@@ -36,14 +36,14 @@
         <input id="employee-emergency-phone" type="text" name="emergency_contact_phone" class="form-control" value="{{ old('emergency_contact_phone', $employee->emergency_contact_phone ?? '') }}">
     </div>
     <div class="col-md-3 mb-3">
-        <label class="form-label" for="employee-pay-type">Pay Type</label>
+        <label class="form-label" for="employee-pay-type">Pay Type <span class="text-danger">*</span></label>
         <select id="employee-pay-type" name="pay_type" class="form-select" required>
             <option value="daily" @selected(old('pay_type', $employee->pay_type ?? '') === 'daily')>Daily Wage</option>
             <option value="monthly" @selected(old('pay_type', $employee->pay_type ?? '') === 'monthly')>Monthly Salary</option>
         </select>
     </div>
     <div class="col-md-3 mb-3">
-        <label class="form-label" for="employee-pay-rate">Pay Rate (₹)</label>
+        <label class="form-label" for="employee-pay-rate">Pay Rate (₹) <span class="text-danger">*</span></label>
         <input id="employee-pay-rate" type="number" step="0.01" name="pay_rate" class="form-control" value="{{ old('pay_rate', $employee->pay_rate ?? '') }}" required>
     </div>
     <div class="col-md-3 mb-3">

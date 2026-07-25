@@ -113,7 +113,7 @@ list view
                     @csrf
                     <div class="col-xxl-6">
                             <div>
-                                <label for="firstName" class="form-label">Product Name</label>
+                                <label for="firstName" class="form-label">Product Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="firstName"  name = "name" value="{{ old('name') }}" placeholder="Enter Product">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -184,7 +184,7 @@ list view
                         <input type="text" class="form-control" id="addStockProductName" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="addStockQuantity" class="form-label">Quantity</label>
+                        <label for="addStockQuantity" class="form-label">Quantity <span class="text-danger">*</span></label>
                         <input type="number" min="0" class="form-control" id="addStockQuantity" name="quantity" required>
                     </div>
                     <div class="mb-3">
@@ -213,7 +213,7 @@ list view
                 <form id="updateQuantityForm">
                     <input type="hidden" id="updateQuantityInventoryId">
                     <div class="mb-3">
-                        <label for="updateQuantityAmount" class="form-label">Quantity used / removed from stock</label>
+                        <label for="updateQuantityAmount" class="form-label">Quantity used / removed from stock <span class="text-danger">*</span></label>
                         <input type="number" min="1" class="form-control" id="updateQuantityAmount" required>
                     </div>
                     <div class="modal-footer">

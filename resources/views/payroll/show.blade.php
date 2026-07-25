@@ -49,11 +49,11 @@
             <form action="{{ route('employees.payments.store', $employee->id) }}" method="POST" class="row g-2 align-items-end mt-1">
                 @csrf
                 <div class="col-md-3">
-                    <label class="form-label" for="payment-date">Date</label>
+                    <label class="form-label" for="payment-date">Date <span class="text-danger">*</span></label>
                     <input id="payment-date" type="date" name="date" class="form-control" value="{{ now()->toDateString() }}" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label" for="payment-amount">Amount (₹)</label>
+                    <label class="form-label" for="payment-amount">Amount (₹) <span class="text-danger">*</span></label>
                     <input id="payment-amount" type="number" step="0.01" name="amount" class="form-control" required>
                 </div>
                 <div class="col-md-4">

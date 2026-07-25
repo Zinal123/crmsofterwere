@@ -28,7 +28,7 @@
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
             <div class="mb-3">
-                <label for="useremail" class="form-label">Email</label>
+                <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
                 <div class="oms-input-group">
                     <i class="ri-mail-line oms-input-icon"></i>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="useremail" name="email" placeholder="Enter email" value="{{ old('email') }}">

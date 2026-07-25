@@ -68,12 +68,12 @@ list view
 
                                     <!-- Input to enter the amount paid -->
                                     <div class="mb-3">
-                                      <label for="paidAmountInput" class="form-label">Paid Amount</label>
+                                      <label for="paidAmountInput" class="form-label">Paid Amount <span class="text-danger">*</span></label>
                                       <input type="number" class="form-control" id="paidAmountInput" name = "paidAmount" required>
                                     </div>
 
                                     <div class="mb-3">
-                                      <label for="paymentMethodInput" class="form-label">Payment Method</label>
+                                      <label for="paymentMethodInput" class="form-label">Payment Method <span class="text-danger">*</span></label>
                                       <select class="form-select" id="paymentMethodInput" name="payment_method" required>
                                         <option value="" selected disabled>Select payment method</option>
                                         <option value="cash">Cash</option>

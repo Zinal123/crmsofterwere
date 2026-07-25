@@ -379,11 +379,11 @@ $number = $amount;
          <form id="invoice-payment-form" class="row g-2 align-items-end mb-3" data-invoice-id="{{ $invoice[0]->id }}" data-customer-id="{{ $customer[0]->id }}">
              @csrf
              <div class="col-sm-3">
-                 <label class="form-label mb-0" for="invoice-paid-amount">Add Payment (₹)</label>
+                 <label class="form-label mb-0" for="invoice-paid-amount">Add Payment (₹) <span class="text-danger">*</span></label>
                  <input type="number" min="0.01" max="99999999.99" step="0.01" class="form-control" id="invoice-paid-amount" required>
              </div>
              <div class="col-sm-3">
-                 <label class="form-label mb-0" for="invoice-payment-method">Payment Method</label>
+                 <label class="form-label mb-0" for="invoice-payment-method">Payment Method <span class="text-danger">*</span></label>
                  <select class="form-select" id="invoice-payment-method" required>
                      <option value="" selected disabled>Select method</option>
                      <option value="cash">Cash</option>

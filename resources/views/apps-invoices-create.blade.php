@@ -108,7 +108,7 @@
                     <div class="row g-3">
                         <div class="col-lg-3 col-sm-6">
                             <div>
-                                <label for="date-field">Place Of Supply</label>
+                                <label for="date-field">Place Of Supply <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control bg-light border-0" id="placesupply"  name = "placesupply" placeholder="Enter Place Of Supply">
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-6">
                             <div>
-                                <label for="billingName" class="text-muted text-uppercase fw-semibold">Billing Address</label>
+                                <label for="billingName" class="text-muted text-uppercase fw-semibold">Billing Address <span class="text-danger">*</span></label>
                             </div>
                             <div class="mb-2">
                                 <input type="text" class="form-control bg-light border-0" id="billingName" placeholder="Full Name" required />
@@ -223,7 +223,7 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <div>
-                                        <label for="shippingName" class="text-muted text-uppercase fw-semibold">Shipping Address</label>
+                                        <label for="shippingName" class="text-muted text-uppercase fw-semibold">Shipping Address <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="mb-2">
                                         <input type="text" class="form-control bg-light border-0" id="shippingName" placeholder="Full Name" required />
@@ -439,7 +439,7 @@
                     </div>
                     <!--end row-->
                     <div class="mt-4">
-                        <label for="exampleFormControlTextarea1" class="form-label text-muted text-uppercase fw-semibold">NOTES</label>
+                        <label for="exampleFormControlTextarea1" class="form-label text-muted text-uppercase fw-semibold">NOTES <span class="text-danger">*</span></label>
                        
                                          <textarea class="form-control alert alert-info" id="exampleFormControlTextarea1" placeholder="Notes" rows="2" required >1)Payment must be made within due date of this invoice failling which interest will be charged 24% per annum from the date of supply of materials
                             (2) Our responsibility ceases on delivery of goods to carriers or rail or transport.
