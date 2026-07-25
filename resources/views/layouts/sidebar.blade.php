@@ -54,7 +54,7 @@
                     <a href="{{route('generatequtation',1)}}" class="nav-link"><i class="ri-quill-pen-line"></i><span>@lang('Quotation')</span></a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('translation.Quation')</span></a>
+                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('All Quotations')</span></a>
                 </li>
                 @endcan
                 @can('products.manage-config')
@@ -65,13 +65,13 @@
                     <div class="collapse menu-dropdown" id="sidebarEcommerce">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{route('standerconfig' ,1)}}" class="nav-link">@lang('translation.Stander Config')</a>
+                                <a href="{{route('standerconfig' ,1)}}" class="nav-link">@lang('Standard Config')</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('TechnicalParameters' ,1)}}"class="nav-link">@lang('translation.Technical Paramater')</a>
+                                <a href="{{route('TechnicalParameters' ,1)}}"class="nav-link">@lang('Technical Parameters')</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('standerconfiglist',1)}}" class="nav-link">@lang('translation.Standerd Config')</a>
+                                <a href="{{route('standerconfiglist',1)}}" class="nav-link">@lang('Standard Config List')</a>
                             </li>
                         </ul>
                     </div>

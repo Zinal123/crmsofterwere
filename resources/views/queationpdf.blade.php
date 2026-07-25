@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title') @lang('translation.Quation') @endsection
+@section('title') Quotation @endsection
 @section('css')
 <style>
 

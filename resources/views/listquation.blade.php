@@ -26,7 +26,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <x-ui.data-table-card title="Quotations">
+        <x-ui.data-table-card title="Quotations" :create-route="route('generatequtation', 1)" create-label="Create Quotation">
             <div class="table-responsive">
                 <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                     style="width:100%">
