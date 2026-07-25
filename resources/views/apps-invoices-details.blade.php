@@ -376,15 +376,31 @@ $number = $amount;
          <div id="invoice-payment-error"></div>
 
          @if($invoice[0]->remaining_amount > 0)
-         <form id="invoice-payment-form" class="d-flex gap-2 align-items-end mb-3" data-invoice-id="{{ $invoice[0]->id }}" data-customer-id="{{ $customer[0]->id }}">
+         <form id="invoice-payment-form" class="row g-2 align-items-end mb-3" data-invoice-id="{{ $invoice[0]->id }}" data-customer-id="{{ $customer[0]->id }}">
              @csrf
-             <div>
+             <div class="col-sm-3">
                  <label class="form-label mb-0" for="invoice-paid-amount">Add Payment (₹)</label>
                  <input type="number" min="0.01" max="99999999.99" step="0.01" class="form-control" id="invoice-paid-amount" required>
              </div>
-             <button type="submit" class="btn btn-success" id="invoice-payment-submit">
-                 <i class="ri-add-line align-bottom me-1"></i> Record Payment
-             </button>
+             <div class="col-sm-3">
+                 <label class="form-label mb-0" for="invoice-payment-method">Payment Method</label>
+                 <select class="form-select" id="invoice-payment-method" required>
+                     <option value="" selected disabled>Select method</option>
+                     <option value="cash">Cash</option>
+                     <option value="bank_transfer">Bank Transfer</option>
+                     <option value="upi">UPI</option>
+                     <option value="cheque">Cheque</option>
+                 </select>
+             </div>
+             <div class="col-sm-3">
+                 <label class="form-label mb-0" for="invoice-payment-reference">Reference No. <span class="text-muted">(optional)</span></label>
+                 <input type="text" class="form-control" id="invoice-payment-reference" placeholder="Transaction ID, cheque no., etc.">
+             </div>
+             <div class="col-sm-3">
+                 <button type="submit" class="btn btn-success w-100" id="invoice-payment-submit">
+                     <i class="ri-add-line align-bottom me-1"></i> Record Payment
+                 </button>
+             </div>
          </form>
          @endif
 
@@ -394,6 +410,8 @@ $number = $amount;
                      <tr>
                          <th>Date</th>
                          <th>Amount</th>
+                         <th>Method</th>
+                         <th>Reference</th>
                      </tr>
                  </thead>
                  <tbody>
@@ -401,9 +419,11 @@ $number = $amount;
                      <tr>
                          <td>{{ $paidAmountRecord->created_at->format('d M Y, H:i') }}</td>
                          <td>{{ \App\Support\IndianNumber::format($paidAmountRecord->paidAmount) }}</td>
+                         <td>{{ $paidAmountRecord->payment_method === 'upi' ? 'UPI' : ($paidAmountRecord->payment_method ? ucwords(str_replace('_', ' ', $paidAmountRecord->payment_method)) : '—') }}</td>
+                         <td>{{ $paidAmountRecord->reference_number ?: '—' }}</td>
                      </tr>
                      @empty
-                     <tr><td colspan="2"><x-ui.empty-state icon="ri-wallet-3-line" message="No payments recorded yet." /></td></tr>
+                     <tr><td colspan="4"><x-ui.empty-state icon="ri-wallet-3-line" message="No payments recorded yet." /></td></tr>
                      @endforelse
                  </tbody>
              </table>
@@ -451,6 +471,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var submitBtn = document.getElementById('invoice-payment-submit');
         var errorBox = document.getElementById('invoice-payment-error');
         var amountInput = document.getElementById('invoice-paid-amount');
+        var methodInput = document.getElementById('invoice-payment-method');
+        var referenceInput = document.getElementById('invoice-payment-reference');
 
         errorBox.innerHTML = '';
         submitBtn.disabled = true;
@@ -465,6 +487,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 id: form.dataset.invoiceId,
                 customer_id: form.dataset.customerId,
                 paidAmount: amountInput.value,
+                payment_method: methodInput.value,
+                reference_number: referenceInput.value,
             }),
         })
             .then(function (response) { return response.json().then(function (data) { return { status: response.status, data: data }; }); })

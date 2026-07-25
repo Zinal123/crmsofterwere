@@ -63,20 +63,31 @@ list view
                             </div>
                             <div class="modal-body">
                                 <form id="paymentForm">
-                                    <!-- Input to show the ID -->
-                                    <div class="mb-3">
-                                      
-                                      <input type="hidden" class="form-control" id="itemIdInput" readonly>
-                                      <input type="text" class="form-control" id="customerInput"  name = "customer_id"readonly>
-                                      
-                                    </div>
-                          
+                                    <input type="hidden" id="itemIdInput">
+                                    <input type="hidden" id="customerInput" name="customer_id">
+
                                     <!-- Input to enter the amount paid -->
                                     <div class="mb-3">
                                       <label for="paidAmountInput" class="form-label">Paid Amount</label>
                                       <input type="number" class="form-control" id="paidAmountInput" name = "paidAmount" required>
                                     </div>
-                          
+
+                                    <div class="mb-3">
+                                      <label for="paymentMethodInput" class="form-label">Payment Method</label>
+                                      <select class="form-select" id="paymentMethodInput" name="payment_method" required>
+                                        <option value="" selected disabled>Select payment method</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="upi">UPI</option>
+                                        <option value="cheque">Cheque</option>
+                                      </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                      <label for="referenceNumberInput" class="form-label">Reference Number <span class="text-muted">(optional)</span></label>
+                                      <input type="text" class="form-control" id="referenceNumberInput" name="reference_number" placeholder="Transaction ID, cheque no., etc.">
+                                    </div>
+
                                     <!-- Submit button -->
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -147,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = button.getAttribute('data-id');
         const customer_id = button.getAttribute('data-customer');
 
+        document.getElementById('paymentForm').reset();
         document.getElementById('itemIdInput').value = itemId;
         document.getElementById('customerInput').value = customer_id;
     });
@@ -159,7 +171,8 @@ document.getElementById('paymentForm').addEventListener('submit', function(event
         const itemId = document.getElementById('itemIdInput').value;
         const customer_id = document.getElementById('customerInput').value
         const paidAmount = document.getElementById('paidAmountInput').value;
-        
+        const paymentMethod = document.getElementById('paymentMethodInput').value;
+        const referenceNumber = document.getElementById('referenceNumberInput').value;
 
         // Make an AJAX request to update the payment
         fetch('/update-payment', {
@@ -171,7 +184,9 @@ document.getElementById('paymentForm').addEventListener('submit', function(event
             body: JSON.stringify({
                 id: itemId,
                 customer_id:customer_id,
-                paidAmount: paidAmount
+                paidAmount: paidAmount,
+                payment_method: paymentMethod,
+                reference_number: referenceNumber
             })
         })
         .then(response => response.json())

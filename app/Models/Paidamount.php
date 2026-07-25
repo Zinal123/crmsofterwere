@@ -17,11 +17,9 @@ class Paidamount extends Authenticatable
     protected $fillable = [
         'invoice_id',
         'customer_id',
-        'paidAmount'
-
-       
-       
-      
+        'paidAmount',
+        'payment_method',
+        'reference_number',
     ];
 
 

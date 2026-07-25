@@ -220,6 +220,8 @@ class InvoiceService
             'invoice_id' => $itemId,
             'customer_id' => $customerId,
             'paidAmount' => $paidAmount,
+            'payment_method' => $data['payment_method'] ?? null,
+            'reference_number' => $data['reference_number'] ?? null,
         ]);
 
         if ($item) {

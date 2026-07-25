@@ -74,6 +74,8 @@ class InvoiceController extends Controller
             'id' => 'required|integer|exists:invoice,id',
             'customer_id' => 'required|integer|exists:customer,id',
             'paidAmount' => 'required|numeric|min:0.01|max:99999999.99',
+            'payment_method' => 'required|in:cash,bank_transfer,upi,cheque',
+            'reference_number' => 'nullable|string|max:100',
         ]);
 
         $success = $this->service->recordPayment($data);

@@ -297,13 +297,37 @@ class InvoiceTest extends TestCase
             'id' => $invoice->id,
             'customer_id' => $customer->id,
             'paidAmount' => 40000,
+            'payment_method' => 'bank_transfer',
+            'reference_number' => 'TXN12345',
         ]);
 
         $response->assertOk();
         $response->assertJson(['success' => true]);
         $this->assertEquals(40000, $invoice->fresh()->paidamount);
         $this->assertEquals(60000, $invoice->fresh()->remaining_amount);
-        $this->assertDatabaseHas('paidamount', ['invoice_id' => $invoice->id, 'paidAmount' => 40000]);
+        $this->assertDatabaseHas('paidamount', [
+            'invoice_id' => $invoice->id,
+            'paidAmount' => 40000,
+            'payment_method' => 'bank_transfer',
+            'reference_number' => 'TXN12345',
+        ]);
+    }
+
+    public function test_updatepayment_rejects_a_missing_payment_method(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 0, 'remaining_amount' => 100000]);
+        $customer = Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->postJson('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => $customer->id,
+            'paidAmount' => 5000,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('payment_method');
+        $this->assertEquals(0, $invoice->fresh()->paidamount);
     }
 
     public function test_updatepayment_rejects_an_absurdly_large_amount(): void
@@ -319,6 +343,7 @@ class InvoiceTest extends TestCase
             'id' => $invoice->id,
             'customer_id' => $customer->id,
             'paidAmount' => 67978778979789,
+            'payment_method' => 'cash',
         ]);
 
         $response->assertStatus(422);
@@ -335,6 +360,7 @@ class InvoiceTest extends TestCase
             'id' => $invoice->id,
             'customer_id' => $customer->id,
             'paidAmount' => -500,
+            'payment_method' => 'cash',
         ]);
 
         $response->assertStatus(422);
@@ -377,6 +403,8 @@ class InvoiceTest extends TestCase
             'id' => $invoice->id,
             'customer_id' => $customer->id,
             'paidAmount' => 30000,
+            'payment_method' => 'upi',
+            'reference_number' => 'UPI98765',
         ]);
 
         $response->assertOk();
@@ -386,6 +414,8 @@ class InvoiceTest extends TestCase
         $detailsResponse->assertOk();
         $detailsResponse->assertSee(\App\Support\IndianNumber::format(30000), false);
         $detailsResponse->assertSee(\App\Support\IndianNumber::format(70000), false);
+        $detailsResponse->assertSee('UPI');
+        $detailsResponse->assertSee('UPI98765');
     }
 
     public function test_datatable_endpoint_escapes_html_in_customer_name_and_phone(): void
@@ -417,6 +447,7 @@ class InvoiceTest extends TestCase
             'id' => $invoice->id,
             'customer_id' => Customer::first()->id,
             'paidAmount' => 25000,
+            'payment_method' => 'cash',
         ]);
 
         $response = $this->actingAs($user)->get(route('invoice.histry'));
