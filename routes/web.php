@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::get('admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
         Route::post('admin/users', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.users.store');
         Route::put('admin/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
+        Route::put('admin/users/{id}/profile', [App\Http\Controllers\Admin\UserController::class, 'updateProfile'])->name('admin.users.update-profile');
     });
 
     Route::post('machines', [App\Http\Controllers\Job\MachineController::class, 'store'])->name('machines.store')->middleware('permission:jobs.manage-machines');

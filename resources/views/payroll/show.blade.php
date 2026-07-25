@@ -35,7 +35,7 @@
                             <td>{{ $payment->note }}</td>
                             <td>
                                 @can('payroll.view-audit')
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-salary_payment" data-audit-id="{{ $payment->id }}">History</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-salary_payment" data-audit-id="{{ $payment->id }}"><i class="ri-history-line align-bottom"></i> History</button>
                                 @endcan
                             </td>
                         </tr>

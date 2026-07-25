@@ -58,14 +58,14 @@ list view
                                 @can('inventory.update')
                                     @if($item->inventory)
                                     <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}">
-                                        Update Qty
+                                        <i class="ri-stack-line align-bottom me-1"></i> Update Qty
                                     </button>
                                     @endif
                                 @endcan
                                 @can('inventory.create')
                                     @if(!$item->inventory)
                                     <button type="button" class="btn btn-soft-success btn-sm open-add-stock-modal" data-product-id="{{ $item->id }}" data-product-name="{{ $item->name }}">
-                                        Add Stock
+                                        <i class="ri-add-box-line align-bottom me-1"></i> Add Stock
                                     </button>
                                     @endif
                                 @endcan

@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-ui.button>
-                                        <x-ui.button variant="danger" type="submit">Confirm Reject</x-ui.button>
+                                        <x-ui.button variant="danger" type="submit" icon="ri-close-circle-line">Confirm Reject</x-ui.button>
                                     </div>
                                 </form>
                             </div>
@@ -170,7 +170,7 @@
                     </div>
                     <div class="modal-footer">
                         <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-ui.button>
-                        <x-ui.button variant="warning" type="submit">Confirm Hold</x-ui.button>
+                        <x-ui.button variant="warning" type="submit" icon="ri-pause-circle-line">Confirm Hold</x-ui.button>
                     </div>
                 </form>
             </div>

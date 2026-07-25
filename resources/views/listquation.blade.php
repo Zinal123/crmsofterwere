@@ -51,15 +51,15 @@
                             <td>{{$item->email}}</td>
                             <td>{{$item->phone}}</td>
                             <td>
-                                   <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-success btn-sm">Download Qutation</a>
+                                   <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-success btn-sm"><i class="ri-download-2-line align-bottom"></i> Download Qutation</a>
                                    @can('quotations.delete')
                                    <a href="{{route('quation.delete', $item->id)}}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this quotation? This cannot be undone.');">
-                                     Delete
+                                     <i class="ri-delete-bin-fill align-bottom"></i> Delete
                                    </a>
                                    @endcan
                                    @can('quotations.view-audit')
                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}">
-                                     History
+                                     <i class="ri-history-line align-bottom"></i> History
                                    </button>
                                    @endcan
                             </td>

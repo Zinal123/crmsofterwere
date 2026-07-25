@@ -63,6 +63,30 @@ class UserService
         return $user;
     }
 
+    /**
+     * $password is null when the admin leaves the "New Password" field
+     * blank in the edit modal - meaning keep the user's current password.
+     */
+    public function updateProfile($id, string $name, string $email, ?string $password): User
+    {
+        $user = $this->repository->find($id);
+
+        if ($user === null) {
+            throw new \InvalidArgumentException('User not found.');
+        }
+
+        $user->name = $name;
+        $user->email = $email;
+
+        if (filled($password)) {
+            $user->password = Hash::make($password);
+        }
+
+        $this->repository->save($user);
+
+        return $user;
+    }
+
     private function isLastActiveOwner(User $user): bool
     {
         if (!$user->hasRole('Owner')) {

@@ -74,6 +74,83 @@ class UserTest extends TestCase
         $this->assertFalse($target->fresh()->is_active);
     }
 
+    public function test_owner_can_edit_a_users_name_and_email(): void
+    {
+        $owner = User::factory()->create();
+        $target = User::factory()->create(['name' => 'Old Name', 'email' => 'old@example.com']);
+
+        $response = $this->actingAs($owner)->put(route('admin.users.update-profile', $target->id), [
+            'name' => 'New Name',
+            'email' => 'new@example.com',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $target->refresh();
+        $this->assertSame('New Name', $target->name);
+        $this->assertSame('new@example.com', $target->email);
+    }
+
+    public function test_owner_can_reset_a_users_password_from_the_edit_modal(): void
+    {
+        $owner = User::factory()->create();
+        $target = User::factory()->create();
+        $originalHash = $target->password;
+
+        $response = $this->actingAs($owner)->put(route('admin.users.update-profile', $target->id), [
+            'name' => $target->name,
+            'email' => $target->email,
+            'password' => 'NewTempPass123',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $target->refresh();
+        $this->assertNotSame($originalHash, $target->password);
+        $this->assertTrue(Hash::check('NewTempPass123', $target->password));
+    }
+
+    public function test_leaving_the_password_field_blank_keeps_the_current_password(): void
+    {
+        $owner = User::factory()->create();
+        $target = User::factory()->create();
+        $originalHash = $target->password;
+
+        $response = $this->actingAs($owner)->put(route('admin.users.update-profile', $target->id), [
+            'name' => $target->name,
+            'email' => $target->email,
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $this->assertSame($originalHash, $target->fresh()->password);
+    }
+
+    public function test_editing_a_user_rejects_an_email_already_used_by_someone_else(): void
+    {
+        $owner = User::factory()->create();
+        $target = User::factory()->create();
+        User::factory()->create(['email' => 'taken@example.com']);
+
+        $response = $this->actingAs($owner)->putJson(route('admin.users.update-profile', $target->id), [
+            'name' => $target->name,
+            'email' => 'taken@example.com',
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    public function test_editing_a_user_can_keep_their_own_current_email(): void
+    {
+        $owner = User::factory()->create();
+        $target = User::factory()->create(['email' => 'keepme@example.com']);
+
+        $response = $this->actingAs($owner)->put(route('admin.users.update-profile', $target->id), [
+            'name' => $target->name,
+            'email' => 'keepme@example.com',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $response->assertSessionHasNoErrors();
+    }
+
     public function test_worker_cannot_reach_user_management(): void
     {
         $worker = User::factory()->create();

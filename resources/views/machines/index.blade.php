@@ -25,12 +25,12 @@
                         <td>
                             <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
                                 @csrf
-                                <x-ui.button variant="secondary" size="sm" type="submit">
+                                <x-ui.button variant="secondary" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'">
                                     {{ $machine->is_active ? 'Disable' : 'Enable' }}
                                 </x-ui.button>
                             </form>
                             @can('machines.view-audit')
-                            <x-ui.button variant="secondary" size="sm" type="button" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}">History</x-ui.button>
+                            <x-ui.button variant="secondary" size="sm" type="button" icon="ri-history-line" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}">History</x-ui.button>
                             @endcan
                         </td>
                     </tr>

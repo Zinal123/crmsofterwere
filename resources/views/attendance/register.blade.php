@@ -17,7 +17,7 @@
                             <td>{{ $row->overtime_hours }}</td>
                             <td>
                                 @can('attendance.view-audit')
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-attendance" data-audit-id="{{ $row->id }}">History</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-attendance" data-audit-id="{{ $row->id }}"><i class="ri-history-line align-bottom"></i> History</button>
                                 @endcan
                             </td>
                         </tr>

@@ -67,6 +67,16 @@ Users
                                 />
                             </td>
                             <td>
+                                <div class="d-flex gap-1 mb-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}" aria-label="Edit user">
+                                        <i class="ri-edit-line align-bottom"></i> Edit
+                                    </button>
+                                    @can('admin.view-audit')
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-user" data-audit-id="{{ $user->id }}" aria-label="View history">
+                                        <i class="ri-history-line align-bottom"></i> History
+                                    </button>
+                                    @endcan
+                                </div>
                                 <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="d-flex gap-1">
                                     @csrf
                                     @method('PUT')
@@ -76,13 +86,11 @@ Users
                                         @endforeach
                                     </select>
                                     <input type="hidden" name="is_active" value="{{ $user->is_active ? '0' : '1' }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" aria-label="{{ $user->is_active ? 'Deactivate user' : 'Activate user' }}">
+                                        <i class="{{ $user->is_active ? 'ri-user-unfollow-line' : 'ri-user-follow-line' }} align-bottom"></i>
                                         {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                     </button>
                                 </form>
-                                @can('admin.view-audit')
-                                <button type="button" class="btn btn-sm btn-outline-secondary mt-1" data-bs-toggle="modal" data-bs-target="#auditTrailModal-user" data-audit-id="{{ $user->id }}">History</button>
-                                @endcan
                             </td>
                         </tr>
                         @endforeach
@@ -90,6 +98,42 @@ Users
                 </table>
             </div>
         </x-ui.data-table-card>
+
+        @foreach($users as $user)
+        <div class="modal fade" id="editUserModal-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('admin.users.update-profile', $user->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <label class="form-label" for="edit-user-name-{{ $user->id }}">Name <span class="text-danger">*</span></label>
+                                <input id="edit-user-name-{{ $user->id }}" type="text" class="form-control" name="name" value="{{ $user->name }}" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="edit-user-email-{{ $user->id }}">Email <span class="text-danger">*</span></label>
+                                <input id="edit-user-email-{{ $user->id }}" type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="edit-user-password-{{ $user->id }}">New Password</label>
+                                <input id="edit-user-password-{{ $user->id }}" type="text" class="form-control" name="password" minlength="8">
+                                <div class="form-text">Leave blank to keep the current password.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <x-ui.button type="submit" variant="success" icon="ri-save-line">Save Changes</x-ui.button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
 </div>
 @can('admin.view-audit')

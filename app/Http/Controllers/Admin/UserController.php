@@ -50,4 +50,21 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User updated.');
     }
+
+    public function updateProfile(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        try {
+            $this->service->updateProfile($id, $request->input('name'), $request->input('email'), $request->input('password'));
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('admin.users.index')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('admin.users.index')->with('success', 'User details updated.');
+    }
 }
