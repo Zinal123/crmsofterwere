@@ -13,10 +13,10 @@
                     <div class="d-flex gap-2">
                         <form action="{{ route('jobs.approve', $job->id) }}" method="POST">
                             @csrf
-                            <x-ui.button variant="success" :soft="true" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Approve job">Approve</x-ui.button>
+                            <x-ui.button variant="success" :soft="true" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Approve job" title="Approve" data-bs-toggle="tooltip" />
                         </form>
-                        <button type="button" class="btn btn-soft-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $job->id }}">
-                            <i class="ri-close-circle-line align-bottom me-1"></i> Reject
+                        <button type="button" class="btn btn-soft-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $job->id }}" title="Reject" aria-label="Reject">
+                            <i class="ri-close-circle-line align-bottom"></i>
                         </button>
                     </div>
                 </div>

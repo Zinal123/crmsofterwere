@@ -44,7 +44,7 @@ Support Tickets
                                     }" />
                             </td>
                             <td>
-                                <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-soft-success btn-sm"><i class="ri-eye-line align-bottom me-1"></i> View</a>
+                                <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="View" aria-label="View"><i class="ri-eye-line align-bottom"></i></a>
                             </td>
                         </tr>
                         @empty

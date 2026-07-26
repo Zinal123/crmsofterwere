@@ -52,15 +52,15 @@
                             <td>{{$item->phone}}</td>
                             <td>
                                <div class="d-flex gap-2 flex-wrap">
-                                   <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm"><i class="ri-download-2-line align-bottom me-1"></i> Download Qutation</a>
+                                   <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Download Qutation" aria-label="Download Qutation"><i class="ri-download-2-line align-bottom"></i></a>
                                    @can('quotations.delete')
-                                   <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this quotation? This cannot be undone.');">
-                                     <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                   <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this quotation? This cannot be undone.');" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
+                                     <i class="ri-delete-bin-fill align-bottom"></i>
                                    </a>
                                    @endcan
                                    @can('quotations.view-audit')
-                                   <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}">
-                                     <i class="ri-history-line align-bottom me-1"></i> History
+                                   <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}" title="History" aria-label="History">
+                                     <i class="ri-history-line align-bottom"></i>
                                    </button>
                                    @endcan
                                </div>

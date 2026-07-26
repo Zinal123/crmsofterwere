@@ -58,9 +58,8 @@ Problem Types
                             <td>
                                 <form action="{{ route('admin.ticket-problem-types.toggle', $problemType->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-soft-secondary btn-sm">
-                                        <i class="{{ $problemType->is_active ? 'ri-forbid-line' : 'ri-toggle-line' }} align-bottom me-1"></i>
-                                        {{ $problemType->is_active ? 'Disable' : 'Enable' }}
+                                    <button type="submit" class="btn btn-soft-secondary btn-sm" data-bs-toggle="tooltip" title="{{ $problemType->is_active ? 'Disable' : 'Enable' }}" aria-label="{{ $problemType->is_active ? 'Disable' : 'Enable' }}">
+                                        <i class="{{ $problemType->is_active ? 'ri-forbid-line' : 'ri-toggle-line' }} align-bottom"></i>
                                     </button>
                                 </form>
                             </td>

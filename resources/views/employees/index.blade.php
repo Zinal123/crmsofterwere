@@ -30,12 +30,12 @@
                         </td>
                         <td>
                             <div class="d-flex gap-2 flex-wrap">
-                                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-soft-primary btn-sm"><i class="ri-edit-line align-bottom me-1"></i> Edit</a>
+                                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip" title="Edit" aria-label="Edit"><i class="ri-edit-line align-bottom"></i></a>
                                 @can('attendance.view')
-                                <a href="{{ route('attendance.register', $employee->id) }}" class="btn btn-soft-secondary btn-sm"><i class="ri-calendar-check-line align-bottom me-1"></i> Attendance</a>
+                                <a href="{{ route('attendance.register', $employee->id) }}" class="btn btn-soft-secondary btn-sm" data-bs-toggle="tooltip" title="Attendance" aria-label="Attendance"><i class="ri-calendar-check-line align-bottom"></i></a>
                                 @endcan
                                 @can('payroll.view')
-                                <a href="{{ route('employees.payroll', $employee->id) }}" class="btn btn-soft-success btn-sm"><i class="ri-wallet-3-line align-bottom me-1"></i> Payroll</a>
+                                <a href="{{ route('employees.payroll', $employee->id) }}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Payroll" aria-label="Payroll"><i class="ri-wallet-3-line align-bottom"></i></a>
                                 @endcan
                             </div>
                         </td>

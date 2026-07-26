@@ -57,40 +57,40 @@ list view
                             <div class="d-flex gap-2 flex-wrap">
                                 @can('inventory.update')
                                     @if($item->inventory)
-                                    <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}">
-                                        <i class="ri-stack-line align-bottom me-1"></i> Update Qty
+                                    <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}" data-bs-toggle="tooltip" title="Update Qty" aria-label="Update Qty">
+                                        <i class="ri-stack-line align-bottom"></i>
                                     </button>
                                     @endif
                                 @endcan
                                 @can('inventory.create')
                                     @if(!$item->inventory)
-                                    <button type="button" class="btn btn-soft-success btn-sm open-add-stock-modal" data-product-id="{{ $item->id }}" data-product-name="{{ $item->name }}">
-                                        <i class="ri-add-box-line align-bottom me-1"></i> Add Stock
+                                    <button type="button" class="btn btn-soft-success btn-sm open-add-stock-modal" data-product-id="{{ $item->id }}" data-product-name="{{ $item->name }}" data-bs-toggle="tooltip" title="Add Stock" aria-label="Add Stock">
+                                        <i class="ri-add-box-line align-bottom"></i>
                                     </button>
                                     @endif
                                 @endcan
                                 @can('products.view-audit')
-                                <button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}">
-                                    <i class="ri-history-line align-bottom me-1"></i> History
+                                <button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}" title="History" aria-label="History">
+                                    <i class="ri-history-line align-bottom"></i>
                                 </button>
                                 @endcan
                                 @can('inventory.view-audit')
                                     @if($item->inventory)
-                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-inventory" data-audit-id="{{ $item->inventory->id }}">
-                                        <i class="ri-history-line align-bottom me-1"></i> Stock History
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-inventory" data-audit-id="{{ $item->inventory->id }}" title="Stock History" aria-label="Stock History">
+                                        <i class="ri-history-line align-bottom"></i>
                                     </button>
                                     @endif
                                 @endcan
                                 @can('spare-parts.manage')
                                 <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="btn btn-soft-{{ $item->is_spare_part ? 'warning' : 'secondary' }} btn-sm">
-                                        <i class="ri-tools-fill align-bottom me-1"></i> {{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}
+                                    <button type="submit" class="btn btn-soft-{{ $item->is_spare_part ? 'warning' : 'secondary' }} btn-sm" title="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}" aria-label="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}">
+                                        <i class="ri-tools-fill align-bottom"></i>
                                     </button>
                                 </form>
                                 @endcan
-                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product? This cannot be undone.');">
-                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product? This cannot be undone.');" title="Delete" aria-label="Delete">
+                                    <i class="ri-delete-bin-fill align-bottom"></i>
                                 </a>
                             </div>
                         </td>

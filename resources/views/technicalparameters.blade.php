@@ -89,11 +89,11 @@ Technical Parameters
                                         
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn">
-                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
+                                                <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                    <i class="ri-pencil-fill align-bottom"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn">
-                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
+                                                    <i class="ri-delete-bin-fill align-bottom"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -138,8 +138,8 @@ Technical Parameters
                                             
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn">
-                                                        <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
+                                                        <i class="ri-delete-bin-fill align-bottom"></i>
                                                     </button>
                                                 </div>
                                             </td>
