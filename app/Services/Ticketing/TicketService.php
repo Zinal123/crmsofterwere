@@ -6,6 +6,7 @@ use App\Models\ClientMachine;
 use App\Models\Job;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Notifications\TicketStatusChangedNotification;
 use App\Repositories\Contracts\TicketRepositoryInterface;
 use App\Services\Job\JobService;
 use Illuminate\Support\Collection;
@@ -85,6 +86,8 @@ class TicketService
         $ticket->status = 'assigned';
         $this->repository->save($ticket);
 
+        $ticket->clientAccount?->notify(new TicketStatusChangedNotification($ticket));
+
         return $ticket;
     }
 
@@ -101,12 +104,19 @@ class TicketService
             return;
         }
 
-        $ticket->status = match ($job->status) {
+        $newStatus = match ($job->status) {
             'in_progress', 'on_hold' => 'in_progress',
             'completed' => 'resolved',
             default => $ticket->status,
         };
 
+        if ($newStatus === $ticket->status) {
+            return;
+        }
+
+        $ticket->status = $newStatus;
         $this->repository->save($ticket);
+
+        $ticket->clientAccount?->notify(new TicketStatusChangedNotification($ticket));
     }
 }

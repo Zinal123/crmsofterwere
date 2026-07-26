@@ -20,6 +20,22 @@
 </head>
 
 <body>
+    @auth('client')
+    <div id="push-subscribe-banner" data-vapid-key="{{ config('webpush.vapid.public_key') }}" data-endpoint="{{ route('client.push-subscriptions.store') }}" class="alert alert-info d-flex justify-content-between align-items-center m-0 rounded-0" style="display:none">
+        <span><i class="ri-notification-3-line"></i> Enable notifications for ticket updates?</span>
+        <span>
+            <x-ui.button variant="primary" size="sm" data-push-enable type="button">Enable</x-ui.button>
+            <x-ui.button variant="secondary" size="sm" data-push-dismiss type="button" icon="ri-close-line" ariaLabel="Dismiss">Not now</x-ui.button>
+        </span>
+    </div>
+    <script>
+        if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+            var banner = document.getElementById('push-subscribe-banner');
+            if (banner) { banner.style.display = 'flex'; }
+        }
+    </script>
+    @endauth
+
     <div class="client-topbar">
         <a href="{{ route('client.dashboard') }}"><img src="{{ URL::asset('build/images/oracallogo.png') }}" alt="Oracle Machine Tech"></a>
         @auth('client')
@@ -46,7 +62,26 @@
         @yield('content')
     </div>
 
-    @include('layouts.vendor-scripts')
+    {{-- Deliberately not @include('layouts.vendor-scripts') here: that now
+         loads app.js globally (see the sidebar-scroll fix), which assumes
+         staff-layout elements (#scrollbar, .navbar-menu, ...) that don't
+         exist on this simpler client-only layout and throws on load. The
+         portal only needs Bootstrap's JS (dropdowns/modals/alert dismiss),
+         not the rest of the admin template's machinery. --}}
+    <script src="{{ URL::asset('build/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    @yield('script')
+    <script>
+        // Registered unconditionally (not just on push opt-in) so the
+        // browser sees an active service worker + manifest as soon as the
+        // portal loads - both are required before "Add to Home Screen"
+        // becomes available.
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+    @auth('client')
+    <script src="{{ asset('build/js/push-subscribe.js') }}"></script>
+    @endauth
 </body>
 
 </html>

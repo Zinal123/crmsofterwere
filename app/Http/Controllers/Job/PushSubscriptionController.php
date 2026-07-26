@@ -9,6 +9,16 @@ class PushSubscriptionController extends Controller
 {
     public function store(Request $request)
     {
+        return $this->subscribe($request, $request->user());
+    }
+
+    public function storeForClient(Request $request)
+    {
+        return $this->subscribe($request, $request->user('client'));
+    }
+
+    private function subscribe(Request $request, $subscriber)
+    {
         $data = $request->validate([
             'endpoint' => 'required|string',
             'publicKey' => 'nullable|string',
@@ -16,7 +26,7 @@ class PushSubscriptionController extends Controller
             'contentEncoding' => 'nullable|string',
         ]);
 
-        $request->user()->updatePushSubscription(
+        $subscriber->updatePushSubscription(
             $data['endpoint'],
             $data['publicKey'] ?? null,
             $data['authToken'] ?? null,

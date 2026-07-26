@@ -53,6 +53,7 @@ Route::prefix('portal')->name('client.')->group(function () {
         Route::post('tickets', [App\Http\Controllers\Client\TicketController::class, 'store'])->name('tickets.store');
         Route::get('tickets', [App\Http\Controllers\Client\TicketController::class, 'index'])->name('tickets.index');
         Route::get('tickets/{id}', [App\Http\Controllers\Client\TicketController::class, 'show'])->name('tickets.show');
+        Route::post('push-subscriptions', [App\Http\Controllers\Job\PushSubscriptionController::class, 'storeForClient'])->name('push-subscriptions.store');
     });
 });
 

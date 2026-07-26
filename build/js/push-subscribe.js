@@ -17,7 +17,7 @@
         }).then(function (subscription) {
             const key = subscription.getKey('p256dh');
             const token = subscription.getKey('auth');
-            return fetch('/push-subscriptions', {
+            return fetch(banner.dataset.endpoint || '/push-subscriptions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
