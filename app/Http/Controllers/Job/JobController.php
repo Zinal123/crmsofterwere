@@ -7,6 +7,7 @@ use App\Repositories\Contracts\JobRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Job\JobService;
 use App\Services\Job\MachineService;
+use App\Services\Ticketing\TicketService;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -17,6 +18,7 @@ class JobController extends Controller
         private JobRepositoryInterface $repository,
         private \App\Services\Job\JobPhotoService $photoService,
         private UserRepositoryInterface $userRepository,
+        private TicketService $ticketService,
     ) {
     }
 
@@ -124,6 +126,8 @@ class JobController extends Controller
             return back()->withErrors(['status' => $e->getMessage()]);
         }
 
+        $this->ticketService->syncStatusFromJob($job);
+
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job started.');
     }
 
@@ -141,6 +145,8 @@ class JobController extends Controller
             return back()->withErrors(['status' => $e->getMessage()]);
         }
 
+        $this->ticketService->syncStatusFromJob($job);
+
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job put on hold.');
     }
 
@@ -156,6 +162,8 @@ class JobController extends Controller
         } catch (\InvalidArgumentException $e) {
             return back()->withErrors(['status' => $e->getMessage()]);
         }
+
+        $this->ticketService->syncStatusFromJob($job);
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job resumed.');
     }
@@ -199,6 +207,8 @@ class JobController extends Controller
         } catch (\InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
+
+        $this->ticketService->syncStatusFromJob($job);
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Job marked complete.');
     }
