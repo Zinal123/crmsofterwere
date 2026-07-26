@@ -62,7 +62,7 @@ Technical Parameters
                                 </div>
                                 <div class = "col-md-6" style = "text-align:right">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid" id= "modal" data-id = "1">
-                                        Add Cutting Way Details
+                                        <i class="ri-add-line align-bottom me-1"></i> Add Cutting Way Details
                                        </button>
                                 </div>
                                </div>
@@ -119,7 +119,7 @@ Technical Parameters
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid1" id= "modal1" data-id = "1">
-                                            Add CNC Thickness Details
+                                            <i class="ri-add-line align-bottom me-1"></i> Add CNC Thickness Details
                                            </button>
                                     </div>
                                    </div>

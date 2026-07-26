@@ -65,7 +65,7 @@ Standard Config List
                                 </div>
                                 <div class = "col-md-6" style = "text-align:right">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid"ata-id = "1" id ="modal">
-                                        Create Motor
+                                        <i class="ri-add-line align-bottom me-1"></i> Create Motor
                                        </button>
                                 </div>
                                </div>
@@ -94,10 +94,10 @@ Standard Config List
                                         
                                         <td>
                                             <button type="button" class="btn btn-primary edit"  data-bs-toggle="modal" data-id="{{$item->id}}">
-                                                 Edit
+                                                 <i class="ri-pencil-fill align-bottom me-1"></i> Edit
                                                </button>
                                                <button type="button" class="btn btn-danger" id = "delete" data-bs-toggle="modal" data-id="{{$item->id}}">
-                                                 Delete
+                                                 <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                                </button>
                                                 
                                         </td>
@@ -116,7 +116,7 @@ Standard Config List
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid1" data-id = "1" id ="modal1">
-                                            Create Gear
+                                            <i class="ri-add-line align-bottom me-1"></i> Create Gear
                                            </button>
                                     </div>
                                    </div>
@@ -146,10 +146,10 @@ Standard Config List
                                            
                                                 <td>
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item2->id}}">
-                                                         Edit
+                                                         <i class="ri-pencil-fill align-bottom me-1"></i> Edit
                                                        </button>
                                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item2->id}}">
-                                                         Delete
+                                                         <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                                        </button>
                                                         
                                                 </td>
@@ -167,7 +167,7 @@ Standard Config List
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid2" data-id = "1" id ="modal2">
-                                           Create Rack Details
+                                           <i class="ri-add-line align-bottom me-1"></i> Create Rack Details
                                            </button>
                                     </div>
                                    </div>
@@ -195,10 +195,10 @@ Standard Config List
                                             
                                             <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item3->id}}">
-                                                    Edit
+                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
                                                   </button>
                                                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item3->id}}">
-                                                    Delete
+                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                                   </button>
                                             </td>
                                         </tr>
@@ -214,7 +214,7 @@ Standard Config List
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid3" data-id = "1" id ="modal3">
-                                            Create Software Details
+                                            <i class="ri-add-line align-bottom me-1"></i> Create Software Details
                                            </button>
                                     </div>
                                    </div>
@@ -242,10 +242,10 @@ Standard Config List
                                             <td>{{$item4->image}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item4->id}}">
-                                                    Edit
+                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
                                                   </button>
                                                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item4->id}}">
-                                                    Delete
+                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                                   </button>
                                             </td>
                                         </tr>

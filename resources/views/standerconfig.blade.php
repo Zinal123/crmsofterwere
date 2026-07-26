@@ -67,7 +67,7 @@ Standard Config
                                 </div>
                                 <div class = "col-md-6" style = "text-align:right">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid" data-id = "1" id ="modal1">
-                                        Create software
+                                        <i class="ri-add-line align-bottom me-1"></i> Create software
                                     </button>
                                 </div>
                                </div>
@@ -127,7 +127,7 @@ Standard Config
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid1">
-                                            Create laser Cutting Machine
+                                            <i class="ri-add-line align-bottom me-1"></i> Create laser Cutting Machine
                                            </button>
                                     </div>
                                    </div>
@@ -187,7 +187,7 @@ Standard Config
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid2">
-                                            Create Focusing Laser Cutting Head
+                                            <i class="ri-add-line align-bottom me-1"></i> Create Focusing Laser Cutting Head
                                            </button>
                                     </div>
                                    </div>
@@ -247,7 +247,7 @@ Standard Config
                                     </div>
                                     <div class = "col-md-6" style = "text-align:right">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid3">
-                                            Create Power Source
+                                            <i class="ri-add-line align-bottom me-1"></i> Create Power Source
                                            </button>
                                     </div>
                                    </div>
