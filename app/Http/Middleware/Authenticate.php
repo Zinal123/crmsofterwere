@@ -14,8 +14,17 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        if ($request->expectsJson()) {
+            return null;
         }
+
+        // The client portal lives under /portal on its own "client" guard -
+        // an unauthenticated visit there must land on the client login page,
+        // never the staff one (and vice versa).
+        if ($request->is('portal*')) {
+            return route('client.login');
+        }
+
+        return route('login');
     }
 }

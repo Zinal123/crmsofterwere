@@ -39,6 +39,23 @@ Route::middleware('auth')->group(function () {
     Route::get('attendance', [App\Http\Controllers\Workforce\AttendanceController::class, 'mark'])->name('attendance.mark')->middleware('permission:attendance.manage');
 });
 
+// Client portal - separate "client" guard, own session, own layout. Registered
+// before the {any} catch-all below (like the block above) since /portal on its
+// own is a single path segment.
+Route::prefix('portal')->name('client.')->group(function () {
+    Route::get('login', [App\Http\Controllers\Client\Auth\ClientLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [App\Http\Controllers\Client\Auth\ClientLoginController::class, 'login'])->name('login.attempt');
+    Route::post('logout', [App\Http\Controllers\Client\Auth\ClientLoginController::class, 'logout'])->name('logout');
+
+    Route::middleware('auth:client')->group(function () {
+        Route::get('/', [App\Http\Controllers\Client\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('machines/{machineId}/tickets/create', [App\Http\Controllers\Client\TicketController::class, 'create'])->name('tickets.create');
+        Route::post('tickets', [App\Http\Controllers\Client\TicketController::class, 'store'])->name('tickets.store');
+        Route::get('tickets', [App\Http\Controllers\Client\TicketController::class, 'index'])->name('tickets.index');
+        Route::get('tickets/{id}', [App\Http\Controllers\Client\TicketController::class, 'show'])->name('tickets.show');
+    });
+});
+
 Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])->name('index');
 
 //Update User Details & Auth-protected routes
