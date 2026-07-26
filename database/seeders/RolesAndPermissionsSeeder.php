@@ -26,6 +26,9 @@ class RolesAndPermissionsSeeder extends Seeder
         'products.view-audit',
         'quotations.view-audit',
         'admin.view-audit',
+        'client-machines.view', 'client-machines.manage',
+        'ticket-problem-types.manage',
+        'tickets.view', 'tickets.assign', 'tickets.view-audit',
     ];
 
     public function run(): void

@@ -113,6 +113,26 @@ Route::middleware('auth')->group(function () {
         Route::put('admin/users/{id}/profile', [App\Http\Controllers\Admin\UserController::class, 'updateProfile'])->name('admin.users.update-profile');
     });
 
+    Route::middleware('permission:client-machines.manage')->group(function () {
+        Route::get('admin/client-accounts', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'index'])->name('admin.client-accounts.index');
+        Route::post('admin/client-accounts', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'store'])->name('admin.client-accounts.store');
+    });
+
+    Route::middleware('permission:client-machines.view')->get('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'index'])->name('admin.client-machines.index');
+    Route::middleware('permission:client-machines.manage')->post('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'store'])->name('admin.client-machines.store');
+
+    Route::middleware('permission:ticket-problem-types.manage')->group(function () {
+        Route::get('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'index'])->name('admin.ticket-problem-types.index');
+        Route::post('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'store'])->name('admin.ticket-problem-types.store');
+        Route::post('admin/ticket-problem-types/{id}/toggle', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'toggle'])->name('admin.ticket-problem-types.toggle');
+    });
+
+    Route::middleware('permission:tickets.view')->group(function () {
+        Route::get('admin/tickets', [App\Http\Controllers\Ticketing\TicketController::class, 'index'])->name('admin.tickets.index');
+        Route::get('admin/tickets/{id}', [App\Http\Controllers\Ticketing\TicketController::class, 'show'])->name('admin.tickets.show');
+    });
+    Route::middleware('permission:tickets.assign')->post('admin/tickets/{id}/assign', [App\Http\Controllers\Ticketing\TicketController::class, 'assign'])->name('admin.tickets.assign');
+
     Route::post('machines', [App\Http\Controllers\Job\MachineController::class, 'store'])->name('machines.store')->middleware('permission:jobs.manage-machines');
     Route::post('machines/{id}/toggle', [App\Http\Controllers\Job\MachineController::class, 'toggle'])->name('machines.toggle')->middleware('permission:jobs.manage-machines');
 

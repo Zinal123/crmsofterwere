@@ -40,7 +40,7 @@
                 </li> <!-- end Dashboard Menu -->
                 @endcan
 
-                @canany(['products.view', 'products.manage-config'])
+                @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage'])
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')
                 <li class="nav-item">
@@ -67,7 +67,29 @@
                     </div>
                 </li>
                 @endcan
+                @can('client-machines.manage')
+                <li class="nav-item">
+                    <a href="{{route('admin.client-accounts.index')}}" class="nav-link"><i class="ri-contacts-line"></i><span>@lang('Client Accounts')</span></a>
+                </li>
+                @endcan
+                @can('client-machines.view')
+                <li class="nav-item">
+                    <a href="{{route('admin.client-machines.index')}}" class="nav-link"><i class="ri-cpu-line"></i><span>@lang('Client Machines')</span></a>
+                </li>
+                @endcan
+                @can('ticket-problem-types.manage')
+                <li class="nav-item">
+                    <a href="{{route('admin.ticket-problem-types.index')}}" class="nav-link"><i class="ri-error-warning-line"></i><span>@lang('Problem Types')</span></a>
+                </li>
+                @endcan
                 @endcanany
+
+                @can('tickets.view')
+                <li class="menu-title"><span>Support Tickets</span></li>
+                <li class="nav-item">
+                    <a href="{{route('admin.tickets.index')}}" class="nav-link"><i class="ri-customer-service-2-line"></i><span>@lang('Tickets')</span></a>
+                </li>
+                @endcan
 
                 @can('quotations.view')
                 <li class="menu-title"><span>Quotations</span></li>

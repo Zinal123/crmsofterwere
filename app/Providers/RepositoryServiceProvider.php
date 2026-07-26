@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Repositories\Contracts\AttendanceRepositoryInterface;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
 use App\Repositories\Contracts\BankRepositoryInterface;
+use App\Repositories\Contracts\ClientAccountRepositoryInterface;
+use App\Repositories\Contracts\ClientMachineRepositoryInterface;
 use App\Repositories\Contracts\DashboardRepositoryInterface;
 use App\Repositories\Contracts\EmployeeDocumentRepositoryInterface;
 use App\Repositories\Contracts\EmployeeRepositoryInterface;
@@ -18,10 +20,14 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\SalaryPaymentRepositoryInterface;
+use App\Repositories\Contracts\TicketProblemTypeRepositoryInterface;
+use App\Repositories\Contracts\TicketRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAttendanceRepository;
 use App\Repositories\Eloquent\EloquentAuditLogRepository;
 use App\Repositories\Eloquent\EloquentBankRepository;
+use App\Repositories\Eloquent\EloquentClientAccountRepository;
+use App\Repositories\Eloquent\EloquentClientMachineRepository;
 use App\Repositories\Eloquent\EloquentDashboardRepository;
 use App\Repositories\Eloquent\EloquentEmployeeDocumentRepository;
 use App\Repositories\Eloquent\EloquentEmployeeRepository;
@@ -35,6 +41,8 @@ use App\Repositories\Eloquent\EloquentProductRepository;
 use App\Repositories\Eloquent\EloquentQuotationRepository;
 use App\Repositories\Eloquent\EloquentRoleRepository;
 use App\Repositories\Eloquent\EloquentSalaryPaymentRepository;
+use App\Repositories\Eloquent\EloquentTicketProblemTypeRepository;
+use App\Repositories\Eloquent\EloquentTicketRepository;
 use App\Repositories\Eloquent\EloquentUserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -59,5 +67,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AttendanceRepositoryInterface::class, EloquentAttendanceRepository::class);
         $this->app->bind(SalaryPaymentRepositoryInterface::class, EloquentSalaryPaymentRepository::class);
         $this->app->bind(AuditLogRepositoryInterface::class, EloquentAuditLogRepository::class);
+        $this->app->bind(ClientAccountRepositoryInterface::class, EloquentClientAccountRepository::class);
+        $this->app->bind(ClientMachineRepositoryInterface::class, EloquentClientMachineRepository::class);
+        $this->app->bind(TicketProblemTypeRepositoryInterface::class, EloquentTicketProblemTypeRepository::class);
+        $this->app->bind(TicketRepositoryInterface::class, EloquentTicketRepository::class);
     }
 }
