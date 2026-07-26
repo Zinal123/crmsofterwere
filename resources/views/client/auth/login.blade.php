@@ -41,7 +41,7 @@ Client Login
                 <div class="position-relative auth-pass-inputgroup oms-input-group mt-1">
                     <i class="ri-lock-2-line oms-input-icon"></i>
                     <input type="password" class="form-control password-input pe-5" name="password" placeholder="Enter password" id="password-input" required>
-                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon" title="Show password" aria-label="Show password"><i class="ri-eye-fill align-middle"></i></button>
                 </div>
             </div>
 

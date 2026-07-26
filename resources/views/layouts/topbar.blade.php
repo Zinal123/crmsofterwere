@@ -39,7 +39,7 @@
                     </a>
                 </div>
 
-                <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
+                <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon" title="Toggle sidebar" aria-label="Toggle sidebar">
                     <span class="hamburger-icon">
                         <span></span>
                         <span></span>
@@ -65,13 +65,13 @@
                 </div>
 
                 <div class="ms-1 header-item d-none d-sm-flex">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen" title="Toggle fullscreen" aria-label="Toggle fullscreen">
                         <i class='ri-fullscreen-line fs-22'></i>
                     </button>
                 </div>
 
                 <div class="ms-1 header-item d-none d-sm-flex">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode" title="Toggle dark mode" aria-label="Toggle dark mode">
                         <i class='ri-moon-line fs-22'></i>
                     </button>
                 </div>
