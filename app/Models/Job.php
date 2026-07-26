@@ -50,4 +50,9 @@ class Job extends Model
     {
         return $this->hasMany(JobAuditLog::class);
     }
+
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
+    }
 }
