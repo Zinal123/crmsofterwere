@@ -35,4 +35,6 @@ interface InvoiceRepositoryInterface
     public function getInvoiceProductsWithProductName($invoiceId): Collection;
 
     public function getPaymentHistory(): Collection;
+
+    public function allWithCustomerOrderedByLatest(): Collection;
 }

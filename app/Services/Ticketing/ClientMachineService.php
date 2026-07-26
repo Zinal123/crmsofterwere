@@ -5,6 +5,7 @@ namespace App\Services\Ticketing;
 use App\Models\ClientMachine;
 use App\Repositories\Contracts\ClientAccountRepositoryInterface;
 use App\Repositories\Contracts\ClientMachineRepositoryInterface;
+use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -14,6 +15,7 @@ class ClientMachineService
         private ClientMachineRepositoryInterface $repository,
         private ClientAccountRepositoryInterface $clientAccountRepository,
         private ProductRepositoryInterface $productRepository,
+        private InvoiceRepositoryInterface $invoiceRepository,
     ) {
     }
 
@@ -27,6 +29,7 @@ class ClientMachineService
         return [
             'clientAccounts' => $this->clientAccountRepository->allOrderedByLatest(),
             'products' => $this->productRepository->allOrderedByLatest(),
+            'invoices' => $this->invoiceRepository->allWithCustomerOrderedByLatest(),
         ];
     }
 

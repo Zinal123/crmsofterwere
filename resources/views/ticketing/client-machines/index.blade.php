@@ -45,8 +45,13 @@ Client Machines
                         <input id="machine-serial" type="text" class="form-control" name="serial_number" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="machine-invoice">Invoice ID (optional)</label>
-                        <input id="machine-invoice" type="number" class="form-control" name="invoice_id">
+                        <label class="form-label" for="machine-invoice">Invoice (optional)</label>
+                        <select id="machine-invoice" class="form-select" name="invoice_id">
+                            <option value="">-- Not linked to an invoice --</option>
+                            @foreach($invoices as $invoice)
+                                <option value="{{ $invoice->id }}">#{{ $invoice->invoice_id ?? $invoice->id }} - {{ $invoice->customer->name ?? 'Unknown customer' }} - {{ \App\Support\IndianNumber::format($invoice->amount) }}</option>
+                            @endforeach
+                        </select>
                         <div class="form-text">Links this machine back to the sale, if known.</div>
                     </div>
                     <div class="mb-2">

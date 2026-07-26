@@ -21,6 +21,11 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
         return Invoice::create($data);
     }
 
+    public function allWithCustomerOrderedByLatest(): Collection
+    {
+        return $this->tenantScope->apply(Invoice::with('customer'))->orderByDesc('id')->get();
+    }
+
     public function createCustomer(array $data): Customer
     {
         return Customer::create($data);
