@@ -93,13 +93,14 @@ Standard Config List
                                         
                                         
                                         <td>
-                                            <button type="button" class="btn btn-primary edit"  data-bs-toggle="modal" data-id="{{$item->id}}">
-                                                 <i class="ri-pencil-fill align-bottom me-1"></i> Edit
-                                               </button>
-                                               <button type="button" class="btn btn-danger" id = "delete" data-bs-toggle="modal" data-id="{{$item->id}}">
-                                                 <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
-                                               </button>
-                                                
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button type="button" class="btn btn-soft-primary btn-sm edit"  data-bs-toggle="modal" data-id="{{$item->id}}">
+                                                     <i class="ri-pencil-fill align-bottom me-1"></i> Edit
+                                                   </button>
+                                                   <button type="button" class="btn btn-soft-danger btn-sm" id = "delete" data-bs-toggle="modal" data-id="{{$item->id}}">
+                                                     <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                   </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -145,13 +146,14 @@ Standard Config List
                                             
                                            
                                                 <td>
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item2->id}}">
-                                                         <i class="ri-pencil-fill align-bottom me-1"></i> Edit
-                                                       </button>
-                                                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item2->id}}">
-                                                         <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
-                                                       </button>
-                                                        
+                                                    <div class="d-flex gap-2 flex-wrap">
+                                                        <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item2->id}}">
+                                                             <i class="ri-pencil-fill align-bottom me-1"></i> Edit
+                                                           </button>
+                                                           <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item2->id}}">
+                                                             <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                           </button>
+                                                    </div>
                                                 </td>
                                         
                                         </tr>
@@ -194,12 +196,14 @@ Standard Config List
                                             <td>{{$item3->image}}</td>
                                             
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item3->id}}">
-                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
-                                                  </button>
-                                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item3->id}}">
-                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
-                                                  </button>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item3->id}}">
+                                                        <i class="ri-pencil-fill align-bottom me-1"></i> Edit
+                                                      </button>
+                                                      <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item3->id}}">
+                                                        <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                      </button>
+                                                </div>
                                             </td>
                                         </tr>
                                        @endforeach
@@ -241,12 +245,14 @@ Standard Config List
                                             <td>{{$item4->companyname}}</td>
                                             <td>{{$item4->image}}</td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{$item4->id}}">
-                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
-                                                  </button>
-                                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-id="{{$item4->id}}">
-                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
-                                                  </button>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item4->id}}">
+                                                        <i class="ri-pencil-fill align-bottom me-1"></i> Edit
+                                                      </button>
+                                                      <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item4->id}}">
+                                                        <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                      </button>
+                                                </div>
                                             </td>
                                         </tr>
                                        @endforeach

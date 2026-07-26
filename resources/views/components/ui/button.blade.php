@@ -1,9 +1,12 @@
 @php
+    $prefix = ($soft ?? false) ? 'btn-soft-' : 'btn-';
     $variantClass = match($variant ?? 'primary') {
-        'success' => 'btn-success',
-        'danger' => 'btn-danger',
-        'secondary' => 'btn-secondary',
-        default => 'btn-primary',
+        'success' => $prefix . 'success',
+        'danger' => $prefix . 'danger',
+        'secondary' => $prefix . 'secondary',
+        'info' => $prefix . 'info',
+        'warning' => $prefix . 'warning',
+        default => $prefix . 'primary',
     };
     $sizeClass = match($size ?? null) {
         'sm' => 'btn-sm',
@@ -15,7 +18,7 @@
     }
 @endphp
 <button
-    {{ $attributes->except(['variant', 'size', 'icon', 'ariaLabel'])->merge(['type' => 'button', 'class' => trim("btn {$variantClass} {$sizeClass}")]) }}
+    {{ $attributes->except(['variant', 'size', 'icon', 'ariaLabel', 'soft'])->merge(['type' => 'button', 'class' => trim("btn {$variantClass} {$sizeClass}")]) }}
     @if($isIconOnly) aria-label="{{ $ariaLabel }}" @endif
 >
     @isset($icon)

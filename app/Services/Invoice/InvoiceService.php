@@ -76,14 +76,14 @@ class InvoiceService
         $data = $rows->map(function ($item) {
             if ($item->amount == $item->paidamount) {
                 $statusHtml = \App\Support\StatusBadge::render('Paid', 'success', 'ri-checkbox-circle-line');
-                $paymentButton = '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-id="' . e($item->id) . '" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;"><i class="ri-secure-payment-line align-bottom"></i> Payment</button>';
+                $paymentButton = '<button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="' . e($item->id) . '" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;"><i class="ri-secure-payment-line align-bottom me-1"></i> Payment</button>';
             } else {
                 $statusHtml = \App\Support\StatusBadge::render('Pending', 'warning', 'ri-time-line');
-                $paymentButton = '<button type="button" class="btn btn-sm btn-primary open-modal" data-id="' . e($item->id) . '" data-customer="' . e($item->customer_id) . '"data-bs-toggle="modal" data-bs-target="#exampleModalgrid"><i class="ri-secure-payment-line align-bottom"></i> Payment</button>';
+                $paymentButton = '<button type="button" class="btn btn-soft-primary btn-sm open-modal" data-id="' . e($item->id) . '" data-customer="' . e($item->customer_id) . '"data-bs-toggle="modal" data-bs-target="#exampleModalgrid"><i class="ri-secure-payment-line align-bottom me-1"></i> Payment</button>';
             }
 
-            $actionHtml = '<div class="d-flex gap-2">'
-                . '<div class="edit"><a href="' . route('invoice.details', $item->id) . '"><button class="btn btn-sm btn-success edit-item-btn"><i class="ri-eye-line align-bottom"></i> Details</button></a></div>'
+            $actionHtml = '<div class="d-flex gap-2 flex-wrap">'
+                . '<div class="edit"><a href="' . route('invoice.details', $item->id) . '"><button class="btn btn-soft-success btn-sm edit-item-btn"><i class="ri-eye-line align-bottom me-1"></i> Details</button></a></div>'
                 . '<div class="remove">' . $paymentButton . '</div>'
                 . '</div>';
 

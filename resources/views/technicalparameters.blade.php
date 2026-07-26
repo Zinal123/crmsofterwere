@@ -88,21 +88,13 @@ Technical Parameters
                                         <td>{{$item->cuttingway}}</td>
                                         
                                         <td>
-                                            <div class="dropdown d-inline-block">
-                                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ri-more-fill align-middle"></i>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn">
+                                                    <i class="ri-pencil-fill align-bottom me-1"></i> Edit
                                                 </button>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li><a class="dropdown-item edit-item-btn"><i
-                                                                class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item remove-item-btn">
-                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                                <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn">
+                                                    <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -145,20 +137,10 @@ Technical Parameters
                                             <td>{{$item1->cnsthinks}}</td>
                                             
                                             <td>
-                                                <div class="dropdown d-inline-block">
-                                                    <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="ri-more-fill align-middle"></i>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn">
+                                                        <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                                     </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item remove-item-btn">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
-                                                            </a>
-                                                        </li>
-                                                    </ul>
                                                 </div>
                                             </td>
                                         </tr>

@@ -67,13 +67,13 @@ Users
                                 />
                             </td>
                             <td>
-                                <div class="d-flex gap-1 mb-1">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}" aria-label="Edit user">
-                                        <i class="ri-edit-line align-bottom"></i> Edit
+                                <div class="d-flex gap-2 flex-wrap mb-1">
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}" aria-label="Edit user">
+                                        <i class="ri-edit-line align-bottom me-1"></i> Edit
                                     </button>
                                     @can('admin.view-audit')
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-user" data-audit-id="{{ $user->id }}" aria-label="View history">
-                                        <i class="ri-history-line align-bottom"></i> History
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-user" data-audit-id="{{ $user->id }}" aria-label="View history">
+                                        <i class="ri-history-line align-bottom me-1"></i> History
                                     </button>
                                     @endcan
                                 </div>

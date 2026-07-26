@@ -23,15 +23,17 @@
                                 icon="{{ $machine->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line' }}" />
                         </td>
                         <td>
-                            <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <x-ui.button variant="secondary" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'">
-                                    {{ $machine->is_active ? 'Disable' : 'Enable' }}
-                                </x-ui.button>
-                            </form>
-                            @can('machines.view-audit')
-                            <x-ui.button variant="secondary" size="sm" type="button" icon="ri-history-line" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}">History</x-ui.button>
-                            @endcan
+                            <div class="d-flex gap-2 flex-wrap">
+                                <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <x-ui.button variant="secondary" :soft="true" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'">
+                                        {{ $machine->is_active ? 'Disable' : 'Enable' }}
+                                    </x-ui.button>
+                                </form>
+                                @can('machines.view-audit')
+                                <x-ui.button variant="secondary" :soft="true" size="sm" type="button" icon="ri-history-line" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}">History</x-ui.button>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty
