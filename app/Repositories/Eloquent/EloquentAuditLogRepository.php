@@ -34,7 +34,15 @@ class EloquentAuditLogRepository implements AuditLogRepositoryInterface
             'field_name' => $fieldName,
             'old_value' => $oldValue !== null ? (string) $oldValue : null,
             'new_value' => $newValue !== null ? (string) $newValue : null,
-            'user_id' => auth()->id(),
+            // Explicitly the "web" (staff) guard, not the unguarded auth()->id()
+            // - audit_logs.user_id has a foreign key to the staff `users` table,
+            // but Laravel's auth:<guard> middleware calls Auth::shouldUse() on a
+            // successful check, so the "default" guard becomes whichever guard
+            // authenticated the current request. Once the client portal (its
+            // own "client" guard) started mutating Auditable models, auth()->id()
+            // silently returned a client_accounts.id instead - fine numerically,
+            // but not a real users.id, so the FK insert failed outright.
+            'user_id' => auth('web')->id(),
         ]);
     }
 

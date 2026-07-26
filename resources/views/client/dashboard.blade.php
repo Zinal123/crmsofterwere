@@ -3,9 +3,12 @@
 My Machines
 @endsection
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h5 class="mb-0">My Machines</h5>
-    <a href="{{ route('client.tickets.index') }}" class="btn btn-sm btn-outline-secondary"><i class="ri-file-list-3-line align-bottom"></i> My Tickets</a>
+    <div class="d-flex gap-2">
+        <a href="{{ route('client.tickets.index') }}" class="btn btn-sm btn-outline-secondary"><i class="ri-file-list-3-line align-bottom"></i> My Tickets</a>
+        <a href="{{ route('client.spare-parts.index') }}" class="btn btn-sm btn-outline-secondary"><i class="ri-tools-fill align-bottom"></i> My Spare Part Requests</a>
+    </div>
 </div>
 
 @forelse($machines as $machine)
@@ -16,9 +19,35 @@ My Machines
         @if($machine->installed_at)
             <p class="text-muted small mb-3">Installed: {{ $machine->installed_at->format('d M Y') }}</p>
         @endif
-        <a href="{{ route('client.tickets.create', $machine->id) }}" class="btn btn-danger btn-sm">
-            <i class="ri-error-warning-line align-bottom"></i> Report a Problem
-        </a>
+
+        @if($machine->invoice)
+            @php
+                $due = (float) $machine->invoice->remaining_amount;
+            @endphp
+            <div class="border rounded p-2 mb-3 {{ $due > 0 ? 'bg-danger-subtle' : 'bg-success-subtle' }}">
+                <div class="d-flex justify-content-between small">
+                    <span>Invoice Amount</span>
+                    <span>&#8377;{{ \App\Support\IndianNumber::format($machine->invoice->amount) }}</span>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span>Paid</span>
+                    <span>&#8377;{{ \App\Support\IndianNumber::format($machine->invoice->paidamount) }}</span>
+                </div>
+                <div class="d-flex justify-content-between fw-semibold {{ $due > 0 ? 'text-danger' : 'text-success' }}">
+                    <span>{{ $due > 0 ? 'Amount Due' : 'Fully Paid' }}</span>
+                    <span>&#8377;{{ \App\Support\IndianNumber::format($machine->invoice->remaining_amount) }}</span>
+                </div>
+            </div>
+        @endif
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ route('client.tickets.create', $machine->id) }}" class="btn btn-danger btn-sm">
+                <i class="ri-error-warning-line align-bottom"></i> Report a Problem
+            </a>
+            <a href="{{ route('client.spare-parts.create', $machine->id) }}" class="btn btn-outline-secondary btn-sm">
+                <i class="ri-tools-fill align-bottom"></i> Request Spare Part
+            </a>
+        </div>
     </div>
 </div>
 @empty

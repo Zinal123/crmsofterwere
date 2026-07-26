@@ -54,6 +54,10 @@ Route::prefix('portal')->name('client.')->group(function () {
         Route::get('tickets', [App\Http\Controllers\Client\TicketController::class, 'index'])->name('tickets.index');
         Route::get('tickets/{id}', [App\Http\Controllers\Client\TicketController::class, 'show'])->name('tickets.show');
         Route::post('push-subscriptions', [App\Http\Controllers\Job\PushSubscriptionController::class, 'storeForClient'])->name('push-subscriptions.store');
+
+        Route::get('machines/{machineId}/spare-parts/create', [App\Http\Controllers\Client\SparePartRequestController::class, 'create'])->name('spare-parts.create');
+        Route::post('spare-parts', [App\Http\Controllers\Client\SparePartRequestController::class, 'store'])->name('spare-parts.store');
+        Route::get('spare-parts', [App\Http\Controllers\Client\SparePartRequestController::class, 'index'])->name('spare-parts.index');
     });
 });
 
@@ -90,6 +94,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('productstore' ,[App\Http\Controllers\Product\ProductController::class, 'productstore'])->name('productstore')->middleware('permission:products.create');
     Route::get('productdelete/{id}' ,[App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete')->middleware('permission:products.delete');
+    Route::post('product/{id}/toggle-spare-part', [App\Http\Controllers\Product\ProductController::class, 'toggleSparePart'])->name('product.toggle-spare-part')->middleware('permission:spare-parts.manage');
 
     Route::get('standerconfig/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'standerconfig'])->name('standerconfig')->middleware('permission:products.manage-config');
     Route::get('TechnicalParameters/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'technicalparameters'])->name('TechnicalParameters')->middleware('permission:products.manage-config');
@@ -150,6 +155,9 @@ Route::middleware('auth')->group(function () {
         Route::get('admin/tickets/{id}', [App\Http\Controllers\Ticketing\TicketController::class, 'show'])->name('admin.tickets.show');
     });
     Route::middleware('permission:tickets.assign')->post('admin/tickets/{id}/assign', [App\Http\Controllers\Ticketing\TicketController::class, 'assign'])->name('admin.tickets.assign');
+
+    Route::middleware('permission:spare-part-requests.view')->get('admin/spare-part-requests', [App\Http\Controllers\Ticketing\SparePartRequestController::class, 'index'])->name('admin.spare-part-requests.index');
+    Route::middleware('permission:spare-part-requests.manage')->post('admin/spare-part-requests/{id}/status', [App\Http\Controllers\Ticketing\SparePartRequestController::class, 'updateStatus'])->name('admin.spare-part-requests.update-status');
 
     Route::post('machines', [App\Http\Controllers\Job\MachineController::class, 'store'])->name('machines.store')->middleware('permission:jobs.manage-machines');
     Route::post('machines/{id}/toggle', [App\Http\Controllers\Job\MachineController::class, 'toggle'])->name('machines.toggle')->middleware('permission:jobs.manage-machines');

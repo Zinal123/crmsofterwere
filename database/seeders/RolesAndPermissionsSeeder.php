@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'client-machines.view', 'client-machines.manage',
         'ticket-problem-types.manage',
         'tickets.view', 'tickets.assign', 'tickets.view-audit',
+        'spare-parts.manage', 'spare-part-requests.view', 'spare-part-requests.manage',
     ];
 
     public function run(): void

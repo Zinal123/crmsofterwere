@@ -20,6 +20,7 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\SalaryPaymentRepositoryInterface;
+use App\Repositories\Contracts\SparePartRequestRepositoryInterface;
 use App\Repositories\Contracts\TicketProblemTypeRepositoryInterface;
 use App\Repositories\Contracts\TicketRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
@@ -41,6 +42,7 @@ use App\Repositories\Eloquent\EloquentProductRepository;
 use App\Repositories\Eloquent\EloquentQuotationRepository;
 use App\Repositories\Eloquent\EloquentRoleRepository;
 use App\Repositories\Eloquent\EloquentSalaryPaymentRepository;
+use App\Repositories\Eloquent\EloquentSparePartRequestRepository;
 use App\Repositories\Eloquent\EloquentTicketProblemTypeRepository;
 use App\Repositories\Eloquent\EloquentTicketRepository;
 use App\Repositories\Eloquent\EloquentUserRepository;
@@ -71,5 +73,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ClientMachineRepositoryInterface::class, EloquentClientMachineRepository::class);
         $this->app->bind(TicketProblemTypeRepositoryInterface::class, EloquentTicketProblemTypeRepository::class);
         $this->app->bind(TicketRepositoryInterface::class, EloquentTicketRepository::class);
+        $this->app->bind(SparePartRequestRepositoryInterface::class, EloquentSparePartRequestRepository::class);
     }
 }

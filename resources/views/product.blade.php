@@ -81,6 +81,14 @@ list view
                                     </button>
                                     @endif
                                 @endcan
+                                @can('spare-parts.manage')
+                                <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-soft-{{ $item->is_spare_part ? 'warning' : 'secondary' }} btn-sm">
+                                        <i class="ri-tools-fill align-bottom me-1"></i> {{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}
+                                    </button>
+                                </form>
+                                @endcan
                                 <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product? This cannot be undone.');">
                                     <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
                                 </a>

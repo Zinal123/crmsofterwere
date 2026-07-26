@@ -4,6 +4,7 @@ namespace Tests\Feature\Tickets;
 
 use App\Models\ClientAccount;
 use App\Models\ClientMachine;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\TicketProblemType;
@@ -88,6 +89,43 @@ class ClientPortalTest extends TestCase
         $response->assertOk();
         $response->assertSee('MY-MACHINE-001');
         $response->assertDontSee('OTHER-MACHINE-002');
+    }
+
+    public function test_client_dashboard_shows_amount_due_when_a_machine_has_a_linked_invoice(): void
+    {
+        $account = ClientAccount::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 850000, 'paidamount' => 500000, 'remaining_amount' => 350000]);
+        ClientMachine::factory()->create(['client_account_id' => $account->id, 'invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($account, 'client')->get(route('client.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Amount Due');
+        $response->assertSee(\App\Support\IndianNumber::format(350000));
+    }
+
+    public function test_client_dashboard_shows_fully_paid_when_no_amount_is_due(): void
+    {
+        $account = ClientAccount::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 850000, 'paidamount' => 850000, 'remaining_amount' => 0]);
+        ClientMachine::factory()->create(['client_account_id' => $account->id, 'invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($account, 'client')->get(route('client.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Fully Paid');
+    }
+
+    public function test_client_dashboard_shows_no_payment_block_when_machine_has_no_linked_invoice(): void
+    {
+        $account = ClientAccount::factory()->create();
+        ClientMachine::factory()->create(['client_account_id' => $account->id, 'invoice_id' => null]);
+
+        $response = $this->actingAs($account, 'client')->get(route('client.dashboard'));
+
+        $response->assertOk();
+        $response->assertDontSee('Amount Due');
+        $response->assertDontSee('Fully Paid');
     }
 
     public function test_client_can_raise_a_ticket_for_their_own_machine(): void

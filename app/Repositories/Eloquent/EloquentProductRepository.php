@@ -36,4 +36,14 @@ class EloquentProductRepository implements ProductRepositoryInterface
         // nothing observable, just cleans up the reference.
         Product::find($id)->delete();
     }
+
+    public function allSpareParts(): Collection
+    {
+        return $this->tenantScope->apply(Product::where('is_spare_part', true))->orderBy('name')->get();
+    }
+
+    public function save(Product $product): void
+    {
+        $product->save();
+    }
 }

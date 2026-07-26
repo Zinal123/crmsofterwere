@@ -15,7 +15,7 @@ class EloquentClientMachineRepository implements ClientMachineRepositoryInterfac
 
     public function forClientAccount(int $clientAccountId): Collection
     {
-        return ClientMachine::with('product')->where('client_account_id', $clientAccountId)->orderBy('id', 'desc')->get();
+        return ClientMachine::with(['product', 'invoice'])->where('client_account_id', $clientAccountId)->orderBy('id', 'desc')->get();
     }
 
     public function find($id): ?ClientMachine

@@ -68,4 +68,18 @@ class ProductService
     {
         $this->repository->delete($id);
     }
+
+    public function toggleSparePart($id): Product
+    {
+        $product = $this->repository->find($id);
+
+        if ($product === null) {
+            throw new \InvalidArgumentException('Product not found.');
+        }
+
+        $product->is_spare_part = ! $product->is_spare_part;
+        $this->repository->save($product);
+
+        return $product;
+    }
 }

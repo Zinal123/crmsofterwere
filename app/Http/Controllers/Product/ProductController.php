@@ -39,4 +39,10 @@ class ProductController extends Controller
         $this->service->delete($id);
         return redirect()->route('product');
     }
+
+    public function toggleSparePart($id)
+    {
+        $this->service->toggleSparePart($id);
+        return redirect()->route('product')->with('success', 'Product updated.');
+    }
 }

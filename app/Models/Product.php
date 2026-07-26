@@ -19,8 +19,12 @@ class Product extends Authenticatable
         'rate',
         'unit',
         'make',
-        'active'
+        'active',
+        'is_spare_part',
+    ];
 
+    protected $casts = [
+        'is_spare_part' => 'boolean',
     ];
 
 

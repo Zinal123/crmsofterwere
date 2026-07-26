@@ -84,12 +84,19 @@
                 @endcan
                 @endcanany
 
-                @can('tickets.view')
+                @canany(['tickets.view', 'spare-part-requests.view'])
                 <li class="menu-title"><span>Support Tickets</span></li>
+                @can('tickets.view')
                 <li class="nav-item">
                     <a href="{{route('admin.tickets.index')}}" class="nav-link"><i class="ri-customer-service-2-line"></i><span>@lang('Tickets')</span></a>
                 </li>
                 @endcan
+                @can('spare-part-requests.view')
+                <li class="nav-item">
+                    <a href="{{route('admin.spare-part-requests.index')}}" class="nav-link"><i class="ri-tools-fill"></i><span>@lang('Spare Part Requests')</span></a>
+                </li>
+                @endcan
+                @endcanany
 
                 @can('quotations.view')
                 <li class="menu-title"><span>Quotations</span></li>

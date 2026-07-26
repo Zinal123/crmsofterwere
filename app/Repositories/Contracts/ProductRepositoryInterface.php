@@ -14,4 +14,8 @@ interface ProductRepositoryInterface
     public function create(array $data): Product;
 
     public function delete($id): void;
+
+    public function allSpareParts(): Collection;
+
+    public function save(Product $product): void;
 }
