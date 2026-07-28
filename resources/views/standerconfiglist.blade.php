@@ -457,8 +457,8 @@ Standard Config List
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="companyname" value="{{ $item->companyname }}">
+                            <label class="form-label" for="edit-motor-companyname-{{ $item->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-motor-companyname-{{ $item->id }}" name="companyname" value="{{ $item->companyname }}">
                         </div>
                     </div>
                     <br>
@@ -486,8 +486,8 @@ Standard Config List
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="companyname" value="{{ $item2->companyname }}">
+                            <label class="form-label" for="edit-gear-companyname-{{ $item2->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-gear-companyname-{{ $item2->id }}" name="companyname" value="{{ $item2->companyname }}">
                         </div>
                     </div>
                     <br>
@@ -515,8 +515,8 @@ Standard Config List
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="companyname" value="{{ $item3->companyname }}">
+                            <label class="form-label" for="edit-rack-companyname-{{ $item3->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-rack-companyname-{{ $item3->id }}" name="companyname" value="{{ $item3->companyname }}">
                         </div>
                     </div>
                     <br>
@@ -544,8 +544,8 @@ Standard Config List
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="companyname" value="{{ $item4->companyname }}">
+                            <label class="form-label" for="edit-software1-companyname-{{ $item4->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-software1-companyname-{{ $item4->id }}" name="companyname" value="{{ $item4->companyname }}">
                         </div>
                     </div>
                     <br>

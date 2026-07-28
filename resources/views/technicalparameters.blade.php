@@ -224,8 +224,8 @@ Technical Parameters
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Cutting Way</label>
-                            <input type="text" class="form-control" name="cuttingway" value="{{ $item->cuttingway }}">
+                            <label class="form-label" for="edit-cuttingway-{{ $item->id }}">Cutting Way</label>
+                            <input type="text" class="form-control" id="edit-cuttingway-{{ $item->id }}" name="cuttingway" value="{{ $item->cuttingway }}">
                         </div>
                     </div>
                     <br>
@@ -288,8 +288,8 @@ Technical Parameters
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">CNC Thickness</label>
-                            <input type="text" class="form-control" name="cuttingthinks" value="{{ $item1->cuttingthinks }}">
+                            <label class="form-label" for="edit-cncthickness-{{ $item1->id }}">CNC Thickness</label>
+                            <input type="text" class="form-control" id="edit-cncthickness-{{ $item1->id }}" name="cuttingthinks" value="{{ $item1->cuttingthinks }}">
                         </div>
                     </div>
                     <br>

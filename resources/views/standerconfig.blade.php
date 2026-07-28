@@ -360,18 +360,18 @@ Standard Config
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="company" value="{{ $item->company }}">
+                            <label class="form-label" for="edit-software-company-{{ $item->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-software-company-{{ $item->id }}" name="company" value="{{ $item->company }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Modal Name</label>
-                            <input type="text" class="form-control" name="modal" value="{{ $item->modal }}">
+                            <label class="form-label" for="edit-software-modal-{{ $item->id }}">Modal Name</label>
+                            <input type="text" class="form-control" id="edit-software-modal-{{ $item->id }}" name="modal" value="{{ $item->modal }}">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <label class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" rows="3" name="description">{{ $item->description }}</textarea>
+                            <label class="form-label" for="edit-software-description-{{ $item->id }}">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" id="edit-software-description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                         </div>
                     </div>
                     <br>
@@ -452,18 +452,18 @@ Standard Config
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="company" value="{{ $item1->company }}">
+                            <label class="form-label" for="edit-lasercutting-company-{{ $item1->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-lasercutting-company-{{ $item1->id }}" name="company" value="{{ $item1->company }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Modal Name</label>
-                            <input type="text" class="form-control" name="modal" value="{{ $item1->modal }}">
+                            <label class="form-label" for="edit-lasercutting-modal-{{ $item1->id }}">Modal Name</label>
+                            <input type="text" class="form-control" id="edit-lasercutting-modal-{{ $item1->id }}" name="modal" value="{{ $item1->modal }}">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <label class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" rows="3" name="decription">{{ $item1->decription }}</textarea>
+                            <label class="form-label" for="edit-lasercutting-description-{{ $item1->id }}">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" id="edit-lasercutting-description-{{ $item1->id }}" name="decription">{{ $item1->decription }}</textarea>
                         </div>
                     </div>
                     <br>
@@ -545,18 +545,18 @@ Standard Config
                     <input type="hidden" name="product_id" value="{{ $id }}">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" name="company" value="{{ $item2->company }}">
+                            <label class="form-label" for="edit-focusing-company-{{ $item2->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-focusing-company-{{ $item2->id }}" name="company" value="{{ $item2->company }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Modal Name</label>
-                            <input type="text" class="form-control" name="modal" value="{{ $item2->modal }}">
+                            <label class="form-label" for="edit-focusing-modal-{{ $item2->id }}">Modal Name</label>
+                            <input type="text" class="form-control" id="edit-focusing-modal-{{ $item2->id }}" name="modal" value="{{ $item2->modal }}">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <label class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" rows="3" name="description">{{ $item2->description }}</textarea>
+                            <label class="form-label" for="edit-focusing-description-{{ $item2->id }}">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" id="edit-focusing-description-{{ $item2->id }}" name="description">{{ $item2->description }}</textarea>
                         </div>
                     </div>
                     <br>
@@ -619,6 +619,45 @@ Standard Config
         </div>
     </div>
 </div>
+
+@foreach($power as $item3)
+<div class="modal fade" id="editPower-{{ $item3->id }}" tabindex="-1" aria-labelledby="editPower-{{ $item3->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPower-{{ $item3->id }}-label">Edit Power Source</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('powerupdate', $item3->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-power-company-{{ $item3->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-power-company-{{ $item3->id }}" name="company" value="{{ $item3->company }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-power-modal-{{ $item3->id }}">Modal Name</label>
+                            <input type="text" class="form-control" id="edit-power-modal-{{ $item3->id }}" name="modal" value="{{ $item3->modal }}">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="form-label" for="edit-power-description-{{ $item3->id }}">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" id="edit-power-description-{{ $item3->id }}" name="description">{{ $item3->description }}</textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
