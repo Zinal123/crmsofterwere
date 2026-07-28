@@ -112,6 +112,146 @@ class ProductConfigController extends Controller
         return view('technicalparameters', $this->service->getTechnicalParamsViewData($request->input('product_id')));
     }
 
+    public function softerwereupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateSoftware($id, $request->only(['company', 'product_id', 'modal', 'description']));
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function softereweredelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteSoftware($id);
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function cuttingupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateLaserCutting($id, $request->only(['company', 'product_id', 'modal', 'decription']));
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function cuttingdelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteLaserCutting($id);
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function focusingupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateFocusing($id, $request->only(['company', 'product_id', 'modal', 'details']));
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function focusingdelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteFocusing($id);
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function powerupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updatePower($id, $request->only(['company', 'product_id', 'modal', 'details']));
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function powerdelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deletePower($id);
+        return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
+    }
+
+    public function motorupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateMotor($id, $request->only(['companyname', 'product_id']));
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function motordelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteMotor($id);
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function gearupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateGear($id, $request->only(['companyname', 'product_id']));
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function geardelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteGear($id);
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function rackupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateRack($id, $request->only(['companyname', 'product_id']));
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function rackdelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteRack($id);
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function software1update(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateSoftware1($id, $request->only(['companyname', 'product_id']));
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function software1delete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteSoftware1($id);
+        return view('standerconfiglist', $this->service->getStanderconfigListViewData($request->input('product_id')));
+    }
+
+    public function cuttingwayupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateCuttingWay($id, $request->only(['cuttingway', 'product_id']));
+        return view('technicalparameters', $this->service->getTechnicalParamsViewData($request->input('product_id')));
+    }
+
+    public function cuttingwaydelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteCuttingWay($id);
+        return view('technicalparameters', $this->service->getTechnicalParamsViewData($request->input('product_id')));
+    }
+
+    public function cncthinknessupdate(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->updateCncThickness($id, $request->only(['cuttingthinks', 'product_id']));
+        return view('technicalparameters', $this->service->getTechnicalParamsViewData($request->input('product_id')));
+    }
+
+    public function cncthinknessdelete(Request $request, $id)
+    {
+        $this->requireProductId($request);
+        $this->service->deleteCncThickness($id);
+        return view('technicalparameters', $this->service->getTechnicalParamsViewData($request->input('product_id')));
+    }
+
     /**
      * A fully empty POST to any of these 10 store endpoints previously created
      * an all-NULL row, invisible even under the product it was meant to belong

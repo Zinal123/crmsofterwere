@@ -89,12 +89,16 @@ Technical Parameters
                                         
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCuttingWay-{{ $item->id }}" title="Edit" aria-label="Edit">
                                                     <i class="ri-pencil-fill align-bottom"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                    <i class="ri-delete-bin-fill align-bottom"></i>
-                                                </button>
+                                                <form action="{{ route('cuttingwaydelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this cutting way entry? This cannot be undone.');">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $id }}">
+                                                    <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                        <i class="ri-delete-bin-fill align-bottom"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -134,13 +138,20 @@ Technical Parameters
                                         <tr>
                                             
                                             <td>{{$item1->id}}</td>
-                                            <td>{{$item1->cnsthinks}}</td>
-                                            
+                                            <td>{{$item1->cuttingthinks}}</td>
+
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCncThickness-{{ $item1->id }}" title="Edit" aria-label="Edit">
+                                                        <i class="ri-pencil-fill align-bottom"></i>
                                                     </button>
+                                                    <form action="{{ route('cncthinknessdelete', $item1->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this CNC thickness entry? This cannot be undone.');">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $id }}">
+                                                        <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -199,6 +210,35 @@ Technical Parameters
     </div>
 </div>
 
+@foreach($Cutting as $item)
+<div class="modal fade" id="editCuttingWay-{{ $item->id }}" tabindex="-1" aria-labelledby="editCuttingWay-{{ $item->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCuttingWay-{{ $item->id }}-label">Edit Cutting Way</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('cuttingwayupdate', $item->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Cutting Way</label>
+                            <input type="text" class="form-control" name="cuttingway" value="{{ $item->cuttingway }}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -234,6 +274,34 @@ Technical Parameters
     </div>
 </div>
 
+@foreach($Cnsthinks as $item1)
+<div class="modal fade" id="editCncThickness-{{ $item1->id }}" tabindex="-1" aria-labelledby="editCncThickness-{{ $item1->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCncThickness-{{ $item1->id }}-label">Edit CNC Thickness</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('cncthinknessupdate', $item1->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">CNC Thickness</label>
+                            <input type="text" class="form-control" name="cuttingthinks" value="{{ $item1->cuttingthinks }}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 @endsection
 @section('script')

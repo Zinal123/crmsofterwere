@@ -99,4 +99,104 @@ class ProductConfigService
     {
         $this->repository->createCncThickness($data);
     }
+
+    public function updateSoftware($id, array $data): void
+    {
+        $this->repository->updateSoftware($id, $data);
+    }
+
+    public function updateLaserCutting($id, array $data): void
+    {
+        $this->repository->updateLaserCutting($id, $data);
+    }
+
+    public function updateFocusing($id, array $data): void
+    {
+        $this->repository->updateFocusing($id, $data);
+    }
+
+    public function updatePower($id, array $data): void
+    {
+        $this->repository->updatePower($id, $data);
+    }
+
+    public function updateMotor($id, array $data): void
+    {
+        $this->repository->updateMotor($id, $data);
+    }
+
+    public function updateGear($id, array $data): void
+    {
+        $this->repository->updateGear($id, $data);
+    }
+
+    public function updateRack($id, array $data): void
+    {
+        $this->repository->updateRack($id, $data);
+    }
+
+    public function updateSoftware1($id, array $data): void
+    {
+        $this->repository->updateSoftware1($id, $data);
+    }
+
+    public function updateCuttingWay($id, array $data): void
+    {
+        $this->repository->updateCuttingWay($id, $data);
+    }
+
+    public function updateCncThickness($id, array $data): void
+    {
+        $this->repository->updateCncThickness($id, $data);
+    }
+
+    public function deleteSoftware($id): void
+    {
+        $this->repository->deleteSoftware($id);
+    }
+
+    public function deleteLaserCutting($id): void
+    {
+        $this->repository->deleteLaserCutting($id);
+    }
+
+    public function deleteFocusing($id): void
+    {
+        $this->repository->deleteFocusing($id);
+    }
+
+    public function deletePower($id): void
+    {
+        $this->repository->deletePower($id);
+    }
+
+    public function deleteMotor($id): void
+    {
+        $this->repository->deleteMotor($id);
+    }
+
+    public function deleteGear($id): void
+    {
+        $this->repository->deleteGear($id);
+    }
+
+    public function deleteRack($id): void
+    {
+        $this->repository->deleteRack($id);
+    }
+
+    public function deleteSoftware1($id): void
+    {
+        $this->repository->deleteSoftware1($id);
+    }
+
+    public function deleteCuttingWay($id): void
+    {
+        $this->repository->deleteCuttingWay($id);
+    }
+
+    public function deleteCncThickness($id): void
+    {
+        $this->repository->deleteCncThickness($id);
+    }
 }

@@ -121,4 +121,104 @@ class EloquentProductConfigRepository implements ProductConfigRepositoryInterfac
     {
         return Cnsthinks::create($data);
     }
+
+    public function updateSoftware($id, array $data): void
+    {
+        Softerwere::whereKey($id)->update($data);
+    }
+
+    public function updateLaserCutting($id, array $data): void
+    {
+        Lasercutting::whereKey($id)->update($data);
+    }
+
+    public function updateFocusing($id, array $data): void
+    {
+        Fource::whereKey($id)->update($data);
+    }
+
+    public function updatePower($id, array $data): void
+    {
+        Power::whereKey($id)->update($data);
+    }
+
+    public function updateMotor($id, array $data): void
+    {
+        Motor::whereKey($id)->update($data);
+    }
+
+    public function updateGear($id, array $data): void
+    {
+        Gear::whereKey($id)->update($data);
+    }
+
+    public function updateRack($id, array $data): void
+    {
+        Rack::whereKey($id)->update($data);
+    }
+
+    public function updateSoftware1($id, array $data): void
+    {
+        Softerwere1::whereKey($id)->update($data);
+    }
+
+    public function updateCuttingWay($id, array $data): void
+    {
+        Cutting::whereKey($id)->update($data);
+    }
+
+    public function updateCncThickness($id, array $data): void
+    {
+        Cnsthinks::whereKey($id)->update($data);
+    }
+
+    public function deleteSoftware($id): void
+    {
+        Softerwere::destroy($id);
+    }
+
+    public function deleteLaserCutting($id): void
+    {
+        Lasercutting::destroy($id);
+    }
+
+    public function deleteFocusing($id): void
+    {
+        Fource::destroy($id);
+    }
+
+    public function deletePower($id): void
+    {
+        Power::destroy($id);
+    }
+
+    public function deleteMotor($id): void
+    {
+        Motor::destroy($id);
+    }
+
+    public function deleteGear($id): void
+    {
+        Gear::destroy($id);
+    }
+
+    public function deleteRack($id): void
+    {
+        Rack::destroy($id);
+    }
+
+    public function deleteSoftware1($id): void
+    {
+        Softerwere1::destroy($id);
+    }
+
+    public function deleteCuttingWay($id): void
+    {
+        Cutting::destroy($id);
+    }
+
+    public function deleteCncThickness($id): void
+    {
+        Cnsthinks::destroy($id);
+    }
 }

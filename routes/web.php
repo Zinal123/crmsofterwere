@@ -116,6 +116,27 @@ Route::middleware('auth')->group(function () {
     Route::post('rack/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackstore'])->name('rackstore')->middleware('permission:products.manage-config');
     Route::post('Software/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softwarestore'])->name('softwarestore')->middleware('permission:products.manage-config');
 
+    Route::post('softerwere/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softerwereupdate'])->name('softerwereupdate')->middleware('permission:products.manage-config');
+    Route::post('softerwere/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softereweredelete'])->name('softereweredelete')->middleware('permission:products.manage-config');
+    Route::post('cutting/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingupdate'])->name('cuttingupdate')->middleware('permission:products.manage-config');
+    Route::post('cutting/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingdelete'])->name('cuttingdelete')->middleware('permission:products.manage-config');
+    Route::post('focusing/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'focusingupdate'])->name('focusingupdate')->middleware('permission:products.manage-config');
+    Route::post('focusing/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'focusingdelete'])->name('focusingdelete')->middleware('permission:products.manage-config');
+    Route::post('power/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'powerupdate'])->name('powerupdate')->middleware('permission:products.manage-config');
+    Route::post('power/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'powerdelete'])->name('powerdelete')->middleware('permission:products.manage-config');
+    Route::post('motor/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'motorupdate'])->name('motorupdate')->middleware('permission:products.manage-config');
+    Route::post('motor/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'motordelete'])->name('motordelete')->middleware('permission:products.manage-config');
+    Route::post('gear/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'gearupdate'])->name('gearupdate')->middleware('permission:products.manage-config');
+    Route::post('gear/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'geardelete'])->name('geardelete')->middleware('permission:products.manage-config');
+    Route::post('rack/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackupdate'])->name('rackupdate')->middleware('permission:products.manage-config');
+    Route::post('rack/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackdelete'])->name('rackdelete')->middleware('permission:products.manage-config');
+    Route::post('software1/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'software1update'])->name('software1update')->middleware('permission:products.manage-config');
+    Route::post('software1/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'software1delete'])->name('software1delete')->middleware('permission:products.manage-config');
+    Route::post('cuttingway/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingwayupdate'])->name('cuttingwayupdate')->middleware('permission:products.manage-config');
+    Route::post('cuttingway/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cuttingwaydelete'])->name('cuttingwaydelete')->middleware('permission:products.manage-config');
+    Route::post('cncthinkness/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cncthinknessupdate'])->name('cncthinknessupdate')->middleware('permission:products.manage-config');
+    Route::post('cncthinkness/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'cncthinknessdelete'])->name('cncthinknessdelete')->middleware('permission:products.manage-config');
+
     Route::get('fiberqutation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtation'])->name('generatequtation')->middleware('permission:quotations.view');
     Route::post('fiberqutation/store' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtationstore'])->name('generatequtationstore')->middleware('permission:quotations.create');
     Route::get('admin/listqutation' ,[App\Http\Controllers\Quotation\QutationController::class, 'index'])->name('listqutation')->middleware('permission:quotations.view');

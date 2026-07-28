@@ -97,21 +97,25 @@ Standard Config
                                         <td>{{$item->image}}</td>
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSoftware-{{ $item->id }}" title="Edit" aria-label="Edit">
                                                     <i class="ri-pencil-fill align-bottom"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                    <i class="ri-delete-bin-fill align-bottom"></i>
-                                                </button>
+                                                <form action="{{ route('softereweredelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this software entry? This cannot be undone.');">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $id }}">
+                                                    <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                        <i class="ri-delete-bin-fill align-bottom"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
                                    @endforeach
-                                       
+
                                 </tbody>
                             </table>
                                </div>
-                                
+
                             </div><!--end tab-pane-->
                             <div class="tab-pane fade" id="custom-v-pills-profile" role="tabpanel" aria-labelledby="custom-v-pills-profile-tab">
                                 <div class = "row">
@@ -149,18 +153,21 @@ Standard Config
                                             <td>{{$item1->image}}</td>
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLasercutting-{{ $item1->id }}" title="Edit" aria-label="Edit">
                                                         <i class="ri-pencil-fill align-bottom"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
-                                                    </button>
+                                                    <form action="{{ route('cuttingdelete', $item1->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this laser cutting machine entry? This cannot be undone.');">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $id }}">
+                                                        <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
                                        @endforeach
-                                       
-                                           
+
                                     </tbody>
                                 </table>
                                    </div>
@@ -201,18 +208,21 @@ Standard Config
                                             <td>{{$item2->image}}</td>
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editFocusing-{{ $item2->id }}" title="Edit" aria-label="Edit">
                                                         <i class="ri-pencil-fill align-bottom"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
-                                                    </button>
+                                                    <form action="{{ route('focusingdelete', $item2->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this focusing laser cutting head entry? This cannot be undone.');">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $id }}">
+                                                        <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
                                        @endforeach
-                                       
-                                           
+
                                     </tbody>
                                 </table>
                                    </div>
@@ -253,18 +263,21 @@ Standard Config
                                             <td>{{$item3->image}}</td>
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-primary btn-sm edit-item-btn" data-bs-toggle="tooltip" title="Edit" aria-label="Edit">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPower-{{ $item3->id }}" title="Edit" aria-label="Edit">
                                                         <i class="ri-pencil-fill align-bottom"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-soft-danger btn-sm remove-item-btn" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
-                                                    </button>
+                                                    <form action="{{ route('powerdelete', $item3->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this power source entry? This cannot be undone.');">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $id }}">
+                                                        <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
                                        @endforeach
-                                       
-                                           
+
                                     </tbody>
                                 </table>
                                    </div>
@@ -315,7 +328,7 @@ Standard Config
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress" rows="3" placeholder="Company Address" name = "description"></textarea>
                         </div>
                     </div>
                     <br>
@@ -332,6 +345,45 @@ Standard Config
         </div>
     </div>
 </div>
+
+@foreach($softwere as $item)
+<div class="modal fade" id="editSoftware-{{ $item->id }}" tabindex="-1" aria-labelledby="editSoftware-{{ $item->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSoftware-{{ $item->id }}-label">Edit Softwere</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('softerwereupdate', $item->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="company" value="{{ $item->company }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Modal Name</label>
+                            <input type="text" class="form-control" name="modal" value="{{ $item->modal }}">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" name="description">{{ $item->description }}</textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <div class="modal fade" id="exampleModalgrid1" tabindex="-1" aria-labelledby="exampleModalgrid1Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
@@ -386,6 +438,45 @@ Standard Config
     </div>
 </div>
 
+@foreach($Lasercutting as $item1)
+<div class="modal fade" id="editLasercutting-{{ $item1->id }}" tabindex="-1" aria-labelledby="editLasercutting-{{ $item1->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLasercutting-{{ $item1->id }}-label">Edit Laser Cutting Machine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('cuttingupdate', $item1->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="company" value="{{ $item1->company }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Modal Name</label>
+                            <input type="text" class="form-control" name="modal" value="{{ $item1->modal }}">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" name="decription">{{ $item1->decription }}</textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <div class="modal fade" id="exampleModalgrid2" tabindex="-1" aria-labelledby="exampleModalgrid2Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -399,7 +490,7 @@ Standard Config
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="firstName-5"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-5"  name = "company" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id2"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
@@ -421,7 +512,7 @@ Standard Config
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" id="companyAddress-3" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-3" rows="3" placeholder="Company Address" name = "description"></textarea>
                         </div>
                     </div>
                     
@@ -439,6 +530,46 @@ Standard Config
         </div>
     </div>
 </div>
+
+@foreach($Focusing as $item2)
+<div class="modal fade" id="editFocusing-{{ $item2->id }}" tabindex="-1" aria-labelledby="editFocusing-{{ $item2->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFocusing-{{ $item2->id }}-label">Edit Focusing Laser Cutting Head</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('focusingupdate', $item2->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="company" value="{{ $item2->company }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Modal Name</label>
+                            <input type="text" class="form-control" name="modal" value="{{ $item2->modal }}">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Product Details</label>
+                            <textarea class="form-control bg-light border-0" rows="3" name="description">{{ $item2->description }}</textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <div class="modal fade" id="exampleModalgrid3" tabindex="-1" aria-labelledby="exampleModalgrid3Label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -452,7 +583,7 @@ Standard Config
                     <div class ="row">
                         <div class ="col-md-3">
                             <label for="firstName" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="firstName-7"  name = "companyname" placeholder="Enter Product">
+                            <input type="text" class="form-control" id="firstName-7"  name = "company" placeholder="Enter Product">
                             <input type="text" class="form-control" id="product_id3"  name = "product_id" placeholder="Enter Product">
                         </div>
                         <div class ="col-md-3">
@@ -474,7 +605,7 @@ Standard Config
                     <div class ="row">
                         <div class ="col-md-12">
                             <label for="firstName" class="form-label">Product Details</label>
-                            <textarea class="form-control bg-light border-0" id="companyAddress-4" rows="3" placeholder="Company Address" name = "details"></textarea>
+                            <textarea class="form-control bg-light border-0" id="companyAddress-4" rows="3" placeholder="Company Address" name = "description"></textarea>
                         </div>
                     </div>
                     

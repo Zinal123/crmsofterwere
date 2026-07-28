@@ -37,4 +37,26 @@ interface ProductConfigRepositoryInterface
     public function createSoftware1(array $data): Softerwere1;
     public function createCuttingWay(array $data): Cutting;
     public function createCncThickness(array $data): Cnsthinks;
+
+    public function updateSoftware($id, array $data): void;
+    public function updateLaserCutting($id, array $data): void;
+    public function updateFocusing($id, array $data): void;
+    public function updatePower($id, array $data): void;
+    public function updateMotor($id, array $data): void;
+    public function updateGear($id, array $data): void;
+    public function updateRack($id, array $data): void;
+    public function updateSoftware1($id, array $data): void;
+    public function updateCuttingWay($id, array $data): void;
+    public function updateCncThickness($id, array $data): void;
+
+    public function deleteSoftware($id): void;
+    public function deleteLaserCutting($id): void;
+    public function deleteFocusing($id): void;
+    public function deletePower($id): void;
+    public function deleteMotor($id): void;
+    public function deleteGear($id): void;
+    public function deleteRack($id): void;
+    public function deleteSoftware1($id): void;
+    public function deleteCuttingWay($id): void;
+    public function deleteCncThickness($id): void;
 }

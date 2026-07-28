@@ -94,12 +94,16 @@ Standard Config List
                                         
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-soft-primary btn-sm edit"  data-bs-toggle="modal" data-id="{{$item->id}}" title="Edit" aria-label="Edit">
+                                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editMotor-{{ $item->id }}" title="Edit" aria-label="Edit">
                                                      <i class="ri-pencil-fill align-bottom"></i>
                                                    </button>
-                                                   <button type="button" class="btn btn-soft-danger btn-sm" id = "delete" data-bs-toggle="modal" data-id="{{$item->id}}" title="Delete" aria-label="Delete">
-                                                     <i class="ri-delete-bin-fill align-bottom"></i>
-                                                   </button>
+                                                   <form action="{{ route('motordelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this motor entry? This cannot be undone.');">
+                                                       @csrf
+                                                       <input type="hidden" name="product_id" value="{{ $id }}">
+                                                       <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                         <i class="ri-delete-bin-fill align-bottom"></i>
+                                                       </button>
+                                                   </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -147,12 +151,16 @@ Standard Config List
                                            
                                                 <td>
                                                     <div class="d-flex gap-2 flex-wrap">
-                                                        <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item2->id}}" title="Edit" aria-label="Edit">
+                                                        <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editGear-{{ $item2->id }}" title="Edit" aria-label="Edit">
                                                              <i class="ri-pencil-fill align-bottom"></i>
                                                            </button>
-                                                           <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item2->id}}" title="Delete" aria-label="Delete">
-                                                             <i class="ri-delete-bin-fill align-bottom"></i>
-                                                           </button>
+                                                           <form action="{{ route('geardelete', $item2->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this gear entry? This cannot be undone.');">
+                                                               @csrf
+                                                               <input type="hidden" name="product_id" value="{{ $id }}">
+                                                               <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                                 <i class="ri-delete-bin-fill align-bottom"></i>
+                                                               </button>
+                                                           </form>
                                                     </div>
                                                 </td>
                                         
@@ -197,12 +205,16 @@ Standard Config List
                                             
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item3->id}}" title="Edit" aria-label="Edit">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editRack-{{ $item3->id }}" title="Edit" aria-label="Edit">
                                                         <i class="ri-pencil-fill align-bottom"></i>
                                                       </button>
-                                                      <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item3->id}}" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
-                                                      </button>
+                                                      <form action="{{ route('rackdelete', $item3->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this rack entry? This cannot be undone.');">
+                                                          @csrf
+                                                          <input type="hidden" name="product_id" value="{{ $id }}">
+                                                          <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                          </button>
+                                                      </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -246,12 +258,16 @@ Standard Config List
                                             <td>{{$item4->image}}</td>
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
-                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="{{$item4->id}}" title="Edit" aria-label="Edit">
+                                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSoftware1-{{ $item4->id }}" title="Edit" aria-label="Edit">
                                                         <i class="ri-pencil-fill align-bottom"></i>
                                                       </button>
-                                                      <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-id="{{$item4->id}}" title="Delete" aria-label="Delete">
-                                                        <i class="ri-delete-bin-fill align-bottom"></i>
-                                                      </button>
+                                                      <form action="{{ route('software1delete', $item4->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this software entry? This cannot be undone.');">
+                                                          @csrf
+                                                          <input type="hidden" name="product_id" value="{{ $id }}">
+                                                          <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                                          </button>
+                                                      </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -427,40 +443,121 @@ Standard Config List
         </div>
     </div>
 </div>
-<div class="modal fade" id="editsofterwere" tabindex="-1" aria-labelledby="editsofterwereLabel" aria-modal="true">
+@foreach($Motor as $item)
+<div class="modal fade" id="editMotor-{{ $item->id }}" tabindex="-1" aria-labelledby="editMotor-{{ $item->id }}-label" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editsofterwereLabel">Add Softwere</h5>
+                <h5 class="modal-title" id="editMotor-{{ $item->id }}-label">Edit Motor</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('softwarestore')}}" method="POST">
+                <form action="{{ route('motorupdate', $item->id) }}" method="POST">
                     @csrf
-                    <div class ="row">
-                        <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="firstName-5"  name = "companyname" placeholder="Enter Product">
-                            <input type="text" class="form-control" id="product_id4-2"  name = "product_id" placeholder="Enter Product">
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyname" value="{{ $item->companyname }}">
                         </div>
-                       
-                        <div class ="col-md-3">
-                            <label for="firstName" class="form-label">Logo</label>
-                            <input type="file" class="filepond filepond-input-multiple" multiple name="filepond" name = "image"
-                            data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3">
-                        </div>
-                        
                     </div>
                     <br>
-                       <div class="col-lg-12">
-                            @include('partials.modal-footer-buttons')
-                        </div><!--end col-->
-                    </div><!--end row-->
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
                 </form>
             </div>
         </div>
     </div>
 </div>
+@endforeach
+
+@foreach($Gear as $item2)
+<div class="modal fade" id="editGear-{{ $item2->id }}" tabindex="-1" aria-labelledby="editGear-{{ $item2->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editGear-{{ $item2->id }}-label">Edit Gear</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('gearupdate', $item2->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyname" value="{{ $item2->companyname }}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach($Rack as $item3)
+<div class="modal fade" id="editRack-{{ $item3->id }}" tabindex="-1" aria-labelledby="editRack-{{ $item3->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRack-{{ $item3->id }}-label">Edit Rack</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('rackupdate', $item3->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyname" value="{{ $item3->companyname }}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach($Softerwere1 as $item4)
+<div class="modal fade" id="editSoftware1-{{ $item4->id }}" tabindex="-1" aria-labelledby="editSoftware1-{{ $item4->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSoftware1-{{ $item4->id }}-label">Edit Software Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('software1update', $item4->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $id }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyname" value="{{ $item4->companyname }}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        @include('partials.modal-footer-buttons')
+                    </div><!--end col-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
@@ -528,24 +625,5 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
                 });
                 });
                 </script>
-              <script>
-                $(document).ready(function(){
-                     $(document).on('click','.edit',function(){
-                        var id = $(this).val();
-                        ('#editsofterwere').modal('show');
-                        $.ajax({
-                           type:"GET",
-                           url:"{ url('softerwere/show') }},",
-                           success:function(response){
-                              $('#bookId').val(response.bookdata.book_id);
-                              $('#bookName').val(response.bookdata.book_name);
-                              $('#bookAuthor').val(response.bookdata.book_author);
-                              $('#bookStatus').val(response.bookdata.book_status);
-                              $('#bookId').val(book_id);
-                           }
-                        });
-                     });
-                  });
-            </script>
 
 @endsection
