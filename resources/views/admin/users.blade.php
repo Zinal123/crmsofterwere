@@ -86,7 +86,7 @@ Users
                                         @endforeach
                                     </select>
                                     <input type="hidden" name="is_active" value="{{ $user->is_active ? '0' : '1' }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary" aria-label="{{ $user->is_active ? 'Deactivate user' : 'Activate user' }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
                                         <i class="{{ $user->is_active ? 'ri-user-unfollow-line' : 'ri-user-follow-line' }} align-bottom"></i>
                                         {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                     </button>

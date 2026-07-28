@@ -43,7 +43,7 @@ Ticket #{{ $ticket->id }}
                     <div class="row g-2">
                         @foreach($ticket->photos as $photo)
                         <div class="col-6 col-md-3">
-                            <img src="{{ asset('storage/' . $photo->path) }}" class="img-fluid rounded" alt="Ticket photo">
+                            <img src="{{ asset('storage/' . $photo->path) }}" class="img-fluid rounded" alt="Ticket #{{ $ticket->id }} attachment {{ $loop->iteration }}">
                         </div>
                         @endforeach
                     </div>
