@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Quotation;
 
 use App\Http\Controllers\Controller;
 use App\Services\Quotation\QuotationService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class QutationController extends Controller
@@ -30,7 +31,10 @@ class QutationController extends Controller
 
     public function print($id)
     {
-        return view('queationpdf', $this->service->getQuotationPdfData($id));
+        $data = $this->service->getQuotationPdfData($id);
+        $pdf = Pdf::loadView('pdf.quotation', $data)->setPaper('a4');
+
+        return $pdf->download('Quotation-' . $data['quotation']->id . '.pdf');
     }
 
     public function delete($id)

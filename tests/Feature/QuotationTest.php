@@ -241,15 +241,45 @@ class QuotationTest extends TestCase
         $response = $this->actingAs($user)->get(route('quation.pdf', $quotation->id));
 
         $response->assertOk();
-        $response->assertSee('PDF Test Client');
-        $response->assertSee('PDF Test Company');
-        $response->assertSee('123 Test Street');
-        $response->assertSee('GSTTEST123');
-        $response->assertSee('Machine unit');
-        $response->assertSee(\App\Support\IndianNumber::format(250000));
-        $response->assertSee('info@oraclemachinetech.com');
-        $response->assertDontSee('technolinksolution', false);
-        $response->assertDontSee('JALASAI ENTERPRISES', false);
+        $response->assertHeader('Content-Type', 'application/pdf');
+        $response->assertHeader('Content-Disposition', 'attachment; filename=Quotation-' . $quotation->id . '.pdf');
+
+        // Case-insensitive: dompdf bakes CSS text-transform (uppercase/
+        // capitalize) into the actual glyphs it draws, unlike HTML where
+        // it's purely visual - so the PDF's text content stream doesn't
+        // necessarily preserve the source string's original casing.
+        $text = strtolower($this->extractPdfText($response->getContent()));
+        $this->assertStringContainsString('pdf test client', $text);
+        $this->assertStringContainsString('pdf test company', $text);
+        $this->assertStringContainsString('123 test street', $text);
+        $this->assertStringContainsString('gsttest123', $text);
+        $this->assertStringContainsString('machine unit', $text);
+        $this->assertStringContainsString(\App\Support\IndianNumber::format(250000), $text);
+        $this->assertStringContainsString('info@oraclemachinetech.com', $text);
+        $this->assertStringNotContainsString('technolinksolution', $text);
+        $this->assertStringNotContainsString('jalasai enterprises', $text);
+    }
+
+    /**
+     * dompdf compresses each content stream with zlib (FlateDecode), so the
+     * rendered text isn't visible in the raw response bytes the way plain
+     * HTML would be. This pulls every stream/endstream block out of the PDF
+     * and inflates the flate-compressed ones back to plain text so tests can
+     * assert on what actually ended up on the page.
+     */
+    private function extractPdfText(string $pdf): string
+    {
+        preg_match_all('/stream\r?\n(.*?)\r?\nendstream/s', $pdf, $matches);
+
+        $text = '';
+        foreach ($matches[1] as $stream) {
+            $inflated = @gzuncompress($stream);
+            if ($inflated !== false) {
+                $text .= $inflated;
+            }
+        }
+
+        return $text;
     }
 
     public function test_printquation_pdf_page_returns_404_for_a_missing_quotation(): void
