@@ -24,6 +24,7 @@ use App\Repositories\Contracts\SparePartRequestRepositoryInterface;
 use App\Repositories\Contracts\TicketProblemTypeRepositoryInterface;
 use App\Repositories\Contracts\TicketRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\VendorRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAttendanceRepository;
 use App\Repositories\Eloquent\EloquentAuditLogRepository;
 use App\Repositories\Eloquent\EloquentBankRepository;
@@ -46,6 +47,7 @@ use App\Repositories\Eloquent\EloquentSparePartRequestRepository;
 use App\Repositories\Eloquent\EloquentTicketProblemTypeRepository;
 use App\Repositories\Eloquent\EloquentTicketRepository;
 use App\Repositories\Eloquent\EloquentUserRepository;
+use App\Repositories\Eloquent\EloquentVendorRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -74,5 +76,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TicketProblemTypeRepositoryInterface::class, EloquentTicketProblemTypeRepository::class);
         $this->app->bind(TicketRepositoryInterface::class, EloquentTicketRepository::class);
         $this->app->bind(SparePartRequestRepositoryInterface::class, EloquentSparePartRequestRepository::class);
+        $this->app->bind(VendorRepositoryInterface::class, EloquentVendorRepository::class);
     }
 }

@@ -32,10 +32,7 @@ $Vender = App\Models\Customer::leftJoin('invoice', 'customer.invoice_id', '=', '
 
 <div class="row">
     <div class="col-lg-12">
-        <x-ui.data-table-card title="Vendors">
-            <div class="d-flex gap-2 flex-wrap mb-3">
-                <button class="btn btn-primary" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-            </div>
+        <x-ui.data-table-card title="Customers">
             <div class="table-responsive">
                 <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width:100%">

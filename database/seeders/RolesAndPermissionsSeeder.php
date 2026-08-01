@@ -13,7 +13,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'products.view', 'products.create', 'products.delete', 'products.manage-config',
         'inventory.view', 'inventory.create', 'inventory.update', 'inventory.view-audit',
         'invoices.view', 'invoices.create', 'invoices.view-details', 'invoices.record-payment',
-        'vendors.view',
+        'vendors.view', 'vendors.manage',
         'payment-history.view',
         'quotations.view', 'quotations.create', 'quotations.download-pdf', 'quotations.delete',
         'admin.manage-roles',

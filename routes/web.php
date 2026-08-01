@@ -165,6 +165,13 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:client-machines.view')->get('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'index'])->name('admin.client-machines.index');
     Route::middleware('permission:client-machines.manage')->post('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'store'])->name('admin.client-machines.store');
 
+    Route::middleware('permission:vendors.view')->get('admin/vendors', [App\Http\Controllers\Vendor\VendorController::class, 'index'])->name('admin.vendors.index');
+    Route::middleware('permission:vendors.manage')->group(function () {
+        Route::post('admin/vendors', [App\Http\Controllers\Vendor\VendorController::class, 'store'])->name('admin.vendors.store');
+        Route::put('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'update'])->name('admin.vendors.update');
+        Route::delete('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'destroy'])->name('admin.vendors.destroy');
+    });
+
     Route::middleware('permission:ticket-problem-types.manage')->group(function () {
         Route::get('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'index'])->name('admin.ticket-problem-types.index');
         Route::post('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'store'])->name('admin.ticket-problem-types.store');

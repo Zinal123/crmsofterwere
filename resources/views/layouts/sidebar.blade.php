@@ -40,7 +40,7 @@
                 </li> <!-- end Dashboard Menu -->
                 @endcan
 
-                @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage'])
+                @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage', 'vendors.view'])
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')
                 <li class="nav-item">
@@ -80,6 +80,11 @@
                 @can('ticket-problem-types.manage')
                 <li class="nav-item">
                     <a href="{{route('admin.ticket-problem-types.index')}}" class="nav-link"><i class="ri-error-warning-line"></i><span>@lang('Problem Types')</span></a>
+                </li>
+                @endcan
+                @can('vendors.view')
+                <li class="nav-item">
+                    <a href="{{route('admin.vendors.index')}}" class="nav-link"><i class="ri-truck-line"></i><span>@lang('Vendors')</span></a>
                 </li>
                 @endcan
                 @endcanany
