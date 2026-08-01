@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Oracle Machine Tech client support portal" name="description" />
-    <meta name="theme-color" content="#c2410c">
+    <meta name="theme-color" content="#4361ee">
     <link rel="manifest" href="{{ URL::asset('manifest.json') }}">
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
     @include('layouts.head-css')

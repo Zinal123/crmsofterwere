@@ -1,17 +1,101 @@
 <style>
-    .oms-auth {
+    .oms-auth-shell {
         min-height: 100vh;
         min-height: 100dvh;
+        display: flex;
+        background: #F0F4FF;
+    }
+
+    /* ── Hero panel (branding) — desktop only ────────────────────────── */
+    .oms-auth-hero {
+        display: none;
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(150deg, #0D1B48 0%, #1a2d6b 60%, #0D1B48 100%);
+    }
+
+    .oms-auth-hero-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, .06);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .oms-auth-hero-ring-1 { width: 34rem; height: 34rem; }
+    .oms-auth-hero-ring-2 { width: 22rem; height: 22rem; }
+
+    .oms-auth-hero-glow {
+        position: absolute;
+        width: 16rem;
+        height: 16rem;
+        border-radius: 50%;
+        opacity: .18;
+        filter: blur(70px);
+        pointer-events: none;
+    }
+
+    .oms-auth-hero-glow-1 { top: 0; left: 0; background: radial-gradient(circle, #F7941D, transparent); }
+    .oms-auth-hero-glow-2 { bottom: 0; right: 0; background: radial-gradient(circle, #4361EE, transparent); }
+
+    .oms-auth-hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #fff;
+        padding: 2rem;
+    }
+
+    .oms-auth-hero-badge {
+        width: 108px;
+        height: 108px;
+        margin: 0 auto 1.5rem;
+        border-radius: 1.5rem;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .5);
+        padding: .75rem;
+    }
+
+    .oms-auth-hero-badge img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .oms-auth-hero-content h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -.01em;
+        margin-bottom: .375rem;
+    }
+
+    .oms-auth-hero-content p {
+        color: rgba(255, 255, 255, .5);
+        font-size: .875rem;
+        margin: 0;
+    }
+
+    @media (min-width: 992px) {
+        .oms-auth-hero { display: flex; }
+    }
+
+    /* ── Form panel ───────────────────────────────────────────────────── */
+    .oms-auth-panel {
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 2rem;
-        background:
-            radial-gradient(1100px circle at 85% -10%, rgba(194, 65, 12, .10), transparent 60%),
-            radial-gradient(900px circle at -10% 110%, rgba(194, 65, 12, .08), transparent 60%),
-            radial-gradient(rgba(194, 65, 12, .09) 1px, transparent 1px) 0 0 / 24px 24px,
-            #faf6f0;
+        width: 100%;
+    }
+
+    @media (min-width: 992px) {
+        .oms-auth-panel { flex: 0 0 440px; }
     }
 
     .oms-auth-logo {
@@ -24,9 +108,14 @@
 
     .oms-auth-tagline {
         text-align: center;
-        color: #9a8a7c;
+        color: #6B7BB8;
         font-size: .85rem;
         margin: -.75rem 0 1.75rem;
+    }
+
+    @media (min-width: 992px) {
+        .oms-auth-logo,
+        .oms-auth-tagline { display: none; }
     }
 
     .oms-auth-card {
@@ -34,10 +123,10 @@
         width: 100%;
         max-width: 25rem;
         background: #fff;
-        border: 1px solid #f0e5da;
+        border: 1px solid rgba(67, 97, 238, .12);
         border-radius: 1rem;
         overflow: hidden;
-        box-shadow: 0 1px 2px rgba(60, 40, 20, .04), 0 20px 40px -18px rgba(120, 60, 20, .22);
+        box-shadow: 0 1px 2px rgba(13, 27, 72, .04), 0 20px 40px -18px rgba(13, 27, 72, .18);
         padding: 2.25rem 2rem 2rem;
     }
 
@@ -48,7 +137,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #c2410c, #f59e0b);
+        background: linear-gradient(90deg, #4361EE, #F7941D);
     }
 
     .oms-auth-badge {
@@ -58,14 +147,14 @@
         align-items: center;
         justify-content: center;
         border-radius: .75rem;
-        background: linear-gradient(135deg, rgba(194, 65, 12, .12), rgba(245, 158, 11, .14));
-        color: #c2410c;
+        background: linear-gradient(135deg, rgba(67, 97, 238, .12), rgba(247, 148, 29, .14));
+        color: #4361EE;
         font-size: 1.2rem;
         margin-bottom: .9rem;
     }
 
     .oms-auth-card-header h5 {
-        color: #7c2d12;
+        color: #0D1B48;
         font-weight: 700;
     }
 
@@ -78,7 +167,7 @@
         left: .95rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #c2833f;
+        color: #6B7BB8;
         font-size: 1.05rem;
         pointer-events: none;
     }
@@ -86,12 +175,13 @@
     .oms-auth-card .form-control {
         border-radius: .6rem;
         padding-block: .62rem;
-        border-color: #e7d9cd;
+        border-color: #E4EAFB;
+        background: #EEF2FF;
     }
 
     .oms-auth-card .form-control:focus {
-        border-color: #c2410c;
-        box-shadow: 0 0 0 .2rem rgba(194, 65, 12, .15);
+        border-color: #4361EE;
+        box-shadow: 0 0 0 .2rem rgba(67, 97, 238, .15);
     }
 
     .oms-auth-card .btn-success {
@@ -110,14 +200,14 @@
     .oms-auth-below {
         text-align: center;
         font-size: .9rem;
-        color: #6b5e52;
+        color: #6B7BB8;
         margin-top: 1.5rem;
     }
 
     .oms-auth-footer {
         text-align: center;
         font-size: .8rem;
-        color: #9a8a7c;
+        color: #93A0C9;
         margin-top: 1.75rem;
     }
 </style>

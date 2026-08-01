@@ -6,7 +6,9 @@
 @include('auth.partials.styles')
 @endsection
 @section('content')
-<div class="oms-auth">
+<div class="oms-auth-shell">
+    @include('auth.partials.hero')
+    <div class="oms-auth-panel">
     <a href="{{ route('root') }}" class="oms-auth-logo">
         <img src="{{ URL::asset('build/images/oracallogo.png') }}" alt="Oracle Machine Tech">
     </a>
@@ -65,6 +67,7 @@
     </div>
 
     <p class="oms-auth-footer mb-0">&copy; {{ date('Y') }} Oracle Machine Tech. All rights reserved.</p>
+    </div>
 </div>
 @endsection
 @section('script')
