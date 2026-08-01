@@ -56,9 +56,25 @@ Users
                     <tbody>
                         @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->name }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-xs flex-shrink-0">
+                                        <span class="avatar-title rounded-circle bg-primary-subtle text-primary fs-13">
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </span>
+                                    </div>
+                                    <span>{{ $user->name }}</span>
+                                </div>
+                            </td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->roles->pluck('name')->first() ?? '-' }}</td>
+                            <td>
+                                @php $roleName = $user->roles->pluck('name')->first(); @endphp
+                                @if($roleName)
+                                    <span class="badge bg-{{ $roleName === 'Owner' ? 'primary' : 'secondary' }}-subtle text-{{ $roleName === 'Owner' ? 'primary' : 'secondary' }}">{{ $roleName }}</span>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>
                                 <x-ui.status-badge
                                     :status="$user->is_active ? 'Active' : 'Inactive'"

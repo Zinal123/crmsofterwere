@@ -39,12 +39,14 @@ Roles & Permissions
                             <th>Permission</th>
                             @foreach($roles as $role)
                                 <th class="text-center">
-                                    {{ $role->name }}
+                                    <span class="badge bg-primary-subtle text-primary fs-12">{{ $role->name }}</span>
                                     @if($role->name !== 'Owner')
                                         <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this role?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1">&times;</button>
+                                            <button type="submit" class="btn btn-soft-danger btn-sm p-1 ms-1" data-bs-toggle="tooltip" title="Delete Role" aria-label="Delete Role">
+                                                <i class="ri-delete-bin-line align-bottom"></i>
+                                            </button>
                                         </form>
                                     @endif
                                 </th>
@@ -57,11 +59,14 @@ Roles & Permissions
                             <td>{{ $permission }}</td>
                             @foreach($roles as $role)
                                 <td class="text-center">
-                                    <input type="checkbox"
-                                        class="form-check-input permission-toggle"
-                                        data-role-id="{{ $role->id }}"
-                                        data-permission="{{ $permission }}"
-                                        {{ $role->permissions->pluck('name')->contains($permission) ? 'checked' : '' }}>
+                                    <div class="form-check form-switch d-flex justify-content-center mb-0">
+                                        <input type="checkbox"
+                                            class="form-check-input permission-toggle"
+                                            data-role-id="{{ $role->id }}"
+                                            data-permission="{{ $permission }}"
+                                            aria-label="{{ $permission }} for {{ $role->name }}"
+                                            {{ $role->permissions->pluck('name')->contains($permission) ? 'checked' : '' }}>
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
