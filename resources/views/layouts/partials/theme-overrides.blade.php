@@ -5,12 +5,24 @@
        existing Velzon build - same mechanism as the previous single-color
        brand theme, extended with the sidebar/background/radius tokens the
        old override didn't touch. */
-    :root, [data-bs-theme=light] {
-        --vz-body-bg: #F0F4FF;
+    :root {
+        /* Radius applies regardless of theme - not a light/dark concern. */
         --vz-border-radius: .5rem;
         --vz-border-radius-sm: .375rem;
         --vz-border-radius-lg: .75rem;
         --vz-border-radius-xl: 1rem;
+    }
+
+    /* Scoped to light mode only - a bare :root rule here would win the
+       cascade over Velzon's own [data-bs-theme=dark] body-bg (same
+       specificity, later source order) and leave dark mode showing this
+       light background instead of a dark one. */
+    [data-bs-theme=light] {
+        --vz-body-bg: #F0F4FF;
+    }
+
+    [data-bs-theme=dark] {
+        --vz-body-bg: #070D24;
     }
 
     :root[data-sidebar=dark] {

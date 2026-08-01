@@ -143,7 +143,7 @@ class ProductConfigController extends Controller
     public function focusingupdate(Request $request, $id)
     {
         $this->requireProductId($request);
-        $this->service->updateFocusing($id, $request->only(['company', 'product_id', 'modal', 'details']));
+        $this->service->updateFocusing($id, $request->only(['company', 'product_id', 'modal', 'description']));
         return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
     }
 
@@ -157,7 +157,7 @@ class ProductConfigController extends Controller
     public function powerupdate(Request $request, $id)
     {
         $this->requireProductId($request);
-        $this->service->updatePower($id, $request->only(['company', 'product_id', 'modal', 'details']));
+        $this->service->updatePower($id, $request->only(['company', 'product_id', 'modal', 'description']));
         return view('standerconfig', $this->service->getConfigViewData($request->input('product_id')));
     }
 
