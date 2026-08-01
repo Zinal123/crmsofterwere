@@ -82,7 +82,7 @@ list view
                                     @endif
                                 @endcan
                                 @can('spare-parts.manage')
-                                <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ $item->is_spare_part ? 'Unmark this as a spare part? Clients will no longer be able to request it.' : 'Mark this as a spare part? It will become requestable by clients in the portal.' }}');">
                                     @csrf
                                     <button type="submit" class="btn btn-soft-{{ $item->is_spare_part ? 'warning' : 'secondary' }} btn-sm" title="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}" aria-label="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}">
                                         <i class="ri-tools-fill align-bottom"></i>

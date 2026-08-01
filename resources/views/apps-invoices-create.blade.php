@@ -170,24 +170,28 @@
                                 <label for="billingName" class="text-muted text-uppercase fw-semibold">Billing Address <span class="text-danger">*</span></label>
                             </div>
                             <div class="mb-2">
+                                <label for="billingName" class="form-label">Full Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control bg-light border-0" id="billingName" placeholder="Full Name" required />
                                 <div class="invalid-feedback">
                                     Please enter a full name
                                 </div>
                             </div>
                             <div class="mb-2">
+                                <label for="billingAddress" class="form-label">Address <span class="text-danger">*</span></label>
                                 <textarea class="form-control bg-light border-0" id="billingAddress" rows="3" placeholder="Address" required></textarea>
                                 <div class="invalid-feedback">
                                     Please enter a address
                                 </div>
                             </div>
                             <div class="mb-2">
+                                <label for="billingPhoneno" class="form-label">Phone <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control bg-light border-0"  id="billingPhoneno" placeholder="Phone"  minlength="10" maxlength="11" required />
                                 <div class="invalid-feedback">
                                         The phone must contain 10 digits
                                     </div>
                             </div>
                             <div class="mb-3">
+                                <label for="billingstate" class="form-label">State <span class="text-danger">*</span></label>
                                 <select class="form-select bg-light border-0" id="billingstate" required>
                                     <option value="">Select State</option>
                                     @foreach($states as $stateOption)
@@ -199,12 +203,14 @@
                                 </div>
                             </div>
                             <div class="mb-3">
+                                <label for="billinggst" class="form-label">GST <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control bg-light border-0" id="billinggst" placeholder="GST" required />
                                 <div class="invalid-feedback">
                                     Please enter a GST number
                                 </div>
                             </div>
                             <div class="mb-3">
+                                <label for="billingpan" class="form-label">PAN Number <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control bg-light border-0" id="billingpan" placeholder="PAN Number" required />
                                 <div class="invalid-feedback">
                                     Please enter a PAN number
@@ -226,24 +232,28 @@
                                         <label for="shippingName" class="text-muted text-uppercase fw-semibold">Shipping Address <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippingName" class="form-label">Full Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control bg-light border-0" id="shippingName" placeholder="Full Name" required />
                                         <div class="invalid-feedback">
                                             Please enter a full name
                                         </div>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippingAddress" class="form-label">Address <span class="text-danger">*</span></label>
                                         <textarea class="form-control bg-light border-0" id="shippingAddress" rows="3" placeholder="Address" required></textarea>
                                         <div class="invalid-feedback">
                                             Please enter a address
                                         </div>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippingPhoneno" class="form-label">Phone <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control bg-light border-0"  id="shippingPhoneno"  placeholder="Phone"  minlength="10" maxlength="11" required />
                                         <div class="invalid-feedback">
                                             Please enter a phone number
                                         </div>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippingstate" class="form-label">State <span class="text-danger">*</span></label>
                                         <select class="form-select bg-light border-0" id="shippingstate" required>
                                             <option value="">Select State</option>
                                             @foreach($states as $stateOption)
@@ -255,12 +265,14 @@
                                         </div>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippinggst" class="form-label">GST <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control bg-light border-0" id="shippinggst" placeholder="GST" required />
                                         <div class="invalid-feedback">
                                             Please enter a GST number
                                         </div>
                                     </div>
                                     <div class="mb-2">
+                                        <label for="shippingpan" class="form-label">PAN Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control bg-light border-0" id="shippingpan" placeholder="PAN Number" required />
                                         <div class="invalid-feedback">
                                             Please enter a PAN number
