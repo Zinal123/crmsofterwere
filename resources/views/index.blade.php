@@ -61,8 +61,8 @@
                                     <a href="{{ route('invoice') }}" class="text-decoration-underline">View all invoices</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-success-subtle rounded fs-3">
-                                        <i class="ri-money-rupee-circle-line text-success"></i>
+                                    <span class="avatar-title rounded fs-3 text-white" style="background:#4361EE;">
+                                        <i class="ri-money-rupee-circle-line"></i>
                                     </span>
                                 </div>
                             </div>
@@ -86,8 +86,8 @@
                                     <a href="{{ route('invoice') }}" class="text-decoration-underline">View all invoices</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-info-subtle rounded fs-3">
-                                        <i class="ri-shopping-bag-3-line text-info"></i>
+                                    <span class="avatar-title rounded fs-3 text-white" style="background:#F7941D;">
+                                        <i class="ri-shopping-bag-3-line"></i>
                                     </span>
                                 </div>
                             </div>
@@ -111,8 +111,8 @@
                                     <a href="{{ route('invoice.vender') }}" class="text-decoration-underline">See details</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                        <i class="ri-user-line text-warning"></i>
+                                    <span class="avatar-title rounded fs-3 text-white" style="background:#10B981;">
+                                        <i class="ri-user-line"></i>
                                     </span>
                                 </div>
                             </div>
@@ -136,8 +136,8 @@
                                     <a href="{{ route('invoice') }}" class="text-decoration-underline">View all invoices</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="ri-wallet-3-line text-primary"></i>
+                                    <span class="avatar-title rounded fs-3 text-white" style="background:#7B2FBE;">
+                                        <i class="ri-wallet-3-line"></i>
                                     </span>
                                 </div>
                             </div>
