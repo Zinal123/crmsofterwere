@@ -50,6 +50,16 @@ class LoginController extends Controller
             return redirect('/login')->with('error', 'Your account has been deactivated. Contact an administrator.');
         }
 
+        // The Worker role has no dashboard.view permission (by design - it's
+        // scoped to just its own jobs), but $redirectTo always points at '/'.
+        // Without this, a Worker's very first page after a real login (not a
+        // deep link caught by intended()) is a 403, before they ever see the
+        // app. Send anyone who can't view the dashboard to their jobs list
+        // instead - the one page every authenticated staff role can reach.
+        if (!$user->can('dashboard.view') && $user->can('jobs.view-own')) {
+            return redirect()->intended(route('jobs.index'));
+        }
+
         return redirect()->intended($this->redirectTo);
     }
 }
