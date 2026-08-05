@@ -145,6 +145,85 @@ class SparePartRequestTest extends TestCase
         $response->assertStatus(403);
     }
 
+    public function test_admin_inbox_shows_available_badge_when_stock_covers_the_request(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
+        SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 3,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('admin.spare-part-requests.index'));
+
+        $response->assertOk();
+        $response->assertSee('Available');
+        $response->assertDontSee('Not Available');
+    }
+
+    public function test_admin_inbox_shows_not_available_badge_when_stock_is_insufficient(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 1]);
+        SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 5,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('admin.spare-part-requests.index'));
+
+        $response->assertOk();
+        $response->assertSee('Not Available');
+    }
+
+    public function test_client_can_still_submit_a_request_when_stock_is_insufficient(): void
+    {
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 0]);
+
+        $response = $this->actingAs($account, 'client')->post(route('client.spare-parts.store'), [
+            'client_machine_id' => $machine->id,
+            'product_id' => $part->id,
+            'quantity' => 5,
+        ]);
+
+        $response->assertRedirect(route('client.spare-parts.index'));
+        $this->assertDatabaseHas('spare_part_requests', [
+            'client_machine_id' => $machine->id,
+            'product_id' => $part->id,
+            'quantity' => 5,
+            'status' => 'pending',
+        ]);
+    }
+
+    public function test_client_create_form_shows_available_quantity_for_each_part(): void
+    {
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['name' => 'Focus Lens', 'is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 7]);
+
+        $response = $this->actingAs($account, 'client')->get(route('client.spare-parts.create', $machine->id));
+
+        $response->assertOk();
+        $response->assertSee('Focus Lens');
+        $response->assertSee('Available: 7');
+    }
+
     public function test_marking_a_request_fulfilled_decrements_matching_inventory_stock(): void
     {
         $owner = User::factory()->create();

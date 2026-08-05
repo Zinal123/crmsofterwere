@@ -26,7 +26,15 @@ Spare Part Requests
                             <td>{{ $request->clientAccount->name ?? '-' }}</td>
                             <td>{{ $request->clientMachine->product->name ?? '-' }} ({{ $request->clientMachine->serial_number ?? '-' }})</td>
                             <td>{{ $request->product->name ?? '-' }}</td>
-                            <td>{{ $request->quantity }}</td>
+                            <td>
+                                {{ $request->quantity }}
+                                @if($request->status === 'pending' || $request->status === 'approved')
+                                    <x-ui.status-badge
+                                        :status="$request->is_available ? 'Available' : 'Not Available'"
+                                        :variant="$request->is_available ? 'success' : 'danger'"
+                                        :icon="$request->is_available ? 'ri-checkbox-circle-line' : 'ri-error-warning-line'" />
+                                @endif
+                            </td>
                             <td>{{ $request->note ?: '-' }}</td>
                             <td>
                                 <x-ui.status-badge

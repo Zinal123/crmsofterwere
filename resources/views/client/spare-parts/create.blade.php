@@ -22,7 +22,7 @@ Request a Spare Part
                 <select id="spare-part-product" class="form-select" name="product_id" required>
                     <option value="">-- Select a part --</option>
                     @foreach($spareParts as $part)
-                        <option value="{{ $part->id }}">{{ $part->name }}</option>
+                        <option value="{{ $part->id }}">{{ $part->name }} ({{ $part->available_quantity > 0 ? 'Available: ' . $part->available_quantity : 'Currently unavailable' }})</option>
                     @endforeach
                 </select>
             </div>

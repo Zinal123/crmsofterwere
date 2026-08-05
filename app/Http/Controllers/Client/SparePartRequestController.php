@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\ClientMachineRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\Inventory\SparePartAvailabilityService;
 use App\Services\Ticketing\SparePartRequestService;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class SparePartRequestController extends Controller
         private SparePartRequestService $service,
         private ClientMachineRepositoryInterface $machineRepository,
         private ProductRepositoryInterface $productRepository,
+        private SparePartAvailabilityService $availabilityService,
     ) {
     }
 
@@ -34,9 +36,14 @@ class SparePartRequestController extends Controller
 
         $this->authorizeOwnership($request, $machine->client_account_id);
 
+        $spareParts = $this->productRepository->allSpareParts();
+        $spareParts->each(function ($part) {
+            $part->available_quantity = $this->availabilityService->available($part->id);
+        });
+
         return view('client.spare-parts.create', [
             'machine' => $machine,
-            'spareParts' => $this->productRepository->allSpareParts(),
+            'spareParts' => $spareParts,
         ]);
     }
 

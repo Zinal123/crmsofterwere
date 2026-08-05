@@ -7,6 +7,7 @@ use App\Models\SparePartRequest;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\SparePartRequestRepositoryInterface;
 use App\Services\Inventory\InventoryService;
+use App\Services\Inventory\SparePartAvailabilityService;
 use Illuminate\Support\Collection;
 
 class SparePartRequestService
@@ -17,12 +18,16 @@ class SparePartRequestService
         private SparePartRequestRepositoryInterface $repository,
         private InventoryRepositoryInterface $inventoryRepository,
         private InventoryService $inventoryService,
+        private SparePartAvailabilityService $availabilityService,
     ) {
     }
 
     public function listAll(): Collection
     {
-        return $this->repository->allWithDetails();
+        return $this->repository->allWithDetails()->each(function (SparePartRequest $request) {
+            $available = $this->availabilityService->available($request->product_id, $request->id);
+            $request->is_available = $available >= $request->quantity;
+        });
     }
 
     public function listForClientAccount(int $clientAccountId): Collection
