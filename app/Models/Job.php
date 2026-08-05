@@ -9,17 +9,28 @@ class Job extends Model
 {
     use HasFactory;
 
+    /** Statuses that are terminal — never counted as overdue regardless of due_date. */
+    private const TERMINAL_STATUSES = ['completed', 'rejected'];
+
     protected $fillable = [
         'title', 'description', 'machine_id', 'site_name', 'created_by', 'assigned_to',
         'priority', 'due_date', 'status', 'decided_by', 'decided_at', 'rejection_reason',
-        'on_hold_reason', 'completion_notes', 'completed_at',
+        'on_hold_reason', 'completion_notes', 'completed_at', 'overdue_flagged_at',
     ];
 
     protected $casts = [
         'due_date' => 'date',
         'decided_at' => 'datetime',
         'completed_at' => 'datetime',
+        'overdue_flagged_at' => 'datetime',
     ];
+
+    public function scopeOverdue($query)
+    {
+        return $query->whereNotNull('due_date')
+            ->whereDate('due_date', '<', now()->toDateString())
+            ->whereNotIn('status', self::TERMINAL_STATUSES);
+    }
 
     public function machine()
     {

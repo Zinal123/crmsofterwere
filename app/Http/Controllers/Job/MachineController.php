@@ -19,9 +19,13 @@ class MachineController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+        ]);
 
-        $this->service->create($request->only('name'));
+        $this->service->create($data);
 
         return redirect()->route('machines.index')->with('success', 'Machine added.');
     }

@@ -34,6 +34,54 @@ class MachineTest extends TestCase
         $this->assertDatabaseHas('machines', ['name' => 'CNC Lathe #3', 'is_active' => true]);
     }
 
+    public function test_machine_can_be_created_with_coordinates(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('Owner');
+
+        $response = $this->actingAs($user)->post(route('machines.store'), [
+            'name' => 'CNC Lathe #4',
+            'latitude' => 19.0759837,
+            'longitude' => 72.8776559,
+        ]);
+
+        $response->assertRedirect(route('machines.index'));
+        $this->assertDatabaseHas('machines', [
+            'name' => 'CNC Lathe #4',
+            'latitude' => 19.0759837,
+            'longitude' => 72.8776559,
+        ]);
+    }
+
+    public function test_machine_can_still_be_created_without_coordinates(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('Owner');
+
+        $response = $this->actingAs($user)->post(route('machines.store'), ['name' => 'CNC Lathe #5']);
+
+        $response->assertRedirect(route('machines.index'));
+        $this->assertDatabaseHas('machines', ['name' => 'CNC Lathe #5', 'latitude' => null, 'longitude' => null]);
+    }
+
+    public function test_machine_coordinates_are_rejected_when_out_of_range(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('Owner');
+
+        $response = $this->actingAs($user)->post(route('machines.store'), [
+            'name' => 'CNC Lathe #6',
+            'latitude' => 200,
+            'longitude' => 72.8776559,
+        ]);
+
+        $response->assertSessionHasErrors('latitude');
+        $this->assertDatabaseMissing('machines', ['name' => 'CNC Lathe #6']);
+    }
+
     public function test_toggle_flips_active_state(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

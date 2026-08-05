@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('jobs:flag-overdue')->dailyAt('07:00');
     }
 
     /**

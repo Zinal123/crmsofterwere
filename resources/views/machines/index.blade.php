@@ -44,11 +44,19 @@
     <div class="card mt-3">
         <div class="card-body">
             <h5 class="card-title">Add Machine</h5>
-            <form action="{{ route('machines.store') }}" method="POST" class="d-flex gap-2">
+            <form action="{{ route('machines.store') }}" method="POST" class="d-flex gap-2 flex-wrap">
                 @csrf
-                <input type="text" name="name" class="form-control" placeholder="Machine name" required>
+                <label for="machine-name" class="visually-hidden">Machine name</label>
+                <input id="machine-name" type="text" name="name" class="form-control" style="max-width: 260px;" placeholder="Machine name" required>
+                <label for="machine-latitude" class="visually-hidden">Latitude</label>
+                <input id="machine-latitude" type="number" step="0.0000001" name="latitude" class="form-control @error('latitude') is-invalid @enderror" style="max-width: 160px;" placeholder="Latitude (optional)">
+                <label for="machine-longitude" class="visually-hidden">Longitude</label>
+                <input id="machine-longitude" type="number" step="0.0000001" name="longitude" class="form-control @error('longitude') is-invalid @enderror" style="max-width: 160px;" placeholder="Longitude (optional)">
                 <x-ui.button variant="success" type="submit" icon="ri-add-line" ariaLabel="Add machine">Add</x-ui.button>
+                @error('latitude')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                @error('longitude')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </form>
+            <p class="text-muted small mt-2 mb-0">Coordinates are optional today, but will be required once GPS geofencing on job photos ships — set them where known.</p>
         </div>
     </div>
 </div>

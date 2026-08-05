@@ -12,9 +12,13 @@ class Machine extends Model
 
     protected $auditStatusFields = ['is_active'];
 
-    protected $fillable = ['name', 'is_active'];
+    protected $fillable = ['name', 'is_active', 'latitude', 'longitude'];
 
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = [
+        'is_active' => 'boolean',
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
+    ];
 
     public function jobs()
     {
