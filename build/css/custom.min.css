@@ -1,0 +1,10 @@
+/* Custom overrides — hand-written and appended directly to this file, mirroring
+   brand-theme.css, because this project's Vite build pipeline is not wired up
+   (no vite.config.js exists; resources/scss changes do not get compiled here).
+   See resources/scss/components/_shopfloor.scss for the source-of-intent version. */
+.btn-shopfloor{min-height:64px;min-width:64px;padding:20px 24px;font-size:1.125rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;}
+.btn-shopfloor:active{transform:scale(.97);}
+.btn-shopfloor:disabled,.btn-shopfloor[disabled]{opacity:.65;cursor:not-allowed;}
+.job-tap-card{display:block;}
+.job-tap-card .card{transition:transform .1s ease-out;}
+.job-tap-card:active .card{transform:scale(.98);}

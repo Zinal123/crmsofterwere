@@ -7,23 +7,34 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-start">
                 <h4>{{ $job->title }}</h4>
-                <x-ui.status-badge
-                    :status="ucfirst(str_replace('_', ' ', $job->status))"
-                    :variant="match($job->status) {
-                        'completed' => 'success',
-                        'rejected' => 'danger',
-                        'on_hold' => 'warning',
-                        default => 'info',
-                    }"
-                    :icon="match($job->status) {
-                        'completed' => 'ri-checkbox-circle-line',
-                        'rejected' => 'ri-close-circle-line',
-                        'on_hold' => 'ri-pause-circle-line',
-                        default => 'ri-time-line',
-                    }" />
+                <div class="d-flex gap-1">
+                    @if($job->overdue_flagged_at)
+                        <x-ui.status-badge status="Overdue" variant="danger" icon="ri-alarm-warning-line" />
+                    @endif
+                    <x-ui.status-badge
+                        :status="ucfirst(str_replace('_', ' ', $job->status))"
+                        :variant="match($job->status) {
+                            'completed' => 'success',
+                            'rejected' => 'danger',
+                            'on_hold' => 'warning',
+                            default => 'info',
+                        }"
+                        :icon="match($job->status) {
+                            'completed' => 'ri-checkbox-circle-line',
+                            'rejected' => 'ri-close-circle-line',
+                            'on_hold' => 'ri-pause-circle-line',
+                            default => 'ri-time-line',
+                        }" />
+                </div>
             </div>
             <p>{{ $job->description }}</p>
             <p class="text-muted">{{ $job->machine->name ?? $job->site_name }} &middot; Priority: {{ ucfirst($job->priority) }}</p>
+
+            @if($job->status === 'completed')
+                <a href="{{ route('jobs.pdf', $job->id) }}" class="btn btn-soft-secondary btn-sm mb-2">
+                    <i class="ri-file-pdf-2-line align-bottom me-1"></i> Download Completion Report
+                </a>
+            @endif
 
             @if($job->status === 'rejected')
                 <div class="alert alert-danger">Rejected: {{ $job->rejection_reason }}</div>
@@ -33,22 +44,22 @@
             @endif
 
             @if($job->assigned_to === auth()->id())
-                <div class="d-flex gap-2 my-3">
+                <div class="d-flex gap-2 flex-wrap my-3">
                     @if($job->status === 'assigned')
-                        <form action="{{ route('jobs.start', $job->id) }}" method="POST">
+                        <form action="{{ route('jobs.start', $job->id) }}" method="POST" class="job-action-form">
                             @csrf
-                            <x-ui.button variant="success" type="submit" icon="ri-play-circle-line" ariaLabel="Start job">Start</x-ui.button>
+                            <x-ui.button variant="success" type="submit" icon="ri-play-circle-line" ariaLabel="Start job" class="btn-shopfloor">Start</x-ui.button>
                         </form>
                     @endif
                     @if($job->status === 'in_progress')
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#holdJobModal">
+                        <button type="button" class="btn btn-warning btn-shopfloor" data-bs-toggle="modal" data-bs-target="#holdJobModal">
                             <i class="ri-pause-circle-line"></i> Put On Hold
                         </button>
                     @endif
                     @if($job->status === 'on_hold')
-                        <form action="{{ route('jobs.resume', $job->id) }}" method="POST">
+                        <form action="{{ route('jobs.resume', $job->id) }}" method="POST" class="job-action-form">
                             @csrf
-                            <x-ui.button variant="success" type="submit" icon="ri-play-circle-line" ariaLabel="Resume job">Resume</x-ui.button>
+                            <x-ui.button variant="success" type="submit" icon="ri-play-circle-line" ariaLabel="Resume job" class="btn-shopfloor">Resume</x-ui.button>
                         </form>
                     @endif
                 </div>
@@ -57,23 +68,28 @@
                     <div class="card border">
                         <div class="card-body">
                             <h6>Add Proof Photo <span class="text-danger">*</span></h6>
-                            <form id="photo-upload-form" action="{{ route('jobs.photos.store', $job->id) }}" method="POST" enctype="multipart/form-data">
+                            <form id="photo-upload-form" class="job-action-form" action="{{ route('jobs.photos.store', $job->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="file" name="photo" accept="image/*" capture="environment" required class="form-control mb-2">
                                 <input type="hidden" name="latitude" id="photo-lat">
                                 <input type="hidden" name="longitude" id="photo-lng">
                                 <p id="location-status" class="small text-muted">Checking location…</p>
-                                <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload photo">Upload</x-ui.button>
+                                <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload photo" class="btn-shopfloor">Upload</x-ui.button>
                             </form>
                         </div>
                     </div>
 
                     @if($job->photos->isNotEmpty())
-                        <form action="{{ route('jobs.complete', $job->id) }}" method="POST" class="mt-3">
+                        @php
+                            $jobLabel = $job->title . ' on ' . ($job->machine->name ?? $job->site_name);
+                            $completeConfirmMessage = "Complete job \"{$jobLabel}\"? This will close the job and cannot be undone.";
+                        @endphp
+                        <form action="{{ route('jobs.complete', $job->id) }}" method="POST" class="mt-3 job-action-form"
+                            onsubmit="return confirm({{ \Illuminate\Support\Js::from($completeConfirmMessage) }});">
                             @csrf
                             <label class="form-label" for="completion-notes">Completion Notes <span class="text-danger">*</span></label>
                             <textarea id="completion-notes" name="completion_notes" class="form-control mb-2" required></textarea>
-                            <x-ui.button variant="success" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Complete job">Complete Job</x-ui.button>
+                            <x-ui.button variant="success" type="submit" icon="ri-checkbox-circle-line" ariaLabel="Complete job" class="btn-shopfloor">Complete Job</x-ui.button>
                         </form>
                     @endif
                 @endif
@@ -161,7 +177,7 @@
     <div class="modal fade" id="holdJobModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('jobs.hold', $job->id) }}" method="POST">
+                <form action="{{ route('jobs.hold', $job->id) }}" method="POST" class="job-action-form">
                     @csrf
                     <div class="modal-header"><h5 class="modal-title">Put Job On Hold</h5></div>
                     <div class="modal-body">
@@ -170,7 +186,7 @@
                     </div>
                     <div class="modal-footer">
                         <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-ui.button>
-                        <x-ui.button variant="warning" type="submit" icon="ri-pause-circle-line">Confirm Hold</x-ui.button>
+                        <x-ui.button variant="warning" type="submit" icon="ri-pause-circle-line" class="btn-shopfloor">Confirm Hold</x-ui.button>
                     </div>
                 </form>
             </div>
@@ -179,6 +195,21 @@
 </div>
 
 <script>
+document.querySelectorAll('form.job-action-form').forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (!btn || btn.disabled) {
+            return;
+        }
+        if (form.hasAttribute('onsubmit') && event.defaultPrevented) {
+            return;
+        }
+        btn.disabled = true;
+        btn.dataset.originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving…';
+    });
+});
+
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
         document.getElementById('photo-lat').value = position.coords.latitude;

@@ -7,25 +7,30 @@
         <div class="row g-2">
             @forelse($jobs as $job)
                 <div class="col-12 col-md-6 col-lg-4">
-                    <a href="{{ route('jobs.show', $job->id) }}" class="text-decoration-none text-body">
+                    <a href="{{ route('jobs.show', $job->id) }}" class="text-decoration-none text-body job-tap-card">
                         <div class="card border">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <h5 class="card-title mb-1">{{ $job->title }}</h5>
-                                    <x-ui.status-badge
-                                        :status="ucfirst(str_replace('_', ' ', $job->status))"
-                                        :variant="match($job->status) {
-                                            'completed' => 'success',
-                                            'rejected' => 'danger',
-                                            'on_hold' => 'warning',
-                                            default => 'info',
-                                        }"
-                                        :icon="match($job->status) {
-                                            'completed' => 'ri-checkbox-circle-line',
-                                            'rejected' => 'ri-close-circle-line',
-                                            'on_hold' => 'ri-pause-circle-line',
-                                            default => 'ri-time-line',
-                                        }" />
+                                    <div class="d-flex gap-1">
+                                        @if($job->overdue_flagged_at)
+                                            <x-ui.status-badge status="Overdue" variant="danger" icon="ri-alarm-warning-line" />
+                                        @endif
+                                        <x-ui.status-badge
+                                            :status="ucfirst(str_replace('_', ' ', $job->status))"
+                                            :variant="match($job->status) {
+                                                'completed' => 'success',
+                                                'rejected' => 'danger',
+                                                'on_hold' => 'warning',
+                                                default => 'info',
+                                            }"
+                                            :icon="match($job->status) {
+                                                'completed' => 'ri-checkbox-circle-line',
+                                                'rejected' => 'ri-close-circle-line',
+                                                'on_hold' => 'ri-pause-circle-line',
+                                                default => 'ri-time-line',
+                                            }" />
+                                    </div>
                                 </div>
                                 <p class="text-muted mb-1">{{ $job->machine->name ?? $job->site_name }}</p>
                                 @if($job->status === 'rejected')
