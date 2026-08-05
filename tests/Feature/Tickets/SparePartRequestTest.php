@@ -4,6 +4,7 @@ namespace Tests\Feature\Tickets;
 
 use App\Models\ClientAccount;
 use App\Models\ClientMachine;
+use App\Models\Invetry;
 use App\Models\Product;
 use App\Models\SparePartRequest;
 use App\Models\User;
@@ -113,6 +114,7 @@ class SparePartRequestTest extends TestCase
         $account = ClientAccount::factory()->create(['name' => 'Solanki Fabricators']);
         $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
         $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
         $sparePartRequest = SparePartRequest::create([
             'client_machine_id' => $machine->id,
             'client_account_id' => $account->id,
@@ -141,5 +143,100 @@ class SparePartRequestTest extends TestCase
         $response = $this->actingAs($worker)->get(route('admin.spare-part-requests.index'));
 
         $response->assertStatus(403);
+    }
+
+    public function test_marking_a_request_fulfilled_decrements_matching_inventory_stock(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        $stock = Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
+        $sparePartRequest = SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 3,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->post(route('admin.spare-part-requests.update-status', $sparePartRequest->id), [
+            'status' => 'fulfilled',
+        ]);
+
+        $response->assertRedirect(route('admin.spare-part-requests.index'));
+        $this->assertSame('fulfilled', $sparePartRequest->fresh()->status);
+        $this->assertSame(7, $stock->fresh()->quantity);
+    }
+
+    public function test_marking_a_request_fulfilled_is_blocked_when_stock_is_insufficient(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        $stock = Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 1]);
+        $sparePartRequest = SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 5,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->post(route('admin.spare-part-requests.update-status', $sparePartRequest->id), [
+            'status' => 'fulfilled',
+        ]);
+
+        $response->assertRedirect(route('admin.spare-part-requests.index'));
+        $response->assertSessionHas('error');
+        $this->assertSame('pending', $sparePartRequest->fresh()->status);
+        $this->assertSame(1, $stock->fresh()->quantity);
+    }
+
+    public function test_marking_a_request_fulfilled_is_blocked_when_no_inventory_record_exists(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        $sparePartRequest = SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 1,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->post(route('admin.spare-part-requests.update-status', $sparePartRequest->id), [
+            'status' => 'fulfilled',
+        ]);
+
+        $response->assertRedirect(route('admin.spare-part-requests.index'));
+        $response->assertSessionHas('error');
+        $this->assertSame('pending', $sparePartRequest->fresh()->status);
+    }
+
+    public function test_re_marking_an_already_fulfilled_request_does_not_double_decrement_stock(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        $stock = Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
+        $sparePartRequest = SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 3,
+            'status' => 'fulfilled',
+        ]);
+
+        $response = $this->actingAs($owner)->post(route('admin.spare-part-requests.update-status', $sparePartRequest->id), [
+            'status' => 'fulfilled',
+        ]);
+
+        $response->assertRedirect(route('admin.spare-part-requests.index'));
+        $this->assertSame(10, $stock->fresh()->quantity);
     }
 }

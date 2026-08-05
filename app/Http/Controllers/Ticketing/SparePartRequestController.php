@@ -25,7 +25,11 @@ class SparePartRequestController extends Controller
             'status' => 'required|in:pending,approved,fulfilled,rejected',
         ]);
 
-        $this->service->updateStatus($this->service->find((int) $id), $request->input('status'));
+        try {
+            $this->service->updateStatus($this->service->find((int) $id), $request->input('status'));
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('admin.spare-part-requests.index')->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.spare-part-requests.index')->with('success', 'Request updated.');
     }

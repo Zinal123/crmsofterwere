@@ -4,15 +4,20 @@ namespace App\Services\Ticketing;
 
 use App\Models\ClientMachine;
 use App\Models\SparePartRequest;
+use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\SparePartRequestRepositoryInterface;
+use App\Services\Inventory\InventoryService;
 use Illuminate\Support\Collection;
 
 class SparePartRequestService
 {
     private const STATUSES = ['pending', 'approved', 'fulfilled', 'rejected'];
 
-    public function __construct(private SparePartRequestRepositoryInterface $repository)
-    {
+    public function __construct(
+        private SparePartRequestRepositoryInterface $repository,
+        private InventoryRepositoryInterface $inventoryRepository,
+        private InventoryService $inventoryService,
+    ) {
     }
 
     public function listAll(): Collection
@@ -54,9 +59,24 @@ class SparePartRequestService
             throw new \InvalidArgumentException('Invalid status.');
         }
 
+        if ($status === 'fulfilled' && $request->status !== 'fulfilled') {
+            $this->fulfillFromInventory($request);
+        }
+
         $request->status = $status;
         $this->repository->save($request);
 
         return $request;
+    }
+
+    private function fulfillFromInventory(SparePartRequest $request): void
+    {
+        $inventoryItem = $this->inventoryRepository->allKeyedByProductId()->get($request->product_id);
+
+        if ($inventoryItem === null) {
+            throw new \InvalidArgumentException('No inventory record found for this part — cannot fulfill.');
+        }
+
+        $this->inventoryService->reduceQuantity($inventoryItem->id, $request->quantity);
     }
 }
