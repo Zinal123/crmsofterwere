@@ -8,6 +8,7 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Job\JobService;
 use App\Services\Job\MachineService;
 use App\Services\Ticketing\TicketService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -76,6 +77,25 @@ class JobController extends Controller
         $workers = $this->userRepository->byRole('Worker');
 
         return view('jobs.show', compact('job', 'workers'));
+    }
+
+    public function pdf(Request $request, $id)
+    {
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+        abort_unless(
+            $request->user()->can('jobs.view-all') || $job->created_by === $request->user()->id || $job->assigned_to === $request->user()->id,
+            403
+        );
+
+        if ($job->status !== 'completed') {
+            return redirect()->route('jobs.show', $job->id)->with('error', 'The completion report is only available once the job is completed.');
+        }
+
+        $job->load(['machine', 'assignee', 'photos']);
+        $pdf = Pdf::loadView('pdf.job', ['job' => $job])->setPaper('a4');
+
+        return $pdf->download('Job-' . $job->id . '-completion-report.pdf');
     }
 
     public function approve(Request $request, $id)
