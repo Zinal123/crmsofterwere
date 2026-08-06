@@ -9,6 +9,7 @@
     <meta content="Oracle Machine Tech CRM" name="description" />
     <meta content="Oracle Machine Tech" name="author" />
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
+    <link rel="manifest" href="{{ URL::asset('worker-manifest.json') }}">
     @include('layouts.head-css')
     <style>
         /*
@@ -141,6 +142,14 @@
                 localStorage.setItem('worker-high-contrast', '1');
             }
         });
+
+        // Registered unconditionally so the browser sees an active service
+        // worker + manifest as soon as the Kiosk loads - required before
+        // "Add to Home Screen" is available, and lets a job page already
+        // opened once be reachable again with no signal (see public/sw.js).
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
     </script>
 
     @include('layouts.vendor-scripts')

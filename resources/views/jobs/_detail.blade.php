@@ -144,6 +144,15 @@
                                 <p id="location-status" class="small text-muted">Checking location…</p>
                                 <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload photo" class="btn-shopfloor" id="photo-upload-submit">Upload</x-ui.button>
                             </form>
+
+                            {{-- Populated by IndexedDB, not the server - photos captured with no
+                                 signal live here until a real upload succeeds. See the script below;
+                                 captured_at is still stamped server-side only at actual receipt. --}}
+                            <div id="offline-queue-panel" style="display: none;" class="mt-3">
+                                <x-ui.status-badge status="Pending Sync" variant="warning" icon="ri-wifi-off-line" />
+                                <p class="small text-muted mb-2" id="offline-queue-count"></p>
+                                <x-ui.button variant="warning" type="button" id="sync-now-btn" icon="ri-refresh-line" class="btn-shopfloor">Sync Now</x-ui.button>
+                            </div>
                         </div>
                     </div>
 
@@ -442,6 +451,132 @@ if (navigator.geolocation) {
         });
     }
 
+    // ---- Offline queue -------------------------------------------------
+    // A photo captured with no signal is never lost: it's queued in
+    // IndexedDB (blob + job/GPS/stage metadata + a client-side pending id
+    // used only to show it in the UI, never trusted as captured_at) and
+    // retried on reconnect. The server still stamps the authoritative
+    // captured_at only when the upload actually lands - see
+    // JobPhotoService::upload(), unchanged by any of this.
+    var OFFLINE_DB_NAME = 'oracle-crm-offline-photos';
+    var OFFLINE_STORE_NAME = 'pending_photos';
+    var jobId = {{ $job->id }};
+
+    function openOfflineDb() {
+        return new Promise(function (resolve, reject) {
+            var request = indexedDB.open(OFFLINE_DB_NAME, 1);
+            request.onupgradeneeded = function () {
+                var db = request.result;
+                if (!db.objectStoreNames.contains(OFFLINE_STORE_NAME)) {
+                    db.createObjectStore(OFFLINE_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                }
+            };
+            request.onsuccess = function () { resolve(request.result); };
+            request.onerror = function () { reject(request.error); };
+        });
+    }
+
+    function queuePhotoOffline(record) {
+        return openOfflineDb().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(OFFLINE_STORE_NAME, 'readwrite');
+                tx.objectStore(OFFLINE_STORE_NAME).add(record);
+                tx.oncomplete = function () { resolve(); };
+                tx.onerror = function () { reject(tx.error); };
+            });
+        });
+    }
+
+    function getPendingPhotosForJob() {
+        return openOfflineDb().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var request = db.transaction(OFFLINE_STORE_NAME, 'readonly').objectStore(OFFLINE_STORE_NAME).getAll();
+                request.onsuccess = function () {
+                    resolve(request.result.filter(function (record) { return record.jobId === jobId; }));
+                };
+                request.onerror = function () { reject(request.error); };
+            });
+        });
+    }
+
+    function removePendingPhoto(id) {
+        return openOfflineDb().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(OFFLINE_STORE_NAME, 'readwrite');
+                tx.objectStore(OFFLINE_STORE_NAME).delete(id);
+                tx.oncomplete = function () { resolve(); };
+                tx.onerror = function () { reject(tx.error); };
+            });
+        });
+    }
+
+    function uploadPhotoBlob(blob, meta) {
+        var formData = new FormData();
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+        formData.append('photo', blob, 'proof-' + Date.now() + '.jpg');
+        formData.append('latitude', meta.latitude);
+        formData.append('longitude', meta.longitude);
+        formData.append('stage', meta.stage);
+
+        return fetch(uploadForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+    }
+
+    function renderOfflineQueuePanel() {
+        var panel = document.getElementById('offline-queue-panel');
+        var countText = document.getElementById('offline-queue-count');
+        if (!panel) {
+            return;
+        }
+        getPendingPhotosForJob().then(function (records) {
+            if (records.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+            panel.style.display = 'block';
+            countText.textContent = records.length + ' photo(s) captured offline, waiting to upload.';
+        }).catch(function () { /* IndexedDB unavailable - nothing queued to show */ });
+    }
+
+    function syncPendingPhotos() {
+        return getPendingPhotosForJob().then(function (records) {
+            var chain = Promise.resolve();
+            records.forEach(function (record) {
+                chain = chain.then(function () {
+                    return uploadPhotoBlob(record.blob, record).then(function (response) {
+                        if (response.ok || response.redirected) {
+                            return removePendingPhoto(record.id);
+                        }
+                        // Still queued (e.g. job no longer in_progress) - leave it for the
+                        // Worker to see and deal with via Sync Now, don't lose it silently.
+                    }).catch(function () {
+                        // Still offline - stop trying the rest for now, next trigger retries all.
+                        return Promise.reject(new Error('offline'));
+                    });
+                });
+            });
+            return chain.catch(function () { /* stop the chain quietly */ }).then(function () {
+                renderOfflineQueuePanel();
+                if (records.length > 0) {
+                    window.location.reload();
+                }
+            });
+        });
+    }
+
+    var syncNowBtn = document.getElementById('sync-now-btn');
+    if (syncNowBtn) {
+        syncNowBtn.addEventListener('click', syncPendingPhotos);
+    }
+    window.addEventListener('online', syncPendingPhotos);
+    renderOfflineQueuePanel();
+    if (navigator.onLine) {
+        syncPendingPhotos();
+    }
+
     uploadForm.addEventListener('submit', function (event) {
         if (!supportsCamera) {
             return; // native file input submits normally
@@ -455,14 +590,14 @@ if (navigator.geolocation) {
         }
 
         canvas.toBlob(function (blob) {
-            var formData = new FormData(uploadForm);
-            formData.set('photo', blob, 'proof-' + Date.now() + '.jpg');
+            var meta = {
+                jobId: jobId,
+                latitude: document.getElementById('photo-lat').value,
+                longitude: document.getElementById('photo-lng').value,
+                stage: stageInput.value,
+            };
 
-            fetch(uploadForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            }).then(function (response) {
+            uploadPhotoBlob(blob, meta).then(function (response) {
                 if (response.redirected) {
                     window.location.href = response.url;
                     return;
@@ -475,8 +610,15 @@ if (navigator.geolocation) {
                 }
                 window.location.reload();
             }).catch(function () {
-                alert('Upload failed - check your connection and try again.');
-                window.location.reload();
+                // Network failure, not a validation error - queue instead of losing the photo.
+                queuePhotoOffline({ jobId: meta.jobId, blob: blob, latitude: meta.latitude, longitude: meta.longitude, stage: meta.stage, queuedAt: Date.now() })
+                    .then(function () {
+                        alert('No connection - photo saved on this device and will upload automatically once you\'re back online.');
+                        renderOfflineQueuePanel();
+                    })
+                    .catch(function () {
+                        alert('Upload failed and this device could not save it offline either. Please try again once you have a connection.');
+                    });
             });
         }, 'image/jpeg', 0.9);
     });

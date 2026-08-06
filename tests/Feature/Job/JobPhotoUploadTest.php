@@ -223,4 +223,20 @@ class JobPhotoUploadTest extends TestCase
         $response->assertSee('id="camera-fallback-input"', false);
         $response->assertSee('camera-fallback-input', false);
     }
+
+    public function test_job_show_page_renders_the_offline_sync_queue(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
+
+        $response = $this->actingAs($worker)->get(route('jobs.show', $job->id));
+
+        $response->assertOk();
+        $response->assertSee('id="offline-queue-panel"', false);
+        $response->assertSee('id="sync-now-btn"', false);
+        $response->assertSee('indexedDB.open', false);
+        $response->assertSee("window.addEventListener('online'", false);
+    }
 }

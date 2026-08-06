@@ -91,4 +91,16 @@ class WorkerKioskTest extends TestCase
         $response->assertSee('worker-high-contrast', false);
         $response->assertSee('data-contrast', false);
     }
+
+    public function test_worker_kiosk_registers_a_service_worker_and_manifest(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        $response = $this->actingAs($worker)->get(route('jobs.index'));
+
+        $response->assertOk();
+        $response->assertSee("navigator.serviceWorker.register('/sw.js')", false);
+        $response->assertSee('worker-manifest.json', false);
+    }
 }
