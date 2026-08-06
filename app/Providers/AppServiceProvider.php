@@ -60,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
             'user' => \App\Models\User::class,
             'machine' => \App\Models\Machine::class,
             'job_photo' => \App\Models\JobPhoto::class,
+            'ticket_photo' => \App\Models\TicketPhoto::class,
             'bank' => \App\Models\Bank::class,
             'role' => \Spatie\Permission\Models\Role::class,
         ]);
