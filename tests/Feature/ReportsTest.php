@@ -122,4 +122,79 @@ class ReportsTest extends TestCase
         $response->assertSee('Focus Lens');
         $response->assertSee('Low Stock');
     }
+
+    public function test_fleet_status_marks_a_machine_with_an_overdue_job_as_overdue_above_all_else(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['name' => 'Overdue Machine', 'is_active' => true]);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'in_progress', 'overdue_flagged_at' => now()]);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
+            return $rows->firstWhere('id', $machine->id)['status'] === 'overdue';
+        });
+    }
+
+    public function test_fleet_status_marks_an_inactive_machine_as_not_reporting(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['name' => 'Retired Machine', 'is_active' => false]);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertSee('Retired Machine');
+        $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
+            return $rows->firstWhere('id', $machine->id)['status'] === 'inactive';
+        });
+    }
+
+    public function test_fleet_status_marks_a_machine_with_an_in_progress_job_as_active(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['is_active' => true]);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'in_progress']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
+            return $rows->firstWhere('id', $machine->id)['status'] === 'active';
+        });
+    }
+
+    public function test_fleet_status_marks_a_machine_with_a_pending_job_as_setup(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['is_active' => true]);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'assigned']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
+            return $rows->firstWhere('id', $machine->id)['status'] === 'setup';
+        });
+    }
+
+    public function test_fleet_status_marks_a_machine_with_no_open_jobs_as_idle(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['is_active' => true]);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'completed']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
+            return $rows->firstWhere('id', $machine->id)['status'] === 'idle';
+        });
+    }
 }

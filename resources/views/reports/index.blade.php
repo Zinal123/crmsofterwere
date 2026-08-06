@@ -8,6 +8,36 @@
 
     <div class="card mb-3">
         <div class="card-body">
+            <h5 class="card-title">Fleet Status</h5>
+            <p class="text-muted small">Derived from open job data, not live machine telemetry - this app doesn't connect to the machines themselves.</p>
+            @php
+                $fleetTileStyle = [
+                    'overdue' => ['variant' => 'danger', 'icon' => 'ri-alarm-warning-line', 'label' => 'Overdue'],
+                    'inactive' => ['variant' => 'secondary', 'icon' => 'ri-stop-circle-line', 'label' => 'Not Reporting'],
+                    'active' => ['variant' => 'success', 'icon' => 'ri-play-circle-line', 'label' => 'Active'],
+                    'setup' => ['variant' => 'warning', 'icon' => 'ri-time-line', 'label' => 'Setup'],
+                    'idle' => ['variant' => 'info', 'icon' => 'ri-pause-circle-line', 'label' => 'Idle'],
+                ];
+            @endphp
+            <div class="row g-3">
+                @forelse($fleetStatus as $machine)
+                    @php $tile = $fleetTileStyle[$machine['status']]; @endphp
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="border rounded p-3 text-center bg-{{ $tile['variant'] }}-subtle">
+                            <i class="{{ $tile['icon'] }} fs-24 text-{{ $tile['variant'] }}"></i>
+                            <div class="fw-semibold mt-1">{{ $machine['name'] }}</div>
+                            <x-ui.status-badge :status="$tile['label']" :variant="$tile['variant']" :icon="$tile['icon']" />
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12"><x-ui.empty-state icon="ri-tools-line" message="No machines yet." /></div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
             <h5 class="card-title">Job Throughput</h5>
             <div class="row g-3">
                 @foreach($jobThroughput as $status => $count)

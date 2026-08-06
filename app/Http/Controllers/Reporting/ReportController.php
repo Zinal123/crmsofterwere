@@ -18,6 +18,7 @@ class ReportController extends Controller
             'technicianPerformance' => $this->service->technicianPerformance(),
             'machineHistory' => $this->service->machineServiceHistory(),
             'inventoryLevels' => $this->service->inventoryLevels(),
+            'fleetStatus' => $this->service->fleetStatus(),
         ]);
     }
 }

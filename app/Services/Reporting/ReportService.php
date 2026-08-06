@@ -81,4 +81,32 @@ class ReportService
             'is_low_stock' => $item->quantity < $item->effectiveLowStockThreshold(),
         ]);
     }
+
+    /**
+     * One of 5 states per machine, derived entirely from job data we already
+     * have (this app has no real machine telemetry - not the MachineMetrics
+     * "actual spindle signal" kind of status, an honest proxy built from
+     * open-job state). Precedence when a machine matches more than one:
+     * overdue > not reporting > active > setup > idle.
+     */
+    public function fleetStatus(): Collection
+    {
+        return Machine::all()->map(function (Machine $machine) {
+            $jobs = Job::where('machine_id', $machine->id)->get();
+
+            $status = match (true) {
+                $jobs->contains(fn (Job $job) => $job->overdue_flagged_at !== null) => 'overdue',
+                ! $machine->is_active => 'inactive',
+                $jobs->contains(fn (Job $job) => $job->status === 'in_progress') => 'active',
+                $jobs->contains(fn (Job $job) => in_array($job->status, ['pending_approval', 'assigned', 'on_hold'], true)) => 'setup',
+                default => 'idle',
+            };
+
+            return [
+                'id' => $machine->id,
+                'name' => $machine->name,
+                'status' => $status,
+            ];
+        });
+    }
 }
