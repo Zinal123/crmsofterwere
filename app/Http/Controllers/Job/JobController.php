@@ -34,7 +34,13 @@ class JobController extends Controller
 
         // A plain Worker (no jobs.view-all) gets the Worker Kiosk: a distinct,
         // large-touch-target surface for shop-floor use, not the admin theme.
-        return view($canViewAll ? 'jobs.index' : 'worker.jobs.index', compact('jobs'));
+        if ($canViewAll) {
+            return view('jobs.index', compact('jobs'));
+        }
+
+        $machines = $this->machineService->list();
+
+        return view('worker.jobs.index', compact('jobs', 'machines'));
     }
 
     public function create(Request $request)

@@ -3,9 +3,11 @@
 namespace App\Services\Job;
 
 use App\Models\Job;
+use App\Models\Machine;
 use App\Models\User;
 use App\Notifications\JobAssignedNotification;
 use App\Notifications\JobDecisionNotification;
+use App\Notifications\MachineDownNotification;
 use App\Repositories\Contracts\JobRepositoryInterface;
 
 class JobService
@@ -66,6 +68,34 @@ class JobService
         $this->auditLogger->log($job, $creator, 'created', "{$creator->name} assigned a new job to worker #{$data['assigned_to']}: {$job->title}");
 
         $job->assignee?->notify(new JobAssignedNotification($job, 'assigned'));
+
+        return $job;
+    }
+
+    /**
+     * Fast path from the Worker Kiosk: skip the normal job-request form
+     * entirely, urgent priority, notify every Owner immediately. This is the
+     * lightweight substitute for MachineMetrics-style downtime automation -
+     * no edge hardware, just a faster entry point into the same job/approval
+     * workflow that already exists.
+     */
+    public function flagMachineDown(Machine $machine, User $reporter, ?string $note): Job
+    {
+        $job = $this->repository->create([
+            'title' => "Machine Down: {$machine->name}",
+            'description' => $note,
+            'machine_id' => $machine->id,
+            'priority' => 'urgent',
+            'created_by' => $reporter->id,
+            'assigned_to' => $reporter->id,
+            'status' => 'pending_approval',
+        ]);
+
+        $this->auditLogger->log($job, $reporter, 'created', "{$reporter->name} flagged \"{$machine->name}\" as down.");
+
+        foreach (User::role('Owner')->get() as $owner) {
+            $owner->notify(new MachineDownNotification($job));
+        }
 
         return $job;
     }
