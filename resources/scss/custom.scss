@@ -39,6 +39,21 @@ SPACING: Bootstrap's existing 0–5 utility scale (0.25rem increments).
 ICONS: Remix Icon (ri-*) is the single icon set for all CRM feature views
 and shared chrome (topbar, error pages). Do not introduce mdi-* or bx-*
 in new code — see docs/superpowers/plans/2026-07-17-design-system.md
-Task 5 for the migration of existing mdi-*/bx-* usage.
+Task 5 for the migration of existing mdi- and bx- icon usage.
+================================================================================
+
+BUILD NOTE: this file is a real, compiled Vite entry (see vite.config.js) -
+`npm run build` compiles it straight to build/css/custom.min.css, which
+head-css.blade.php already links last in the cascade. It does NOT rebuild
+app.min.css/bootstrap.min.css/icons.min.css - those are still the static,
+one-time-imported vendor files (see build/manifest.json's single commit).
+Deliberately scoped this way: recompiling the whole vendor bundle from
+resources/scss/app.scss carries real visual-regression risk this project
+has no way to verify (no headless browser available) and was never asked
+for. Only import partials here that don't depend on Bootstrap's SCSS
+functions/variables/mixins (plain CSS values only) - this file compiles
+standalone, without app.scss's Bootstrap import chain in front of it.
 ================================================================================
 */
+
+@import "components/shopfloor";
