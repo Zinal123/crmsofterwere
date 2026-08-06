@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Invoice;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Services\Invoice\InvoiceService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -63,6 +65,17 @@ class InvoiceController extends Controller
     public function details($id)
     {
         return view('apps-invoices-details', $this->service->getInvoiceDetails($id));
+    }
+
+    public function pdf($id)
+    {
+        abort_unless(Invoice::where('id', $id)->exists(), 404);
+
+        $data = $this->service->getInvoiceDetails($id);
+        $filename = 'Invoice-' . str_replace('/', '-', $data['invoice'][0]->invoice_id) . '.pdf';
+        $pdf = Pdf::loadView('pdf.invoice', $data)->setPaper('a4');
+
+        return $pdf->download($filename);
     }
 
     public function updatePayment(Request $request)

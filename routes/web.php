@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::post('update-payment', [App\Http\Controllers\Invoice\InvoiceController::class, 'updatePayment'])->middleware('permission:invoices.record-payment');
     Route::post('invoicestore' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoices.create');
     Route::get('invoiceddetails/{id}' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'details'])->name('invoice.details')->middleware('permission:invoices.view-details');
+    Route::get('invoices/{id}/pdf', [App\Http\Controllers\Invoice\InvoiceController::class, 'pdf'])->name('invoice.pdf')->middleware('permission:invoices.view-details');
 
     Route::post('inventrystore', [App\Http\Controllers\Inventory\InventryController::class, 'inventrystore'])->name('inventrystore')->middleware('permission:inventory.create');
     Route::post('quantityupdate', [App\Http\Controllers\Inventory\InventryController::class, 'quantityupdate'])->name('quantityupdate')->middleware('permission:inventory.update');

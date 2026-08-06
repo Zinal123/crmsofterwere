@@ -8,7 +8,12 @@
 @slot('li_1') invoices @endslot
 @slot('title') Invoice Details @endslot
 @endcomponent
-<x-ui.back-link :route="route('invoice')" label="Back to Invoices" class="d-print-none" />
+<div class="d-flex justify-content-between align-items-center d-print-none">
+    <x-ui.back-link :route="route('invoice')" label="Back to Invoices" />
+    <a href="{{ route('invoice.pdf', $invoice[0]->id) }}" class="btn btn-soft-secondary btn-sm">
+        <i class="ri-file-pdf-2-line align-bottom me-1"></i> Download PDF
+    </a>
+</div>
 <?php
 $number = $amount;
    $no = floor($number);
