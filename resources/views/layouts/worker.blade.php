@@ -54,7 +54,42 @@
             padding: 14px 16px;
             min-height: 56px;
         }
+
+        /*
+         * High-contrast mode (Fiix precedent: "increase readability... in
+         * low visibility environments"). Pure black-on-white, thicker
+         * borders/outlines, no soft/pastel badge backgrounds - readable in
+         * shop-floor glare. Toggled via [data-contrast="high"] on <html>,
+         * applied pre-paint (see the inline script below) so there's no
+         * flash of normal-contrast content on load.
+         */
+        html[data-contrast="high"] body.worker-kiosk {
+            background-color: #fff;
+            color: #000;
+        }
+        html[data-contrast="high"] .worker-kiosk .worker-topbar {
+            background-color: #000;
+        }
+        html[data-contrast="high"] .worker-kiosk .card {
+            border: 2px solid #000;
+        }
+        html[data-contrast="high"] .worker-kiosk .text-muted {
+            color: #000 !important;
+        }
+        html[data-contrast="high"] .worker-kiosk .btn-shopfloor {
+            border: 2px solid #000;
+        }
+        html[data-contrast="high"] .worker-kiosk .badge {
+            border: 1px solid #000;
+        }
     </style>
+    <script>
+        // Applied before <body> paints, so a returning Worker never sees a
+        // flash of normal contrast before this flips.
+        if (localStorage.getItem('worker-high-contrast') === '1') {
+            document.documentElement.setAttribute('data-contrast', 'high');
+        }
+    </script>
 </head>
 
 <body class="worker-kiosk">
@@ -62,6 +97,9 @@
         <img src="{{ URL::asset('build/images/oracallogo.png') }}" alt="Oracle Machine Tech">
         <div class="worker-user">
             {{ auth()->user()->name }}
+            <button type="button" id="high-contrast-toggle" class="btn btn-outline-light btn-shopfloor ms-2" style="min-height: 44px; padding: 8px 16px; font-size: 1rem;" title="Toggle high-contrast mode" aria-label="Toggle high-contrast mode">
+                <i class="ri-contrast-2-line align-bottom"></i>
+            </button>
             <form action="{{ route('logout') }}" method="POST" class="d-inline ms-2">
                 @csrf
                 <button type="submit" class="btn btn-outline-light btn-shopfloor" style="min-height: 44px; padding: 8px 16px; font-size: 1rem;">Log Out</button>
@@ -83,6 +121,19 @@
 
         @yield('content')
     </main>
+
+    <script>
+        document.getElementById('high-contrast-toggle').addEventListener('click', function () {
+            var isHighContrast = document.documentElement.getAttribute('data-contrast') === 'high';
+            if (isHighContrast) {
+                document.documentElement.removeAttribute('data-contrast');
+                localStorage.removeItem('worker-high-contrast');
+            } else {
+                document.documentElement.setAttribute('data-contrast', 'high');
+                localStorage.setItem('worker-high-contrast', '1');
+            }
+        });
+    </script>
 
     @include('layouts.vendor-scripts')
 </body>

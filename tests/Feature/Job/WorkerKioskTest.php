@@ -78,4 +78,17 @@ class WorkerKioskTest extends TestCase
         $response->assertOk();
         $response->assertSee('btn-shopfloor', false);
     }
+
+    public function test_worker_kiosk_has_a_high_contrast_toggle(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        $response = $this->actingAs($worker)->get(route('jobs.index'));
+
+        $response->assertOk();
+        $response->assertSee('id="high-contrast-toggle"', false);
+        $response->assertSee('worker-high-contrast', false);
+        $response->assertSee('data-contrast', false);
+    }
 }
