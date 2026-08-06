@@ -162,4 +162,23 @@ class JobPhotoUploadTest extends TestCase
         $this->assertFalse($photo->location_flagged);
         $this->assertNull($photo->distance_from_machine_meters);
     }
+
+    public function test_job_show_page_renders_camera_capture_ui_not_a_bare_file_picker(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
+
+        $response = $this->actingAs($worker)->get(route('jobs.show', $job->id));
+
+        $response->assertOk();
+        $response->assertSee('id="camera-video"', false);
+        $response->assertSee('id="capture-btn"', false);
+        $response->assertSee('getUserMedia', false);
+        // The plain file input exists only as a fallback, hidden until JS
+        // determines getUserMedia is unavailable.
+        $response->assertSee('id="camera-fallback-input"', false);
+        $response->assertSee('camera-fallback-input', false);
+    }
 }

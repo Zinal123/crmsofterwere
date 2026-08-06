@@ -100,11 +100,30 @@
                             <h6>Add Proof Photo <span class="text-danger">*</span></h6>
                             <form id="photo-upload-form" class="job-action-form" action="{{ route('jobs.photos.store', $job->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="file" name="photo" accept="image/*" capture="environment" required class="form-control mb-2">
+
+                                <div id="camera-capture">
+                                    <video id="camera-video" autoplay playsinline muted class="w-100 rounded mb-2" style="max-height: 320px; background: #000; display: none;"></video>
+                                    <canvas id="camera-canvas" style="display: none;"></canvas>
+                                    <img id="camera-preview" class="w-100 rounded mb-2" style="max-height: 320px; object-fit: contain; background: #000; display: none;" alt="Captured proof">
+
+                                    <div class="d-flex gap-2 flex-wrap mb-2">
+                                        <x-ui.button variant="primary" type="button" id="start-camera-btn" icon="ri-camera-line" class="btn-shopfloor">Open Camera</x-ui.button>
+                                        <x-ui.button variant="success" type="button" id="capture-btn" icon="ri-checkbox-circle-line" class="btn-shopfloor" style="display: none;">Capture</x-ui.button>
+                                        <x-ui.button variant="secondary" type="button" id="retake-btn" icon="ri-refresh-line" class="btn-shopfloor" style="display: none;">Retake</x-ui.button>
+                                    </div>
+
+                                    {{-- Camera capture draws to canvas and attaches the blob on submit (see script below) -
+                                         this structurally blocks gallery selection, unlike a plain file-picker hint.
+                                         Only shown as a fallback when getUserMedia isn't available at all. --}}
+                                    <p id="camera-fallback-note" class="small text-muted" style="display: none;">Live camera capture isn't available on this device - falling back to your device's photo picker.</p>
+                                    <label for="camera-fallback-input" class="visually-hidden">Photo</label>
+                                    <input type="file" id="camera-fallback-input" name="photo" accept="image/*" capture="environment" class="form-control mb-2" style="display: none;">
+                                </div>
+
                                 <input type="hidden" name="latitude" id="photo-lat">
                                 <input type="hidden" name="longitude" id="photo-lng">
                                 <p id="location-status" class="small text-muted">Checking location…</p>
-                                <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload photo" class="btn-shopfloor">Upload</x-ui.button>
+                                <x-ui.button variant="primary" type="submit" icon="ri-upload-line" ariaLabel="Upload photo" class="btn-shopfloor" id="photo-upload-submit">Upload</x-ui.button>
                             </form>
                         </div>
                     </div>
@@ -254,4 +273,115 @@ if (navigator.geolocation) {
         if (status) { status.textContent = 'Location not available ⚠'; status.classList.replace('text-muted', 'text-danger'); }
     });
 }
+
+(function () {
+    var uploadForm = document.getElementById('photo-upload-form');
+    if (!uploadForm) {
+        return;
+    }
+
+    var video = document.getElementById('camera-video');
+    var canvas = document.getElementById('camera-canvas');
+    var preview = document.getElementById('camera-preview');
+    var startBtn = document.getElementById('start-camera-btn');
+    var captureBtn = document.getElementById('capture-btn');
+    var retakeBtn = document.getElementById('retake-btn');
+    var fallbackNote = document.getElementById('camera-fallback-note');
+    var fallbackInput = document.getElementById('camera-fallback-input');
+    var stream = null;
+    var capturedBlob = null;
+
+    function stopStream() {
+        if (stream) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            stream = null;
+        }
+    }
+
+    function fallBackToFilePicker() {
+        stopStream();
+        video.style.display = 'none';
+        startBtn.style.display = 'none';
+        captureBtn.style.display = 'none';
+        retakeBtn.style.display = 'none';
+        fallbackNote.style.display = 'block';
+        fallbackInput.style.display = 'block';
+        fallbackInput.required = true;
+    }
+
+    var supportsCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+
+    if (!supportsCamera) {
+        fallBackToFilePicker();
+    } else {
+        startBtn.addEventListener('click', function () {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function (mediaStream) {
+                stream = mediaStream;
+                video.srcObject = stream;
+                video.style.display = 'block';
+                startBtn.style.display = 'none';
+                captureBtn.style.display = 'inline-flex';
+            }).catch(fallBackToFilePicker);
+        });
+
+        captureBtn.addEventListener('click', function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob(function (blob) {
+                capturedBlob = blob;
+                preview.src = URL.createObjectURL(blob);
+                preview.style.display = 'block';
+                video.style.display = 'none';
+                captureBtn.style.display = 'none';
+                retakeBtn.style.display = 'inline-flex';
+                stopStream();
+            }, 'image/jpeg', 0.9);
+        });
+
+        retakeBtn.addEventListener('click', function () {
+            capturedBlob = null;
+            preview.style.display = 'none';
+            retakeBtn.style.display = 'none';
+            startBtn.style.display = 'inline-flex';
+        });
+    }
+
+    uploadForm.addEventListener('submit', function (event) {
+        if (!supportsCamera) {
+            return; // native file input submits normally
+        }
+
+        event.preventDefault();
+
+        if (!capturedBlob) {
+            alert('Please capture a photo first.');
+            return;
+        }
+
+        var formData = new FormData(uploadForm);
+        formData.set('photo', capturedBlob, 'proof-' + Date.now() + '.jpg');
+
+        fetch(uploadForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        }).then(function (response) {
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+            if (response.status === 422) {
+                return response.json().then(function (data) {
+                    alert(data.message || 'Upload failed. Please try again.');
+                    window.location.reload();
+                });
+            }
+            window.location.reload();
+        }).catch(function () {
+            alert('Upload failed - check your connection and try again.');
+            window.location.reload();
+        });
+    });
+})();
 </script>
