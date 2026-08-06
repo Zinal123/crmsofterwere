@@ -10,13 +10,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Invetry extends Model
 {
     use HasFactory, Auditable;
+
+    /** Below this on-hand quantity, a part is considered Low Stock (Reports page and low-stock notifications). */
+    public const LOW_STOCK_THRESHOLD = 5;
+
     protected $table  ="invetry";
     protected $fillable = [
         'product_id',
         'quantity',
         'vandername',
         'rate',
+        'low_stock_notified_at',
+    ];
 
+    protected $casts = [
+        'low_stock_notified_at' => 'datetime',
     ];
 
     public function product(): BelongsTo

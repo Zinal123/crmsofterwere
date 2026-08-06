@@ -10,9 +10,6 @@ use Illuminate\Support\Collection;
 
 class ReportService
 {
-    /** Below this on-hand quantity, a part is flagged Low Stock on the report. */
-    private const LOW_STOCK_THRESHOLD = 5;
-
     /**
      * Job counts by status. Always includes every known status, zero-filled,
      * so the report has a stable shape regardless of what data exists.
@@ -81,7 +78,7 @@ class ReportService
             'id' => $item->id,
             'product_name' => $item->product->name ?? 'Unknown part',
             'quantity' => $item->quantity,
-            'is_low_stock' => $item->quantity < self::LOW_STOCK_THRESHOLD,
+            'is_low_stock' => $item->quantity < Invetry::LOW_STOCK_THRESHOLD,
         ]);
     }
 }

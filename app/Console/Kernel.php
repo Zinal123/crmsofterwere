@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('jobs:flag-overdue')->dailyAt('07:00');
+        $schedule->command('inventory:flag-low-stock')->dailyAt('07:15');
     }
 
     /**
