@@ -10,7 +10,7 @@ class JobPhoto extends Model
     use Auditable;
 
     protected $fillable = [
-        'job_id', 'uploaded_by', 'path', 'content_hash', 'latitude', 'longitude',
+        'job_id', 'uploaded_by', 'path', 'content_hash', 'stage', 'latitude', 'longitude',
         'location_captured', 'location_flagged', 'distance_from_machine_meters',
         'map_link', 'address', 'captured_at',
     ];

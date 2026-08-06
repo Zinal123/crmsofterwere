@@ -30,7 +30,7 @@ class JobPhotoService
     ) {
     }
 
-    public function upload(Job $job, User $uploader, UploadedFile $file, ?float $lat, ?float $lng): JobPhoto
+    public function upload(Job $job, User $uploader, UploadedFile $file, ?float $lat, ?float $lng, string $stage = 'general'): JobPhoto
     {
         if ($job->status !== 'in_progress') {
             throw new \InvalidArgumentException('Proof photos can only be uploaded while a job is in progress.');
@@ -61,6 +61,7 @@ class JobPhotoService
             'uploaded_by' => $uploader->id,
             'path' => $diskPath,
             'content_hash' => $contentHash,
+            'stage' => $stage,
             'latitude' => $lat,
             'longitude' => $lng,
             'location_captured' => true,

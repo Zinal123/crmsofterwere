@@ -61,6 +61,9 @@
                             <p class="photo-caption">(photo file unavailable)</p>
                         @endif
                         <p class="photo-caption">
+                            @if($photo->stage !== 'general')
+                                <strong>{{ ucfirst($photo->stage) }}</strong> &middot;
+                            @endif
                             {{ $photo->captured_at?->format('d M Y, H:i') ?? '-' }}
                             @if($photo->location_captured)
                                 &middot; {{ $photo->address ?? 'Location captured' }}

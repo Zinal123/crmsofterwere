@@ -41,6 +41,48 @@ class JobPhotoUploadTest extends TestCase
         $this->assertDatabaseHas('job_audit_logs', ['job_id' => $job->id, 'action' => 'photo_uploaded']);
     }
 
+    public function test_a_photo_can_be_tagged_as_before_or_after(): void
+    {
+        Storage::fake('public');
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
+
+        $this->actingAs($worker)->post(route('jobs.photos.store', $job->id), [
+            'photo' => UploadedFile::fake()->image('before.jpg'),
+            'latitude' => '23.0225000',
+            'longitude' => '72.5714000',
+            'stage' => 'before',
+        ]);
+        $this->actingAs($worker)->post(route('jobs.photos.store', $job->id), [
+            'photo' => UploadedFile::fake()->image('after.jpg'),
+            'latitude' => '23.0225000',
+            'longitude' => '72.5714000',
+            'stage' => 'after',
+        ]);
+
+        $this->assertDatabaseHas('job_photos', ['job_id' => $job->id, 'stage' => 'before']);
+        $this->assertDatabaseHas('job_photos', ['job_id' => $job->id, 'stage' => 'after']);
+    }
+
+    public function test_a_photo_defaults_to_general_stage_when_not_specified(): void
+    {
+        Storage::fake('public');
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['status' => 'in_progress', 'assigned_to' => $worker->id]);
+
+        $this->actingAs($worker)->post(route('jobs.photos.store', $job->id), [
+            'photo' => UploadedFile::fake()->image('proof.jpg'),
+            'latitude' => '23.0225000',
+            'longitude' => '72.5714000',
+        ]);
+
+        $this->assertDatabaseHas('job_photos', ['job_id' => $job->id, 'stage' => 'general']);
+    }
+
     public function test_upload_fails_when_job_is_not_in_progress(): void
     {
         Storage::fake('public');

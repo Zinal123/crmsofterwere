@@ -98,19 +98,38 @@
                     <div class="card border">
                         <div class="card-body">
                             <h6>Add Proof Photo <span class="text-danger">*</span></h6>
+
+                            <div class="mb-2" role="radiogroup" aria-label="Photo stage">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="stage-radio" id="stage-before" value="before" autocomplete="off">
+                                    <label class="btn btn-outline-secondary btn-shopfloor" for="stage-before" style="min-height: 48px;">Before</label>
+
+                                    <input type="radio" class="btn-check" name="stage-radio" id="stage-general" value="general" autocomplete="off" checked>
+                                    <label class="btn btn-outline-secondary btn-shopfloor" for="stage-general" style="min-height: 48px;">General</label>
+
+                                    <input type="radio" class="btn-check" name="stage-radio" id="stage-after" value="after" autocomplete="off">
+                                    <label class="btn btn-outline-secondary btn-shopfloor" for="stage-after" style="min-height: 48px;">After</label>
+                                </div>
+                            </div>
+
                             <form id="photo-upload-form" class="job-action-form" action="{{ route('jobs.photos.store', $job->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <input type="hidden" name="stage" id="photo-stage" value="general">
 
                                 <div id="camera-capture">
                                     <video id="camera-video" autoplay playsinline muted class="w-100 rounded mb-2" style="max-height: 320px; background: #000; display: none;"></video>
-                                    <canvas id="camera-canvas" style="display: none;"></canvas>
-                                    <img id="camera-preview" class="w-100 rounded mb-2" style="max-height: 320px; object-fit: contain; background: #000; display: none;" alt="Captured proof">
+                                    {{-- Canvas doubles as the annotation surface: after Capture, the frozen
+                                         frame stays on canvas (not a static <img>) so the Worker can draw
+                                         directly on it (arrows/notes) before it's flattened and uploaded. --}}
+                                    <canvas id="camera-canvas" class="w-100 rounded mb-2" style="max-height: 320px; background: #000; display: none; touch-action: none;" aria-label="Captured proof photo, tap or drag to annotate"></canvas>
 
                                     <div class="d-flex gap-2 flex-wrap mb-2">
                                         <x-ui.button variant="primary" type="button" id="start-camera-btn" icon="ri-camera-line" class="btn-shopfloor">Open Camera</x-ui.button>
                                         <x-ui.button variant="success" type="button" id="capture-btn" icon="ri-checkbox-circle-line" class="btn-shopfloor" style="display: none;">Capture</x-ui.button>
+                                        <x-ui.button variant="secondary" type="button" id="clear-annotation-btn" icon="ri-eraser-line" class="btn-shopfloor" style="display: none;">Clear Markup</x-ui.button>
                                         <x-ui.button variant="secondary" type="button" id="retake-btn" icon="ri-refresh-line" class="btn-shopfloor" style="display: none;">Retake</x-ui.button>
                                     </div>
+                                    <p id="annotation-hint" class="small text-muted" style="display: none;">Draw on the photo above to mark or annotate anything - fingertip or stylus.</p>
 
                                     {{-- Camera capture draws to canvas and attaches the blob on submit (see script below) -
                                          this structurally blocks gallery selection, unlike a plain file-picker hint.
@@ -210,6 +229,12 @@
                 @forelse($job->photos as $photo)
                     <div class="col-6 col-md-3">
                         <img src="{{ asset('storage/' . $photo->path) }}" class="img-fluid rounded" alt="Job completion">
+                        @if($photo->stage !== 'general')
+                            <x-ui.status-badge
+                                :status="ucfirst($photo->stage)"
+                                :variant="$photo->stage === 'before' ? 'warning' : 'success'"
+                                :icon="$photo->stage === 'before' ? 'ri-history-line' : 'ri-checkbox-circle-line'" />
+                        @endif
                         @if($photo->location_captured)
                             <a href="{{ $photo->map_link }}" target="_blank" class="small d-block">{{ $photo->address ?? 'View location' }}</a>
                         @else
@@ -280,16 +305,29 @@ if (navigator.geolocation) {
         return;
     }
 
+    var stageInput = document.getElementById('photo-stage');
+    document.querySelectorAll('input[name="stage-radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            if (radio.checked) {
+                stageInput.value = radio.value;
+            }
+        });
+    });
+
     var video = document.getElementById('camera-video');
     var canvas = document.getElementById('camera-canvas');
-    var preview = document.getElementById('camera-preview');
+    var ctx = canvas.getContext('2d');
     var startBtn = document.getElementById('start-camera-btn');
     var captureBtn = document.getElementById('capture-btn');
+    var clearAnnotationBtn = document.getElementById('clear-annotation-btn');
     var retakeBtn = document.getElementById('retake-btn');
+    var annotationHint = document.getElementById('annotation-hint');
     var fallbackNote = document.getElementById('camera-fallback-note');
     var fallbackInput = document.getElementById('camera-fallback-input');
     var stream = null;
-    var capturedBlob = null;
+    var hasCapturedPhoto = false;
+    var originalFrame = null; // ImageData of the un-annotated capture, for "Clear Markup"
+    var isDrawing = false;
 
     function stopStream() {
         if (stream) {
@@ -301,13 +339,60 @@ if (navigator.geolocation) {
     function fallBackToFilePicker() {
         stopStream();
         video.style.display = 'none';
+        canvas.style.display = 'none';
         startBtn.style.display = 'none';
         captureBtn.style.display = 'none';
+        clearAnnotationBtn.style.display = 'none';
         retakeBtn.style.display = 'none';
+        annotationHint.style.display = 'none';
         fallbackNote.style.display = 'block';
         fallbackInput.style.display = 'block';
         fallbackInput.required = true;
     }
+
+    function canvasPoint(event) {
+        var rect = canvas.getBoundingClientRect();
+        var point = event.touches ? event.touches[0] : event;
+        return {
+            x: (point.clientX - rect.left) * (canvas.width / rect.width),
+            y: (point.clientY - rect.top) * (canvas.height / rect.height),
+        };
+    }
+
+    function startDrawing(event) {
+        if (!hasCapturedPhoto) {
+            return;
+        }
+        isDrawing = true;
+        var p = canvasPoint(event);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        event.preventDefault();
+    }
+
+    function draw(event) {
+        if (!isDrawing) {
+            return;
+        }
+        var p = canvasPoint(event);
+        ctx.lineWidth = Math.max(4, canvas.width * 0.006);
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#ff3b30';
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        event.preventDefault();
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
 
     var supportsCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 
@@ -327,22 +412,32 @@ if (navigator.geolocation) {
         captureBtn.addEventListener('click', function () {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            canvas.toBlob(function (blob) {
-                capturedBlob = blob;
-                preview.src = URL.createObjectURL(blob);
-                preview.style.display = 'block';
-                video.style.display = 'none';
-                captureBtn.style.display = 'none';
-                retakeBtn.style.display = 'inline-flex';
-                stopStream();
-            }, 'image/jpeg', 0.9);
+            ctx.drawImage(video, 0, 0);
+            originalFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            hasCapturedPhoto = true;
+
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+            captureBtn.style.display = 'none';
+            clearAnnotationBtn.style.display = 'inline-flex';
+            retakeBtn.style.display = 'inline-flex';
+            annotationHint.style.display = 'block';
+            stopStream();
+        });
+
+        clearAnnotationBtn.addEventListener('click', function () {
+            if (originalFrame) {
+                ctx.putImageData(originalFrame, 0, 0);
+            }
         });
 
         retakeBtn.addEventListener('click', function () {
-            capturedBlob = null;
-            preview.style.display = 'none';
+            hasCapturedPhoto = false;
+            originalFrame = null;
+            canvas.style.display = 'none';
+            clearAnnotationBtn.style.display = 'none';
             retakeBtn.style.display = 'none';
+            annotationHint.style.display = 'none';
             startBtn.style.display = 'inline-flex';
         });
     }
@@ -354,34 +449,36 @@ if (navigator.geolocation) {
 
         event.preventDefault();
 
-        if (!capturedBlob) {
+        if (!hasCapturedPhoto) {
             alert('Please capture a photo first.');
             return;
         }
 
-        var formData = new FormData(uploadForm);
-        formData.set('photo', capturedBlob, 'proof-' + Date.now() + '.jpg');
+        canvas.toBlob(function (blob) {
+            var formData = new FormData(uploadForm);
+            formData.set('photo', blob, 'proof-' + Date.now() + '.jpg');
 
-        fetch(uploadForm.action, {
-            method: 'POST',
-            body: formData,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        }).then(function (response) {
-            if (response.redirected) {
-                window.location.href = response.url;
-                return;
-            }
-            if (response.status === 422) {
-                return response.json().then(function (data) {
-                    alert(data.message || 'Upload failed. Please try again.');
-                    window.location.reload();
-                });
-            }
-            window.location.reload();
-        }).catch(function () {
-            alert('Upload failed - check your connection and try again.');
-            window.location.reload();
-        });
+            fetch(uploadForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            }).then(function (response) {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                if (response.status === 422) {
+                    return response.json().then(function (data) {
+                        alert(data.message || 'Upload failed. Please try again.');
+                        window.location.reload();
+                    });
+                }
+                window.location.reload();
+            }).catch(function () {
+                alert('Upload failed - check your connection and try again.');
+                window.location.reload();
+            });
+        }, 'image/jpeg', 0.9);
     });
 })();
 </script>
