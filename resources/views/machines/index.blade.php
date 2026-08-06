@@ -28,6 +28,7 @@
                                     @csrf
                                     <x-ui.button variant="secondary" :soft="true" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'" :ariaLabel="$machine->is_active ? 'Disable' : 'Enable'" data-bs-toggle="tooltip" :title="$machine->is_active ? 'Disable' : 'Enable'" />
                                 </form>
+                                <x-ui.button variant="secondary" :soft="true" size="sm" type="button" icon="ri-qr-code-line" class="show-machine-qr" data-machine-id="{{ $machine->id }}" data-machine-name="{{ $machine->name }}" data-machine-token="{{ \App\Support\MachineQrCode::token($machine->id) }}" ariaLabel="QR Code" title="QR Code" />
                                 @can('machines.view-audit')
                                 <x-ui.button variant="secondary" :soft="true" size="sm" type="button" icon="ri-history-line" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}" ariaLabel="History" title="History" />
                                 @endcan
@@ -63,4 +64,56 @@
 @can('machines.view-audit')
     <x-ui.audit-trail-modal type="machine" />
 @endcan
+
+<div class="modal fade" id="machineQrModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="machine-qr-title">Machine QR Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="machine-qr-code" class="d-inline-block"></div>
+                <p class="text-muted small mt-2 mb-0">Print and affix to the machine. Scanning it during job creation selects this machine automatically instead of the dropdown.</p>
+            </div>
+            <div class="modal-footer">
+                <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Close</x-ui.button>
+                <x-ui.button variant="primary" type="button" id="print-machine-qr" icon="ri-printer-line">Print</x-ui.button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('script')
+<script src="{{ URL::asset('build/libs/qrcodejs/qrcode.js') }}"></script>
+<style media="print">
+    body * { visibility: hidden; }
+    #machine-qr-code, #machine-qr-code * { visibility: visible; }
+    #machine-qr-code { position: absolute; top: 0; left: 0; }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var qrContainer = document.getElementById('machine-qr-code');
+    var qrTitle = document.getElementById('machine-qr-title');
+    var currentQr = null;
+
+    document.querySelectorAll('.show-machine-qr').forEach(function (button) {
+        button.addEventListener('click', function () {
+            qrTitle.textContent = button.dataset.machineName + ' — QR Code';
+            qrContainer.innerHTML = '';
+            currentQr = new QRCode(qrContainer, {
+                text: button.dataset.machineToken,
+                width: 220,
+                height: 220,
+            });
+            new bootstrap.Modal(document.getElementById('machineQrModal')).show();
+        });
+    });
+
+    document.getElementById('print-machine-qr').addEventListener('click', function () {
+        window.print();
+    });
+});
+</script>
 @endsection
