@@ -34,4 +34,18 @@ class InventoryService
 
         return true;
     }
+
+    public function setLowStockThreshold(int $itemId, ?int $threshold): bool
+    {
+        $item = $this->repository->find($itemId);
+
+        if (!$item) {
+            return false;
+        }
+
+        $item->low_stock_threshold = $threshold;
+        $item->save();
+
+        return true;
+    }
 }

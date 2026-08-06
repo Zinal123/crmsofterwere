@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\ClientAccount;
+use App\Models\ClientMachine;
 use App\Models\Invetry;
 use App\Models\Product;
+use App\Models\SparePartRequest;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,6 +81,41 @@ class ProductInventoryMergeTest extends TestCase
         $response->assertOk();
         $response->assertSee('open-update-qty-modal', false);
         $response->assertSee('data-id="' . $item->id . '"', false);
+    }
+
+    public function test_product_page_shows_reserved_and_available_stock_for_a_spare_part(): void
+    {
+        $owner = $this->owner();
+        $part = Product::factory()->create(['name' => 'Ceramic Nozzle Ring', 'is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        SparePartRequest::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'product_id' => $part->id,
+            'quantity' => 3,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('Reserved: 3');
+        $response->assertSee('Available: 7');
+    }
+
+    public function test_product_page_shows_low_stock_badge_using_the_effective_threshold(): void
+    {
+        $owner = $this->owner();
+        $part = Product::factory()->create(['name' => 'Precitec Focusing Lens', 'is_spare_part' => true]);
+        // 8 is above the global default (5) but below this item's custom threshold (10).
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 8, 'low_stock_threshold' => 10]);
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('Low Stock');
     }
 
     public function test_sidebar_no_longer_shows_a_separate_inventory_menu_item(): void

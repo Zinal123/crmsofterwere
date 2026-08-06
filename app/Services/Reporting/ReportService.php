@@ -78,7 +78,7 @@ class ReportService
             'id' => $item->id,
             'product_name' => $item->product->name ?? 'Unknown part',
             'quantity' => $item->quantity,
-            'is_low_stock' => $item->quantity < Invetry::LOW_STOCK_THRESHOLD,
+            'is_low_stock' => $item->quantity < $item->effectiveLowStockThreshold(),
         ]);
     }
 }

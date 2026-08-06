@@ -21,6 +21,7 @@ class Invetry extends Model
         'vandername',
         'rate',
         'low_stock_notified_at',
+        'low_stock_threshold',
     ];
 
     protected $casts = [
@@ -30,5 +31,10 @@ class Invetry extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function effectiveLowStockThreshold(): int
+    {
+        return $this->low_stock_threshold ?? self::LOW_STOCK_THRESHOLD;
     }
 }

@@ -15,9 +15,12 @@ class FlagLowStockInventory extends Command
 
     public function handle(): int
     {
-        $newlyLow = Invetry::where('quantity', '<', Invetry::LOW_STOCK_THRESHOLD)
-            ->whereNull('low_stock_notified_at')
-            ->get();
+        // Per-item thresholds can override the global default in either
+        // direction, so this can't be a single DB-side comparison - filter
+        // in PHP against each item's effective threshold instead.
+        $newlyLow = Invetry::whereNull('low_stock_notified_at')
+            ->get()
+            ->filter(fn (Invetry $item) => $item->quantity < $item->effectiveLowStockThreshold());
 
         if ($newlyLow->isNotEmpty()) {
             $owners = User::role('Owner')->get();
@@ -31,10 +34,11 @@ class FlagLowStockInventory extends Command
         }
 
         $restocked = Invetry::whereNotNull('low_stock_notified_at')
-            ->where('quantity', '>=', Invetry::LOW_STOCK_THRESHOLD)
-            ->update(['low_stock_notified_at' => null]);
+            ->get()
+            ->filter(fn (Invetry $item) => $item->quantity >= $item->effectiveLowStockThreshold());
+        Invetry::whereIn('id', $restocked->pluck('id'))->update(['low_stock_notified_at' => null]);
 
-        $this->info("Flagged {$newlyLow->count()} newly low-stock item(s), cleared {$restocked} restocked item(s).");
+        $this->info("Flagged {$newlyLow->count()} newly low-stock item(s), cleared {$restocked->count()} restocked item(s).");
 
         return self::SUCCESS;
     }

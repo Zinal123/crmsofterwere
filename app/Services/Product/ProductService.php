@@ -5,6 +5,7 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\Inventory\SparePartAvailabilityService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,7 @@ class ProductService
     public function __construct(
         private ProductRepositoryInterface $repository,
         private InventoryRepositoryInterface $inventoryRepository,
+        private SparePartAvailabilityService $availabilityService,
     ) {
     }
 
@@ -32,6 +34,11 @@ class ProductService
 
         return $products->each(function (Product $product) use ($inventoryByProductId) {
             $product->inventory = $inventoryByProductId->get($product->id);
+
+            if ($product->is_spare_part && $product->inventory !== null) {
+                $product->reserved_quantity = $product->inventory->quantity - $this->availabilityService->available($product->id);
+                $product->available_quantity = $this->availabilityService->available($product->id);
+            }
         });
     }
 

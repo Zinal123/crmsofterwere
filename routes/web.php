@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('inventrystore', [App\Http\Controllers\Inventory\InventryController::class, 'inventrystore'])->name('inventrystore')->middleware('permission:inventory.create');
     Route::post('quantityupdate', [App\Http\Controllers\Inventory\InventryController::class, 'quantityupdate'])->name('quantityupdate')->middleware('permission:inventory.update');
+    Route::post('inventory/{id}/low-stock-threshold', [App\Http\Controllers\Inventory\InventryController::class, 'setLowStockThreshold'])->name('inventory.set-low-stock-threshold')->middleware('permission:inventory.update');
 
     Route::post('productstore' ,[App\Http\Controllers\Product\ProductController::class, 'productstore'])->name('productstore')->middleware('permission:products.create');
     Route::get('productdelete/{id}' ,[App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete')->middleware('permission:products.delete');

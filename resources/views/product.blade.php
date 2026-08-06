@@ -47,6 +47,12 @@ list view
                         <td>
                             @if($item->inventory)
                                 {{ $item->inventory->quantity }}
+                                @if($item->inventory->quantity < $item->inventory->effectiveLowStockThreshold())
+                                    <x-ui.status-badge status="Low Stock" variant="danger" icon="ri-error-warning-line" />
+                                @endif
+                                @if($item->is_spare_part && isset($item->reserved_quantity))
+                                    <div class="small text-muted">Reserved: {{ $item->reserved_quantity }} &middot; Available: {{ $item->available_quantity }}</div>
+                                @endif
                             @else
                                 <span class="badge bg-secondary-subtle text-secondary">Not tracked</span>
                             @endif
@@ -60,6 +66,12 @@ list view
                                     <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}" data-bs-toggle="tooltip" title="Update Qty" aria-label="Update Qty">
                                         <i class="ri-stack-line align-bottom"></i>
                                     </button>
+                                    <form action="{{ route('inventory.set-low-stock-threshold', $item->inventory->id) }}" method="POST" class="d-inline-flex align-items-center gap-1">
+                                        @csrf
+                                        <label class="visually-hidden" for="threshold-{{ $item->inventory->id }}">Low-stock threshold</label>
+                                        <input type="number" min="0" name="low_stock_threshold" id="threshold-{{ $item->inventory->id }}" class="form-control form-control-sm" style="width: 70px;" value="{{ $item->inventory->low_stock_threshold }}" placeholder="{{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }}" title="Low-stock threshold (default {{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }})">
+                                        <button type="submit" class="btn btn-soft-secondary btn-sm" title="Save low-stock threshold" aria-label="Save low-stock threshold"><i class="ri-alarm-warning-line align-bottom"></i></button>
+                                    </form>
                                     @endif
                                 @endcan
                                 @can('inventory.create')

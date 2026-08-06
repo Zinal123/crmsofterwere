@@ -51,4 +51,15 @@ class InventryController extends Controller
             return response()->json(['success' => true]);
         }
     }
+
+    public function setLowStockThreshold(Request $request, $id)
+    {
+        $data = $request->validate([
+            'low_stock_threshold' => 'nullable|integer|min:0',
+        ]);
+
+        $this->service->setLowStockThreshold((int) $id, $data['low_stock_threshold'] ?? null);
+
+        return redirect()->route('product')->with('success', 'Low-stock threshold updated.');
+    }
 }
