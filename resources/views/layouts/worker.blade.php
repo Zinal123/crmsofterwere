@@ -118,6 +118,14 @@
                 <i class="ri-error-warning-line align-middle me-1"></i>{{ session('error') }}
             </div>
         @endif
+        @if($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <i class="ri-error-warning-line align-middle me-1"></i>
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        @endif
 
         @yield('content')
     </main>

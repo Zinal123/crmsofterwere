@@ -67,6 +67,9 @@
                             @else
                                 &middot; Location not captured
                             @endif
+                            @if($photo->location_flagged)
+                                &middot; ⚠ {{ number_format($photo->distance_from_machine_meters) }}m from machine
+                            @endif
                         </p>
                     </td>
                 @endforeach

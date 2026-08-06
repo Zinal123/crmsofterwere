@@ -234,8 +234,8 @@ class JobController extends Controller
     {
         $data = $request->validate([
             'photo' => 'required|image|max:10240',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
         ]);
         $job = $this->repository->find($id);
         abort_if(! $job, 404);
@@ -246,8 +246,8 @@ class JobController extends Controller
                 $job,
                 $request->user(),
                 $request->file('photo'),
-                isset($data['latitude']) ? (float) $data['latitude'] : null,
-                isset($data['longitude']) ? (float) $data['longitude'] : null,
+                (float) $data['latitude'],
+                (float) $data['longitude'],
             );
         } catch (\InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 422);

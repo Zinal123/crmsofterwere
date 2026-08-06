@@ -61,6 +61,8 @@ class TicketJobSyncTest extends TestCase
         $this->actingAs($worker)->post(route('jobs.start', $ticket->job_id));
         $this->actingAs($worker)->post(route('jobs.photos.store', $ticket->job_id), [
             'photo' => UploadedFile::fake()->image('proof.jpg'),
+            'latitude' => 23.0225,
+            'longitude' => 72.5714,
         ]);
         $this->actingAs($worker)->post(route('jobs.complete', $ticket->job_id), [
             'completion_notes' => 'Replaced the nozzle.',

@@ -196,6 +196,9 @@
                         @else
                             <span class="small text-danger d-block">Location not captured</span>
                         @endif
+                        @if($photo->location_flagged)
+                            <x-ui.status-badge :status="'Outside expected radius (' . number_format($photo->distance_from_machine_meters) . 'm)'" variant="danger" icon="ri-map-pin-line" />
+                        @endif
                     </div>
                 @empty
                     <div class="col-12"><x-ui.empty-state icon="ri-image-line" message="No photos uploaded yet." /></div>
