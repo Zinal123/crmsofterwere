@@ -60,6 +60,14 @@
                 </div>
             </div>
 
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="1" id="remember" name="remember">
+                <label class="form-check-label" for="remember">
+                    Remember this device
+                </label>
+                <div class="form-text">Only check this on your own phone — leave unchecked on a shared shop tablet, which will sign out automatically after 15 minutes idle.</div>
+            </div>
+
             <div class="mt-4">
                 <button class="btn btn-success w-100" type="submit">Sign In</button>
             </div>

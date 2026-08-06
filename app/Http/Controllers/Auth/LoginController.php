@@ -42,6 +42,12 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        // Drives EnforceIdleTimeout: an unchecked "Remember this device" box
+        // means this could be a shared shop-floor tablet, so the session
+        // gets a short idle timeout. Checked means a trusted personal
+        // device - no forced logout, same as Laravel's own remember-me cookie.
+        $request->session()->put('device_trusted', $request->boolean('remember'));
+
         if (!$user->is_active) {
             Auth::logout();
             $request->session()->invalidate();

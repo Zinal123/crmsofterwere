@@ -26,9 +26,12 @@ class JobController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $jobs = $user->can('jobs.view-all') ? $this->repository->all() : $this->repository->allForUser($user);
+        $canViewAll = $user->can('jobs.view-all');
+        $jobs = $canViewAll ? $this->repository->all() : $this->repository->allForUser($user);
 
-        return view('jobs.index', compact('jobs'));
+        // A plain Worker (no jobs.view-all) gets the Worker Kiosk: a distinct,
+        // large-touch-target surface for shop-floor use, not the admin theme.
+        return view($canViewAll ? 'jobs.index' : 'worker.jobs.index', compact('jobs'));
     }
 
     public function create(Request $request)
@@ -76,7 +79,7 @@ class JobController extends Controller
 
         $workers = $this->userRepository->byRole('Worker');
 
-        return view('jobs.show', compact('job', 'workers'));
+        return view($request->user()->can('jobs.view-all') ? 'jobs.show' : 'worker.jobs.show', compact('job', 'workers'));
     }
 
     public function pdf(Request $request, $id)
