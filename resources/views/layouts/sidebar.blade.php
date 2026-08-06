@@ -40,6 +40,14 @@
                 </li> <!-- end Dashboard Menu -->
                 @endcan
 
+                @can('reports.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('reports.index') }}">
+                        <i class="ri-bar-chart-box-line"></i> <span>Reports</span>
+                    </a>
+                </li>
+                @endcan
+
                 @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage', 'vendors.view'])
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')

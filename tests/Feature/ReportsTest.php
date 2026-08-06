@@ -1,0 +1,125 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Invetry;
+use App\Models\Job;
+use App\Models\Machine;
+use App\Models\Product;
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ReportsTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(RolesAndPermissionsSeeder::class);
+    }
+
+    public function test_owner_can_view_the_reports_page(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+    }
+
+    public function test_worker_cannot_view_the_reports_page(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        $response = $this->actingAs($worker)->get(route('reports.index'));
+
+        $response->assertForbidden();
+    }
+
+    public function test_job_throughput_counts_jobs_by_status(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        Job::factory()->create(['status' => 'completed']);
+        Job::factory()->create(['status' => 'completed']);
+        Job::factory()->create(['status' => 'in_progress']);
+        Job::factory()->create(['status' => 'rejected']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewHas('jobThroughput', function ($throughput) {
+            return $throughput['completed'] === 2
+                && $throughput['in_progress'] === 1
+                && $throughput['rejected'] === 1;
+        });
+    }
+
+    public function test_technician_performance_shows_completed_count_per_worker(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $workerA = User::factory()->create(['name' => 'Ramesh Solanki']);
+        $workerA->syncRoles(['Worker']);
+        $workerB = User::factory()->create(['name' => 'Suresh Vaghela']);
+        $workerB->syncRoles(['Worker']);
+
+        Job::factory()->create(['assigned_to' => $workerA->id, 'status' => 'completed', 'created_at' => now()->subDays(2), 'completed_at' => now()->subDays(2)->addHours(3)]);
+        Job::factory()->create(['assigned_to' => $workerA->id, 'status' => 'completed', 'created_at' => now()->subDays(1), 'completed_at' => now()->subDays(1)->addHours(5)]);
+        Job::factory()->create(['assigned_to' => $workerB->id, 'status' => 'in_progress']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertSee('Ramesh Solanki');
+        $response->assertSee('Suresh Vaghela');
+        // workerA has 2 completed jobs, workerB has 0
+        $response->assertViewHas('technicianPerformance', function ($rows) use ($workerA, $workerB) {
+            $a = $rows->firstWhere('id', $workerA->id);
+            $b = $rows->firstWhere('id', $workerB->id);
+
+            return $a['completed_count'] === 2 && $b['completed_count'] === 0;
+        });
+    }
+
+    public function test_machine_service_history_counts_jobs_per_machine(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create(['name' => 'CNC Lathe #9']);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'completed']);
+        Job::factory()->create(['machine_id' => $machine->id, 'status' => 'in_progress']);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertSee('CNC Lathe #9');
+        $response->assertViewHas('machineHistory', function ($rows) use ($machine) {
+            $row = $rows->firstWhere('id', $machine->id);
+
+            return $row['job_count'] === 2;
+        });
+    }
+
+    public function test_inventory_levels_flags_low_stock(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $healthy = Product::factory()->create(['name' => 'Ceramic Nozzle Ring']);
+        Invetry::factory()->create(['product_id' => $healthy->id, 'quantity' => 100]);
+        $low = Product::factory()->create(['name' => 'Focus Lens']);
+        Invetry::factory()->create(['product_id' => $low->id, 'quantity' => 2]);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertSee('Ceramic Nozzle Ring');
+        $response->assertSee('Focus Lens');
+        $response->assertSee('Low Stock');
+    }
+}
