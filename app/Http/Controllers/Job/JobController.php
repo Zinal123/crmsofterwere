@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Job;
 
 use App\Http\Controllers\Controller;
+use App\Models\JobChecklistItem;
 use App\Repositories\Contracts\JobRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\Job\JobChecklistService;
 use App\Services\Job\JobService;
 use App\Services\Job\MachineService;
 use App\Services\Ticketing\TicketService;
@@ -20,6 +22,7 @@ class JobController extends Controller
         private \App\Services\Job\JobPhotoService $photoService,
         private UserRepositoryInterface $userRepository,
         private TicketService $ticketService,
+        private JobChecklistService $checklistService,
     ) {
     }
 
@@ -80,6 +83,36 @@ class JobController extends Controller
         $workers = $this->userRepository->byRole('Worker');
 
         return view($request->user()->can('jobs.view-all') ? 'jobs.show' : 'worker.jobs.show', compact('job', 'workers'));
+    }
+
+    public function addChecklistItem(Request $request, $id)
+    {
+        $data = $request->validate(['description' => 'required|string|max:255']);
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+        abort_unless(
+            $job->created_by === $request->user()->id || $request->user()->can('jobs.assign'),
+            403
+        );
+
+        $this->checklistService->addItem($job, $data['description']);
+
+        return redirect()->route('jobs.show', $job->id)->with('success', 'Checklist item added.');
+    }
+
+    public function toggleChecklistItem(Request $request, $id, $itemId)
+    {
+        $job = $this->repository->find($id);
+        abort_if(! $job, 404);
+        abort_unless(
+            $request->user()->can('jobs.view-all') || $job->created_by === $request->user()->id || $job->assigned_to === $request->user()->id,
+            403
+        );
+
+        $item = JobChecklistItem::where('job_id', $job->id)->findOrFail($itemId);
+        $this->checklistService->toggleItem($item, $request->user());
+
+        return redirect()->route('jobs.show', $job->id);
     }
 
     public function pdf(Request $request, $id)

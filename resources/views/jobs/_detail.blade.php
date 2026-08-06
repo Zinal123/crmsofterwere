@@ -27,6 +27,39 @@
             <p>{{ $job->description }}</p>
             <p class="text-muted">{{ $job->machine->name ?? $job->site_name }} &middot; Priority: {{ ucfirst($job->priority) }}</p>
 
+            @if($job->checklistItems->isNotEmpty() || $job->created_by === auth()->id() || auth()->user()->can('jobs.assign'))
+                <div class="card border mb-3">
+                    <div class="card-body">
+                        <h6>Work Instructions</h6>
+                        @forelse($job->checklistItems as $checklistItem)
+                            <form action="{{ route('jobs.checklist.toggle', [$job->id, $checklistItem->id]) }}" method="POST" class="job-action-form">
+                                @csrf
+                                <div class="form-check py-1">
+                                    <input class="form-check-input" type="checkbox" id="checklist-item-{{ $checklistItem->id }}" onchange="this.form.submit()" @checked($checklistItem->is_completed) style="width: 1.5em; height: 1.5em;">
+                                    <label class="form-check-label {{ $checklistItem->is_completed ? 'text-decoration-line-through text-muted' : '' }}" for="checklist-item-{{ $checklistItem->id }}">
+                                        {{ $checklistItem->description }}
+                                    </label>
+                                    @if($checklistItem->is_completed && $checklistItem->completer)
+                                        <span class="small text-muted d-block ms-4">Checked by {{ $checklistItem->completer->name }}, {{ $checklistItem->completed_at->format('d M Y, H:i') }}</span>
+                                    @endif
+                                </div>
+                            </form>
+                        @empty
+                            <p class="text-muted small mb-2">No work instructions added yet.</p>
+                        @endforelse
+
+                        @if($job->created_by === auth()->id() || auth()->user()->can('jobs.assign'))
+                            <form action="{{ route('jobs.checklist.store', $job->id) }}" method="POST" class="d-flex gap-2 mt-2">
+                                @csrf
+                                <label for="new-checklist-item" class="visually-hidden">New work instruction</label>
+                                <input type="text" id="new-checklist-item" name="description" class="form-control form-control-sm" placeholder="Add a work instruction or checklist step" required maxlength="255">
+                                <x-ui.button variant="secondary" size="sm" type="submit" icon="ri-add-line" ariaLabel="Add checklist item" />
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
             @if($job->status === 'completed')
                 <a href="{{ route('jobs.pdf', $job->id) }}" class="btn btn-soft-secondary btn-sm mb-2">
                     <i class="ri-file-pdf-2-line align-bottom me-1"></i> Download Completion Report

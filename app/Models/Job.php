@@ -57,6 +57,11 @@ class Job extends Model
         return $this->hasMany(JobPhoto::class);
     }
 
+    public function checklistItems()
+    {
+        return $this->hasMany(JobChecklistItem::class)->orderBy('id');
+    }
+
     public function auditLogs()
     {
         return $this->hasMany(JobAuditLog::class);
