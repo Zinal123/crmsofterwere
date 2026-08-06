@@ -30,6 +30,8 @@ class EloquentQuotationRepository implements QuotationRepositoryInterface
             'quotation_id' => $quotationId,
             'description' => $item['description'] ?? null,
             'amount' => $item['amount'] ?? null,
+            'product_id' => $item['product_id'] ?? null,
+            'quantity' => $item['quantity'] ?? null,
         ]);
     }
 

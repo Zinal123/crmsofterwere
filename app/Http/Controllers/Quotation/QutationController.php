@@ -67,6 +67,8 @@ class QutationController extends Controller
             'items' => 'nullable|array',
             'items.*.description' => 'nullable|string|max:255',
             'items.*.amount' => 'nullable|string|max:255',
+            'items.*.product_id' => 'nullable|integer|exists:product,id',
+            'items.*.quantity' => 'nullable|integer|min:1',
         ])['items'] ?? [];
         $this->service->create($data, $items);
         return redirect()->route('listqutation')->with('success', 'Your message has been sent successfully!');

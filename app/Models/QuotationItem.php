@@ -13,10 +13,17 @@ class QuotationItem extends Model
         'quotation_id',
         'description',
         'amount',
+        'product_id',
+        'quantity',
     ];
 
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quation::class, 'quotation_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

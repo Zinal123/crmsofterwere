@@ -6,6 +6,7 @@ use App\Models\Quation;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
+use App\Services\Inventory\SparePartAvailabilityService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +16,7 @@ class QuotationService
         private QuotationRepositoryInterface $repository,
         private ProductConfigRepositoryInterface $productConfigRepository,
         private BankRepositoryInterface $bankRepository,
+        private SparePartAvailabilityService $availabilityService,
     ) {
     }
 
@@ -40,6 +42,12 @@ class QuotationService
     {
         $quotation = $this->repository->findWithDetails($id);
         $productId = $quotation->product_id ?: 1;
+
+        $quotation->items->each(function ($item) {
+            if ($item->product_id !== null) {
+                $item->is_available = $this->availabilityService->available($item->product_id) >= ($item->quantity ?? 1);
+            }
+        });
 
         return [
             'quotation' => $quotation,

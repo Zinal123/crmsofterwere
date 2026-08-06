@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Fource;
+use App\Models\Invetry;
+use App\Models\Product;
 use App\Models\Quation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -87,6 +89,49 @@ class QuotationTest extends TestCase
             'quotation_id' => $quotation->id,
             'description' => 'Annual maintenance',
             'amount' => '15000',
+        ]);
+    }
+
+    public function test_a_pricing_row_can_optionally_link_to_a_tracked_inventory_item(): void
+    {
+        $user = User::factory()->create();
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'Linked Item Client',
+            'items' => [
+                ['description' => 'Focus Lens', 'amount' => '8500', 'product_id' => $part->id, 'quantity' => 3],
+            ],
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $quotation = Quation::where('clientname', 'Linked Item Client')->firstOrFail();
+        $this->assertDatabaseHas('quotation_items', [
+            'quotation_id' => $quotation->id,
+            'product_id' => $part->id,
+            'quantity' => 3,
+        ]);
+    }
+
+    public function test_a_pricing_row_without_a_linked_product_still_works(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('generatequtationstore'), [
+            'product_id' => 1,
+            'clientname' => 'No Link Client',
+            'items' => [
+                ['description' => 'Installation charges', 'amount' => '10000'],
+            ],
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $quotation = Quation::where('clientname', 'No Link Client')->firstOrFail();
+        $this->assertDatabaseHas('quotation_items', [
+            'quotation_id' => $quotation->id,
+            'product_id' => null,
         ]);
     }
 
@@ -280,6 +325,21 @@ class QuotationTest extends TestCase
         }
 
         return $text;
+    }
+
+    public function test_printquation_pdf_shows_stock_availability_for_a_linked_item(): void
+    {
+        $user = User::factory()->create();
+        $part = Product::factory()->create(['is_spare_part' => true]);
+        Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 1]);
+        $quotation = Quation::create(['product_id' => 1, 'clientname' => 'Stock Check Client', 'bank' => 1]);
+        $quotation->items()->create(['description' => 'Focus Lens', 'amount' => '8500', 'product_id' => $part->id, 'quantity' => 5]);
+
+        $response = $this->actingAs($user)->get(route('quation.pdf', $quotation->id));
+
+        $response->assertOk();
+        $text = strtolower($this->extractPdfText($response->getContent()));
+        $this->assertStringContainsString('not available', $text);
     }
 
     public function test_printquation_pdf_page_returns_404_for_a_missing_quotation(): void

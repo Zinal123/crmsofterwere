@@ -256,7 +256,12 @@
     @forelse($quotation->items as $index => $item)
     <tr>
         <td>{{ $index + 1 }}</td>
-        <td class="text-capitalize">{{ $item->description ?: '-' }}</td>
+        <td class="text-capitalize">
+            {{ $item->description ?: '-' }}
+            @if(isset($item->is_available))
+                ({{ $item->is_available ? 'Available' : 'Not Available' }})
+            @endif
+        </td>
         <td class="text-right">{{ \App\Support\IndianNumber::format($item->amount) }}</td>
     </tr>
     @empty
