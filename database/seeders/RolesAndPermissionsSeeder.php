@@ -31,7 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'tickets.view', 'tickets.assign', 'tickets.view-audit',
         'spare-parts.manage', 'spare-part-requests.view', 'spare-part-requests.manage', 'spare-part-requests.view-audit',
         'reports.view',
-        'expenses.view', 'expenses.manage', 'expenses.view-audit',
+        'expenses.view', 'expenses.manage', 'expenses.delete', 'expenses.view-audit',
         'vendor-payments.view', 'vendor-payments.manage',
         'vendors.view-audit',
     ];

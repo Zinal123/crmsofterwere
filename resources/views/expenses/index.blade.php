@@ -27,7 +27,7 @@ Daily Expenses
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Mode</th><th>Description</th></tr>
+                        <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Mode</th><th>Description</th>@can('expenses.delete')<th></th>@endcan</tr>
                     </thead>
                     <tbody>
                         @forelse($transactions as $transaction)
@@ -44,9 +44,20 @@ Daily Expenses
                             <td>{{ \App\Support\IndianNumber::format($transaction->amount) }}</td>
                             <td>{{ ucfirst($transaction->payment_mode) }}</td>
                             <td>{{ $transaction->description ?: '—' }}</td>
+                            @can('expenses.delete')
+                            <td>
+                                <form action="{{ route('expenses.destroy', $transaction->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
+                                        <i class="ri-delete-bin-fill align-bottom"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            @endcan
                         </tr>
                         @empty
-                        <tr><td colspan="6"><x-ui.empty-state icon="ri-exchange-dollar-line" message="No transactions recorded yet." /></td></tr>
+                        <tr><td colspan="7"><x-ui.empty-state icon="ri-exchange-dollar-line" message="No transactions recorded yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -184,6 +195,10 @@ Daily Expenses
         </div>
     </div>
 </div>
+@endcan
+
+@can('expenses.delete')
+    <x-ui.confirm-modal recordType="transaction" />
 @endcan
 @endsection
 

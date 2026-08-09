@@ -77,4 +77,11 @@ class DailyTransactionController extends Controller
 
         return redirect()->route('expenses.index')->with('success', 'Transaction recorded.');
     }
+
+    public function destroy($id)
+    {
+        $this->service->delete($id);
+
+        return redirect()->route('expenses.index')->with('success', 'Transaction deleted.');
+    }
 }

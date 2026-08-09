@@ -192,4 +192,60 @@ class DailyTransactionTest extends TestCase
         $transaction = \App\Models\DailyTransaction::where('amount', 1300)->first();
         $this->assertNotNull($transaction->receipt_photo);
     }
+
+    public function test_owner_can_delete_a_standalone_transaction(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $category = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        $transaction = app(\App\Services\Expenses\DailyTransactionService::class)->create($category, ['amount' => 900, 'date' => now()->toDateString(), 'payment_mode' => 'cash'], $owner);
+
+        $response = $this->actingAs($owner)->delete(route('expenses.destroy', $transaction->id));
+
+        $response->assertRedirect(route('expenses.index'));
+        $this->assertDatabaseMissing('daily_transactions', ['id' => $transaction->id]);
+    }
+
+    public function test_deleting_a_worker_wages_transaction_also_deletes_the_real_salary_payment(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        $category = ExpenseCategory::create(['name' => 'Worker Wages', 'type' => 'payment', 'party_model' => 'employee']);
+        $transaction = app(\App\Services\Expenses\DailyTransactionService::class)->create($category, ['amount' => 500, 'date' => now()->toDateString(), 'payment_mode' => 'cash', 'employee_id' => $employee->id], $owner);
+        $salaryPaymentId = $transaction->linked_id;
+
+        $this->actingAs($owner)->delete(route('expenses.destroy', $transaction->id));
+
+        $this->assertDatabaseMissing('daily_transactions', ['id' => $transaction->id]);
+        $this->assertDatabaseMissing('salary_payments', ['id' => $salaryPaymentId]);
+    }
+
+    public function test_worker_cannot_delete_a_transaction(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $category = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        $transaction = app(\App\Services\Expenses\DailyTransactionService::class)->create($category, ['amount' => 900, 'date' => now()->toDateString(), 'payment_mode' => 'cash'], $owner);
+
+        $response = $this->actingAs($worker)->delete(route('expenses.destroy', $transaction->id));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('daily_transactions', ['id' => $transaction->id]);
+    }
+
+    public function test_expenses_page_has_a_delete_trigger_per_transaction(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $category = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        $transaction = app(\App\Services\Expenses\DailyTransactionService::class)->create($category, ['amount' => 900, 'date' => now()->toDateString(), 'payment_mode' => 'cash'], $owner);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertSee(route('expenses.destroy', $transaction->id), false);
+    }
 }

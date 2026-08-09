@@ -203,6 +203,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:expenses.manage')->post('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'store'])->name('expenses.store');
     Route::middleware('permission:expenses.view')->get('expenses/cashbook', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'cashBook'])->name('expenses.cashbook');
+    Route::middleware('permission:expenses.delete')->delete('expenses/{id}', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'destroy'])->name('expenses.destroy');
 
     Route::middleware('permission:tickets.view')->group(function () {
         Route::get('admin/tickets', [App\Http\Controllers\Ticketing\TicketController::class, 'index'])->name('admin.tickets.index');

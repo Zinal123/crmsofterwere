@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Services\Workforce\SalaryPaymentService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 
@@ -123,5 +124,23 @@ class DailyTransactionService
             'linked_id' => $linkedId,
             'created_by' => $creator->id,
         ]);
+    }
+
+    /**
+     * A wrong amount entered has no in-place edit path - financial ledger
+     * rows in this app are corrected by delete-and-redo, matching the
+     * Invoice/Payroll/VendorBill convention elsewhere. Deleting also removes
+     * the real linked SalaryPayment/VendorPayment so the worker's payroll or
+     * the vendor's ledger doesn't retain a record for a transaction that no
+     * longer exists here.
+     */
+    public function delete(int $id): void
+    {
+        $transaction = DailyTransaction::findOrFail($id);
+
+        DB::transaction(function () use ($transaction) {
+            $transaction->linked()?->delete();
+            $transaction->delete();
+        });
     }
 }
