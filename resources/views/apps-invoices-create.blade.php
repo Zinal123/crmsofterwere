@@ -368,7 +368,7 @@
                                     </td>
                                   
                                     <td class="product-removal">
-                                        <a href="javascript:void(0)" class="btn btn-success">Delete</a>
+                                        <a href="javascript:void(0)" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             </tbody>

@@ -37,6 +37,19 @@ class InvoiceTest extends TestCase
         $response->assertDontSee('readonly="readonly" value = "18"', false);
     }
 
+    public function test_create_page_product_line_delete_button_is_styled_as_destructive(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice.create'));
+
+        $response->assertOk();
+        // Was btn-success (green) - misleadingly styled as a positive/safe
+        // action for something that removes a line item.
+        $response->assertDontSee('class="btn btn-success">Delete</a>', false);
+        $response->assertSee('class="btn btn-danger">Delete</a>', false);
+    }
+
     public function test_getproduct_returns_product_list_json(): void
     {
         $user = User::factory()->create();

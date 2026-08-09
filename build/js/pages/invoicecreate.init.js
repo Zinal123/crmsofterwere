@@ -228,7 +228,7 @@ function new_link() {
         "</div>" +
         "</td>" +
         '<td class="product-removal">' +
-        '<a class="btn btn-success">Delete</a>' +
+        '<a class="btn btn-danger">Delete</a>' +
         "</td>" +
         "</tr>";
     tr1.innerHTML = document.getElementById("newForm").innerHTML + delLink;
