@@ -134,4 +134,38 @@ class RoleTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_owner_can_rename_a_role(): void
+    {
+        $owner = User::factory()->create();
+        $role = Role::create(['name' => 'QA Old Name', 'guard_name' => 'web']);
+
+        $response = $this->actingAs($owner)->put(route('admin.roles.update', $role->id), ['name' => 'QA New Name']);
+
+        $response->assertRedirect(route('admin.roles.index'));
+        $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => 'QA New Name']);
+    }
+
+    public function test_the_owner_role_cannot_be_renamed(): void
+    {
+        $owner = User::factory()->create();
+        $ownerRole = Role::findByName('Owner');
+
+        $response = $this->actingAs($owner)->put(route('admin.roles.update', $ownerRole->id), ['name' => 'Not Owner Anymore']);
+
+        $response->assertRedirect(route('admin.roles.index'));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('roles', ['id' => $ownerRole->id, 'name' => 'Owner']);
+    }
+
+    public function test_roles_page_has_a_rename_trigger_per_role(): void
+    {
+        $owner = User::factory()->create();
+        $worker = Role::findByName('Worker');
+
+        $response = $this->actingAs($owner)->get(route('admin.roles.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#renameRole-' . $worker->id . '"', false);
+    }
 }

@@ -35,6 +35,26 @@ class RoleService
         return $role;
     }
 
+    public function renameRole($id, string $newName): Role
+    {
+        $role = $this->repository->find($id);
+
+        if ($role === null) {
+            throw new \InvalidArgumentException('Role not found.');
+        }
+
+        if ($role->name === 'Owner') {
+            throw new \InvalidArgumentException('The Owner role cannot be renamed.');
+        }
+
+        $oldName = $role->name;
+        $role->name = $newName;
+        $this->repository->save($role);
+        $this->auditLog->log($role, 'updated', 'name', $oldName, $newName);
+
+        return $role;
+    }
+
     public function deleteRole($id): void
     {
         $role = $this->repository->find($id);

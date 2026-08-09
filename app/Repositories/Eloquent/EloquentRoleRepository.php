@@ -32,4 +32,9 @@ class EloquentRoleRepository implements RoleRepositoryInterface
     {
         return Role::find($roleId)?->users()->exists() ?? false;
     }
+
+    public function save(Role $role): void
+    {
+        $role->save();
+    }
 }

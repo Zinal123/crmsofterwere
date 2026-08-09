@@ -29,6 +29,19 @@ class RoleController extends Controller
         return redirect()->route('admin.roles.index')->with('success', 'Role created.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+
+        try {
+            $this->service->renameRole($id, $request->input('name'));
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('admin.roles.index')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role renamed.');
+    }
+
     public function togglePermission(Request $request, $roleId)
     {
         try {

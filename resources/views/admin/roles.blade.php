@@ -41,6 +41,9 @@ Roles & Permissions
                                 <th class="text-center">
                                     <span class="badge bg-primary-subtle text-primary fs-12">{{ $role->name }}</span>
                                     @if($role->name !== 'Owner')
+                                        <button type="button" class="btn btn-soft-primary btn-sm p-1 ms-1" data-bs-toggle="modal" data-bs-target="#renameRole-{{ $role->id }}" title="Rename Role" aria-label="Rename Role">
+                                            <i class="ri-edit-line align-bottom"></i>
+                                        </button>
                                         <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -77,6 +80,36 @@ Roles & Permissions
         </x-ui.data-table-card>
     </div>
 </div>
+
+@foreach($roles as $role)
+    @if($role->name !== 'Owner')
+    <div class="modal fade" id="renameRole-{{ $role->id }}" tabindex="-1" aria-labelledby="renameRole-{{ $role->id }}-label" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="renameRole-{{ $role->id }}-label">Rename Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-2">
+                            <label class="form-label" for="rename-role-name-{{ $role->id }}">Role Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="rename-role-name-{{ $role->id }}" name="name" value="{{ $role->name }}" required>
+                        </div>
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
+
 <x-ui.confirm-modal recordType="role" />
 @endsection
 

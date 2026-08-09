@@ -16,4 +16,6 @@ interface RoleRepositoryInterface
     public function delete($id): void;
 
     public function hasAssignedUsers($roleId): bool;
+
+    public function save(Role $role): void;
 }

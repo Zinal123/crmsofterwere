@@ -155,6 +155,7 @@ Route::middleware('auth')->group(function () {
         Route::post('admin/roles', [App\Http\Controllers\Admin\RoleController::class, 'store'])->name('admin.roles.store');
         Route::post('admin/roles/{roleId}/toggle-permission', [App\Http\Controllers\Admin\RoleController::class, 'togglePermission'])->name('admin.roles.togglePermission');
         Route::delete('admin/roles/{id}', [App\Http\Controllers\Admin\RoleController::class, 'destroy'])->name('admin.roles.destroy');
+        Route::put('admin/roles/{id}', [App\Http\Controllers\Admin\RoleController::class, 'update'])->name('admin.roles.update');
     });
 
     Route::middleware('permission:admin.manage-users')->group(function () {
