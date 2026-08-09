@@ -18,8 +18,8 @@ return new class extends Migration
             // (predates Laravel's bigint id() convention) - see jobs table
             // migration for the same discipline. foreignId() would create a
             // column type MySQL refuses as FK-incompatible with the real tables.
-            $table->integer('product_id');
-            $table->integer('invoice_id')->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('invoice_id')->nullable();
             $table->string('serial_number');
             $table->date('installed_at')->nullable();
             $table->timestamps();

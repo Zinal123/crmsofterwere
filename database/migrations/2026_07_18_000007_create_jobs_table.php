@@ -20,12 +20,12 @@ return new class extends Migration
             // type MySQL refuses as FK-incompatible with the real users table (only
             // caught by testing against live MySQL; sqlite's weak typing let this pass
             // silently in the automated test suite).
-            $table->integer('created_by');
-            $table->integer('assigned_to')->nullable();
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('assigned_to')->nullable();
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
             $table->date('due_date')->nullable();
             $table->enum('status', ['pending_approval', 'assigned', 'in_progress', 'on_hold', 'completed', 'rejected']);
-            $table->integer('decided_by')->nullable();
+            $table->unsignedBigInteger('decided_by')->nullable();
             $table->timestamp('decided_at')->nullable();
             $table->text('rejection_reason')->nullable();
             $table->text('on_hold_reason')->nullable();

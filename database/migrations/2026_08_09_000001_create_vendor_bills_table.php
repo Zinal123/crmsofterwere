@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('amount', 12, 2);
             $table->date('date');
             $table->text('description')->nullable();
-            $table->integer('created_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();

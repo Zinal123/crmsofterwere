@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreignId('job_id')->nullable()->constrained('jobs')->cascadeOnDelete();
             $table->foreignId('ticket_id')->nullable()->constrained('tickets')->cascadeOnDelete();
             // Nullable now - a client-submitted ticket photo has no staff uploader.
-            $table->integer('uploaded_by')->nullable();
+            $table->unsignedBigInteger('uploaded_by')->nullable();
             $table->string('path');
             $table->string('content_hash', 64)->nullable();
             $table->enum('stage', ['before', 'after', 'general'])->default('general');
@@ -88,7 +88,7 @@ return new class extends Migration
         Schema::create('job_photos_old', function (Blueprint $table) {
             $table->id();
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
-            $table->integer('uploaded_by');
+            $table->unsignedBigInteger('uploaded_by');
             $table->string('path');
             $table->string('content_hash', 64)->nullable();
             $table->enum('stage', ['before', 'after', 'general'])->default('general');

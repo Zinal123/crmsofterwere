@@ -19,7 +19,7 @@ return new class extends Migration
             // discipline as client_machines.product_id in an earlier migration -
             // foreignId() would create a bigint unsigned column MySQL refuses as
             // FK-incompatible with the real product table.
-            $table->integer('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedInteger('quantity')->default(1);
             $table->text('note')->nullable();
             $table->enum('status', ['pending', 'approved', 'fulfilled', 'rejected'])->default('pending');

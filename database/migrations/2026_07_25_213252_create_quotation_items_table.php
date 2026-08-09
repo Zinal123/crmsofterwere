@@ -18,7 +18,7 @@ return new class extends Migration
             // bigint unsigned `id()`), so the FK column here has to match
             // both the width AND signedness exactly - MySQL rejects a
             // foreign key between mismatched integer types.
-            $table->integer('quotation_id');
+            $table->unsignedBigInteger('quotation_id');
             $table->foreign('quotation_id')->references('id')->on('quationform')->cascadeOnDelete();
             $table->string('description')->nullable();
             $table->string('amount')->nullable();

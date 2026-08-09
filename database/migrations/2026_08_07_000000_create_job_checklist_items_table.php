@@ -16,7 +16,7 @@ return new class extends Migration
             // Plain integer, not foreignId()->constrained(): users.id predates
             // Laravel's bigint id() convention (see jobs table migration for
             // the same discipline).
-            $table->integer('completed_by')->nullable();
+            $table->unsignedBigInteger('completed_by')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
