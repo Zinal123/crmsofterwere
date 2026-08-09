@@ -30,6 +30,31 @@ class HomeTest extends TestCase
         $response->assertSee('Fiber Laser Cutting Machine');
     }
 
+    public function test_dashboard_has_no_leftover_fake_ecommerce_demo_content(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('root'));
+
+        $response->assertOk();
+        // Leftover Velzon e-commerce template content unrelated to this
+        // machine-tools CRM's real business - fake activity feed, fake
+        // category counts, fake customer reviews, fake referral CTA.
+        $response->assertDontSee('Recent Activity');
+        $response->assertDontSee('James Price');
+        $response->assertDontSee('Natasha Carey');
+        $response->assertDontSee('Frank Hook');
+        $response->assertDontSee('Digitech Galaxy');
+        $response->assertDontSee('Top 10 Categories');
+        $response->assertDontSee('Mobile &amp; Accessories');
+        $response->assertDontSee('Products Reviews');
+        $response->assertDontSee('Zoetic');
+        $response->assertDontSee('Invite New Seller');
+        // Real content must still be present.
+        $response->assertSee('Top Products by Revenue');
+        $response->assertSee('Recent Invoices');
+    }
+
     public function test_updateprofile_updates_name_and_email(): void
     {
         $user = User::factory()->create(['name' => 'Old Name']);
