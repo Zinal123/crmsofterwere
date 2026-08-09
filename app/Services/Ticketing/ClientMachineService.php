@@ -43,4 +43,24 @@ class ClientMachineService
             'installed_at' => $data['installed_at'] ?? null,
         ]);
     }
+
+    public function update($id, array $data): ClientMachine
+    {
+        $machine = $this->repository->find($id);
+
+        if ($machine === null) {
+            throw new \InvalidArgumentException('Client machine not found.');
+        }
+
+        $machine->fill([
+            'client_account_id' => $data['client_account_id'],
+            'product_id' => $data['product_id'],
+            'invoice_id' => $data['invoice_id'] ?? null,
+            'serial_number' => $data['serial_number'],
+            'installed_at' => $data['installed_at'] ?? null,
+        ]);
+        $this->repository->save($machine);
+
+        return $machine;
+    }
 }

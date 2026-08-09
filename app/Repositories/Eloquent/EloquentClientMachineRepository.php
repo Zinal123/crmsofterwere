@@ -27,4 +27,9 @@ class EloquentClientMachineRepository implements ClientMachineRepositoryInterfac
     {
         return ClientMachine::create($data);
     }
+
+    public function save(ClientMachine $machine): void
+    {
+        $machine->save();
+    }
 }

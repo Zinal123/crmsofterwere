@@ -14,4 +14,6 @@ interface ClientMachineRepositoryInterface
     public function find($id): ?ClientMachine;
 
     public function create(array $data): ClientMachine;
+
+    public function save(ClientMachine $machine): void;
 }

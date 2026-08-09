@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:client-machines.view')->get('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'index'])->name('admin.client-machines.index');
     Route::middleware('permission:client-machines.manage')->post('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'store'])->name('admin.client-machines.store');
+    Route::middleware('permission:client-machines.manage')->put('admin/client-machines/{id}', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'update'])->name('admin.client-machines.update');
 
     Route::middleware('permission:vendors.view')->get('admin/vendors', [App\Http\Controllers\Vendor\VendorController::class, 'index'])->name('admin.vendors.index');
     Route::middleware('permission:vendors.manage')->group(function () {

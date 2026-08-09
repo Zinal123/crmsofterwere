@@ -69,7 +69,7 @@ Client Machines
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Client</th><th>Product</th><th>Serial Number</th><th>Installed</th></tr>
+                        <tr><th>Client</th><th>Product</th><th>Serial Number</th><th>Installed</th><th></th></tr>
                     </thead>
                     <tbody>
                         @forelse($clientMachines as $machine)
@@ -78,9 +78,14 @@ Client Machines
                             <td>{{ $machine->product->name ?? '-' }}</td>
                             <td>{{ $machine->serial_number }}</td>
                             <td>{{ $machine->installed_at?->format('d M Y') ?? '-' }}</td>
+                            <td>
+                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editClientMachine-{{ $machine->id }}" title="Edit" aria-label="Edit">
+                                    <i class="ri-edit-line align-bottom"></i>
+                                </button>
+                            </td>
                         </tr>
                         @empty
-                        <tr><td colspan="4"><x-ui.empty-state icon="ri-tools-line" message="No machines registered yet." /></td></tr>
+                        <tr><td colspan="5"><x-ui.empty-state icon="ri-tools-line" message="No machines registered yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -88,4 +93,60 @@ Client Machines
         </x-ui.data-table-card>
     </div>
 </div>
+
+@foreach($clientMachines as $machine)
+<div class="modal fade" id="editClientMachine-{{ $machine->id }}" tabindex="-1" aria-labelledby="editClientMachine-{{ $machine->id }}-label" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editClientMachine-{{ $machine->id }}-label">Edit Machine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.client-machines.update', $machine->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-machine-client-{{ $machine->id }}">Client <span class="text-danger">*</span></label>
+                        <select id="edit-machine-client-{{ $machine->id }}" class="form-select" name="client_account_id" required>
+                            @foreach($clientAccounts as $account)
+                                <option value="{{ $account->id }}" @selected($machine->client_account_id === $account->id)>{{ $account->name }} ({{ $account->email }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-machine-product-{{ $machine->id }}">Product / Model <span class="text-danger">*</span></label>
+                        <select id="edit-machine-product-{{ $machine->id }}" class="form-select" name="product_id" required>
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}" @selected($machine->product_id === $product->id)>{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-machine-serial-{{ $machine->id }}">Serial Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit-machine-serial-{{ $machine->id }}" name="serial_number" value="{{ $machine->serial_number }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-machine-invoice-{{ $machine->id }}">Invoice (optional)</label>
+                        <select id="edit-machine-invoice-{{ $machine->id }}" class="form-select" name="invoice_id">
+                            <option value="">-- Not linked to an invoice --</option>
+                            @foreach($invoices as $invoice)
+                                <option value="{{ $invoice->id }}" @selected($machine->invoice_id === $invoice->id)>#{{ $invoice->invoice_id ?? $invoice->id }} - {{ $invoice->customer->name ?? 'Unknown customer' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-machine-installed-{{ $machine->id }}">Installation Date</label>
+                        <input type="date" class="form-control" id="edit-machine-installed-{{ $machine->id }}" name="installed_at" value="{{ $machine->installed_at?->format('Y-m-d') }}">
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
