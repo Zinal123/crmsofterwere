@@ -12,17 +12,60 @@ Daily Expenses
 @endslot
 @endcomponent
 
+@can('expenses.manage')
+<div class="d-flex justify-content-end gap-2 mb-3">
+    <a href="{{ route('admin.expense-categories.index') }}" class="btn btn-soft-secondary"><i class="ri-price-tag-3-line align-middle"></i> Manage Categories</a>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+        <i class="ri-add-line align-middle"></i> Add Transaction
+    </button>
+</div>
+@endcan
+
 <div class="row">
-    @can('expenses.manage')
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Add Transaction</h5>
-                <a href="{{ route('admin.expense-categories.index') }}" class="small">Manage Categories</a>
+    <div class="col-lg-12">
+        <x-ui.data-table-card title="Recent Transactions" :createRoute="route('expenses.cashbook')" createLabel="Cash Book">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead>
+                        <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Mode</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse($transactions as $transaction)
+                        <tr>
+                            <td>{{ $transaction->date->format('d M Y') }}</td>
+                            <td>
+                                @if($transaction->type === 'payment')
+                                    <x-ui.status-badge status="Send" variant="danger" icon="ri-arrow-up-circle-line" />
+                                @else
+                                    <x-ui.status-badge status="Receive" variant="success" icon="ri-arrow-down-circle-line" />
+                                @endif
+                            </td>
+                            <td>{{ $transaction->category->name ?? '—' }}</td>
+                            <td>{{ \App\Support\IndianNumber::format($transaction->amount) }}</td>
+                            <td>{{ ucfirst($transaction->payment_mode) }}</td>
+                            <td>{{ $transaction->description ?: '—' }}</td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="6"><x-ui.empty-state icon="ri-exchange-dollar-line" message="No transactions recorded yet." /></td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <div class="card-body">
-                <form action="{{ route('expenses.store') }}" method="POST" enctype="multipart/form-data" id="transaction-form">
-                    @csrf
+        </x-ui.data-table-card>
+    </div>
+</div>
+
+@can('expenses.manage')
+<div class="modal fade" id="addTransactionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Transaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('expenses.store') }}" method="POST" enctype="multipart/form-data" id="transaction-form">
+                @csrf
+                <div class="modal-body">
                     <div class="mb-2">
                         <label class="form-label">Type <span class="text-danger">*</span></label>
                         <div class="btn-group w-100" role="group">
@@ -101,45 +144,16 @@ Daily Expenses
                         <label class="form-label" for="transaction-receipt">Receipt Photo (optional)</label>
                         <input id="transaction-receipt" type="file" class="form-control" name="receipt_photo" accept="image/*">
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <x-ui.button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-ui.button>
                     <x-ui.button type="submit" variant="success" icon="ri-add-line">Add Transaction</x-ui.button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
-    @endcan
-
-    <div class="col-lg-{{ auth()->user()->can('expenses.manage') ? '8' : '12' }}">
-        <x-ui.data-table-card title="Recent Transactions" :createRoute="route('expenses.cashbook')" createLabel="Cash Book">
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead>
-                        <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Mode</th><th>Description</th></tr>
-                    </thead>
-                    <tbody>
-                        @forelse($transactions as $transaction)
-                        <tr>
-                            <td>{{ $transaction->date->format('d M Y') }}</td>
-                            <td>
-                                @if($transaction->type === 'payment')
-                                    <x-ui.status-badge status="Send" variant="danger" icon="ri-arrow-up-circle-line" />
-                                @else
-                                    <x-ui.status-badge status="Receive" variant="success" icon="ri-arrow-down-circle-line" />
-                                @endif
-                            </td>
-                            <td>{{ $transaction->category->name ?? '—' }}</td>
-                            <td>{{ \App\Support\IndianNumber::format($transaction->amount) }}</td>
-                            <td>{{ ucfirst($transaction->payment_mode) }}</td>
-                            <td>{{ $transaction->description ?: '—' }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="6"><x-ui.empty-state icon="ri-exchange-dollar-line" message="No transactions recorded yet." /></td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </x-ui.data-table-card>
-    </div>
 </div>
+@endcan
 
 @can('expenses.manage')
 <div class="modal fade" id="quickAddCategoryModal" tabindex="-1">
