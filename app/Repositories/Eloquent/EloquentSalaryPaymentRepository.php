@@ -35,4 +35,19 @@ class EloquentSalaryPaymentRepository implements SalaryPaymentRepositoryInterfac
                 ->whereMonth('date', $month)
         )->sum('amount');
     }
+
+    public function find($id): ?SalaryPayment
+    {
+        return SalaryPayment::find($id);
+    }
+
+    public function save(SalaryPayment $payment): void
+    {
+        $payment->save();
+    }
+
+    public function delete($id): void
+    {
+        SalaryPayment::find($id)?->delete();
+    }
 }

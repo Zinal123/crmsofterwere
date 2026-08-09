@@ -44,6 +44,53 @@ class PayrollControllerTest extends TestCase
         $this->assertDatabaseHas('salary_payments', ['employee_id' => $employee->id, 'amount' => 2000, 'note' => 'Mid-month advance']);
     }
 
+    public function test_owner_can_update_a_salary_payment(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        $payment = \App\Models\SalaryPayment::create(['employee_id' => $employee->id, 'date' => '2026-07-15', 'amount' => 2000, 'note' => 'Old note', 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->put(route('employees.payments.update', [$employee->id, $payment->id]), [
+            'date' => '2026-07-16',
+            'amount' => 2500,
+            'note' => 'Corrected amount',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('salary_payments', ['id' => $payment->id, 'amount' => 2500, 'note' => 'Corrected amount']);
+    }
+
+    public function test_owner_can_delete_a_salary_payment(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        $payment = \App\Models\SalaryPayment::create(['employee_id' => $employee->id, 'date' => '2026-07-15', 'amount' => 2000, 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->delete(route('employees.payments.destroy', [$employee->id, $payment->id]));
+
+        $response->assertRedirect();
+        $this->assertDatabaseMissing('salary_payments', ['id' => $payment->id]);
+    }
+
+    public function test_payroll_page_has_edit_and_delete_triggers_per_payment(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        $payment = \App\Models\SalaryPayment::create(['employee_id' => $employee->id, 'date' => '2026-07-15', 'amount' => 2000, 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editPayment-' . $payment->id . '"', false);
+        $response->assertSee(route('employees.payments.destroy', [$employee->id, $payment->id]), false);
+    }
+
     public function test_worker_cannot_view_payroll(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

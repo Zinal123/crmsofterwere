@@ -21,4 +21,23 @@ class SalaryPaymentService
     {
         return $this->repository->forEmployeeAndMonth($employeeId, $year, $month);
     }
+
+    public function update($id, array $data): SalaryPayment
+    {
+        $payment = $this->repository->find($id);
+
+        if ($payment === null) {
+            throw new \InvalidArgumentException('Salary payment not found.');
+        }
+
+        $payment->fill($data);
+        $this->repository->save($payment);
+
+        return $payment;
+    }
+
+    public function delete($id): void
+    {
+        $this->repository->delete($id);
+    }
 }

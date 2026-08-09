@@ -51,4 +51,24 @@ class PayrollController extends Controller
 
         return redirect()->route('employees.payroll', ['employee' => $employeeModel->id, 'year' => date('Y', strtotime($data['date'])), 'month' => date('n', strtotime($data['date']))])->with('success', 'Payment recorded.');
     }
+
+    public function updatePayment(Request $request, $employee, $paymentId)
+    {
+        $data = $request->validate([
+            'date' => 'required|date',
+            'amount' => 'required|numeric|min:0.01',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $this->paymentService->update($paymentId, $data);
+
+        return redirect()->route('employees.payroll', ['employee' => $employee, 'year' => date('Y', strtotime($data['date'])), 'month' => date('n', strtotime($data['date']))])->with('success', 'Payment updated.');
+    }
+
+    public function destroyPayment(Request $request, $employee, $paymentId)
+    {
+        $this->paymentService->delete($paymentId);
+
+        return redirect()->route('employees.payroll', $employee)->with('success', 'Payment deleted.');
+    }
 }

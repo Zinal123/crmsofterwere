@@ -34,9 +34,19 @@
                             <td>{{ $payment->amount }}</td>
                             <td>{{ $payment->note }}</td>
                             <td>
-                                @can('payroll.view-audit')
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-salary_payment" data-audit-id="{{ $payment->id }}"><i class="ri-history-line align-bottom"></i> History</button>
-                                @endcan
+                                <div class="d-flex gap-1 flex-wrap">
+                                    @can('payroll.manage-payments')
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editPayment-{{ $payment->id }}"><i class="ri-edit-line align-bottom"></i> Edit</button>
+                                    <form action="{{ route('employees.payments.destroy', [$employee->id, $payment->id]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm-delete><i class="ri-delete-bin-line align-bottom"></i> Delete</button>
+                                    </form>
+                                    @endcan
+                                    @can('payroll.view-audit')
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#auditTrailModal-salary_payment" data-audit-id="{{ $payment->id }}"><i class="ri-history-line align-bottom"></i> History</button>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -45,6 +55,43 @@
                 </tbody>
             </table>
             </div>
+
+            @can('payroll.manage-payments')
+            @foreach($payments as $payment)
+            <div class="modal fade" id="editPayment-{{ $payment->id }}" tabindex="-1" aria-labelledby="editPayment-{{ $payment->id }}-label" aria-modal="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPayment-{{ $payment->id }}-label">Edit Payment</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('employees.payments.update', [$employee->id, $payment->id]) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="mb-2">
+                                    <label class="form-label" for="edit-payment-date-{{ $payment->id }}">Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="edit-payment-date-{{ $payment->id }}" name="date" value="{{ $payment->date->toDateString() }}" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="edit-payment-amount-{{ $payment->id }}">Amount (₹) <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" id="edit-payment-amount-{{ $payment->id }}" name="amount" value="{{ $payment->amount }}" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="edit-payment-note-{{ $payment->id }}">Note</label>
+                                    <input type="text" class="form-control" id="edit-payment-note-{{ $payment->id }}" name="note" value="{{ $payment->note }}">
+                                </div>
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+            @endcan
 
             <form action="{{ route('employees.payments.store', $employee->id) }}" method="POST" class="row g-2 align-items-end mt-1">
                 @csrf
@@ -70,5 +117,8 @@
 
 @can('payroll.view-audit')
     <x-ui.audit-trail-modal type="salary_payment" />
+@endcan
+@can('payroll.manage-payments')
+    <x-ui.confirm-modal recordType="payment" />
 @endcan
 @endsection

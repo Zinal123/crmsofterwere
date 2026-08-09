@@ -12,4 +12,10 @@ interface SalaryPaymentRepositoryInterface
     public function forEmployeeAndMonth(int $employeeId, int $year, int $month): Collection;
 
     public function totalForEmployeeAndMonth(int $employeeId, int $year, int $month): float;
+
+    public function find($id): ?SalaryPayment;
+
+    public function save(SalaryPayment $payment): void;
+
+    public function delete($id): void;
 }
