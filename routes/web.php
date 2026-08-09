@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('productstore' ,[App\Http\Controllers\Product\ProductController::class, 'productstore'])->name('productstore')->middleware('permission:products.create');
     Route::get('productdelete/{id}' ,[App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete')->middleware('permission:products.delete');
+    Route::put('product/{id}' ,[App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update')->middleware('permission:products.update');
     Route::post('product/{id}/toggle-spare-part', [App\Http\Controllers\Product\ProductController::class, 'toggleSparePart'])->name('product.toggle-spare-part')->middleware('permission:spare-parts.manage');
 
     Route::get('standerconfig/{id}' ,[App\Http\Controllers\Product\ProductConfigController::class, 'standerconfig'])->name('standerconfig')->middleware('permission:products.manage-config');

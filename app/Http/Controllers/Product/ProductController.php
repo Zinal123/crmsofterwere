@@ -34,6 +34,20 @@ class ProductController extends Controller
         return redirect()->route('product')->with('success', 'Product created successfully.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'rate' => 'nullable|numeric|min:0',
+            'unit' => 'nullable|string|max:255',
+            'make' => 'nullable|string|max:255',
+        ]);
+
+        $this->service->update($id, $data);
+
+        return redirect()->route('product')->with('success', 'Product updated successfully.');
+    }
+
     public function delete($id)
     {
         $this->service->delete($id);

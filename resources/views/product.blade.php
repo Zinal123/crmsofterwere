@@ -61,6 +61,11 @@ list view
 
                             <td>
                             <div class="d-flex gap-2 flex-wrap">
+                                @can('products.update')
+                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProduct-{{ $item->id }}" title="Edit" aria-label="Edit">
+                                    <i class="ri-edit-line align-bottom"></i>
+                                </button>
+                                @endcan
                                 @can('inventory.update')
                                     @if($item->inventory)
                                     <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}" data-bs-toggle="tooltip" title="Update Qty" aria-label="Update Qty">
@@ -186,6 +191,47 @@ list view
         </div>
     </div>
 </div>
+
+@can('products.update')
+@foreach($product as $item)
+<div class="modal fade" id="editProduct-{{ $item->id }}" tabindex="-1" aria-labelledby="editProduct-{{ $item->id }}-label" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProduct-{{ $item->id }}-label">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('product.update', $item->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-product-name-{{ $item->id }}">Product Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit-product-name-{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-product-unit-{{ $item->id }}">Unit</label>
+                        <input type="text" class="form-control" id="edit-product-unit-{{ $item->id }}" name="unit" value="{{ $item->unit }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-product-make-{{ $item->id }}">HSN</label>
+                        <input type="text" class="form-control" id="edit-product-make-{{ $item->id }}" name="make" value="{{ $item->make }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-product-rate-{{ $item->id }}">Rate</label>
+                        <input type="text" class="form-control" id="edit-product-rate-{{ $item->id }}" name="rate" value="{{ $item->rate }}">
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endcan
 
 <!-- Add Stock to an existing product -->
 <div class="modal fade" id="addStockModal" tabindex="-1" aria-labelledby="addStockModalLabel" aria-modal="true">

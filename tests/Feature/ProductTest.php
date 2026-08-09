@@ -39,4 +39,42 @@ class ProductTest extends TestCase
         $response->assertOk();
         $response->assertSee("this.querySelector('button[type=submit]').disabled = true;", false);
     }
+
+    public function test_owner_can_update_a_product(): void
+    {
+        $user = User::factory()->create();
+        $product = \App\Models\Product::create(['name' => 'Old Name', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'OLD-1']);
+
+        $response = $this->actingAs($user)->put(route('product.update', $product->id), [
+            'name' => 'New Laser Cutter Name',
+            'rate' => 2000,
+            'unit' => 'Pcs',
+            'make' => 'NEW-2',
+        ]);
+
+        $response->assertRedirect(route('product'));
+        $this->assertDatabaseHas('product', ['id' => $product->id, 'name' => 'New Laser Cutter Name', 'rate' => 2000, 'unit' => 'Pcs', 'make' => 'NEW-2']);
+    }
+
+    public function test_updating_a_product_requires_a_name(): void
+    {
+        $user = User::factory()->create();
+        $product = \App\Models\Product::create(['name' => 'Old Name', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'OLD-1']);
+
+        $response = $this->actingAs($user)->put(route('product.update', $product->id), ['name' => '']);
+
+        $response->assertSessionHasErrors('name');
+        $this->assertDatabaseHas('product', ['id' => $product->id, 'name' => 'Old Name']);
+    }
+
+    public function test_product_list_page_has_an_edit_trigger_per_row(): void
+    {
+        $user = User::factory()->create();
+        $product = \App\Models\Product::create(['name' => 'Editable Product', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'OLD-1']);
+
+        $response = $this->actingAs($user)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editProduct-' . $product->id . '"', false);
+    }
 }

@@ -71,6 +71,20 @@ class ProductService
         });
     }
 
+    public function update($id, array $data): Product
+    {
+        $product = $this->repository->find($id);
+
+        if ($product === null) {
+            throw new \InvalidArgumentException('Product not found.');
+        }
+
+        $product->fill($data);
+        $this->repository->save($product);
+
+        return $product;
+    }
+
     public function delete($id): void
     {
         $this->repository->delete($id);
