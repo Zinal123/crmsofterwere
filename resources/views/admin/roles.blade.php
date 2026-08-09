@@ -40,6 +40,11 @@ Roles & Permissions
                             @foreach($roles as $role)
                                 <th class="text-center">
                                     <span class="badge bg-primary-subtle text-primary fs-12">{{ $role->name }}</span>
+                                    @can('admin.view-audit')
+                                    <button type="button" class="btn btn-soft-secondary btn-sm p-1 ms-1" data-bs-toggle="modal" data-bs-target="#auditTrailModal-role" data-audit-id="{{ $role->id }}" title="History" aria-label="History">
+                                        <i class="ri-history-line align-bottom"></i>
+                                    </button>
+                                    @endcan
                                     @if($role->name !== 'Owner')
                                         <button type="button" class="btn btn-soft-primary btn-sm p-1 ms-1" data-bs-toggle="modal" data-bs-target="#renameRole-{{ $role->id }}" title="Rename Role" aria-label="Rename Role">
                                             <i class="ri-edit-line align-bottom"></i>
@@ -110,6 +115,9 @@ Roles & Permissions
     @endif
 @endforeach
 
+@can('admin.view-audit')
+    <x-ui.audit-trail-modal type="role" />
+@endcan
 <x-ui.confirm-modal recordType="role" />
 @endsection
 

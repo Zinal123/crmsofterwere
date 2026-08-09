@@ -68,6 +68,11 @@ Client Accounts
                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editClientAccount-{{ $account->id }}" title="Edit" aria-label="Edit">
                                         <i class="ri-edit-line align-bottom"></i>
                                     </button>
+                                    @can('client-machines.view-audit')
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-client_account" data-audit-id="{{ $account->id }}" title="History" aria-label="History">
+                                        <i class="ri-history-line align-bottom"></i>
+                                    </button>
+                                    @endcan
                                     <form action="{{ route('admin.client-accounts.toggle', $account->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         <button type="submit" class="btn btn-soft-{{ $account->is_active ? 'warning' : 'success' }} btn-sm" title="{{ $account->is_active ? 'Deactivate' : 'Activate' }}" aria-label="{{ $account->is_active ? 'Deactivate' : 'Activate' }}">
@@ -121,4 +126,8 @@ Client Accounts
     </div>
 </div>
 @endforeach
+
+@can('client-machines.view-audit')
+    <x-ui.audit-trail-modal type="client_account" />
+@endcan
 @endsection

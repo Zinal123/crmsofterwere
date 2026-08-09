@@ -59,6 +59,19 @@ class ClientMachineEditTest extends TestCase
         $response->assertSee('data-bs-target="#editClientMachine-' . $machine->id . '"', false);
     }
 
+    public function test_client_machines_page_has_a_history_trigger_per_row(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = ClientMachine::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('admin.client-machines.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#auditTrailModal-client_machine"', false);
+        $response->assertSee('data-audit-id="' . $machine->id . '"', false);
+    }
+
     public function test_worker_cannot_update_a_client_machine(): void
     {
         $worker = User::factory()->create();

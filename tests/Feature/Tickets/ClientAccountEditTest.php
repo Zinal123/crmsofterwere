@@ -60,6 +60,31 @@ class ClientAccountEditTest extends TestCase
         $response->assertSee(route('admin.client-accounts.toggle', $account->id), false);
     }
 
+    public function test_client_accounts_page_has_a_history_trigger_per_row(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $account = ClientAccount::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('admin.client-accounts.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#auditTrailModal-client_account"', false);
+        $response->assertSee('data-audit-id="' . $account->id . '"', false);
+    }
+
+    public function test_client_account_history_is_viewable_and_shows_the_creation_entry(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $account = ClientAccount::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('audit-logs.for-record', ['type' => 'client_account', 'id' => $account->id]));
+
+        $response->assertOk();
+        $response->assertSee('created');
+    }
+
     public function test_worker_cannot_update_a_client_account(): void
     {
         $worker = User::factory()->create();

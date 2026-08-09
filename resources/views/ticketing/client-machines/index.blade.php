@@ -79,9 +79,16 @@ Client Machines
                             <td>{{ $machine->serial_number }}</td>
                             <td>{{ $machine->installed_at?->format('d M Y') ?? '-' }}</td>
                             <td>
-                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editClientMachine-{{ $machine->id }}" title="Edit" aria-label="Edit">
-                                    <i class="ri-edit-line align-bottom"></i>
-                                </button>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editClientMachine-{{ $machine->id }}" title="Edit" aria-label="Edit">
+                                        <i class="ri-edit-line align-bottom"></i>
+                                    </button>
+                                    @can('client-machines.view-audit')
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-client_machine" data-audit-id="{{ $machine->id }}" title="History" aria-label="History">
+                                        <i class="ri-history-line align-bottom"></i>
+                                    </button>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                         @empty
@@ -149,4 +156,8 @@ Client Machines
     </div>
 </div>
 @endforeach
+
+@can('client-machines.view-audit')
+    <x-ui.audit-trail-modal type="client_machine" />
+@endcan
 @endsection

@@ -168,4 +168,29 @@ class RoleTest extends TestCase
         $response->assertOk();
         $response->assertSee('data-bs-target="#renameRole-' . $worker->id . '"', false);
     }
+
+    public function test_roles_page_has_a_history_trigger_per_role(): void
+    {
+        $owner = User::factory()->create();
+        $worker = Role::findByName('Worker');
+
+        $response = $this->actingAs($owner)->get(route('admin.roles.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#auditTrailModal-role"', false);
+        $response->assertSee('data-audit-id="' . $worker->id . '"', false);
+    }
+
+    public function test_renaming_a_role_shows_up_in_its_history(): void
+    {
+        $owner = User::factory()->create();
+        $role = Role::create(['name' => 'QA History Role', 'guard_name' => 'web']);
+
+        $this->actingAs($owner)->put(route('admin.roles.update', $role->id), ['name' => 'QA Renamed Role']);
+
+        $response = $this->actingAs($owner)->get(route('audit-logs.for-record', ['type' => 'role', 'id' => $role->id]));
+
+        $response->assertOk();
+        $response->assertSee('updated');
+    }
 }
