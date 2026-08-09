@@ -54,7 +54,7 @@
                                <div class="d-flex gap-2 flex-wrap">
                                    <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Download Qutation" aria-label="Download Qutation"><i class="ri-download-2-line align-bottom"></i></a>
                                    @can('quotations.delete')
-                                   <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this quotation? This cannot be undone.');" data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
+                                   <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
                                      <i class="ri-delete-bin-fill align-bottom"></i>
                                    </a>
                                    @endcan
@@ -77,6 +77,7 @@
 </div>
 <!--end row-->
 
+<x-ui.confirm-modal recordType="quotation" />
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>

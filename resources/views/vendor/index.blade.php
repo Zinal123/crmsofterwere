@@ -109,10 +109,10 @@ Vendors
                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVendor-{{ $vendor->id }}" title="Edit" aria-label="Edit">
                                     <i class="ri-edit-line align-bottom"></i>
                                 </button>
-                                <form action="{{ route('admin.vendors.destroy', $vendor->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this vendor? This cannot be undone.');">
+                                <form action="{{ route('admin.vendors.destroy', $vendor->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-soft-danger btn-sm" title="Delete" aria-label="Delete">
+                                    <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
                                         <i class="ri-delete-bin-fill align-bottom"></i>
                                     </button>
                                 </form>
@@ -201,4 +201,5 @@ Vendors
 </div>
 @endforeach
 @endcan
+<x-ui.confirm-modal recordType="vendor" />
 @endsection

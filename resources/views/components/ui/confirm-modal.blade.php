@@ -21,3 +21,35 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var modalEl = document.getElementById('deleteOrder');
+    if (!modalEl) {
+        return;
+    }
+    var modal = new bootstrap.Modal(modalEl);
+    var confirmBtn = document.getElementById('delete-record');
+    var pendingForm = null;
+    var pendingHref = null;
+
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('[data-confirm-delete]');
+        if (!trigger) {
+            return;
+        }
+        event.preventDefault();
+        pendingForm = trigger.closest('form');
+        pendingHref = pendingForm ? null : trigger.getAttribute('href');
+        modal.show();
+    });
+
+    confirmBtn.addEventListener('click', function () {
+        modal.hide();
+        if (pendingForm) {
+            pendingForm.submit();
+        } else if (pendingHref) {
+            window.location.href = pendingHref;
+        }
+    });
+});
+</script>

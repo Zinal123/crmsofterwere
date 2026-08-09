@@ -101,7 +101,7 @@ list view
                                     </button>
                                 </form>
                                 @endcan
-                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product? This cannot be undone.');" title="Delete" aria-label="Delete">
+                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
                                     <i class="ri-delete-bin-fill align-bottom"></i>
                                 </a>
                             </div>
@@ -252,6 +252,7 @@ list view
 @can('inventory.view-audit')
     <x-ui.audit-trail-modal type="inventory" />
 @endcan
+<x-ui.confirm-modal recordType="product" />
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>

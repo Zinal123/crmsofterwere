@@ -41,10 +41,10 @@ Roles & Permissions
                                 <th class="text-center">
                                     <span class="badge bg-primary-subtle text-primary fs-12">{{ $role->name }}</span>
                                     @if($role->name !== 'Owner')
-                                        <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this role? This cannot be undone.');">
+                                        <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-soft-danger btn-sm p-1 ms-1" data-bs-toggle="tooltip" title="Delete Role" aria-label="Delete Role">
+                                            <button type="submit" class="btn btn-soft-danger btn-sm p-1 ms-1" data-confirm-delete data-bs-toggle="tooltip" title="Delete Role" aria-label="Delete Role">
                                                 <i class="ri-delete-bin-line align-bottom"></i>
                                             </button>
                                         </form>
@@ -77,6 +77,7 @@ Roles & Permissions
         </x-ui.data-table-card>
     </div>
 </div>
+<x-ui.confirm-modal recordType="role" />
 @endsection
 
 @section('script')

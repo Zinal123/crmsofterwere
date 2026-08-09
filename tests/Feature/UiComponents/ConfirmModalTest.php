@@ -20,25 +20,17 @@ class ConfirmModalTest extends TestCase
      * removed separately - see CreateButtonConsistencyTest). It was dead
      * markup on all three pages since it was first added. This test now
      * locks in its absence.
+     *
+     * Product was later re-added deliberately (see ConfirmDialogConsistencyTest)
+     * once the component became a real, wired data-confirm-delete trigger
+     * instead of dead markup - it's no longer covered by this "stays absent"
+     * check.
      */
     public function test_invoice_list_page_has_no_dead_delete_modal(): void
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('invoice'));
-
-        $response->assertOk();
-        $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
-    }
-
-    // Inventory management was merged into the product page - this check
-    // is now covered by test_product_list_page_has_no_dead_delete_modal.
-
-    public function test_product_list_page_has_no_dead_delete_modal(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->get(route('product'));
 
         $response->assertOk();
         $response->assertDontSee(self::REMOVED_DELETE_MODAL_ID, false);
