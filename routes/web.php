@@ -148,6 +148,7 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/listqutation' ,[App\Http\Controllers\Quotation\QutationController::class, 'index'])->name('listqutation')->middleware('permission:quotations.view');
     Route::get('/printquation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'print'])->name('quation.pdf')->middleware('permission:quotations.download-pdf');
     Route::get('quation/delete/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'delete'])->name('quation.delete')->middleware('permission:quotations.delete');
+    Route::put('quation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'update'])->name('quation.update')->middleware('permission:quotations.update');
 
     Route::middleware('permission:admin.manage-roles')->group(function () {
         Route::get('admin/roles', [App\Http\Controllers\Admin\RoleController::class, 'index'])->name('admin.roles.index');

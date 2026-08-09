@@ -43,6 +43,23 @@ class QutationController extends Controller
         return redirect()->route('listqutation')->with('success', 'Quotation deleted.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'clientname' => 'nullable|string|max:255',
+            'companyname' => 'nullable|string|max:255',
+            'gstno' => 'nullable|string|max:255',
+            'companyaddress' => 'nullable|string|max:255',
+            'email' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'note' => 'nullable|string|max:1000',
+        ]);
+
+        $this->service->update($id, $data);
+
+        return redirect()->route('listqutation')->with('success', 'Quotation updated.');
+    }
+
     public function Co2quation($id)
     {
         return view('qutation', array_merge($this->service->getQuotationFormViewData($id), ['defaultType' => 'co2']));

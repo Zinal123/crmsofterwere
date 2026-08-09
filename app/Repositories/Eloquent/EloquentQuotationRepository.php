@@ -44,4 +44,14 @@ class EloquentQuotationRepository implements QuotationRepositoryInterface
     {
         return Quation::with('items')->findOrFail($id);
     }
+
+    public function find(int $id): ?Quation
+    {
+        return $this->tenantScope->apply(Quation::query())->find($id);
+    }
+
+    public function save(Quation $quotation): void
+    {
+        $quotation->save();
+    }
 }

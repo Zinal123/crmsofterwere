@@ -17,4 +17,8 @@ interface QuotationRepositoryInterface
     public function delete(int $id): void;
 
     public function findWithDetails(int $id): Quation;
+
+    public function find(int $id): ?Quation;
+
+    public function save(Quation $quotation): void;
 }

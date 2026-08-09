@@ -52,6 +52,11 @@
                             <td>{{$item->phone}}</td>
                             <td>
                                <div class="d-flex gap-2 flex-wrap">
+                                   @can('quotations.update')
+                                   <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editQuotation-{{ $item->id }}" title="Edit" aria-label="Edit">
+                                     <i class="ri-edit-line align-bottom"></i>
+                                   </button>
+                                   @endcan
                                    <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Download Qutation" aria-label="Download Qutation"><i class="ri-download-2-line align-bottom"></i></a>
                                    @can('quotations.delete')
                                    <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
@@ -76,6 +81,61 @@
     <!--end col-->
 </div>
 <!--end row-->
+
+@can('quotations.update')
+@foreach($product as $item)
+<div class="modal fade" id="editQuotation-{{ $item->id }}" tabindex="-1" aria-labelledby="editQuotation-{{ $item->id }}-label" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editQuotation-{{ $item->id }}-label">Edit Quotation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('quation.update', $item->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-clientname-{{ $item->id }}">Client Name</label>
+                            <input type="text" class="form-control" id="edit-quotation-clientname-{{ $item->id }}" name="clientname" value="{{ $item->clientname }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-companyname-{{ $item->id }}">Company Name</label>
+                            <input type="text" class="form-control" id="edit-quotation-companyname-{{ $item->id }}" name="companyname" value="{{ $item->companyname }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-gstno-{{ $item->id }}">GST No.</label>
+                            <input type="text" class="form-control" id="edit-quotation-gstno-{{ $item->id }}" name="gstno" value="{{ $item->gstno }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-companyaddress-{{ $item->id }}">Company Address</label>
+                            <input type="text" class="form-control" id="edit-quotation-companyaddress-{{ $item->id }}" name="companyaddress" value="{{ $item->companyaddress }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-email-{{ $item->id }}">Email</label>
+                            <input type="email" class="form-control" id="edit-quotation-email-{{ $item->id }}" name="email" value="{{ $item->email }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-quotation-phone-{{ $item->id }}">Phone</label>
+                            <input type="text" class="form-control" id="edit-quotation-phone-{{ $item->id }}" name="phone" value="{{ $item->phone }}">
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label" for="edit-quotation-note-{{ $item->id }}">Note</label>
+                            <textarea class="form-control" id="edit-quotation-note-{{ $item->id }}" name="note" rows="2">{{ $item->note }}</textarea>
+                        </div>
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endcan
 
 <x-ui.confirm-modal recordType="quotation" />
 @endsection

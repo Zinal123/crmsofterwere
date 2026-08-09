@@ -31,6 +31,26 @@ class QuotationService
     }
 
     /**
+     * Only the client/contact-facing fields are editable here - the
+     * technical machine-spec fields (cutting/power/motor/etc.) are set once
+     * at generation time via the dedicated fiber/CO2 forms, not corrected
+     * after the fact through this simpler edit.
+     */
+    public function update(int $id, array $data): Quation
+    {
+        $quotation = $this->repository->find($id);
+
+        if ($quotation === null) {
+            throw new \InvalidArgumentException('Quotation not found.');
+        }
+
+        $quotation->fill($data);
+        $this->repository->save($quotation);
+
+        return $quotation;
+    }
+
+    /**
      * Resolves every dropdown selection stored on the quotation (just IDs)
      * back to its real config record, so the PDF can show what was actually
      * picked instead of the hardcoded, unrelated content it used to ship

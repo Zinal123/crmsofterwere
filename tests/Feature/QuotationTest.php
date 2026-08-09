@@ -396,4 +396,39 @@ class QuotationTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_owner_can_update_a_quotations_client_details(): void
+    {
+        $user = User::factory()->create();
+        $quotation = Quation::create(['product_id' => 1, 'clientname' => 'Old Client Name', 'email' => 'old@example.com', 'phone' => 9998887776]);
+
+        $response = $this->actingAs($user)->put(route('quation.update', $quotation->id), [
+            'clientname' => 'New Client Name',
+            'companyname' => 'New Company Pvt Ltd',
+            'gstno' => '24AAAAA0000A1Z5',
+            'companyaddress' => 'Ahmedabad, Gujarat',
+            'email' => 'new@example.com',
+            'phone' => '9998887777',
+            'note' => 'QA correction test',
+        ]);
+
+        $response->assertRedirect(route('listqutation'));
+        $this->assertDatabaseHas('quationform', [
+            'id' => $quotation->id,
+            'clientname' => 'New Client Name',
+            'companyname' => 'New Company Pvt Ltd',
+            'email' => 'new@example.com',
+        ]);
+    }
+
+    public function test_quotation_list_page_has_an_edit_trigger_per_row(): void
+    {
+        $user = User::factory()->create();
+        $quotation = Quation::create(['product_id' => 1, 'clientname' => 'Editable Client']);
+
+        $response = $this->actingAs($user)->get(route('listqutation'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editQuotation-' . $quotation->id . '"', false);
+    }
 }
