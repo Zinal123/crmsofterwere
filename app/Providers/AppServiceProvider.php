@@ -65,6 +65,16 @@ class AppServiceProvider extends ServiceProvider
             'job_checklist_item' => \App\Models\JobChecklistItem::class,
             'bank' => \App\Models\Bank::class,
             'role' => \Spatie\Permission\Models\Role::class,
+            'client_account' => \App\Models\ClientAccount::class,
+            'client_machine' => \App\Models\ClientMachine::class,
+            'daily_transaction' => \App\Models\DailyTransaction::class,
+            'expense_category' => \App\Models\ExpenseCategory::class,
+            'spare_part_request' => \App\Models\SparePartRequest::class,
+            'ticket' => \App\Models\Ticket::class,
+            'ticket_problem_type' => \App\Models\TicketProblemType::class,
+            'vendor' => \App\Models\Vendor::class,
+            'vendor_bill' => \App\Models\VendorBill::class,
+            'vendor_payment' => \App\Models\VendorPayment::class,
         ]);
     }
 }

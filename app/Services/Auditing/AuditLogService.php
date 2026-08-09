@@ -38,6 +38,17 @@ class AuditLogService
         'job_photo' => 'jobs.view-audit',
         'ticket_photo' => 'tickets.view-audit',
         'job_checklist_item' => 'jobs.view-audit',
+        'role' => 'admin.view-audit',
+        'client_account' => 'client-machines.view-audit',
+        'client_machine' => 'client-machines.view-audit',
+        'daily_transaction' => 'expenses.view-audit',
+        'expense_category' => 'expenses.view-audit',
+        'spare_part_request' => 'spare-part-requests.view-audit',
+        'ticket' => 'tickets.view-audit',
+        'ticket_problem_type' => 'ticket-problem-types.view-audit',
+        'vendor' => 'vendors.view-audit',
+        'vendor_bill' => 'vendors.view-audit',
+        'vendor_payment' => 'vendors.view-audit',
     ];
 
     public function __construct(private AuditLogRepositoryInterface $repository)
