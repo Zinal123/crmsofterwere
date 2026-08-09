@@ -48,6 +48,14 @@
                 </li>
                 @endcan
 
+                @can('expenses.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('expenses.index') }}">
+                        <i class="ri-exchange-dollar-line"></i> <span>Daily Expenses</span>
+                    </a>
+                </li>
+                @endcan
+
                 @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage', 'vendors.view'])
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')

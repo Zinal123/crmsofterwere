@@ -2,6 +2,7 @@
 
 namespace App\Services\Reporting;
 
+use App\Models\DailyTransaction;
 use App\Models\Invetry;
 use App\Models\Job;
 use App\Models\Machine;
@@ -108,5 +109,24 @@ class ReportService
                 'status' => $status,
             ];
         });
+    }
+
+    /**
+     * Payment-type Daily Transactions summed per category, so the owner can
+     * see where cash is actually going without opening the Cash Book.
+     */
+    public function expensesByCategory(): Collection
+    {
+        return DailyTransaction::query()
+            ->where('daily_transactions.type', 'payment')
+            ->join('expense_categories', 'expense_categories.id', '=', 'daily_transactions.expense_category_id')
+            ->selectRaw('expense_categories.name as category, sum(daily_transactions.amount) as total')
+            ->groupBy('expense_categories.name')
+            ->orderByDesc('total')
+            ->get()
+            ->map(fn ($row) => [
+                'category' => $row->category,
+                'total' => (float) $row->total,
+            ]);
     }
 }

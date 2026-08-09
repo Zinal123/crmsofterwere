@@ -102,6 +102,30 @@
 
     <div class="card mb-3">
         <div class="card-body">
+            <h5 class="card-title">Expenses by Category</h5>
+            <p class="text-muted small">Money out (payments) from the Daily Expenses module, summed per category.</p>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead>
+                        <tr><th>Category</th><th>Total</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse($expensesByCategory as $row)
+                            <tr>
+                                <td>{{ $row['category'] }}</td>
+                                <td>{{ \App\Support\IndianNumber::format($row['total']) }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2"><x-ui.empty-state icon="ri-exchange-dollar-line" message="No expenses recorded yet." /></td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
             <h5 class="card-title">Inventory Levels</h5>
             <p class="text-muted small">Current stock on hand. This is not an inventory-turns report — that needs a stock-movement history this app doesn't track yet.</p>
             <div class="table-responsive">

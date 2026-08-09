@@ -19,6 +19,7 @@ class ReportController extends Controller
             'machineHistory' => $this->service->machineServiceHistory(),
             'inventoryLevels' => $this->service->inventoryLevels(),
             'fleetStatus' => $this->service->fleetStatus(),
+            'expensesByCategory' => $this->service->expensesByCategory(),
         ]);
     }
 }

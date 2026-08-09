@@ -19,14 +19,16 @@ Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, '
 
 Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
-// These 12 routes must be registered before the {any} catch-all below:
+// These 13 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
 // would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
 // (invoice.create, invoice.histry, invoice, invoice.vender, invoice.inventrylist, product,
-// machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark, reports.index)
+// machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark, reports.index,
+// expenses.index)
 Route::middleware('auth')->group(function () {
     Route::get('reports', [App\Http\Controllers\Reporting\ReportController::class, 'index'])->name('reports.index')->middleware('permission:reports.view');
+    Route::get('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'index'])->name('expenses.index')->middleware('permission:expenses.view');
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
     Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry')->middleware('permission:payment-history.view');
     Route::get('apps-invoices-list' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'index'])->name('invoice')->middleware('permission:invoices.view');
@@ -192,6 +194,9 @@ Route::middleware('auth')->group(function () {
         Route::post('admin/expense-categories/{id}/toggle', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'toggle'])->name('admin.expense-categories.toggle');
         Route::post('admin/expense-categories/quick-add', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'quickAdd'])->name('admin.expense-categories.quick-add');
     });
+
+    Route::middleware('permission:expenses.manage')->post('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'store'])->name('expenses.store');
+    Route::middleware('permission:expenses.view')->get('expenses/cashbook', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'cashBook'])->name('expenses.cashbook');
 
     Route::middleware('permission:tickets.view')->group(function () {
         Route::get('admin/tickets', [App\Http\Controllers\Ticketing\TicketController::class, 'index'])->name('admin.tickets.index');

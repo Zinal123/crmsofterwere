@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\DailyTransaction;
+use App\Models\ExpenseCategory;
 use App\Models\Invetry;
 use App\Models\Job;
 use App\Models\Machine;
@@ -195,6 +197,27 @@ class ReportsTest extends TestCase
         $response->assertOk();
         $response->assertViewHas('fleetStatus', function ($rows) use ($machine) {
             return $rows->firstWhere('id', $machine->id)['status'] === 'idle';
+        });
+    }
+
+    public function test_reports_page_shows_expenses_grouped_by_category(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $diesel = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        $electricity = ExpenseCategory::create(['name' => 'Electricity', 'type' => 'payment', 'party_model' => null]);
+        DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $diesel->id, 'amount' => 2000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+        DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $diesel->id, 'amount' => 1500, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+        DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $electricity->id, 'amount' => 3200, 'date' => now(), 'payment_mode' => 'bank', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertSee('Diesel / Fuel');
+        $response->assertViewHas('expensesByCategory', function ($rows) {
+            $diesel = $rows->firstWhere('category', 'Diesel / Fuel');
+
+            return $diesel['total'] === 3500.0;
         });
     }
 }
