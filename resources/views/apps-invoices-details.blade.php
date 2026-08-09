@@ -10,9 +10,25 @@
 @endcomponent
 <div class="d-flex justify-content-between align-items-center d-print-none">
     <x-ui.back-link :route="route('invoice')" label="Back to Invoices" />
-    <a href="{{ route('invoice.pdf', $invoice[0]->id) }}" class="btn btn-soft-secondary btn-sm">
-        <i class="ri-file-pdf-2-line align-bottom me-1"></i> Download PDF
-    </a>
+    <div class="d-flex gap-2">
+        @can('invoices.update')
+        <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editInvoice">
+            <i class="ri-edit-line align-bottom me-1"></i> Edit
+        </button>
+        @endcan
+        @can('invoices.delete')
+        <form action="{{ route('invoice.destroy', $invoice[0]->id) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete>
+                <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete
+            </button>
+        </form>
+        @endcan
+        <a href="{{ route('invoice.pdf', $invoice[0]->id) }}" class="btn btn-soft-secondary btn-sm">
+            <i class="ri-file-pdf-2-line align-bottom me-1"></i> Download PDF
+        </a>
+    </div>
 </div>
 <?php
 $number = $amount;
@@ -460,6 +476,137 @@ $number = $amount;
      </div>
  </div>
  @endcan
+
+@can('invoices.update')
+<div class="modal fade d-print-none" id="editInvoice" tabindex="-1" aria-labelledby="editInvoiceLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInvoiceLabel">Edit Invoice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('invoice.update', $invoice[0]->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <h6 class="text-muted text-uppercase fs-12">Customer</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-name">Name</label>
+                            <input type="text" class="form-control" id="edit-invoice-name" name="name" value="{{ $customer[0]->name }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-phone">Phone</label>
+                            <input type="text" class="form-control" id="edit-invoice-phone" name="phone" value="{{ $customer[0]->phone }}">
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label" for="edit-invoice-address">Address</label>
+                            <textarea class="form-control" id="edit-invoice-address" name="address">{{ $customer[0]->address }}</textarea>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-email">Email</label>
+                            <input type="email" class="form-control" id="edit-invoice-email" name="email" value="{{ $customer[0]->email }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-state">State</label>
+                            <select class="form-select" id="edit-invoice-state" name="state">
+                                @foreach(\App\Support\IndianStates::LIST as $stateOption)
+                                <option value="{{ $stateOption }}" @selected($customer[0]->state === $stateOption)>{{ $stateOption }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-billinggst">GSTIN</label>
+                            <input type="text" class="form-control" id="edit-invoice-billinggst" name="billinggst" value="{{ $customer[0]->billinggst }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-billingpan">PAN</label>
+                            <input type="text" class="form-control" id="edit-invoice-billingpan" name="billingpan" value="{{ $customer[0]->billingpan }}">
+                        </div>
+                    </div>
+
+                    <h6 class="text-muted text-uppercase fs-12 mt-3">Bank &amp; Dispatch Details</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-bankname">Bank Name</label>
+                            <input type="text" class="form-control" id="edit-invoice-bankname" name="bankname" value="{{ $invoice[0]->bankname }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-accountholder">Account Holder</label>
+                            <input type="text" class="form-control" id="edit-invoice-accountholder" name="accountholder" value="{{ $invoice[0]->accountholder }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-bankaccountnumber">Account Number</label>
+                            <input type="text" class="form-control" id="edit-invoice-bankaccountnumber" name="bankaccountnumber" value="{{ $invoice[0]->bankaccountnumber }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-bankifsccode">IFSC Code</label>
+                            <input type="text" class="form-control" id="edit-invoice-bankifsccode" name="bankifsccode" value="{{ $invoice[0]->bankifsccode }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-bankbranchname">Branch Name</label>
+                            <input type="text" class="form-control" id="edit-invoice-bankbranchname" name="bankbranchname" value="{{ $invoice[0]->bankbranchname }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-placesupply">Place of Supply</label>
+                            <select class="form-select" id="edit-invoice-placesupply" name="placesupply">
+                                @foreach(\App\Support\IndianStates::LIST as $stateOption)
+                                <option value="{{ $stateOption }}" @selected($invoice[0]->placesupply === $stateOption)>{{ $stateOption }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-duedate">Due Date</label>
+                            <input type="date" class="form-control" id="edit-invoice-duedate" name="duedate" value="{{ $invoice[0]->duedate }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-paycondition">Payment Condition</label>
+                            <input type="text" class="form-control" id="edit-invoice-paycondition" name="paycondition" value="{{ $invoice[0]->paycondition }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-challanno">Challan No.</label>
+                            <input type="text" class="form-control" id="edit-invoice-challanno" name="challanno" value="{{ $invoice[0]->challanno }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-pono">PO No.</label>
+                            <input type="text" class="form-control" id="edit-invoice-pono" name="pono" value="{{ $invoice[0]->pono }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-ewaybillno">E-Way Bill No.</label>
+                            <input type="text" class="form-control" id="edit-invoice-ewaybillno" name="ewaybillno" value="{{ $invoice[0]->ewaybillno }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-ewaybilldate">E-Way Bill Date</label>
+                            <input type="date" class="form-control" id="edit-invoice-ewaybilldate" name="ewaybilldate" value="{{ $invoice[0]->ewaybilldate }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-despatchthrough">Despatch Through</label>
+                            <input type="text" class="form-control" id="edit-invoice-despatchthrough" name="despatchthrough" value="{{ $invoice[0]->despatchthrough }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="edit-invoice-transportvehicleno">Transport Vehicle No.</label>
+                            <input type="text" class="form-control" id="edit-invoice-transportvehicleno" name="TransportVehicleNo" value="{{ $invoice[0]->TransportVehicleNo }}">
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label" for="edit-invoice-notes">Notes</label>
+                            <textarea class="form-control" id="edit-invoice-notes" name="notes">{{ $invoice[0]->notes }}</textarea>
+                        </div>
+                    </div>
+                    <p class="text-muted small">Amount, GST, and line items aren't editable here - they're set from the products selected when this invoice was created.</p>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
+
+@can('invoices.delete')
+    <x-ui.confirm-modal recordType="invoice" />
+@endcan
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/js/pages/invoicedetails.js') }}"></script>

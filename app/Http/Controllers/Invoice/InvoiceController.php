@@ -67,6 +67,48 @@ class InvoiceController extends Controller
         return view('apps-invoices-details', $this->service->getInvoiceDetails($id));
     }
 
+    public function update(Request $request, $id)
+    {
+        $invoiceData = $request->validate([
+            'bankaccountnumber' => 'nullable|string|max:255',
+            'bankifsccode' => 'nullable|string|max:255',
+            'accountholder' => 'nullable|string|max:255',
+            'bankname' => 'nullable|string|max:255',
+            'bankbranchname' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:2000',
+            'paycondition' => 'nullable|string|max:255',
+            'duedate' => 'nullable|date',
+            'placesupply' => 'nullable|string|max:255',
+            'challanno' => 'nullable|string|max:255',
+            'pono' => 'nullable|string|max:255',
+            'ewaybillno' => 'nullable|string|max:255',
+            'ewaybilldate' => 'nullable|date',
+            'despatchthrough' => 'nullable|string|max:255',
+            'TransportVehicleNo' => 'nullable|string|max:255',
+        ]);
+
+        $customerData = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:2000',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'state' => ['nullable', 'string', \Illuminate\Validation\Rule::in(\App\Support\IndianStates::LIST)],
+            'billinggst' => 'nullable|string|max:255',
+            'billingpan' => 'nullable|string|max:255',
+        ]);
+
+        $this->service->updateDetails((int) $id, $invoiceData, $customerData);
+
+        return redirect()->route('invoice.details', $id)->with('success', 'Invoice updated.');
+    }
+
+    public function destroy($id)
+    {
+        $this->service->deleteInvoice((int) $id);
+
+        return redirect()->route('invoice')->with('success', 'Invoice deleted.');
+    }
+
     public function pdf($id)
     {
         abort_unless(Invoice::where('id', $id)->exists(), 404);

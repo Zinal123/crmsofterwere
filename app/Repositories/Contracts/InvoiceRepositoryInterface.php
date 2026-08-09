@@ -37,4 +37,10 @@ interface InvoiceRepositoryInterface
     public function getPaymentHistory(): Collection;
 
     public function allWithCustomerOrderedByLatest(): Collection;
+
+    public function findCustomerByInvoiceId($invoiceId): ?Customer;
+
+    public function saveCustomer(Customer $customer): void;
+
+    public function deleteInvoiceCascade($id): void;
 }

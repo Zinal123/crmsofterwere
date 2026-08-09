@@ -51,6 +51,24 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
         $invoice->save();
     }
 
+    public function findCustomerByInvoiceId($invoiceId): ?Customer
+    {
+        return Customer::where('invoice_id', $invoiceId)->first();
+    }
+
+    public function saveCustomer(Customer $customer): void
+    {
+        $customer->save();
+    }
+
+    public function deleteInvoiceCascade($id): void
+    {
+        Customer::where('invoice_id', $id)->delete();
+        Invoiceproduct::where('invoice_id', $id)->delete();
+        Paidamount::where('invoice_id', $id)->delete();
+        Invoice::where('id', $id)->delete();
+    }
+
     private function invoiceCustomerJoin()
     {
         return $this->tenantScope->apply(

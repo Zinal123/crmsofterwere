@@ -254,4 +254,36 @@ class InvoiceService
     {
         return $this->repository->getPaymentHistory();
     }
+
+    /**
+     * Only the header/contact fields are editable here - amount, GST, and
+     * line items are computed at creation time from the selected products
+     * and aren't safe to silently recompute after the fact through this
+     * simpler edit (same scoping decision as Quotation's edit).
+     */
+    public function updateDetails(int $id, array $invoiceData, array $customerData): void
+    {
+        $invoice = $this->repository->findInvoice($id);
+
+        if ($invoice === null) {
+            throw new \InvalidArgumentException('Invoice not found.');
+        }
+
+        $customer = $this->repository->findCustomerByInvoiceId($id);
+
+        DB::transaction(function () use ($invoice, $customer, $invoiceData, $customerData) {
+            $invoice->fill($invoiceData);
+            $this->repository->saveInvoice($invoice);
+
+            if ($customer !== null) {
+                $customer->fill($customerData);
+                $this->repository->saveCustomer($customer);
+            }
+        });
+    }
+
+    public function deleteInvoice(int $id): void
+    {
+        $this->repository->deleteInvoiceCascade($id);
+    }
 }

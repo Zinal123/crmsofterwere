@@ -507,4 +507,58 @@ class InvoiceTest extends TestCase
         $response->assertOk();
         $response->assertSee('Precision CNC Works');
     }
+
+    public function test_owner_can_update_an_invoices_header_and_customer_details(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000, 'placesupply' => 'Gujarat']);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'name' => 'Old Customer Name', 'state' => 'Gujarat']);
+
+        $response = $this->actingAs($user)->put(route('invoice.update', $invoice->id), [
+            'name' => 'New Customer Name',
+            'address' => 'New Address, Ahmedabad',
+            'phone' => '9998887777',
+            'email' => 'new@example.com',
+            'state' => 'Maharashtra',
+            'bankaccountnumber' => '1234567890',
+            'bankifsccode' => 'HDFC0001234',
+            'accountholder' => 'Oracle Machine Tech',
+            'bankname' => 'HDFC Bank',
+            'placesupply' => 'Maharashtra',
+        ]);
+
+        $response->assertRedirect(route('invoice.details', $invoice->id));
+        $this->assertDatabaseHas('customer', ['invoice_id' => $invoice->id, 'name' => 'New Customer Name', 'state' => 'Maharashtra']);
+        $this->assertDatabaseHas('invoice', ['id' => $invoice->id, 'placesupply' => 'Maharashtra', 'bankname' => 'HDFC Bank']);
+    }
+
+    public function test_owner_can_delete_an_invoice_and_its_related_records(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000]);
+        Customer::factory()->create(['invoice_id' => $invoice->id]);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id]);
+        \App\Models\Paidamount::create(['invoice_id' => $invoice->id, 'customer_id' => 1, 'paidAmount' => 1000]);
+
+        $response = $this->actingAs($user)->delete(route('invoice.destroy', $invoice->id));
+
+        $response->assertRedirect(route('invoice'));
+        $this->assertDatabaseMissing('invoice', ['id' => $invoice->id]);
+        $this->assertDatabaseMissing('customer', ['invoice_id' => $invoice->id]);
+        $this->assertDatabaseMissing('invoiceproduct', ['invoice_id' => $invoice->id]);
+        $this->assertDatabaseMissing('paidamount', ['invoice_id' => $invoice->id]);
+    }
+
+    public function test_invoice_details_page_has_edit_and_delete_triggers(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'amountwithtax' => 118000]);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editInvoice"', false);
+        $response->assertSee(route('invoice.destroy', $invoice->id), false);
+    }
 }
