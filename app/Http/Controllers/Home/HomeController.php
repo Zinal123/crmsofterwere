@@ -34,9 +34,25 @@ class HomeController extends Controller
         return abort(404);
     }
 
-    public function root()
+    /**
+     * The dashboard at '/', rendered per role. Every staff role now has
+     * dashboard.view and lands here; each sees a view scoped to what its job
+     * actually is (owner = strategic, manager = operational, account =
+     * finance, worker = my jobs) rather than one shared page.
+     */
+    public function root(Request $request)
     {
-        return view('index', $this->dashboardService->getDashboardViewData());
+        $user = $request->user();
+
+        return match (true) {
+            $user->hasRole('Owner') => view('index', $this->dashboardService->ownerViewData()),
+            $user->hasRole('Manager') => view('dashboard.manager', $this->dashboardService->managerViewData()),
+            $user->hasRole('Account') => view('dashboard.account', $this->dashboardService->accountViewData()),
+            $user->hasRole('Worker') => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
+            // Any other role that has been granted dashboard.view still gets a
+            // safe, data-light landing rather than a 500.
+            default => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
+        };
     }
 
     /*Language Translation*/

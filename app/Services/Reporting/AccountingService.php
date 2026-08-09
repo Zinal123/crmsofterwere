@@ -33,6 +33,29 @@ class AccountingService
     }
 
     /**
+     * Income vs. expense for each of the last N months, oldest first - the
+     * series behind the dashboard trend chart.
+     */
+    public function monthlyTrend(int $months = 6): array
+    {
+        $trend = [];
+        $cursor = Carbon::now()->startOfMonth()->subMonths($months - 1);
+
+        for ($i = 0; $i < $months; $i++) {
+            $pl = $this->profitAndLoss($cursor->copy()->startOfMonth(), $cursor->copy()->endOfMonth());
+            $trend[] = [
+                'label' => $cursor->format('M'),
+                'income' => round($pl['total_income'], 2),
+                'expense' => round($pl['total_expense'], 2),
+                'profit' => $pl['net_profit'],
+            ];
+            $cursor->addMonth();
+        }
+
+        return $trend;
+    }
+
+    /**
      * Profit & Loss for a date range. Income and expense lines only - this is
      * the statement of what was earned vs. spent over the period.
      */

@@ -46,7 +46,33 @@ class RolesAndPermissionsSeeder extends Seeder
         $owner = Role::findOrCreate('Owner');
         $owner->syncPermissions(self::PERMISSIONS);
 
+        // Worker keeps its own-jobs scope, plus dashboard.view so it lands on
+        // the "my day" dashboard at '/' instead of a bare jobs list.
         $worker = Role::findOrCreate('Worker');
-        $worker->syncPermissions(['jobs.view-own', 'jobs.create']);
+        $worker->syncPermissions(['dashboard.view', 'jobs.view-own', 'jobs.create']);
+
+        // Manager: operational, read-only across the shop floor. No finance,
+        // no admin. This is a sensible baseline - widen it as the role's
+        // responsibilities are finalised.
+        $manager = Role::findOrCreate('Manager');
+        $manager->syncPermissions([
+            'dashboard.view',
+            'jobs.view-all', 'jobs.view-own', 'jobs.approve', 'jobs.assign',
+            'tickets.view', 'spare-part-requests.view',
+            'employees.view', 'attendance.view',
+            'reports.view', 'inventory.view',
+        ]);
+
+        // Account: finance-facing, read plus the money entry points. No job
+        // operations or admin.
+        $account = Role::findOrCreate('Account');
+        $account->syncPermissions([
+            'dashboard.view',
+            'invoices.view', 'invoices.view-details', 'invoices.record-payment',
+            'payment-history.view',
+            'expenses.view', 'expenses.manage',
+            'vendors.view', 'vendor-payments.view', 'vendor-payments.manage',
+            'reports.view', 'accounting.view',
+        ]);
     }
 }

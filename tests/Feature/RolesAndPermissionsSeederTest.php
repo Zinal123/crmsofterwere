@@ -30,13 +30,14 @@ class RolesAndPermissionsSeederTest extends TestCase
         $this->assertCount(count(RolesAndPermissionsSeeder::PERMISSIONS), $owner->permissions);
     }
 
-    public function test_worker_role_gets_only_its_two_job_permissions(): void
+    public function test_worker_role_gets_its_job_permissions_plus_dashboard(): void
     {
         (new RolesAndPermissionsSeeder())->run();
 
         $worker = Role::findByName('Worker');
 
-        $this->assertCount(2, $worker->permissions);
+        // jobs.view-own, jobs.create, plus dashboard.view for the "my day" landing.
+        $this->assertCount(3, $worker->permissions);
     }
 
     public function test_seeder_is_idempotent(): void
@@ -45,7 +46,8 @@ class RolesAndPermissionsSeederTest extends TestCase
         (new RolesAndPermissionsSeeder())->run();
 
         $this->assertCount(count(RolesAndPermissionsSeeder::PERMISSIONS), Permission::all());
-        $this->assertCount(2, Role::all());
+        // Owner, Worker, Manager, Account.
+        $this->assertCount(4, Role::all());
     }
 
     public function test_new_factory_user_has_owner_role_and_full_permissions(): void

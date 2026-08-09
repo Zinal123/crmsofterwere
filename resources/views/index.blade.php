@@ -143,6 +143,116 @@
                 </div><!-- end col -->
             </div> <!-- end row-->
 
+            <!-- Financial snapshot (this month), from the accounting reporting layer -->
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-2">Net {{ $financials['net_profit_month'] >= 0 ? 'Profit' : 'Loss' }} (This Month)</p>
+                            <h4 class="mb-1 {{ $financials['net_profit_month'] >= 0 ? 'text-success' : 'text-danger' }}">₹{{ \App\Support\IndianNumber::format(abs($financials['net_profit_month'])) }}</h4>
+                            <a href="{{ route('accounting.profit-loss') }}" class="text-decoration-underline small">View P&amp;L</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-2">Cash &amp; Bank</p>
+                            <h4 class="mb-1">₹{{ \App\Support\IndianNumber::format($financials['cash']) }}</h4>
+                            <a href="{{ route('accounting.trial-balance') }}" class="text-decoration-underline small">Trial balance</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-2">Receivables</p>
+                            <h4 class="mb-1 text-info">₹{{ \App\Support\IndianNumber::format($financials['receivable']) }}</h4>
+                            <a href="{{ route('invoice') }}" class="text-decoration-underline small">Unpaid invoices</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <p class="text-uppercase fw-medium text-muted mb-2">Payables</p>
+                            <h4 class="mb-1 text-warning">₹{{ \App\Support\IndianNumber::format($financials['payable']) }}</h4>
+                            <a href="{{ route('expenses.cashbook') }}" class="text-decoration-underline small">Vendor dues</a>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end financial row -->
+
+            <!-- Operational alerts -->
+            @if($overdueJobs > 0 || $lowStockCount > 0)
+            <div class="row">
+                @if($overdueJobs > 0)
+                <div class="col-xl-6">
+                    <a href="{{ route('jobs.index') }}" class="text-reset">
+                        <div class="card border border-danger border-opacity-25">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="avatar-sm flex-shrink-0 me-3">
+                                    <span class="avatar-title rounded bg-danger-subtle text-danger fs-3"><i class="ri-alarm-warning-line"></i></span>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-danger">{{ $overdueJobs }}</h4>
+                                    <p class="text-muted mb-0">Overdue job(s) need attention</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @endif
+                @if($lowStockCount > 0)
+                <div class="col-xl-6">
+                    <a href="{{ route('invoice.inventrylist') }}" class="text-reset">
+                        <div class="card border border-warning border-opacity-25">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="avatar-sm flex-shrink-0 me-3">
+                                    <span class="avatar-title rounded bg-warning-subtle text-warning fs-3"><i class="ri-stack-line"></i></span>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0 text-warning">{{ $lowStockCount }}</h4>
+                                    <p class="text-muted mb-0">Inventory item(s) low on stock</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @endif
+            </div>
+            @endif
+
+            <!-- Charts: turn the numbers into a picture -->
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h4 class="card-title mb-0 flex-grow-1">Income vs Expenses</h4>
+                            <span class="text-muted small">Last 6 months</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="incomeExpenseChart" style="min-height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Expenses by Category</h4>
+                            <span class="text-muted small">This month</span>
+                        </div>
+                        <div class="card-body">
+                            @if(collect($financials['expense_breakdown'])->isNotEmpty())
+                                <div id="expenseDonut" style="min-height: 300px;"></div>
+                            @else
+                                <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             @can('jobs.view-all')
             <div class="row">
                 <div class="col-xl-3 col-md-6">
@@ -294,4 +404,48 @@
 
 </div>
 
+@endsection
+
+@section('script')
+<script src="{{ URL::asset('build/libs/apexcharts/apexcharts.min.js') }}"></script>
+<script>
+    (function () {
+        var trend = @json($trend);
+        var expenseBreakdown = @json(collect($financials['expense_breakdown'])->values());
+
+        // Income vs Expenses - grouped columns over the last 6 months.
+        if (document.querySelector('#incomeExpenseChart') && typeof ApexCharts !== 'undefined') {
+            new ApexCharts(document.querySelector('#incomeExpenseChart'), {
+                chart: { type: 'bar', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
+                series: [
+                    { name: 'Income', data: trend.map(function (m) { return m.income; }) },
+                    { name: 'Expenses', data: trend.map(function (m) { return m.expense; }) }
+                ],
+                colors: ['#10B981', '#F7941D'],
+                plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
+                dataLabels: { enabled: false },
+                stroke: { show: true, width: 2, colors: ['transparent'] },
+                xaxis: { categories: trend.map(function (m) { return m.label; }) },
+                yaxis: { labels: { formatter: function (v) { return '₹' + Math.round(v).toLocaleString('en-IN'); } } },
+                legend: { position: 'top' },
+                grid: { borderColor: 'rgba(0,0,0,.08)', strokeDashArray: 4 },
+                tooltip: { y: { formatter: function (v) { return '₹' + Math.round(v).toLocaleString('en-IN'); } } }
+            }).render();
+        }
+
+        // Expenses by category - donut.
+        if (document.querySelector('#expenseDonut') && expenseBreakdown.length && typeof ApexCharts !== 'undefined') {
+            new ApexCharts(document.querySelector('#expenseDonut'), {
+                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
+                series: expenseBreakdown.map(function (c) { return c.total; }),
+                labels: expenseBreakdown.map(function (c) { return c.category; }),
+                colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],
+                legend: { position: 'bottom' },
+                dataLabels: { enabled: true, formatter: function (val) { return Math.round(val) + '%'; } },
+                plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total', formatter: function (w) { return '₹' + Math.round(w.globals.seriesTotals.reduce(function (a, b) { return a + b; }, 0)).toLocaleString('en-IN'); } } } } } },
+                tooltip: { y: { formatter: function (v) { return '₹' + Math.round(v).toLocaleString('en-IN'); } } }
+            }).render();
+        }
+    })();
+</script>
 @endsection
