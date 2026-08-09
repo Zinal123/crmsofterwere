@@ -53,7 +53,7 @@ class TicketService
             ]);
 
             foreach ($photoPaths as $path) {
-                $ticket->photos()->create(['path' => $path]);
+                $ticket->photos()->create(['path' => $path, 'captured_at' => now()]);
             }
 
             return $ticket;

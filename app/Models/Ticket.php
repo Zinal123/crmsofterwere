@@ -43,6 +43,6 @@ class Ticket extends Model
 
     public function photos(): HasMany
     {
-        return $this->hasMany(TicketPhoto::class);
+        return $this->hasMany(JobPhoto::class);
     }
 }

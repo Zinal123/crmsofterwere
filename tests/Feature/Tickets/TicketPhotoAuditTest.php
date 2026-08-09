@@ -4,8 +4,8 @@ namespace Tests\Feature\Tickets;
 
 use App\Models\ClientAccount;
 use App\Models\ClientMachine;
+use App\Models\JobPhoto;
 use App\Models\Ticket;
-use App\Models\TicketPhoto;
 use App\Models\TicketProblemType;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -32,7 +32,7 @@ class TicketPhotoAuditTest extends TestCase
             'status' => 'open',
         ]);
 
-        $photo = TicketPhoto::create([
+        $photo = JobPhoto::create([
             'ticket_id' => $ticket->id,
             'path' => 'ticket-photos/1/example.jpg',
         ]);
@@ -59,7 +59,7 @@ class TicketPhotoAuditTest extends TestCase
         // Simulates the client-guard request context (see EloquentAuditLogRepository -
         // must not try to attribute this to a `users` row and blow up the FK).
         $this->actingAs($account, 'client');
-        $photo = TicketPhoto::create(['ticket_id' => $ticket->id, 'path' => 'ticket-photos/1/example.jpg']);
+        $photo = JobPhoto::create(['ticket_id' => $ticket->id, 'path' => 'ticket-photos/1/example.jpg']);
 
         $this->assertDatabaseHas('audit_logs', [
             'auditable_type' => 'ticket_photo',

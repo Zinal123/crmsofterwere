@@ -5,9 +5,9 @@ namespace Tests\Feature\Tickets;
 use App\Models\ClientAccount;
 use App\Models\ClientMachine;
 use App\Models\Job;
+use App\Models\JobPhoto;
 use App\Models\Product;
 use App\Models\Ticket;
-use App\Models\TicketPhoto;
 use App\Models\TicketProblemType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,7 +35,7 @@ class TicketModelsMigrationTest extends TestCase
             'status' => 'open',
         ]);
 
-        $photo = TicketPhoto::create(['ticket_id' => $ticket->id, 'path' => 'ticket-photos/test.jpg']);
+        $photo = JobPhoto::create(['ticket_id' => $ticket->id, 'path' => 'ticket-photos/test.jpg']);
 
         $this->assertTrue($account->machines->first()->is($machine));
         $this->assertTrue($account->tickets->first()->is($ticket));
