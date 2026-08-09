@@ -24,6 +24,7 @@
                         </td>
                         <td>
                             <div class="d-flex gap-2 flex-wrap">
+                                <x-ui.button variant="primary" :soft="true" size="sm" type="button" icon="ri-edit-line" data-bs-toggle="modal" data-bs-target="#editMachine-{{ $machine->id }}" ariaLabel="Edit" title="Edit" />
                                 <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     <x-ui.button variant="secondary" :soft="true" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'" :ariaLabel="$machine->is_active ? 'Disable' : 'Enable'" data-bs-toggle="tooltip" :title="$machine->is_active ? 'Disable' : 'Enable'" />
@@ -41,6 +42,41 @@
             </tbody>
         </table>
     </x-ui.data-table-card>
+
+    @foreach($machines as $machine)
+    <div class="modal fade" id="editMachine-{{ $machine->id }}" tabindex="-1" aria-labelledby="editMachine-{{ $machine->id }}-label" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMachine-{{ $machine->id }}-label">Edit Machine</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('machines.update', $machine->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-2">
+                            <label class="form-label" for="edit-machine-name-{{ $machine->id }}">Machine Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit-machine-name-{{ $machine->id }}" name="name" value="{{ $machine->name }}" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="edit-machine-latitude-{{ $machine->id }}">Latitude</label>
+                            <input type="number" step="0.0000001" class="form-control" id="edit-machine-latitude-{{ $machine->id }}" name="latitude" value="{{ $machine->latitude }}">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="edit-machine-longitude-{{ $machine->id }}">Longitude</label>
+                            <input type="number" step="0.0000001" class="form-control" id="edit-machine-longitude-{{ $machine->id }}" name="longitude" value="{{ $machine->longitude }}">
+                        </div>
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
 
     <div class="card mt-3">
         <div class="card-body">

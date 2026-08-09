@@ -36,4 +36,9 @@ class EloquentMachineRepository implements MachineRepositoryInterface
 
         return $machine;
     }
+
+    public function save(Machine $machine): void
+    {
+        $machine->save();
+    }
 }

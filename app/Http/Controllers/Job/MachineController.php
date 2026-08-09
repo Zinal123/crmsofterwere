@@ -34,6 +34,19 @@ class MachineController extends Controller
         return redirect()->route('machines.index')->with('success', 'Machine added.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+        ]);
+
+        $this->service->update($id, $data);
+
+        return redirect()->route('machines.index')->with('success', 'Machine updated.');
+    }
+
     public function toggle($id)
     {
         $this->service->toggleActive($id);

@@ -14,4 +14,6 @@ interface MachineRepositoryInterface
     public function find($id): ?Machine;
 
     public function toggleActive($id): Machine;
+
+    public function save(Machine $machine): void;
 }

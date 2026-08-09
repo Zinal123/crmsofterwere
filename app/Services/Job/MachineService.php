@@ -26,4 +26,18 @@ class MachineService
     {
         return $this->repository->toggleActive($id);
     }
+
+    public function update($id, array $data): Machine
+    {
+        $machine = $this->repository->find($id);
+
+        if ($machine === null) {
+            throw new \InvalidArgumentException('Machine not found.');
+        }
+
+        $machine->fill($data);
+        $this->repository->save($machine);
+
+        return $machine;
+    }
 }

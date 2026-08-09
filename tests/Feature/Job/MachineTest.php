@@ -94,6 +94,36 @@ class MachineTest extends TestCase
         $this->assertFalse($machine->fresh()->is_active);
     }
 
+    public function test_owner_can_update_a_machine(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('Owner');
+        $machine = Machine::factory()->create(['name' => 'Old Name', 'latitude' => null, 'longitude' => null]);
+
+        $response = $this->actingAs($user)->put(route('machines.update', $machine->id), [
+            'name' => 'CNC Lathe #9 (relocated)',
+            'latitude' => 23.0225,
+            'longitude' => 72.5714,
+        ]);
+
+        $response->assertRedirect(route('machines.index'));
+        $this->assertDatabaseHas('machines', ['id' => $machine->id, 'name' => 'CNC Lathe #9 (relocated)', 'latitude' => 23.0225, 'longitude' => 72.5714]);
+    }
+
+    public function test_machine_list_page_has_an_edit_trigger_per_row(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('Owner');
+        $machine = Machine::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('machines.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editMachine-' . $machine->id . '"', false);
+    }
+
     public function test_user_without_permission_is_forbidden(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

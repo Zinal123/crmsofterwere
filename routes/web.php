@@ -210,6 +210,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('machines', [App\Http\Controllers\Job\MachineController::class, 'store'])->name('machines.store')->middleware('permission:jobs.manage-machines');
     Route::post('machines/{id}/toggle', [App\Http\Controllers\Job\MachineController::class, 'toggle'])->name('machines.toggle')->middleware('permission:jobs.manage-machines');
+    Route::put('machines/{id}', [App\Http\Controllers\Job\MachineController::class, 'update'])->name('machines.update')->middleware('permission:jobs.manage-machines');
     Route::post('machines/{id}/flag-down', [App\Http\Controllers\Job\MachineController::class, 'flagDown'])->name('machines.flag-down')->middleware('permission:jobs.view-own|jobs.view-all');
 
     Route::get('jobs/create', [App\Http\Controllers\Job\JobController::class, 'create'])->name('jobs.create')->middleware('permission:jobs.create|jobs.assign');
