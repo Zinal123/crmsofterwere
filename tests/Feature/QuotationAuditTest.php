@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Quation;
+use App\Models\QuotationItem;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,5 +37,23 @@ class QuotationAuditTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('data-audit-id="' . $quotation->id . '"', false);
+    }
+
+    public function test_creating_a_quotation_item_logs_a_created_row(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $quotation = Quation::create(['clientname' => 'Test Client']);
+        $item = QuotationItem::create([
+            'quotation_id' => $quotation->id,
+            'description' => 'CNC spindle bearing',
+            'amount' => 1500,
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('audit-logs.for-record', ['type' => 'quotation_item', 'id' => $item->id]));
+
+        $response->assertOk();
+        $response->assertSee('created');
     }
 }

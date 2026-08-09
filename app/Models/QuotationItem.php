@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationItem extends Model
 {
+    use Auditable;
+
     protected $table = 'quotation_items';
 
     protected $fillable = [

@@ -31,6 +31,7 @@ class AuditLogService
         'cnsthinks' => 'products.view-audit',
         'termandcondition' => 'products.view-audit',
         'quotation' => 'quotations.view-audit',
+        'quotation_item' => 'quotations.view-audit',
         'inventory' => 'inventory.view-audit',
         'user' => 'admin.view-audit',
         'machine' => 'machines.view-audit',
