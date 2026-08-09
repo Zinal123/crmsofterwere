@@ -47,7 +47,7 @@ Client Accounts
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Machines</th></tr>
+                        <tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Machines</th><th></th></tr>
                     </thead>
                     <tbody>
                         @forelse($clientAccounts as $account)
@@ -63,9 +63,22 @@ Client Accounts
                                 />
                             </td>
                             <td>{{ $account->machines()->count() }}</td>
+                            <td>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editClientAccount-{{ $account->id }}" title="Edit" aria-label="Edit">
+                                        <i class="ri-edit-line align-bottom"></i>
+                                    </button>
+                                    <form action="{{ route('admin.client-accounts.toggle', $account->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-soft-{{ $account->is_active ? 'warning' : 'success' }} btn-sm" title="{{ $account->is_active ? 'Deactivate' : 'Activate' }}" aria-label="{{ $account->is_active ? 'Deactivate' : 'Activate' }}">
+                                            <i class="{{ $account->is_active ? 'ri-forbid-line' : 'ri-checkbox-circle-line' }} align-bottom"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                         @empty
-                        <tr><td colspan="5"><x-ui.empty-state icon="ri-user-line" message="No client accounts yet." /></td></tr>
+                        <tr><td colspan="6"><x-ui.empty-state icon="ri-user-line" message="No client accounts yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -73,4 +86,39 @@ Client Accounts
         </x-ui.data-table-card>
     </div>
 </div>
+
+@foreach($clientAccounts as $account)
+<div class="modal fade" id="editClientAccount-{{ $account->id }}" tabindex="-1" aria-labelledby="editClientAccount-{{ $account->id }}-label" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editClientAccount-{{ $account->id }}-label">Edit Client Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.client-accounts.update', $account->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-client-name-{{ $account->id }}">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit-client-name-{{ $account->id }}" name="name" value="{{ $account->name }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-client-email-{{ $account->id }}">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="edit-client-email-{{ $account->id }}" name="email" value="{{ $account->email }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-client-phone-{{ $account->id }}">Phone</label>
+                        <input type="text" class="form-control" id="edit-client-phone-{{ $account->id }}" name="phone" value="{{ $account->phone }}">
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection

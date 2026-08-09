@@ -12,4 +12,6 @@ interface ClientAccountRepositoryInterface
     public function find($id): ?ClientAccount;
 
     public function create(array $data): ClientAccount;
+
+    public function save(ClientAccount $account): void;
 }

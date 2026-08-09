@@ -22,4 +22,9 @@ class EloquentClientAccountRepository implements ClientAccountRepositoryInterfac
     {
         return ClientAccount::create($data);
     }
+
+    public function save(ClientAccount $account): void
+    {
+        $account->save();
+    }
 }

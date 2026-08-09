@@ -167,6 +167,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:client-machines.manage')->group(function () {
         Route::get('admin/client-accounts', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'index'])->name('admin.client-accounts.index');
         Route::post('admin/client-accounts', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'store'])->name('admin.client-accounts.store');
+        Route::put('admin/client-accounts/{id}', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'update'])->name('admin.client-accounts.update');
+        Route::post('admin/client-accounts/{id}/toggle', [App\Http\Controllers\Ticketing\ClientAccountController::class, 'toggle'])->name('admin.client-accounts.toggle');
     });
 
     Route::middleware('permission:client-machines.view')->get('admin/client-machines', [App\Http\Controllers\Ticketing\ClientMachineController::class, 'index'])->name('admin.client-machines.index');

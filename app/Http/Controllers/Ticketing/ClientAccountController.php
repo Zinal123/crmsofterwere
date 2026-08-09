@@ -32,4 +32,24 @@ class ClientAccountController extends Controller
 
         return redirect()->route('admin.client-accounts.index')->with('success', 'Client account created.');
     }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:client_accounts,email,' . $id,
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $this->service->update($id, $data);
+
+        return redirect()->route('admin.client-accounts.index')->with('success', 'Client account updated.');
+    }
+
+    public function toggle($id)
+    {
+        $this->service->toggleActive($id);
+
+        return redirect()->route('admin.client-accounts.index')->with('success', 'Client account status updated.');
+    }
 }

@@ -28,4 +28,32 @@ class ClientAccountService
             'is_active' => true,
         ]);
     }
+
+    public function update($id, array $data): ClientAccount
+    {
+        $account = $this->repository->find($id);
+
+        if ($account === null) {
+            throw new \InvalidArgumentException('Client account not found.');
+        }
+
+        $account->fill($data);
+        $this->repository->save($account);
+
+        return $account;
+    }
+
+    public function toggleActive($id): ClientAccount
+    {
+        $account = $this->repository->find($id);
+
+        if ($account === null) {
+            throw new \InvalidArgumentException('Client account not found.');
+        }
+
+        $account->is_active = ! $account->is_active;
+        $this->repository->save($account);
+
+        return $account;
+    }
 }
