@@ -48,6 +48,14 @@
                 </li>
                 @endcan
 
+                @can('accounting.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('accounting.chart') }}">
+                        <i class="ri-book-3-line"></i> <span>Accounting</span>
+                    </a>
+                </li>
+                @endcan
+
                 @can('expenses.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('expenses.index') }}">

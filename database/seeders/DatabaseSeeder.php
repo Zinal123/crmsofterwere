@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(TicketProblemTypeSeeder::class);
+        $this->call(ChartOfAccountsSeeder::class);
     }
 }

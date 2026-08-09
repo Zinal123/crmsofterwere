@@ -28,6 +28,11 @@ Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Con
 // expenses.index)
 Route::middleware('auth')->group(function () {
     Route::get('reports', [App\Http\Controllers\Reporting\ReportController::class, 'index'])->name('reports.index')->middleware('permission:reports.view');
+    Route::middleware('permission:accounting.view')->group(function () {
+        Route::get('accounting/chart-of-accounts', [App\Http\Controllers\Reporting\AccountingController::class, 'chartOfAccounts'])->name('accounting.chart');
+        Route::get('accounting/profit-loss', [App\Http\Controllers\Reporting\AccountingController::class, 'profitAndLoss'])->name('accounting.profit-loss');
+        Route::get('accounting/trial-balance', [App\Http\Controllers\Reporting\AccountingController::class, 'trialBalance'])->name('accounting.trial-balance');
+    });
     Route::get('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'index'])->name('expenses.index')->middleware('permission:expenses.view');
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
     Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry')->middleware('permission:payment-history.view');
