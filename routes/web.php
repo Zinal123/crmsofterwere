@@ -187,7 +187,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:vendor-payments.view')->get('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'show'])->name('admin.vendors.show');
     Route::middleware('permission:vendor-payments.manage')->group(function () {
         Route::post('admin/vendors/{id}/bills', [App\Http\Controllers\Vendor\VendorController::class, 'storeBill'])->name('admin.vendors.bills.store');
+        Route::put('admin/vendors/{id}/bills/{billId}', [App\Http\Controllers\Vendor\VendorController::class, 'updateBill'])->name('admin.vendors.bills.update');
+        Route::delete('admin/vendors/{id}/bills/{billId}', [App\Http\Controllers\Vendor\VendorController::class, 'destroyBill'])->name('admin.vendors.bills.destroy');
         Route::post('admin/vendors/{id}/payments', [App\Http\Controllers\Vendor\VendorController::class, 'storePayment'])->name('admin.vendors.payments.store');
+        Route::put('admin/vendors/{id}/payments/{paymentId}', [App\Http\Controllers\Vendor\VendorController::class, 'updatePaymentRecord'])->name('admin.vendors.payments.update');
+        Route::delete('admin/vendors/{id}/payments/{paymentId}', [App\Http\Controllers\Vendor\VendorController::class, 'destroyPaymentRecord'])->name('admin.vendors.payments.destroy');
     });
 
     Route::middleware('permission:ticket-problem-types.manage')->group(function () {

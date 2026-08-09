@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
+use App\Models\VendorBill;
+use App\Models\VendorPayment;
 use App\Services\Expenses\VendorPayableService;
 use App\Services\Vendor\VendorService;
 use Illuminate\Http\Request;
@@ -72,6 +74,54 @@ class VendorController extends Controller
         }
 
         return redirect()->route('admin.vendors.show', $vendor->id)->with('success', 'Payment recorded.');
+    }
+
+    public function updateBill(Request $request, $id, $billId)
+    {
+        $bill = VendorBill::where('vendor_id', $id)->findOrFail($billId);
+
+        $data = $request->validate([
+            'bill_number' => 'nullable|string|max:255',
+            'amount' => 'required|numeric|min:0.01',
+            'date' => 'required|date',
+            'description' => 'nullable|string|max:2000',
+        ]);
+
+        $this->payableService->updateBill($bill, $data);
+
+        return redirect()->route('admin.vendors.show', $id)->with('success', 'Bill updated.');
+    }
+
+    public function destroyBill($id, $billId)
+    {
+        $bill = VendorBill::where('vendor_id', $id)->findOrFail($billId);
+        $this->payableService->deleteBill($bill);
+
+        return redirect()->route('admin.vendors.show', $id)->with('success', 'Bill deleted.');
+    }
+
+    public function updatePaymentRecord(Request $request, $id, $paymentId)
+    {
+        $payment = VendorPayment::where('vendor_id', $id)->findOrFail($paymentId);
+
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'date' => 'required|date',
+            'payment_mode' => 'required|in:cash,bank,upi,cheque',
+            'description' => 'nullable|string|max:2000',
+        ]);
+
+        $this->payableService->updatePayment($payment, $data);
+
+        return redirect()->route('admin.vendors.show', $id)->with('success', 'Payment updated.');
+    }
+
+    public function destroyPaymentRecord($id, $paymentId)
+    {
+        $payment = VendorPayment::where('vendor_id', $id)->findOrFail($paymentId);
+        $this->payableService->deletePayment($payment);
+
+        return redirect()->route('admin.vendors.show', $id)->with('success', 'Payment deleted.');
     }
 
     public function store(Request $request)

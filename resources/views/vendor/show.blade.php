@@ -104,7 +104,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Date</th><th>Bill #</th><th>Amount</th><th>Balance</th></tr>
+                        <tr><th>Date</th><th>Bill #</th><th>Amount</th><th>Balance</th>@can('vendor-payments.manage')<th></th>@endcan</tr>
                     </thead>
                     <tbody>
                         @forelse($bills as $bill)
@@ -119,9 +119,25 @@
                                     <x-ui.status-badge :status="\App\Support\IndianNumber::format($bill->balance()) . ' due'" variant="warning" icon="ri-time-line" />
                                 @endif
                             </td>
+                            @can('vendor-payments.manage')
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editBill-{{ $bill->id }}" title="Edit" aria-label="Edit">
+                                        <i class="ri-edit-line align-bottom"></i>
+                                    </button>
+                                    <form action="{{ route('admin.vendors.bills.destroy', [$vendor->id, $bill->id]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
+                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                            @endcan
                         </tr>
                         @empty
-                        <tr><td colspan="4"><x-ui.empty-state icon="ri-file-list-3-line" message="No bills recorded yet." /></td></tr>
+                        <tr><td colspan="5"><x-ui.empty-state icon="ri-file-list-3-line" message="No bills recorded yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -132,7 +148,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Date</th><th>Against</th><th>Amount</th><th>Mode</th></tr>
+                        <tr><th>Date</th><th>Against</th><th>Amount</th><th>Mode</th>@can('vendor-payments.manage')<th></th>@endcan</tr>
                     </thead>
                     <tbody>
                         @forelse($payments as $payment)
@@ -141,9 +157,25 @@
                             <td>{{ $payment->bill ? ($payment->bill->bill_number ?: 'Bill #' . $payment->bill->id) : 'General / advance' }}</td>
                             <td>{{ \App\Support\IndianNumber::format($payment->amount) }}</td>
                             <td>{{ ucfirst($payment->payment_mode) }}</td>
+                            @can('vendor-payments.manage')
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPayment-{{ $payment->id }}" title="Edit" aria-label="Edit">
+                                        <i class="ri-edit-line align-bottom"></i>
+                                    </button>
+                                    <form action="{{ route('admin.vendors.payments.destroy', [$vendor->id, $payment->id]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
+                                            <i class="ri-delete-bin-fill align-bottom"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                            @endcan
                         </tr>
                         @empty
-                        <tr><td colspan="4"><x-ui.empty-state icon="ri-money-dollar-circle-line" message="No payments recorded yet." /></td></tr>
+                        <tr><td colspan="5"><x-ui.empty-state icon="ri-money-dollar-circle-line" message="No payments recorded yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -151,4 +183,91 @@
         </x-ui.data-table-card>
     </div>
 </div>
+
+@can('vendor-payments.manage')
+@foreach($bills as $bill)
+<div class="modal fade" id="editBill-{{ $bill->id }}" tabindex="-1" aria-labelledby="editBill-{{ $bill->id }}-label" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBill-{{ $bill->id }}-label">Edit Bill</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.vendors.bills.update', [$vendor->id, $bill->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-bill-number-{{ $bill->id }}">Bill / Invoice Number</label>
+                        <input type="text" class="form-control" id="edit-bill-number-{{ $bill->id }}" name="bill_number" value="{{ $bill->bill_number }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-bill-amount-{{ $bill->id }}">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" class="form-control" id="edit-bill-amount-{{ $bill->id }}" name="amount" value="{{ $bill->amount }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-bill-date-{{ $bill->id }}">Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="edit-bill-date-{{ $bill->id }}" name="date" value="{{ $bill->date->toDateString() }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-bill-description-{{ $bill->id }}">Description</label>
+                        <textarea class="form-control" id="edit-bill-description-{{ $bill->id }}" name="description">{{ $bill->description }}</textarea>
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach($payments as $payment)
+<div class="modal fade" id="editPayment-{{ $payment->id }}" tabindex="-1" aria-labelledby="editPayment-{{ $payment->id }}-label" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPayment-{{ $payment->id }}-label">Edit Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.vendors.payments.update', [$vendor->id, $payment->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-payment-amount-{{ $payment->id }}">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" class="form-control" id="edit-payment-amount-{{ $payment->id }}" name="amount" value="{{ $payment->amount }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-payment-date-{{ $payment->id }}">Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="edit-payment-date-{{ $payment->id }}" name="date" value="{{ $payment->date->toDateString() }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-payment-mode-{{ $payment->id }}">Payment Mode <span class="text-danger">*</span></label>
+                        <select class="form-select" id="edit-payment-mode-{{ $payment->id }}" name="payment_mode" required>
+                            <option value="cash" @selected($payment->payment_mode === 'cash')>Cash</option>
+                            <option value="bank" @selected($payment->payment_mode === 'bank')>Bank Transfer</option>
+                            <option value="upi" @selected($payment->payment_mode === 'upi')>UPI</option>
+                            <option value="cheque" @selected($payment->payment_mode === 'cheque')>Cheque</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="edit-payment-description-{{ $payment->id }}">Description</label>
+                        <textarea class="form-control" id="edit-payment-description-{{ $payment->id }}" name="description">{{ $payment->description }}</textarea>
+                    </div>
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<x-ui.confirm-modal recordType="record" />
+@endcan
 @endsection

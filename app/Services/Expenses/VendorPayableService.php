@@ -47,4 +47,40 @@ class VendorPayableService
             'created_by' => $creator->id,
         ]);
     }
+
+    public function updateBill(VendorBill $bill, array $data): VendorBill
+    {
+        $bill->fill([
+            'bill_number' => $data['bill_number'] ?? null,
+            'amount' => $data['amount'],
+            'date' => $data['date'],
+            'description' => $data['description'] ?? null,
+        ]);
+        $bill->save();
+
+        return $bill;
+    }
+
+    public function deleteBill(VendorBill $bill): void
+    {
+        $bill->delete();
+    }
+
+    public function updatePayment(VendorPayment $payment, array $data): VendorPayment
+    {
+        $payment->fill([
+            'amount' => $data['amount'],
+            'date' => $data['date'],
+            'payment_mode' => $data['payment_mode'],
+            'description' => $data['description'] ?? null,
+        ]);
+        $payment->save();
+
+        return $payment;
+    }
+
+    public function deletePayment(VendorPayment $payment): void
+    {
+        $payment->delete();
+    }
 }

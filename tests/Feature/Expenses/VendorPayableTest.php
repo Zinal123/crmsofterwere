@@ -5,6 +5,7 @@ namespace Tests\Feature\Expenses;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorBill;
+use App\Models\VendorPayment;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -142,6 +143,85 @@ class VendorPayableTest extends TestCase
         $response->assertOk();
         // 45000 + 15000 billed - 20000 paid = 40000 outstanding
         $response->assertSee('40,000');
+    }
+
+    public function test_owner_can_update_a_bill(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        $bill = VendorBill::create(['vendor_id' => $vendor->id, 'bill_number' => 'OLD-1', 'amount' => 45000, 'date' => now(), 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->put(route('admin.vendors.bills.update', [$vendor->id, $bill->id]), [
+            'bill_number' => 'NEW-2',
+            'amount' => 48000,
+            'date' => now()->toDateString(),
+            'description' => 'Corrected amount',
+        ]);
+
+        $response->assertRedirect(route('admin.vendors.show', $vendor->id));
+        $this->assertDatabaseHas('vendor_bills', ['id' => $bill->id, 'bill_number' => 'NEW-2', 'amount' => 48000]);
+    }
+
+    public function test_owner_can_delete_a_bill(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        $bill = VendorBill::create(['vendor_id' => $vendor->id, 'amount' => 45000, 'date' => now(), 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->delete(route('admin.vendors.bills.destroy', [$vendor->id, $bill->id]));
+
+        $response->assertRedirect(route('admin.vendors.show', $vendor->id));
+        $this->assertDatabaseMissing('vendor_bills', ['id' => $bill->id]);
+    }
+
+    public function test_owner_can_update_a_payment(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        $payment = VendorPayment::create(['vendor_id' => $vendor->id, 'amount' => 10000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->put(route('admin.vendors.payments.update', [$vendor->id, $payment->id]), [
+            'amount' => 12000,
+            'date' => now()->toDateString(),
+            'payment_mode' => 'bank',
+            'description' => 'Corrected',
+        ]);
+
+        $response->assertRedirect(route('admin.vendors.show', $vendor->id));
+        $this->assertDatabaseHas('vendor_payments', ['id' => $payment->id, 'amount' => 12000, 'payment_mode' => 'bank']);
+    }
+
+    public function test_owner_can_delete_a_payment(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        $payment = VendorPayment::create(['vendor_id' => $vendor->id, 'amount' => 10000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->delete(route('admin.vendors.payments.destroy', [$vendor->id, $payment->id]));
+
+        $response->assertRedirect(route('admin.vendors.show', $vendor->id));
+        $this->assertDatabaseMissing('vendor_payments', ['id' => $payment->id]);
+    }
+
+    public function test_vendor_show_page_has_edit_and_delete_triggers_for_bills_and_payments(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        $bill = VendorBill::create(['vendor_id' => $vendor->id, 'amount' => 45000, 'date' => now(), 'created_by' => $owner->id]);
+        $payment = VendorPayment::create(['vendor_id' => $vendor->id, 'amount' => 10000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('admin.vendors.show', $vendor->id));
+
+        $response->assertOk();
+        $response->assertSee('data-bs-target="#editBill-' . $bill->id . '"', false);
+        $response->assertSee(route('admin.vendors.bills.destroy', [$vendor->id, $bill->id]), false);
+        $response->assertSee('data-bs-target="#editPayment-' . $payment->id . '"', false);
+        $response->assertSee(route('admin.vendors.payments.destroy', [$vendor->id, $payment->id]), false);
     }
 
     public function test_worker_cannot_view_vendor_payable_ledger(): void
