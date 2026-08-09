@@ -84,9 +84,9 @@ Vendors
                             <th>Contact</th>
                             <th>Phone</th>
                             <th>State</th>
-                            @can('vendors.manage')
+                            @canany(['vendors.manage', 'vendor-payments.view'])
                             <th></th>
-                            @endcan
+                            @endcanany
                         </tr>
                     </thead>
                     <tbody>
@@ -98,8 +98,14 @@ Vendors
                             <td>{{ $vendor->contact_name ?? '-' }}</td>
                             <td>{{ $vendor->phone ?? '-' }}</td>
                             <td>{{ $vendor->state ?? '-' }}</td>
-                            @can('vendors.manage')
+                            @canany(['vendors.manage', 'vendor-payments.view'])
                             <td>
+                                @can('vendor-payments.view')
+                                <a href="{{ route('admin.vendors.show', $vendor->id) }}" class="btn btn-soft-secondary btn-sm" title="Payable Ledger" aria-label="Payable Ledger">
+                                    <i class="ri-wallet-3-line align-bottom"></i>
+                                </a>
+                                @endcan
+                                @can('vendors.manage')
                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVendor-{{ $vendor->id }}" title="Edit" aria-label="Edit">
                                     <i class="ri-edit-line align-bottom"></i>
                                 </button>
@@ -110,8 +116,9 @@ Vendors
                                         <i class="ri-delete-bin-fill align-bottom"></i>
                                     </button>
                                 </form>
+                                @endcan
                             </td>
-                            @endcan
+                            @endcanany
                         </tr>
                         @empty
                         <tr><td colspan="7"><x-ui.empty-state icon="ri-truck-line" message="No vendors yet." /></td></tr>

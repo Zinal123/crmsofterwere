@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
+use App\Services\Expenses\VendorPayableService;
 use App\Services\Vendor\VendorService;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
-    public function __construct(private VendorService $service)
-    {
+    public function __construct(
+        private VendorService $service,
+        private VendorPayableService $payableService,
+    ) {
     }
 
     public function index()
@@ -18,6 +21,57 @@ class VendorController extends Controller
         return view('vendor.index', [
             'vendors' => $this->service->listAll(),
         ]);
+    }
+
+    public function show($id)
+    {
+        $vendor = $this->service->find((int) $id);
+        abort_if(! $vendor, 404);
+
+        return view('vendor.show', [
+            'vendor' => $vendor,
+            'bills' => $vendor->bills()->latest('date')->get(),
+            'payments' => $vendor->payments()->latest('date')->get(),
+        ]);
+    }
+
+    public function storeBill(Request $request, $id)
+    {
+        $vendor = $this->service->find((int) $id);
+        abort_if(! $vendor, 404);
+
+        $data = $request->validate([
+            'bill_number' => 'nullable|string|max:255',
+            'amount' => 'required|numeric|min:0.01',
+            'date' => 'required|date',
+            'description' => 'nullable|string|max:2000',
+        ]);
+
+        $this->payableService->createBill($vendor, $data, $request->user());
+
+        return redirect()->route('admin.vendors.show', $vendor->id)->with('success', 'Bill recorded.');
+    }
+
+    public function storePayment(Request $request, $id)
+    {
+        $vendor = $this->service->find((int) $id);
+        abort_if(! $vendor, 404);
+
+        $data = $request->validate([
+            'vendor_bill_id' => 'nullable|integer',
+            'amount' => 'required|numeric|min:0.01',
+            'date' => 'required|date',
+            'payment_mode' => 'required|in:cash,bank,upi,cheque',
+            'description' => 'nullable|string|max:2000',
+        ]);
+
+        try {
+            $this->payableService->recordPayment($vendor, $data, $request->user());
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return redirect()->route('admin.vendors.show', $vendor->id)->with('success', 'Payment recorded.');
     }
 
     public function store(Request $request)

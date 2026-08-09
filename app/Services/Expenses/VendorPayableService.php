@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Services\Expenses;
+
+use App\Models\User;
+use App\Models\Vendor;
+use App\Models\VendorBill;
+use App\Models\VendorPayment;
+
+class VendorPayableService
+{
+    public function createBill(Vendor $vendor, array $data, User $creator): VendorBill
+    {
+        return VendorBill::create([
+            'vendor_id' => $vendor->id,
+            'bill_number' => $data['bill_number'] ?? null,
+            'amount' => $data['amount'],
+            'date' => $data['date'],
+            'description' => $data['description'] ?? null,
+            'created_by' => $creator->id,
+        ]);
+    }
+
+    public function recordPayment(Vendor $vendor, array $data, User $creator): VendorPayment
+    {
+        $bill = null;
+
+        if (! empty($data['vendor_bill_id'])) {
+            $bill = VendorBill::where('vendor_id', $vendor->id)->find($data['vendor_bill_id']);
+
+            if ($bill === null) {
+                throw new \InvalidArgumentException('That bill was not found for this vendor.');
+            }
+
+            if ((float) $data['amount'] > $bill->balance()) {
+                throw new \InvalidArgumentException('This payment of ' . $data['amount'] . ' exceeds the bill\'s remaining balance of ' . $bill->balance() . '.');
+            }
+        }
+
+        return VendorPayment::create([
+            'vendor_id' => $vendor->id,
+            'vendor_bill_id' => $bill?->id,
+            'amount' => $data['amount'],
+            'date' => $data['date'],
+            'payment_mode' => $data['payment_mode'],
+            'description' => $data['description'] ?? null,
+            'created_by' => $creator->id,
+        ]);
+    }
+}

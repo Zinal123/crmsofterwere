@@ -174,11 +174,23 @@ Route::middleware('auth')->group(function () {
         Route::put('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'update'])->name('admin.vendors.update');
         Route::delete('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'destroy'])->name('admin.vendors.destroy');
     });
+    Route::middleware('permission:vendor-payments.view')->get('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'show'])->name('admin.vendors.show');
+    Route::middleware('permission:vendor-payments.manage')->group(function () {
+        Route::post('admin/vendors/{id}/bills', [App\Http\Controllers\Vendor\VendorController::class, 'storeBill'])->name('admin.vendors.bills.store');
+        Route::post('admin/vendors/{id}/payments', [App\Http\Controllers\Vendor\VendorController::class, 'storePayment'])->name('admin.vendors.payments.store');
+    });
 
     Route::middleware('permission:ticket-problem-types.manage')->group(function () {
         Route::get('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'index'])->name('admin.ticket-problem-types.index');
         Route::post('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'store'])->name('admin.ticket-problem-types.store');
         Route::post('admin/ticket-problem-types/{id}/toggle', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'toggle'])->name('admin.ticket-problem-types.toggle');
+    });
+
+    Route::middleware('permission:expenses.manage')->group(function () {
+        Route::get('admin/expense-categories', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'index'])->name('admin.expense-categories.index');
+        Route::post('admin/expense-categories', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'store'])->name('admin.expense-categories.store');
+        Route::post('admin/expense-categories/{id}/toggle', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'toggle'])->name('admin.expense-categories.toggle');
+        Route::post('admin/expense-categories/quick-add', [App\Http\Controllers\Expenses\ExpenseCategoryController::class, 'quickAdd'])->name('admin.expense-categories.quick-add');
     });
 
     Route::middleware('permission:tickets.view')->group(function () {

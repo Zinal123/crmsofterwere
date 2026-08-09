@@ -38,4 +38,29 @@ class Vendor extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function bills()
+    {
+        return $this->hasMany(VendorBill::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(VendorPayment::class);
+    }
+
+    public function totalBilled(): float
+    {
+        return (float) $this->bills()->sum('amount');
+    }
+
+    public function totalPaid(): float
+    {
+        return (float) $this->payments()->sum('amount');
+    }
+
+    public function outstandingBalance(): float
+    {
+        return round($this->totalBilled() - $this->totalPaid(), 2);
+    }
 }
