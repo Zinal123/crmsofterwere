@@ -26,7 +26,7 @@
 <!-- Hero + business overview -->
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card dash-hero h-100">
+        <div class="card dash-card dash-hero">
             <div class="card-body">
                 <h5 class="mb-1">Welcome back, {{ Auth::user()->name }}! 🎉</h5>
                 <p class="text-muted mb-3">Here's your business for {{ $rangeFrom->format('d M') }} &ndash; {{ $rangeTo->format('d M Y') }}.</p>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="col-xl-8">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-body">
                 <h5 class="card-title mb-0">Business Overview</h5>
                 <p class="text-muted small mb-3">All-time totals across the business</p>
@@ -136,18 +136,18 @@
 <h5 class="mb-2 mt-1">Analytics</h5>
 <div class="row">
     <div class="col-xl-6">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">Monthly Overview</h5>
                 <span class="text-muted small">Income vs Expenses · 6 months</span>
             </div>
             <div class="card-body pt-0">
-                <div id="monthlyOverviewChart" style="min-height: 320px;"></div>
+                <div id="monthlyOverviewChart" style="height: 340px;"></div>
             </div>
         </div>
     </div>
     <div class="col-xl-6">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center flex-wrap gap-2">
                 <h5 class="card-title mb-0 flex-grow-1">Income &amp; Expenses</h5>
                 <div class="btn-group btn-group-sm" role="group">
@@ -157,7 +157,7 @@
                 </div>
             </div>
             <div class="card-body pt-0">
-                <div id="trendTabChart" style="min-height: 320px;"></div>
+                <div id="trendTabChart" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -167,7 +167,7 @@
         <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">Collection Rate</h5></div>
             <div class="card-body pt-0 text-center">
-                <div id="collectionGauge" style="min-height: 280px;"></div>
+                <div id="collectionGauge" style="height: 320px;"></div>
                 <p class="text-muted small mb-0">Share of invoiced money collected</p>
             </div>
         </div>
@@ -180,7 +180,7 @@
             </div>
             <div class="card-body pt-0">
                 @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="min-height: 300px;"></div>
+                    <div id="expenseDonut" style="height: 320px;"></div>
                 @else
                     <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
                 @endif
@@ -194,7 +194,7 @@
                 <span class="text-muted small tabular-nums">₹{{ \App\Support\IndianNumber::format($totalRevenue) }}</span>
             </div>
             <div class="card-body pt-0">
-                <div id="revenueAreaChart" style="min-height: 300px;"></div>
+                <div id="revenueAreaChart" style="height: 320px;"></div>
             </div>
         </div>
     </div>
@@ -203,7 +203,7 @@
 <!-- ============ TABLES / LISTS ============ -->
 <div class="row">
     <div class="col-xl-6">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">Top Products by Revenue</h5>
             </div>
@@ -227,7 +227,7 @@
         </div>
     </div>
     <div class="col-xl-6">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">Recent Invoices</h5>
                 <a href="{{ route('invoice') }}" class="btn btn-soft-info btn-sm">View all</a>
@@ -311,7 +311,7 @@
         var moEl = document.querySelector('#monthlyOverviewChart');
         if (moEl) {
             new ApexCharts(moEl, {
-                chart: { type: 'bar', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'bar', height: 340, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [
                     { name: 'Income', data: trend.map(function (m) { return m.income; }) },
                     { name: 'Expenses', data: trend.map(function (m) { return m.expense; }) }
@@ -330,7 +330,7 @@
         var gaugeEl = document.querySelector('#collectionGauge');
         if (gaugeEl) {
             new ApexCharts(gaugeEl, {
-                chart: { type: 'radialBar', height: 280, fontFamily: 'inherit' },
+                chart: { type: 'radialBar', height: 320, fontFamily: 'inherit' },
                 series: [{{ (int) $collectionRate }}],
                 labels: ['Collected'],
                 colors: ['#4361EE'],
@@ -344,7 +344,7 @@
         var revEl = document.querySelector('#revenueAreaChart');
         if (revEl) {
             new ApexCharts(revEl, {
-                chart: { type: 'area', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'area', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [{ name: 'Revenue', data: revenueTrend.map(function (m) { return m.revenue; }) }],
                 colors: ['#4361EE'],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
@@ -360,7 +360,7 @@
         var donutEl = document.querySelector('#expenseDonut');
         if (donutEl && expenseBreakdown.length) {
             new ApexCharts(donutEl, {
-                chart: { type: 'donut', height: 300, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
                 series: expenseBreakdown.map(function (c) { return c.total; }),
                 labels: expenseBreakdown.map(function (c) { return c.category; }),
                 colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],
@@ -379,7 +379,7 @@
         };
         if (tabEl) {
             var tabChart = new ApexCharts(tabEl, {
-                chart: { type: 'area', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'area', height: 340, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [{ name: seriesMap.income.name, data: seriesMap.income.data }],
                 colors: [seriesMap.income.color],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },

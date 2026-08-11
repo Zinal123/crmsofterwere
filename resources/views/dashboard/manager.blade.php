@@ -7,7 +7,7 @@
 <!-- Row 1: hero + operations overview -->
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card dash-hero h-100">
+        <div class="card dash-card dash-hero">
             <div class="card-body">
                 <h5 class="mb-1">Welcome, {{ Auth::user()->name }}! 👋</h5>
                 <p class="text-muted mb-3">Shop-floor operations at a glance.</p>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="col-xl-8">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">Operations Overview</h5>
                 <p class="text-muted small mb-0">Current job pipeline &amp; support load</p>
@@ -103,7 +103,7 @@
         <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">Job Pipeline</h5></div>
             <div class="card-body pt-0">
-                <div id="jobPipelineChart" style="min-height: 300px;"></div>
+                <div id="jobPipelineChart" style="height: 320px;"></div>
             </div>
         </div>
     </div>
@@ -141,7 +141,7 @@
         var series = [{{ (int) $jobStats['pending_approval'] }}, {{ (int) $jobStats['pending_completion'] }}, {{ (int) $jobStats['completed_today'] }}];
         if (el && series.some(function (n) { return n > 0; })) {
             new ApexCharts(el, {
-                chart: { type: 'donut', height: 300, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
                 series: series,
                 labels: ['Pending Approval', 'In Progress', 'Completed Today'],
                 colors: ['#F7941D', '#4361EE', '#10B981'],

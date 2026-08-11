@@ -7,7 +7,7 @@
 <!-- Row 1: hero + finance overview -->
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card dash-hero h-100">
+        <div class="card dash-card dash-hero">
             <div class="card-body">
                 <h5 class="mb-1">Welcome, {{ Auth::user()->name }}! 💰</h5>
                 <p class="text-muted mb-3">Finance overview for this month.</p>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="col-xl-8">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">Finance Overview</h5>
                 <p class="text-muted small mb-0">Cash position &amp; balances</p>
@@ -76,7 +76,7 @@
                 <span class="text-muted small">Last 6 months</span>
             </div>
             <div class="card-body pt-0">
-                <div id="accountTrendChart" style="min-height: 320px;"></div>
+                <div id="accountTrendChart" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
         <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">Collection Rate</h5></div>
             <div class="card-body pt-0 text-center">
-                <div id="collectionGauge" style="min-height: 260px;"></div>
+                <div id="collectionGauge" style="height: 320px;"></div>
                 <p class="text-muted small mb-0">Share of invoiced money collected</p>
             </div>
         </div>
@@ -101,7 +101,7 @@
             </div>
             <div class="card-body pt-0">
                 @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="min-height: 300px;"></div>
+                    <div id="expenseDonut" style="height: 320px;"></div>
                 @else
                     <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
                 @endif
@@ -153,7 +153,7 @@
         var el = document.querySelector('#accountTrendChart');
         if (el) {
             new ApexCharts(el, {
-                chart: { type: 'area', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'area', height: 340, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [
                     { name: 'Income', data: trend.map(function (m) { return m.income; }) },
                     { name: 'Expenses', data: trend.map(function (m) { return m.expense; }) }
@@ -173,7 +173,7 @@
         var gaugeEl = document.querySelector('#collectionGauge');
         if (gaugeEl) {
             new ApexCharts(gaugeEl, {
-                chart: { type: 'radialBar', height: 260, fontFamily: 'inherit' },
+                chart: { type: 'radialBar', height: 320, fontFamily: 'inherit' },
                 series: [{{ (int) $collectionRate }}],
                 labels: ['Collected'],
                 colors: ['#4361EE'],
@@ -187,7 +187,7 @@
         var donutEl = document.querySelector('#expenseDonut');
         if (donutEl && expenseBreakdown.length) {
             new ApexCharts(donutEl, {
-                chart: { type: 'donut', height: 300, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
                 series: expenseBreakdown.map(function (c) { return c.total; }),
                 labels: expenseBreakdown.map(function (c) { return c.category; }),
                 colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],

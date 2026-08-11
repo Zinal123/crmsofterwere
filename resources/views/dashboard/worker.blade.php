@@ -7,7 +7,7 @@
 <!-- Row 1: hero + my work overview -->
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card dash-hero h-100">
+        <div class="card dash-card dash-hero">
             <div class="card-body">
                 <h5 class="mb-1">Hi, {{ Auth::user()->name }}! 👋</h5>
                 <p class="text-muted mb-3">Here's your work for today.</p>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="col-xl-8">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">My Work Overview</h5>
                 <p class="text-muted small mb-0">Your current job load</p>
@@ -73,7 +73,7 @@
         <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">My Workload</h5></div>
             <div class="card-body pt-0">
-                <div id="workerStatusChart" style="min-height: 290px;"></div>
+                <div id="workerStatusChart" style="height: 320px;"></div>
             </div>
         </div>
     </div>
@@ -127,7 +127,7 @@
         var series = [{{ (int) $assignedToday }}, {{ (int) $inProgress }}, {{ (int) $onHold }}];
         if (el && series.some(function (n) { return n > 0; })) {
             new ApexCharts(el, {
-                chart: { type: 'donut', height: 290, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
                 series: series,
                 labels: ['Assigned', 'In Progress', 'On Hold'],
                 colors: ['#0EA5E9', '#4361EE', '#F7941D'],
