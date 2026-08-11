@@ -3,7 +3,7 @@
 
 @section('content')
 
-<!-- Page title + date range filter (fills the page-content top area) -->
+<!-- Page title + date range filter -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -23,10 +23,10 @@
     </div>
 </div>
 
-<!-- Row 1: Congratulations hero + Business overview -->
+<!-- Hero + business overview -->
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card dash-hero">
+        <div class="card dash-card dash-hero h-100">
             <div class="card-body">
                 <h5 class="mb-1">Welcome back, {{ Auth::user()->name }}! 🎉</h5>
                 <p class="text-muted mb-3">Here's your business for {{ $rangeFrom->format('d M') }} &ndash; {{ $rangeTo->format('d M Y') }}.</p>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="col-xl-8">
-        <div class="card dash-card">
+        <div class="card dash-card h-100">
             <div class="card-body">
                 <h5 class="card-title mb-0">Business Overview</h5>
                 <p class="text-muted small mb-3">All-time totals across the business</p>
@@ -70,36 +70,114 @@
     </div>
 </div>
 
-<!-- Row 2: Monthly overview + Top products -->
+<!-- ============ CARDS: financial + operational stat cards ============ -->
+<div class="d-flex align-items-center mb-2 mt-1">
+    <h5 class="mb-0 flex-grow-1">Financials</h5>
+    <span class="badge bg-primary-subtle text-primary"><i class="ri-calendar-2-line align-middle me-1"></i>{{ $rangeFrom->format('d M Y') }} &ndash; {{ $rangeTo->format('d M Y') }}</span>
+</div>
 <div class="row">
-    <div class="col-xl-8">
-        <div class="card dash-card">
+    @php
+        $statCards = [
+            ['Net ' . ($financials['net_profit_month'] >= 0 ? 'Profit' : 'Loss'), '₹' . \App\Support\IndianNumber::format(abs($financials['net_profit_month'])), 'ri-funds-line', $financials['net_profit_month'] >= 0 ? 'success' : 'danger', null],
+            ['Cash & Bank', '₹' . \App\Support\IndianNumber::format($financials['cash']), 'ri-bank-line', 'primary', route('accounting.trial-balance')],
+            ['Receivables', '₹' . \App\Support\IndianNumber::format($financials['receivable']), 'ri-arrow-down-circle-line', 'info', route('invoice')],
+            ['Payables', '₹' . \App\Support\IndianNumber::format($financials['payable']), 'ri-arrow-up-circle-line', 'warning', route('expenses.cashbook')],
+            ['Average Ticket Size', '₹' . \App\Support\IndianNumber::format($avgTicketSize), 'ri-price-tag-3-line', 'secondary', null],
+            ['Pending Payments', '₹' . \App\Support\IndianNumber::format($pendingPayments), 'ri-wallet-3-line', 'danger', route('invoice')],
+            ['Overdue Jobs', $overdueJobs, 'ri-alarm-warning-line', $overdueJobs > 0 ? 'danger' : 'success', route('jobs.index')],
+            ['Low-Stock Items', $lowStockCount, 'ri-stack-line', $lowStockCount > 0 ? 'warning' : 'success', route('invoice.inventrylist')],
+        ];
+    @endphp
+    @foreach($statCards as [$label, $value, $icon, $color, $link])
+        <div class="col-xl-3 col-md-6">
+            <div class="card dash-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="overflow-hidden">
+                            <p class="text-muted mb-1 small text-uppercase text-truncate">{{ $label }}</p>
+                            <h4 class="mb-0 tabular-nums text-{{ $color }}">{{ $value }}</h4>
+                            @if($link)<a href="{{ $link }}" class="small text-decoration-underline">Details</a>@endif
+                        </div>
+                        <span class="stat-icon bg-{{ $color }}-subtle text-{{ $color }}"><i class="{{ $icon }}"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+<!-- ============ CHARTS ============ -->
+<h5 class="mb-2 mt-1">Analytics</h5>
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card dash-card h-100">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">Monthly Overview</h5>
-                <span class="text-muted small">Income vs Expenses · last 6 months</span>
+                <span class="text-muted small">Income vs Expenses · 6 months</span>
             </div>
             <div class="card-body pt-0">
                 <div id="monthlyOverviewChart" style="min-height: 320px;"></div>
             </div>
         </div>
     </div>
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-header border-0">
-                <h5 class="card-title mb-0">Collection Rate</h5>
+    <div class="col-xl-6">
+        <div class="card dash-card h-100">
+            <div class="card-header border-0 d-flex align-items-center flex-wrap gap-2">
+                <h5 class="card-title mb-0 flex-grow-1">Income &amp; Expenses</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-soft-primary trend-tab active" data-series="income">Income</button>
+                    <button type="button" class="btn btn-soft-primary trend-tab" data-series="expense">Expenses</button>
+                    <button type="button" class="btn btn-soft-primary trend-tab" data-series="profit">Profit</button>
+                </div>
             </div>
+            <div class="card-body pt-0">
+                <div id="trendTabChart" style="min-height: 320px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card dash-card h-100">
+            <div class="card-header border-0"><h5 class="card-title mb-0">Collection Rate</h5></div>
             <div class="card-body pt-0 text-center">
-                <div id="collectionGauge" style="min-height: 240px;"></div>
+                <div id="collectionGauge" style="min-height: 260px;"></div>
                 <p class="text-muted small mb-0">Share of invoiced money collected</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card dash-card h-100">
+            <div class="card-header border-0">
+                <h5 class="card-title mb-0">Expenses by Category</h5>
+                <span class="text-muted small">This month</span>
+            </div>
+            <div class="card-body pt-0">
+                @if(collect($financials['expense_breakdown'])->isNotEmpty())
+                    <div id="expenseDonut" style="min-height: 280px;"></div>
+                @else
+                    <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card dash-card h-100">
+            <div class="card-header border-0 d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Revenue Trend</h5>
+                <span class="text-muted small tabular-nums">₹{{ \App\Support\IndianNumber::format($totalRevenue) }}</span>
+            </div>
+            <div class="card-body pt-0">
+                <div id="revenueAreaChart" style="min-height: 280px;"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Row 3: Top products + Revenue trend + Net profit -->
+<!-- ============ TABLES / LISTS ============ -->
 <div class="row">
-    <div class="col-xl-4">
-        <div class="card dash-card">
+    <div class="col-xl-6">
+        <div class="card dash-card h-100">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">Top Products by Revenue</h5>
             </div>
@@ -122,134 +200,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Revenue (6-mo trend)</p>
-                        <h4 class="mb-0 tabular-nums">₹{{ \App\Support\IndianNumber::format($totalRevenue) }}</h4>
-                    </div>
-                    <span class="stat-icon bg-primary-subtle text-primary"><i class="ri-line-chart-line"></i></span>
-                </div>
-                <div id="revenueSpark" style="height: 70px;" class="mt-3"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Average Ticket Size</p>
-                        <h4 class="mb-0 tabular-nums">₹{{ \App\Support\IndianNumber::format($avgTicketSize) }}</h4>
-                        <span class="text-muted small">Avg. value per invoice</span>
-                    </div>
-                    <span class="stat-icon bg-info-subtle text-info"><i class="ri-price-tag-3-line"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Financials snapshot for the selected period -->
-<div class="d-flex align-items-center mb-2 mt-1">
-    <h5 class="mb-0 flex-grow-1">Financials</h5>
-    <span class="badge bg-primary-subtle text-primary"><i class="ri-calendar-2-line align-middle me-1"></i>{{ $rangeFrom->format('d M Y') }} &ndash; {{ $rangeTo->format('d M Y') }}</span>
-</div>
-<div class="row">
-    @php
-        $finCards = [
-            ['Net ' . ($financials['net_profit_month'] >= 0 ? 'Profit' : 'Loss'), '₹' . \App\Support\IndianNumber::format(abs($financials['net_profit_month'])), 'ri-funds-line', $financials['net_profit_month'] >= 0 ? 'success' : 'danger', null],
-            ['Cash & Bank', '₹' . \App\Support\IndianNumber::format($financials['cash']), 'ri-bank-line', 'primary', route('accounting.trial-balance')],
-            ['Receivables', '₹' . \App\Support\IndianNumber::format($financials['receivable']), 'ri-arrow-down-circle-line', 'info', route('invoice')],
-            ['Payables', '₹' . \App\Support\IndianNumber::format($financials['payable']), 'ri-arrow-up-circle-line', 'warning', route('expenses.cashbook')],
-        ];
-    @endphp
-    @foreach($finCards as [$label, $value, $icon, $color, $link])
-        <div class="col-xl-3 col-md-6">
-            <div class="card dash-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <p class="text-muted mb-1 small text-uppercase">{{ $label }}</p>
-                            <h4 class="mb-0 tabular-nums text-{{ $color }}">{{ $value }}</h4>
-                            @if($link)<a href="{{ $link }}" class="small text-decoration-underline">Details</a>@endif
-                        </div>
-                        <span class="stat-icon bg-{{ $color }}-subtle text-{{ $color }}"><i class="{{ $icon }}"></i></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-</div>
-
-<!-- Operational alerts -->
-@if($overdueJobs > 0 || $lowStockCount > 0)
-<div class="row">
-    @if($overdueJobs > 0)
     <div class="col-xl-6">
-        <a href="{{ route('jobs.index') }}" class="text-reset">
-            <div class="card dash-card border border-danger border-opacity-25">
-                <div class="card-body d-flex align-items-center">
-                    <span class="stat-icon bg-danger-subtle text-danger me-3"><i class="ri-alarm-warning-line"></i></span>
-                    <div><h4 class="mb-0 text-danger tabular-nums">{{ $overdueJobs }}</h4><p class="text-muted mb-0">Overdue job(s) need attention</p></div>
-                </div>
-            </div>
-        </a>
-    </div>
-    @endif
-    @if($lowStockCount > 0)
-    <div class="col-xl-6">
-        <a href="{{ route('invoice.inventrylist') }}" class="text-reset">
-            <div class="card dash-card border border-warning border-opacity-25">
-                <div class="card-body d-flex align-items-center">
-                    <span class="stat-icon bg-warning-subtle text-warning me-3"><i class="ri-stack-line"></i></span>
-                    <div><h4 class="mb-0 text-warning tabular-nums">{{ $lowStockCount }}</h4><p class="text-muted mb-0">Inventory item(s) low on stock</p></div>
-                </div>
-            </div>
-        </a>
-    </div>
-    @endif
-</div>
-@endif
-
-<!-- Row: category donut + income/expense/profit tabs + recent invoices -->
-<div class="row">
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-header border-0">
-                <h5 class="card-title mb-0">Expenses by Category</h5>
-                <span class="text-muted small">This month</span>
-            </div>
-            <div class="card-body pt-0">
-                @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="min-height: 300px;"></div>
-                @else
-                    <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-header border-0 d-flex align-items-center flex-wrap gap-2">
-                <h5 class="card-title mb-0 flex-grow-1">Income &amp; Expenses</h5>
-                <div class="btn-group btn-group-sm" role="group">
-                    <button type="button" class="btn btn-soft-primary trend-tab active" data-series="income">Income</button>
-                    <button type="button" class="btn btn-soft-primary trend-tab" data-series="expense">Expenses</button>
-                    <button type="button" class="btn btn-soft-primary trend-tab" data-series="profit">Profit</button>
-                </div>
-            </div>
-            <div class="card-body pt-0">
-                <div id="trendTabChart" style="min-height: 300px;"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-4">
-        <div class="card dash-card">
+        <div class="card dash-card h-100">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">Recent Invoices</h5>
                 <a href="{{ route('invoice') }}" class="btn btn-soft-info btn-sm">View all</a>
@@ -279,7 +231,6 @@
     </div>
 </div>
 
-<!-- Technician performance -->
 <div class="row">
     <div class="col-12">
         <div class="card dash-card">
@@ -329,6 +280,7 @@
         var expenseBreakdown = @json(collect($financials['expense_breakdown'])->values());
         var labels = trend.map(function (m) { return m.label; });
         var inr = function (v) { return '₹' + Math.round(v).toLocaleString('en-IN'); };
+        var k = function (v) { return '₹' + Math.round(v / 1000) + 'k'; };
 
         var moEl = document.querySelector('#monthlyOverviewChart');
         if (moEl) {
@@ -342,7 +294,7 @@
                 plotOptions: { bar: { borderRadius: 5, columnWidth: '55%' } },
                 dataLabels: { enabled: false },
                 xaxis: { categories: labels },
-                yaxis: { labels: { formatter: function (v) { return '₹' + Math.round(v / 1000) + 'k'; } } },
+                yaxis: { labels: { formatter: k } },
                 legend: { position: 'top' },
                 grid: { borderColor: 'rgba(0,0,0,.08)', strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
@@ -352,7 +304,7 @@
         var gaugeEl = document.querySelector('#collectionGauge');
         if (gaugeEl) {
             new ApexCharts(gaugeEl, {
-                chart: { type: 'radialBar', height: 240, fontFamily: 'inherit' },
+                chart: { type: 'radialBar', height: 260, fontFamily: 'inherit' },
                 series: [{{ (int) $collectionRate }}],
                 labels: ['Collected'],
                 colors: ['#4361EE'],
@@ -363,24 +315,26 @@
             }).render();
         }
 
-        function sparkline(selector, data, color) {
-            var el = document.querySelector(selector);
-            if (!el) return;
-            new ApexCharts(el, {
-                chart: { type: 'area', height: 70, sparkline: { enabled: true } },
-                series: [{ data: data }],
+        var revEl = document.querySelector('#revenueAreaChart');
+        if (revEl) {
+            new ApexCharts(revEl, {
+                chart: { type: 'area', height: 280, toolbar: { show: false }, fontFamily: 'inherit' },
+                series: [{ name: 'Revenue', data: revenueTrend.map(function (m) { return m.revenue; }) }],
+                colors: ['#4361EE'],
+                fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
                 stroke: { curve: 'smooth', width: 2 },
-                fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0 } },
-                colors: [color],
-                tooltip: { y: { formatter: inr }, x: { show: false } }
+                dataLabels: { enabled: false },
+                xaxis: { categories: revenueTrend.map(function (m) { return m.label; }) },
+                yaxis: { labels: { formatter: k } },
+                grid: { borderColor: 'rgba(0,0,0,.08)', strokeDashArray: 4 },
+                tooltip: { y: { formatter: inr } }
             }).render();
         }
-        sparkline('#revenueSpark', revenueTrend.map(function (m) { return m.revenue; }), '#4361EE');
 
         var donutEl = document.querySelector('#expenseDonut');
         if (donutEl && expenseBreakdown.length) {
             new ApexCharts(donutEl, {
-                chart: { type: 'donut', height: 300, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 280, fontFamily: 'inherit' },
                 series: expenseBreakdown.map(function (c) { return c.total; }),
                 labels: expenseBreakdown.map(function (c) { return c.category; }),
                 colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],
@@ -399,14 +353,14 @@
         };
         if (tabEl) {
             var tabChart = new ApexCharts(tabEl, {
-                chart: { type: 'area', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'area', height: 320, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [{ name: seriesMap.income.name, data: seriesMap.income.data }],
                 colors: [seriesMap.income.color],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
                 stroke: { curve: 'smooth', width: 2 },
                 dataLabels: { enabled: false },
                 xaxis: { categories: labels },
-                yaxis: { labels: { formatter: function (v) { return '₹' + Math.round(v / 1000) + 'k'; } } },
+                yaxis: { labels: { formatter: k } },
                 grid: { borderColor: 'rgba(0,0,0,.08)', strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
             });
