@@ -46,6 +46,13 @@
                         <span></span>
                     </span>
                 </button>
+
+                <!-- Command palette trigger -->
+                <button type="button" class="btn btn-light d-none d-md-flex align-items-center gap-2 ms-2 text-muted" data-cmdk-open title="Search (Ctrl/⌘ + K)" style="min-width: 220px;">
+                    <i class="ri-search-line"></i>
+                    <span class="flex-grow-1 text-start">Search…</span>
+                    <span class="badge bg-body-secondary text-body border">⌘K</span>
+                </button>
             </div>
 
             <div class="d-flex align-items-center">

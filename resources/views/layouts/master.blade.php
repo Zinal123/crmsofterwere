@@ -52,6 +52,10 @@
 
     @include('layouts.customizer')
 
+    @auth
+        @include('layouts.partials.command-palette')
+    @endauth
+
     <!-- JAVASCRIPT -->
     @include('layouts.vendor-scripts')
 </body>
