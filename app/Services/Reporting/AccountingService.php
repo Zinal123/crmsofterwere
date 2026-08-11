@@ -148,6 +148,23 @@ class AccountingService
         ];
     }
 
+    /** Gross invoiced revenue (with tax) for each of the last N months, oldest first. */
+    public function monthlyRevenue(int $months = 6): array
+    {
+        $revenue = [];
+        $cursor = Carbon::now()->startOfMonth()->subMonths($months - 1);
+
+        for ($i = 0; $i < $months; $i++) {
+            $revenue[] = [
+                'label' => $cursor->format('M'),
+                'revenue' => $this->moneySum(Invoice::query(), 'amountwithtax', 'date', $cursor->copy()->startOfMonth(), $cursor->copy()->endOfMonth()),
+            ];
+            $cursor->addMonth();
+        }
+
+        return $revenue;
+    }
+
     /** Payment-type daily transactions per category (excludes linked mirror rows). */
     private function operatingExpenseBreakdown(Carbon $from, Carbon $to): Collection
     {

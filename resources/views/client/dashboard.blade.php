@@ -11,6 +11,40 @@ My Machines
     </div>
 </div>
 
+<div class="row g-3 mb-4">
+    <div class="col-4">
+        <a href="{{ route('client.tickets.index') }}" class="text-reset">
+            <div class="card mb-0 h-100">
+                <div class="card-body text-center py-3">
+                    <i class="ri-customer-service-2-line fs-3 text-primary"></i>
+                    <h3 class="my-1 tabular-nums">{{ $openTickets }}</h3>
+                    <p class="text-muted mb-0 small">Open Tickets</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="{{ route('client.spare-parts.index') }}" class="text-reset">
+            <div class="card mb-0 h-100">
+                <div class="card-body text-center py-3">
+                    <i class="ri-tools-fill fs-3 text-warning"></i>
+                    <h3 class="my-1 tabular-nums">{{ $openSpareParts }}</h3>
+                    <p class="text-muted mb-0 small">Spare Part Requests</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-4">
+        <div class="card mb-0 h-100 {{ $amountDue > 0 ? 'border border-danger border-opacity-25' : '' }}">
+            <div class="card-body text-center py-3">
+                <i class="ri-wallet-3-line fs-3 {{ $amountDue > 0 ? 'text-danger' : 'text-success' }}"></i>
+                <h3 class="my-1 tabular-nums {{ $amountDue > 0 ? 'text-danger' : 'text-success' }}">&#8377;{{ \App\Support\IndianNumber::format($amountDue) }}</h3>
+                <p class="text-muted mb-0 small">{{ $amountDue > 0 ? 'Amount Due' : 'All Paid' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 @forelse($machines as $machine)
 <div class="card mb-3">
     <div class="card-body">

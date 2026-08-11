@@ -45,7 +45,7 @@ class HomeController extends Controller
         $user = $request->user();
 
         return match (true) {
-            $user->hasRole('Owner') => view('index', $this->dashboardService->ownerViewData()),
+            $user->hasRole('Owner') => view('index', $this->dashboardService->ownerViewData(...$this->dashboardRange($request))),
             $user->hasRole('Manager') => view('dashboard.manager', $this->dashboardService->managerViewData()),
             $user->hasRole('Account') => view('dashboard.account', $this->dashboardService->accountViewData()),
             $user->hasRole('Worker') => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
@@ -53,6 +53,27 @@ class HomeController extends Controller
             // safe, data-light landing rather than a 500.
             default => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
         };
+    }
+
+    /**
+     * Parse the Owner dashboard's date-range filter, defaulting to the current
+     * month. Returns [from, to] Carbon instances; an invalid or inverted range
+     * falls back to sensible values rather than erroring.
+     */
+    private function dashboardRange(Request $request): array
+    {
+        $parse = function ($value, \Illuminate\Support\Carbon $default) {
+            try {
+                return is_string($value) && $value !== '' ? \Illuminate\Support\Carbon::parse($value) : $default;
+            } catch (\Exception) {
+                return $default;
+            }
+        };
+
+        $from = $parse($request->query('from'), \Illuminate\Support\Carbon::now()->startOfMonth())->startOfDay();
+        $to = $parse($request->query('to'), \Illuminate\Support\Carbon::now()->endOfMonth())->endOfDay();
+
+        return $from->lte($to) ? [$from, $to] : [$to->copy()->startOfDay(), $from->copy()->endOfDay()];
     }
 
     /*Language Translation*/

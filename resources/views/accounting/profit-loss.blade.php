@@ -26,7 +26,7 @@
     <p class="text-muted small mb-3">Cash basis, {{ $report['from']->format('d M Y') }} &ndash; {{ $report['to']->format('d M Y') }}. Wages and vendor payments are counted once, from payroll and vendor records &mdash; not double-counted from mirrored cash-book entries.</p>
 
     <div class="table-responsive">
-        <table class="table table-bordered align-middle mb-0">
+        <table class="table table-bordered align-middle mb-0 tabular-nums">
             <tbody>
                 <tr class="table-light">
                     <td class="fw-semibold text-uppercase small text-muted" colspan="2">Income</td>
@@ -69,7 +69,7 @@
     @if($report['expense_breakdown']->isNotEmpty())
         <h6 class="mt-4 mb-2">Operating Expenses by Category</h6>
         <div class="table-responsive">
-            <table class="table table-sm table-bordered align-middle mb-0">
+            <table class="table table-sm table-bordered align-middle mb-0 tabular-nums">
                 <thead>
                     <tr><th>Category</th><th class="text-end" style="width:200px">Amount</th></tr>
                 </thead>

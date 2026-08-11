@@ -128,6 +128,17 @@ class ClientPortalTest extends TestCase
         $response->assertDontSee('Fully Paid');
     }
 
+    public function test_client_dashboard_shows_the_summary_stats_strip(): void
+    {
+        $account = ClientAccount::factory()->create();
+
+        $response = $this->actingAs($account, 'client')->get(route('client.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Open Tickets');
+        $response->assertSee('Spare Part Requests');
+    }
+
     public function test_client_can_raise_a_ticket_for_their_own_machine(): void
     {
         Storage::fake('public');

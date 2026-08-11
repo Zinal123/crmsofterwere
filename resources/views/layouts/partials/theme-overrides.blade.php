@@ -13,6 +13,33 @@
         --vz-border-radius-xl: 1rem;
     }
 
+    /* Lining, fixed-width figures so money columns line up digit-for-digit.
+       font-variant-numeric inherits, so setting it on a table (or a single
+       cell) flows down to all its numbers. */
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+
+    /* Shared dashboard (Materio-style) building blocks - used by every role
+       dashboard (owner/manager/account/worker). */
+    .dash-hero {
+        background: linear-gradient(135deg, rgba(67,97,238,.10), rgba(67,97,238,.02));
+        border: 1px solid rgba(67,97,238,.14);
+    }
+    [data-bs-theme=dark] .dash-hero {
+        background: linear-gradient(135deg, rgba(125,146,255,.16), rgba(125,146,255,.03));
+        border-color: rgba(125,146,255,.22);
+    }
+    .stat-icon {
+        width: 46px; height: 46px; border-radius: 12px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1.35rem; flex-shrink: 0;
+    }
+    .dash-card { border: 0; box-shadow: 0 2px 14px rgba(13,27,72,.06); }
+    [data-bs-theme=dark] .dash-card { box-shadow: 0 2px 14px rgba(0,0,0,.35); }
+    .top-progress { height: 6px; border-radius: 6px; }
+    .txn-item + .txn-item { border-top: 1px solid var(--vz-border-color); }
+    .trend-tab.active { background: var(--vz-primary); color: #fff; }
+    .trend-tab { cursor: pointer; }
+
     /* Scoped to light mode only - a bare :root rule here would win the
        cascade over Velzon's own [data-bs-theme=dark] body-bg (same
        specificity, later source order) and leave dark mode showing this

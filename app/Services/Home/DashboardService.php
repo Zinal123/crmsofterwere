@@ -4,11 +4,13 @@ namespace App\Services\Home;
 
 use App\Models\Invetry;
 use App\Models\Job;
+use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Repositories\Contracts\DashboardRepositoryInterface;
 use App\Repositories\Contracts\JobRepositoryInterface;
 use App\Services\Reporting\AccountingService;
+use App\Services\Reporting\ReportService;
 use App\Support\Tenancy\TenantScope;
 use Illuminate\Support\Carbon;
 
@@ -18,6 +20,7 @@ class DashboardService
         private DashboardRepositoryInterface $repository,
         private JobRepositoryInterface $jobRepository,
         private AccountingService $accounting,
+        private ReportService $reports,
         private TenantScope $tenantScope,
     ) {
     }
@@ -27,8 +30,11 @@ class DashboardService
      * (from the accounting reporting layer), operational alerts, and the
      * existing product/invoice tables.
      */
-    public function ownerViewData(): array
+    public function ownerViewData(?Carbon $from = null, ?Carbon $to = null): array
     {
+        $from = $from ?: Carbon::now()->startOfMonth();
+        $to = $to ?: Carbon::now()->endOfMonth();
+
         return array_merge([
             'totalRevenue' => $this->repository->getTotalRevenue(),
             'totalInvoices' => $this->repository->getTotalInvoices(),
@@ -37,8 +43,15 @@ class DashboardService
             'topProducts' => $this->repository->getTopProducts(),
             'recentInvoices' => $this->repository->getRecentInvoices(),
             'jobStats' => $this->jobRepository->ownerDashboardStats(),
-            'financials' => $this->financialSnapshot(),
+            'technicianPerformance' => $this->technicianPerformance(),
+            'avgTicketSize' => $this->averageTicketSize(),
+            'productsCount' => Product::count(),
+            'collectionRate' => $this->collectionRate(),
+            'financials' => $this->financialSnapshot($from, $to),
             'trend' => $this->accounting->monthlyTrend(6),
+            'revenueTrend' => $this->accounting->monthlyRevenue(6),
+            'rangeFrom' => $from,
+            'rangeTo' => $to,
         ], $this->operationalAlerts());
     }
 
@@ -64,6 +77,7 @@ class DashboardService
             'totalRevenue' => $this->repository->getTotalRevenue(),
             'pendingPayments' => $this->repository->getPendingPayments(),
             'recentInvoices' => $this->repository->getRecentInvoices(),
+            'collectionRate' => $this->collectionRate(),
             'financials' => $this->financialSnapshot(),
             'trend' => $this->accounting->monthlyTrend(6),
         ];
@@ -90,11 +104,18 @@ class DashboardService
         ];
     }
 
-    /** Live financial snapshot shared by the Owner and Account dashboards. */
-    private function financialSnapshot(): array
+    /**
+     * Live financial snapshot shared by the Owner and Account dashboards.
+     * Income/expense/profit cover the given range; cash and party balances
+     * are point-in-time as of the range end.
+     */
+    private function financialSnapshot(?Carbon $from = null, ?Carbon $to = null): array
     {
-        $pl = $this->accounting->profitAndLoss(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
-        $tb = $this->accounting->trialBalance(Carbon::now());
+        $from = $from ?: Carbon::now()->startOfMonth();
+        $to = $to ?: Carbon::now()->endOfMonth();
+
+        $pl = $this->accounting->profitAndLoss($from, $to);
+        $tb = $this->accounting->trialBalance($to);
         $byCode = $tb['rows']->keyBy('code');
 
         return [
@@ -107,6 +128,36 @@ class DashboardService
             'receivable' => (float) ($byCode['1100']['debit'] ?? 0),
             'payable' => (float) ($byCode['2000']['credit'] ?? 0),
         ];
+    }
+
+    /**
+     * Per-technician completed-job count and average completion time. Invoices
+     * aren't linked to jobs in this app, so true revenue-per-technician can't
+     * be derived - this is the honest productivity view instead. Top 5 by
+     * completed jobs.
+     */
+    private function technicianPerformance()
+    {
+        return $this->reports->technicianPerformance()
+            ->sortByDesc('completed_count')
+            ->take(5)
+            ->values();
+    }
+
+    /** Average invoice value = total revenue / number of invoices. */
+    private function averageTicketSize(): float
+    {
+        $count = $this->repository->getTotalInvoices();
+
+        return $count > 0 ? round($this->repository->getTotalRevenue() / $count, 2) : 0.0;
+    }
+
+    /** Share of invoiced money actually collected, as a whole-number percent. */
+    private function collectionRate(): int
+    {
+        $revenue = $this->repository->getTotalRevenue();
+
+        return $revenue > 0 ? (int) round(($revenue - $this->repository->getPendingPayments()) / $revenue * 100) : 0;
     }
 
     /** Operational alert counts shared by the Owner and Manager dashboards. */

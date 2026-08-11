@@ -16,7 +16,7 @@ Cash Book
 
 <x-ui.data-table-card title="Cash Book">
     <div class="table-responsive">
-        <table class="table table-bordered align-middle">
+        <table class="table table-bordered align-middle tabular-nums">
             <thead>
                 <tr>
                     <th>Date</th>

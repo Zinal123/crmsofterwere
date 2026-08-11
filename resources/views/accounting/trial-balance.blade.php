@@ -22,7 +22,7 @@
     <p class="text-muted small mb-3">Derived from cash-book, invoice, vendor and payroll records as of {{ $report['as_of']->format('d M Y') }}. Owner&rsquo;s Equity is the balancing figure &mdash; these books are kept on a cash basis, not a posted double-entry journal.</p>
 
     <div class="table-responsive">
-        <table class="table table-bordered align-middle mb-0">
+        <table class="table table-bordered align-middle mb-0 tabular-nums">
             <thead>
                 <tr>
                     <th style="width:100px">Code</th>

@@ -33,7 +33,22 @@ class RoleDashboardTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Total Revenue');
-        $response->assertSee('This Month'); // financial snapshot
+        $response->assertSee('Financials'); // financial snapshot section
+        $response->assertSee('Average Ticket Size');
+        $response->assertSee('Technician Performance');
+    }
+
+    public function test_owner_dashboard_honours_the_date_range_filter(): void
+    {
+        $owner = $this->userWithRole('Owner');
+
+        // A valid custom range renders without error and echoes the dates back
+        // into the filter inputs.
+        $response = $this->actingAs($owner)->get(route('root', ['from' => '2026-01-01', 'to' => '2026-01-31']));
+
+        $response->assertOk();
+        $response->assertSee('2026-01-01');
+        $response->assertSee('2026-01-31');
     }
 
     public function test_manager_lands_on_the_operational_dashboard(): void
