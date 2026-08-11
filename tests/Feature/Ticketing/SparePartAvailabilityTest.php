@@ -63,4 +63,19 @@ class SparePartAvailabilityTest extends TestCase
         $updated = app(SparePartRequestService::class)->updateStatus($req, 'approved');
         $this->assertSame('approved', $updated->status);
     }
+
+    public function test_request_list_shows_available_or_not_available_badge(): void
+    {
+        $owner = \App\Models\User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $p = Product::create(['name' => 'Ring', 'rate' => '100', 'unit' => 'pcs', 'make' => 'X']);
+        Invetry::create(['product_id' => $p->id, 'quantity' => 1, 'vandername' => 'V', 'rate' => '100']);
+        $this->makeRequest($p, 4, 'pending');
+
+        $response = $this->actingAs($owner)->get(route('admin.spare-part-requests.index'));
+
+        $response->assertOk();
+        $response->assertSee('Not Available');
+    }
 }

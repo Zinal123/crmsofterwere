@@ -28,11 +28,11 @@ Spare Part Requests
                             <td>{{ $request->product->name ?? '-' }}</td>
                             <td>
                                 {{ $request->quantity }}
-                                @if($request->status === 'pending' || $request->status === 'approved')
-                                    <x-ui.status-badge
-                                        :status="$request->is_available ? 'Available' : 'Not Available'"
-                                        :variant="$request->is_available ? 'success' : 'danger'"
-                                        :icon="$request->is_available ? 'ri-checkbox-circle-line' : 'ri-error-warning-line'" />
+                                @php $free = ($availability[$request->product_id]['available'] ?? 0); @endphp
+                                @if($request->quantity <= $free)
+                                    <span class="badge bg-success-subtle text-success">Available</span>
+                                @else
+                                    <span class="badge bg-danger-subtle text-danger">Not Available</span>
                                 @endif
                             </td>
                             <td>{{ $request->note ?: '-' }}</td>
