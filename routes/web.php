@@ -27,6 +27,9 @@ Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Con
 // machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark, reports.index,
 // expenses.index)
 Route::middleware('auth')->group(function () {
+    // Registered here (before the {any} catch-all further down) so /profile
+    // resolves to the controller with its $user data, not the view directly.
+    Route::get('profile', [App\Http\Controllers\Home\HomeController::class, 'profile'])->name('profile');
     Route::get('reports', [App\Http\Controllers\Reporting\ReportController::class, 'index'])->name('reports.index')->middleware('permission:reports.view');
     Route::middleware('permission:accounting.view')->group(function () {
         Route::get('accounting/chart-of-accounts', [App\Http\Controllers\Reporting\AccountingController::class, 'chartOfAccounts'])->name('accounting.chart');

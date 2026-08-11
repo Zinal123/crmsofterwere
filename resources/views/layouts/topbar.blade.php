@@ -186,6 +186,9 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">Welcome, {{ Auth::user()->name }}!</h6>
+                        <a class="dropdown-item" href="{{ route('profile') }}"><i class="ri-account-circle-line font-size-16 align-middle me-1"></i> <span>My Profile</span></a>
+                        <a class="dropdown-item" href="{{ route('profile') }}#change-password"><i class="ri-lock-2-line font-size-16 align-middle me-1"></i> <span>Change Password</span></a>
+                        <div class="dropdown-divider"></div>
                         <button type="button" class="dropdown-item" onclick="document.getElementById('logout-form').submit();"><i class="ri-logout-box-line font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></button>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf

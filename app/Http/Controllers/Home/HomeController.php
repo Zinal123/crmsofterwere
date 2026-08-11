@@ -8,6 +8,7 @@ use App\Services\Home\UserProfileService;
 use App\Traits\HandlesAvatarUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -76,6 +77,12 @@ class HomeController extends Controller
         return $from->lte($to) ? [$from, $to] : [$to->copy()->startOfDay(), $from->copy()->endOfDay()];
     }
 
+    /** The signed-in user's own profile / account settings page. */
+    public function profile()
+    {
+        return view('profile', ['user' => Auth::user()]);
+    }
+
     /*Language Translation*/
     public function lang($locale)
     {
@@ -101,14 +108,10 @@ class HomeController extends Controller
         $user = $this->profileService->updateProfile($id, $request->get('name'), $request->get('email'), $avatarPath);
 
         if ($user) {
-            Session::flash('message', 'User Details Updated successfully!');
-            Session::flash('alert-class', 'alert-success');
-            return redirect()->back();
-        } else {
-            Session::flash('message', self::ERROR_MESSAGE);
-            Session::flash('alert-class', 'alert-danger');
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Your profile has been updated.');
         }
+
+        return redirect()->back()->with('error', self::ERROR_MESSAGE);
     }
 
     public function updatePassword(Request $request, $id)
