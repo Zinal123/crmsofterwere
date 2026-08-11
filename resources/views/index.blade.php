@@ -48,9 +48,9 @@
                     @php
                         $tiles = [
                             ['Total Revenue', '₹' . \App\Support\IndianNumber::format($totalRevenue), 'ri-money-rupee-circle-line', 'primary'],
+                            ['Average Ticket Size', '₹' . \App\Support\IndianNumber::format($avgTicketSize), 'ri-price-tag-3-line', 'info'],
                             ['Customers', $totalCustomers, 'ri-group-line', 'success'],
-                            ['Products', $productsCount, 'ri-macbook-line', 'warning'],
-                            ['Invoices', $totalInvoices, 'ri-file-list-3-line', 'info'],
+                            ['Invoices', $totalInvoices, 'ri-file-list-3-line', 'warning'],
                         ];
                     @endphp
                     @foreach($tiles as [$label, $value, $icon, $color])
@@ -82,10 +82,6 @@
             ['Cash & Bank', '₹' . \App\Support\IndianNumber::format($financials['cash']), 'ri-bank-line', 'primary', route('accounting.trial-balance')],
             ['Receivables', '₹' . \App\Support\IndianNumber::format($financials['receivable']), 'ri-arrow-down-circle-line', 'info', route('invoice')],
             ['Payables', '₹' . \App\Support\IndianNumber::format($financials['payable']), 'ri-arrow-up-circle-line', 'warning', route('expenses.cashbook')],
-            ['Average Ticket Size', '₹' . \App\Support\IndianNumber::format($avgTicketSize), 'ri-price-tag-3-line', 'secondary', null],
-            ['Pending Payments', '₹' . \App\Support\IndianNumber::format($pendingPayments), 'ri-wallet-3-line', 'danger', route('invoice')],
-            ['Overdue Jobs', $overdueJobs, 'ri-alarm-warning-line', $overdueJobs > 0 ? 'danger' : 'success', route('jobs.index')],
-            ['Low-Stock Items', $lowStockCount, 'ri-stack-line', $lowStockCount > 0 ? 'warning' : 'success', route('invoice.inventrylist')],
         ];
     @endphp
     @foreach($statCards as [$label, $value, $icon, $color, $link])
@@ -105,6 +101,36 @@
         </div>
     @endforeach
 </div>
+
+<!-- Conditional alerts (only shown when something needs attention) -->
+@if($overdueJobs > 0 || $lowStockCount > 0)
+<div class="row">
+    @if($overdueJobs > 0)
+    <div class="col-md-6">
+        <a href="{{ route('jobs.index') }}" class="text-reset">
+            <div class="card dash-card border border-danger border-opacity-25 mb-3">
+                <div class="card-body d-flex align-items-center py-2">
+                    <span class="stat-icon bg-danger-subtle text-danger me-3"><i class="ri-alarm-warning-line"></i></span>
+                    <div><h5 class="mb-0 text-danger tabular-nums">{{ $overdueJobs }}</h5><span class="text-muted small">Overdue job(s) need attention</span></div>
+                </div>
+            </div>
+        </a>
+    </div>
+    @endif
+    @if($lowStockCount > 0)
+    <div class="col-md-6">
+        <a href="{{ route('invoice.inventrylist') }}" class="text-reset">
+            <div class="card dash-card border border-warning border-opacity-25 mb-3">
+                <div class="card-body d-flex align-items-center py-2">
+                    <span class="stat-icon bg-warning-subtle text-warning me-3"><i class="ri-stack-line"></i></span>
+                    <div><h5 class="mb-0 text-warning tabular-nums">{{ $lowStockCount }}</h5><span class="text-muted small">Inventory item(s) low on stock</span></div>
+                </div>
+            </div>
+        </a>
+    </div>
+    @endif
+</div>
+@endif
 
 <!-- ============ CHARTS ============ -->
 <h5 class="mb-2 mt-1">Analytics</h5>
@@ -138,23 +164,23 @@
 </div>
 <div class="row">
     <div class="col-xl-4">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">Collection Rate</h5></div>
             <div class="card-body pt-0 text-center">
-                <div id="collectionGauge" style="min-height: 260px;"></div>
+                <div id="collectionGauge" style="min-height: 280px;"></div>
                 <p class="text-muted small mb-0">Share of invoiced money collected</p>
             </div>
         </div>
     </div>
     <div class="col-xl-4">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0">
                 <h5 class="card-title mb-0">Expenses by Category</h5>
                 <span class="text-muted small">This month</span>
             </div>
             <div class="card-body pt-0">
                 @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="min-height: 280px;"></div>
+                    <div id="expenseDonut" style="min-height: 300px;"></div>
                 @else
                     <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
                 @endif
@@ -162,13 +188,13 @@
         </div>
     </div>
     <div class="col-xl-4">
-        <div class="card dash-card h-100">
+        <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">Revenue Trend</h5>
                 <span class="text-muted small tabular-nums">₹{{ \App\Support\IndianNumber::format($totalRevenue) }}</span>
             </div>
             <div class="card-body pt-0">
-                <div id="revenueAreaChart" style="min-height: 280px;"></div>
+                <div id="revenueAreaChart" style="min-height: 300px;"></div>
             </div>
         </div>
     </div>
@@ -304,7 +330,7 @@
         var gaugeEl = document.querySelector('#collectionGauge');
         if (gaugeEl) {
             new ApexCharts(gaugeEl, {
-                chart: { type: 'radialBar', height: 260, fontFamily: 'inherit' },
+                chart: { type: 'radialBar', height: 280, fontFamily: 'inherit' },
                 series: [{{ (int) $collectionRate }}],
                 labels: ['Collected'],
                 colors: ['#4361EE'],
@@ -318,7 +344,7 @@
         var revEl = document.querySelector('#revenueAreaChart');
         if (revEl) {
             new ApexCharts(revEl, {
-                chart: { type: 'area', height: 280, toolbar: { show: false }, fontFamily: 'inherit' },
+                chart: { type: 'area', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
                 series: [{ name: 'Revenue', data: revenueTrend.map(function (m) { return m.revenue; }) }],
                 colors: ['#4361EE'],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
@@ -334,7 +360,7 @@
         var donutEl = document.querySelector('#expenseDonut');
         if (donutEl && expenseBreakdown.length) {
             new ApexCharts(donutEl, {
-                chart: { type: 'donut', height: 280, fontFamily: 'inherit' },
+                chart: { type: 'donut', height: 300, fontFamily: 'inherit' },
                 series: expenseBreakdown.map(function (c) { return c.total; }),
                 labels: expenseBreakdown.map(function (c) { return c.category; }),
                 colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],
