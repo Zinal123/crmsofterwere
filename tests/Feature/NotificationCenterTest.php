@@ -83,6 +83,41 @@ class NotificationCenterTest extends TestCase
         $this->assertEquals(2, $owner->unreadNotifications()->count());
     }
 
+    public function test_a_single_notification_can_be_marked_read(): void
+    {
+        $owner = $this->owner();
+        $this->pushNotification($owner, LowStockNotification::class, ['invetry_id' => 1, 'product_name' => 'X', 'quantity' => 0]);
+        $id = $owner->notifications()->first()->id;
+
+        $this->actingAs($owner)->post(route('notifications.read', $id))->assertNoContent();
+
+        $this->assertEquals(0, $owner->fresh()->unreadNotifications()->count());
+    }
+
+    public function test_mark_all_read_clears_the_unread_count(): void
+    {
+        $owner = $this->owner();
+        $this->pushNotification($owner, LowStockNotification::class, ['invetry_id' => 1, 'product_name' => 'X', 'quantity' => 0]);
+        $this->pushNotification($owner, JobOverdueNotification::class, ['job_id' => 1, 'job_title' => 'Y', 'due_date' => null]);
+
+        $this->actingAs($owner)->post(route('notifications.read-all'))->assertRedirect();
+
+        $this->assertEquals(0, $owner->fresh()->unreadNotifications()->count());
+    }
+
+    public function test_a_user_cannot_mark_another_users_notification_read(): void
+    {
+        $owner = $this->owner();
+        $other = $this->owner();
+        $this->pushNotification($other, LowStockNotification::class, ['invetry_id' => 1, 'product_name' => 'X', 'quantity' => 0]);
+        $id = $other->notifications()->first()->id;
+
+        // Acting as $owner, hitting $other's notification id does nothing.
+        $this->actingAs($owner)->post(route('notifications.read', $id))->assertNoContent();
+
+        $this->assertEquals(1, $other->fresh()->unreadNotifications()->count());
+    }
+
     private function owner(): User
     {
         $owner = User::factory()->create();

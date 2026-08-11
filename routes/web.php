@@ -78,6 +78,8 @@ Route::get('{any}', [App\Http\Controllers\Home\HomeController::class, 'index'])-
 Route::middleware('auth')->group(function () {
     Route::post('/update-profile/{id}', [App\Http\Controllers\Home\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\Home\HomeController::class, 'updatePassword'])->name('updatePassword');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\Home\NotificationController::class, 'read'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\Home\NotificationController::class, 'readAll'])->name('notifications.read-all');
     Route::get('employees/create', [App\Http\Controllers\Workforce\EmployeeController::class, 'create'])->name('employees.create')->middleware('permission:employees.manage');
     Route::post('employees', [App\Http\Controllers\Workforce\EmployeeController::class, 'store'])->name('employees.store')->middleware('permission:employees.manage');
     Route::get('employees/{id}/edit', [App\Http\Controllers\Workforce\EmployeeController::class, 'edit'])->name('employees.edit')->middleware('permission:employees.manage');

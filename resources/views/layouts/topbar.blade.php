@@ -50,20 +50,6 @@
 
             <div class="d-flex align-items-center">
 
-                <div class="dropdown ms-1 topbar-head-dropdown header-item">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ URL::asset('build/images/flags/in.svg') }}" class="rounded" alt="Header Language" height="20">
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-
-                        <!-- item-->
-                        <a href="{{ url('index/en') }}" class="dropdown-item notify-item language py-2" data-lang="en" title="English">
-                            <img src="{{ URL::asset('build/images/flags/in.svg') }}" alt="India flag" class="me-2 rounded" height="20">
-                            <span class="align-middle">English</span>
-                        </a>
-                    </div>
-                </div>
-
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen" title="Toggle fullscreen" aria-label="Toggle fullscreen">
                         <i class='ri-fullscreen-line fs-22'></i>
@@ -89,8 +75,14 @@
                                     <div class="col">
                                         <h6 class="m-0 fs-16 fw-semibold text-white"> Notifications </h6>
                                     </div>
-                                    <div class="col-auto">
+                                    <div class="col-auto d-flex align-items-center gap-2">
                                         <span class="badge bg-light-subtle text-body fs-13"> {{ $unreadJobNotificationCount }} New</span>
+                                        @if ($unreadJobNotificationCount > 0)
+                                            <form action="{{ route('notifications.read-all') }}" method="POST" class="m-0">
+                                                @csrf
+                                                <button type="submit" class="btn btn-link btn-sm text-white p-0 text-decoration-underline">Mark all read</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -150,8 +142,8 @@
                                                     </span>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <a href="{{ $notifLink }}" class="stretched-link">
-                                                        <h6 class="mt-0 mb-1 fs-13 fw-semibold">{{ $notifTitle }}</h6>
+                                                    <a href="{{ $notifLink }}" class="stretched-link js-notif-link" data-notif-id="{{ $notification->id }}">
+                                                        <h6 class="mt-0 mb-1 fs-13 fw-semibold">{{ $notifTitle }} @unless($notification->read_at)<span class="badge bg-primary-subtle text-primary ms-1">new</span>@endunless</h6>
                                                     </a>
                                                     <div class="fs-13 text-muted">
                                                         <p class="mb-1">{{ $notifText }}</p>
@@ -221,3 +213,25 @@
 </div>
 </div><!-- /.modal -->
 
+
+<script>
+    // Mark a notification read as the user opens it, so the unread badge
+    // actually clears. Fire-and-forget (keepalive) so navigation isn't blocked.
+    document.addEventListener('DOMContentLoaded', function () {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        var token = meta ? meta.content : '';
+        document.querySelectorAll('.js-notif-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var id = link.getAttribute('data-notif-id');
+                if (!id) return;
+                try {
+                    fetch('{{ url('notifications') }}/' + id + '/read', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+                        keepalive: true
+                    });
+                } catch (e) {}
+            });
+        });
+    });
+</script>
