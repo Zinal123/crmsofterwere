@@ -6,6 +6,7 @@ use App\Models\ClientMachine;
 use App\Models\SparePartRequest;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\SparePartRequestRepositoryInterface;
+use App\Services\Inventory\AvailabilityService;
 use App\Services\Inventory\InventoryService;
 use App\Services\Inventory\SparePartAvailabilityService;
 use Illuminate\Support\Collection;
@@ -19,6 +20,7 @@ class SparePartRequestService
         private InventoryRepositoryInterface $inventoryRepository,
         private InventoryService $inventoryService,
         private SparePartAvailabilityService $availabilityService,
+        private AvailabilityService $inventoryAvailability,
     ) {
     }
 
@@ -62,6 +64,17 @@ class SparePartRequestService
     {
         if (! in_array($status, self::STATUSES, true)) {
             throw new \InvalidArgumentException('Invalid status.');
+        }
+
+        // When approving, reserve stock — but only if it's actually free. Available
+        // already excludes other approved requests, so this prevents double-promising.
+        if ($status === 'approved' && $request->status !== 'approved') {
+            $available = $this->inventoryAvailability->available($request->product_id);
+            if ($request->quantity > $available) {
+                throw new \InvalidArgumentException(
+                    "Only {$available} available for this part — cannot approve a request for {$request->quantity}."
+                );
+            }
         }
 
         if ($status === 'fulfilled' && $request->status !== 'fulfilled') {
