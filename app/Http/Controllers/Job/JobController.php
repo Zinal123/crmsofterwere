@@ -88,7 +88,31 @@ class JobController extends Controller
 
         $workers = $this->userRepository->byRole('Worker');
 
-        return view($request->user()->can('jobs.view-all') ? 'jobs.show' : 'worker.jobs.show', compact('job', 'workers'));
+        if (! $request->user()->can('jobs.view-all')) {
+            return view('worker.jobs.show', compact('job', 'workers'));
+        }
+
+        $materialAvailability = app(\App\Services\Job\JobMaterialService::class)->availabilityFor($job);
+        $products = \App\Models\Product::orderBy('name')->get();
+
+        return view('jobs.show', compact('job', 'workers', 'materialAvailability', 'products'));
+    }
+
+    public function addMaterial(Request $request, $job, \App\Services\Job\JobMaterialService $svc)
+    {
+        $data = $request->validate(['product_id' => 'required|integer|exists:product,id', 'quantity' => 'required|integer|min:1']);
+        $jobModel = $this->repository->find($job);
+        abort_if(! $jobModel, 404);
+        $svc->add($jobModel, (int) $data['product_id'], (int) $data['quantity']);
+
+        return redirect()->route('jobs.show', $jobModel->id)->with('success', 'Material added to job.');
+    }
+
+    public function removeMaterial($material, \App\Services\Job\JobMaterialService $svc)
+    {
+        $svc->remove((int) $material);
+
+        return back()->with('success', 'Material removed.');
     }
 
     public function addChecklistItem(Request $request, $id)

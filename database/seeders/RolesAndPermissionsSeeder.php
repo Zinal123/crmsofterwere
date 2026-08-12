@@ -18,7 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'quotations.view', 'quotations.create', 'quotations.update', 'quotations.download-pdf', 'quotations.delete',
         'admin.manage-roles',
         'admin.manage-users',
-        'jobs.view-own', 'jobs.create', 'jobs.view-all', 'jobs.approve', 'jobs.assign', 'jobs.manage-machines', 'machines.view-audit', 'jobs.view-audit',
+        'jobs.view-own', 'jobs.create', 'jobs.view-all', 'jobs.approve', 'jobs.assign', 'jobs.manage-machines', 'jobs.manage-materials', 'machines.view-audit', 'jobs.view-audit',
         'employees.view', 'employees.manage', 'attendance.view', 'attendance.manage', 'attendance.view-audit', 'payroll.view', 'payroll.manage-payments',
         'employees.view-audit',
         'payroll.view-audit',
