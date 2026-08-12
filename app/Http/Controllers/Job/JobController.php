@@ -119,6 +119,14 @@ class JobController extends Controller
         return back()->with('success', 'Material removed.');
     }
 
+    public function substituteMaterial(Request $request, $material, \App\Services\Job\JobMaterialService $svc)
+    {
+        $data = $request->validate(['new_product_id' => 'required|integer|exists:product,id']);
+        $svc->substitute((int) $material, (int) $data['new_product_id']);
+
+        return back()->with('success', 'Material substituted.');
+    }
+
     public function addChecklistItem(Request $request, $id)
     {
         $data = $request->validate(['description' => 'required|string|max:255']);

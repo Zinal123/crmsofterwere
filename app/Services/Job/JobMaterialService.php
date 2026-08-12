@@ -21,6 +21,14 @@ class JobMaterialService
         JobMaterial::where('id', $materialId)->delete();
     }
 
+    public function substitute(int $materialId, int $newProductId): JobMaterial
+    {
+        $material = JobMaterial::findOrFail($materialId);
+        $material->update(['product_id' => $newProductId]);
+
+        return $material;
+    }
+
     /**
      * Per-material availability for a job. Availability is computed EXCLUDING
      * this job's own demand (via the service's $excludingJobId), so a job is

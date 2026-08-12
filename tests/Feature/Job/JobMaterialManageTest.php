@@ -94,4 +94,29 @@ class JobMaterialManageTest extends TestCase
             ->get(route('jobs.index'))
             ->assertSee('Shortage');
     }
+
+    public function test_substituting_swaps_the_product_on_that_line_only(): void
+    {
+        $job = \App\Models\Job::factory()->create(['status' => 'assigned']);
+        $orig = \App\Models\Product::create(['name' => 'OEM Lens', 'rate' => '1', 'unit' => 'pcs', 'make' => 'X']);
+        $alt = \App\Models\Product::create(['name' => 'Compatible Lens', 'rate' => '1', 'unit' => 'pcs', 'make' => 'Y']);
+        $mat = \App\Models\JobMaterial::create(['job_id' => $job->id, 'product_id' => $orig->id, 'quantity' => 1]);
+
+        app(\App\Services\Job\JobMaterialService::class)->substitute($mat->id, $alt->id);
+
+        $this->assertDatabaseHas('job_materials', ['id' => $mat->id, 'product_id' => $alt->id]);
+    }
+
+    public function test_owner_can_substitute_via_http(): void
+    {
+        $owner = \App\Models\User::factory()->create();
+        $owner->assignRole('Owner');
+        $job = \App\Models\Job::factory()->create(['status' => 'assigned']);
+        $orig = \App\Models\Product::create(['name' => 'OEM', 'rate' => '1', 'unit' => 'pcs', 'make' => 'X']);
+        $alt = \App\Models\Product::create(['name' => 'Alt', 'rate' => '1', 'unit' => 'pcs', 'make' => 'Y']);
+        $mat = \App\Models\JobMaterial::create(['job_id' => $job->id, 'product_id' => $orig->id, 'quantity' => 1]);
+
+        $this->actingAs($owner)->post(route('jobs.materials.substitute', $mat->id), ['new_product_id' => $alt->id])->assertRedirect();
+        $this->assertDatabaseHas('job_materials', ['id' => $mat->id, 'product_id' => $alt->id]);
+    }
 }

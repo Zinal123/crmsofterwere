@@ -255,6 +255,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:jobs.manage-materials')->group(function () {
         Route::post('jobs/{job}/materials', [App\Http\Controllers\Job\JobController::class, 'addMaterial'])->name('jobs.materials.store');
         Route::delete('jobs/materials/{material}', [App\Http\Controllers\Job\JobController::class, 'removeMaterial'])->name('jobs.materials.destroy');
+        Route::post('jobs/materials/{material}/substitute', [App\Http\Controllers\Job\JobController::class, 'substituteMaterial'])->name('jobs.materials.substitute');
     });
 
     Route::post('push-subscriptions', [App\Http\Controllers\Job\PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');

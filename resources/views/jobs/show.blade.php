@@ -44,11 +44,23 @@
                                     </td>
                                     <td class="text-end">
                                         @can('jobs.manage-materials')
-                                            <form action="{{ route('jobs.materials.destroy', $line['material_id']) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-ui.button variant="danger" size="sm" type="submit" icon="ri-delete-bin-line" ariaLabel="Remove material" />
-                                            </form>
+                                            <div class="d-flex justify-content-end align-items-center gap-1">
+                                                <form action="{{ route('jobs.materials.substitute', $line['material_id']) }}" method="POST" class="d-flex align-items-center gap-1">
+                                                    @csrf
+                                                    <select name="new_product_id" class="form-select form-select-sm" style="width: auto;" aria-label="Substitute part" required>
+                                                        <option value="">Substitute…</option>
+                                                        @foreach($products as $product)
+                                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <x-ui.button variant="secondary" size="sm" type="submit">Swap</x-ui.button>
+                                                </form>
+                                                <form action="{{ route('jobs.materials.destroy', $line['material_id']) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-ui.button variant="danger" size="sm" type="submit" icon="ri-delete-bin-line" ariaLabel="Remove material" />
+                                                </form>
+                                            </div>
                                         @endcan
                                     </td>
                                 </tr>
