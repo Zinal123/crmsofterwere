@@ -5,7 +5,7 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Repositories\Contracts\InventoryRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
-use App\Services\Inventory\SparePartAvailabilityService;
+use App\Services\Inventory\AvailabilityService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +14,7 @@ class ProductService
     public function __construct(
         private ProductRepositoryInterface $repository,
         private InventoryRepositoryInterface $inventoryRepository,
-        private SparePartAvailabilityService $availabilityService,
+        private AvailabilityService $availabilityService,
     ) {
     }
 

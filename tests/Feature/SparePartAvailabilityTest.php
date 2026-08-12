@@ -7,7 +7,7 @@ use App\Models\ClientMachine;
 use App\Models\Invetry;
 use App\Models\Product;
 use App\Models\SparePartRequest;
-use App\Services\Inventory\SparePartAvailabilityService;
+use App\Services\Inventory\AvailabilityService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -34,7 +34,7 @@ class SparePartAvailabilityTest extends TestCase
         $part = Product::factory()->create();
         Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
 
-        $available = app(SparePartAvailabilityService::class)->available($part->id);
+        $available = app(AvailabilityService::class)->available($part->id);
 
         $this->assertSame(10, $available);
     }
@@ -46,7 +46,7 @@ class SparePartAvailabilityTest extends TestCase
         $this->makeRequest($part, 3, 'pending');
         $this->makeRequest($part, 4, 'approved');
 
-        $available = app(SparePartAvailabilityService::class)->available($part->id);
+        $available = app(AvailabilityService::class)->available($part->id);
 
         $this->assertSame(3, $available);
     }
@@ -58,7 +58,7 @@ class SparePartAvailabilityTest extends TestCase
         $this->makeRequest($part, 5, 'fulfilled');
         $this->makeRequest($part, 5, 'rejected');
 
-        $available = app(SparePartAvailabilityService::class)->available($part->id);
+        $available = app(AvailabilityService::class)->available($part->id);
 
         $this->assertSame(10, $available);
     }
@@ -69,8 +69,8 @@ class SparePartAvailabilityTest extends TestCase
         Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 10]);
         $request = $this->makeRequest($part, 6, 'pending');
 
-        $availableIncludingSelf = app(SparePartAvailabilityService::class)->available($part->id);
-        $availableExcludingSelf = app(SparePartAvailabilityService::class)->available($part->id, $request->id);
+        $availableIncludingSelf = app(AvailabilityService::class)->available($part->id);
+        $availableExcludingSelf = app(AvailabilityService::class)->available($part->id, $request->id);
 
         $this->assertSame(4, $availableIncludingSelf);
         $this->assertSame(10, $availableExcludingSelf);
@@ -82,7 +82,7 @@ class SparePartAvailabilityTest extends TestCase
         Invetry::factory()->create(['product_id' => $part->id, 'quantity' => 5]);
         $this->makeRequest($part, 8, 'pending');
 
-        $available = app(SparePartAvailabilityService::class)->available($part->id);
+        $available = app(AvailabilityService::class)->available($part->id);
 
         $this->assertSame(0, $available);
     }
@@ -91,7 +91,7 @@ class SparePartAvailabilityTest extends TestCase
     {
         $part = Product::factory()->create();
 
-        $available = app(SparePartAvailabilityService::class)->available($part->id);
+        $available = app(AvailabilityService::class)->available($part->id);
 
         $this->assertSame(0, $available);
     }

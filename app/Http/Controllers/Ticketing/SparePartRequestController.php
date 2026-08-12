@@ -16,7 +16,6 @@ class SparePartRequestController extends Controller
     {
         return view('ticketing.spare-part-requests.index', [
             'requests' => $this->service->listAll(),
-            'availability' => app(\App\Services\Inventory\AvailabilityService::class)->snapshot(),
         ]);
     }
 

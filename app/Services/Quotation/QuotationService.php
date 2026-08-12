@@ -6,7 +6,7 @@ use App\Models\Quation;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
-use App\Services\Inventory\SparePartAvailabilityService;
+use App\Services\Inventory\AvailabilityService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +16,7 @@ class QuotationService
         private QuotationRepositoryInterface $repository,
         private ProductConfigRepositoryInterface $productConfigRepository,
         private BankRepositoryInterface $bankRepository,
-        private SparePartAvailabilityService $availabilityService,
+        private AvailabilityService $availabilityService,
     ) {
     }
 

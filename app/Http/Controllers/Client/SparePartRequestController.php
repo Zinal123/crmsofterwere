@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\ClientMachineRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
-use App\Services\Inventory\SparePartAvailabilityService;
+use App\Services\Inventory\AvailabilityService;
 use App\Services\Ticketing\SparePartRequestService;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ class SparePartRequestController extends Controller
         private SparePartRequestService $service,
         private ClientMachineRepositoryInterface $machineRepository,
         private ProductRepositoryInterface $productRepository,
-        private SparePartAvailabilityService $availabilityService,
+        private AvailabilityService $availabilityService,
     ) {
     }
 
