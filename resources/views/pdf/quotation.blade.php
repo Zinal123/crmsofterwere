@@ -348,5 +348,9 @@
     Email- info@oraclemachinetech.com, www.oraclemachinetech.com
 </p>
 
+@if(!empty($autoPrint))
+<script type="text/javascript">this.print();</script>
+@endif
+
 </body>
 </html>

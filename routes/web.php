@@ -161,6 +161,7 @@ Route::middleware('auth')->group(function () {
     Route::post('fiberqutation/store' ,[App\Http\Controllers\Quotation\QutationController::class, 'generatequtationstore'])->name('generatequtationstore')->middleware('permission:quotations.create');
     Route::get('admin/listqutation' ,[App\Http\Controllers\Quotation\QutationController::class, 'index'])->name('listqutation')->middleware('permission:quotations.view');
     Route::get('/printquation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'print'])->name('quation.pdf')->middleware('permission:quotations.download-pdf');
+    Route::get('/printquation/{id}/print', [App\Http\Controllers\Quotation\QutationController::class, 'printInline'])->name('quation.print')->middleware('permission:quotations.download-pdf');
     Route::get('quation/delete/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'delete'])->name('quation.delete')->middleware('permission:quotations.delete');
     Route::put('quation/{id}', [App\Http\Controllers\Quotation\QutationController::class, 'update'])->name('quation.update')->middleware('permission:quotations.update');
 

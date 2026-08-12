@@ -58,6 +58,7 @@
                                    </button>
                                    @endcan
                                    <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Download Qutation" aria-label="Download Qutation"><i class="ri-download-2-line align-bottom"></i></a>
+                                   <a href="{{route('quation.print' ,$item->id)}}" target="_blank" rel="noopener" class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip" title="Print Quotation" aria-label="Print Quotation"><i class="ri-printer-line align-bottom"></i></a>
                                    @can('quotations.delete')
                                    <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
                                      <i class="ri-delete-bin-fill align-bottom"></i>

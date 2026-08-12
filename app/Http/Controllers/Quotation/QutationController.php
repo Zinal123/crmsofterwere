@@ -37,6 +37,16 @@ class QutationController extends Controller
         return $pdf->download('Quotation-' . $data['quotation']->id . '.pdf');
     }
 
+    public function printInline($id)
+    {
+        $data = $this->service->getQuotationPdfData($id);
+        $data['autoPrint'] = true;
+        $pdf = Pdf::loadView('pdf.quotation', $data)->setPaper('a4');
+        $pdf->getDomPDF()->getOptions()->set('isJavascriptEnabled', true);
+
+        return $pdf->stream('Quotation-' . $data['quotation']->id . '.pdf');
+    }
+
     public function delete($id)
     {
         $this->service->delete($id);
