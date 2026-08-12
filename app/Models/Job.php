@@ -32,6 +32,11 @@ class Job extends Model
             ->whereNotIn('status', self::TERMINAL_STATUSES);
     }
 
+    public function scopeOpen($query)
+    {
+        return $query->whereIn('status', ['pending_approval', 'assigned', 'in_progress', 'on_hold']);
+    }
+
     public function machine()
     {
         return $this->belongsTo(Machine::class);
