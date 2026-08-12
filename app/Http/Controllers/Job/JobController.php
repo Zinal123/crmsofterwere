@@ -110,7 +110,7 @@ class JobController extends Controller
         $jobModel = $this->repository->find($job);
         abort_if(! $jobModel, 404);
         abort_unless($jobModel->created_by === $request->user()->id || $request->user()->can('jobs.assign'), 403);
-        $template = \App\Models\ChecklistTemplate::findOrFail($data['checklist_template_id']);
+        $template = \App\Models\ChecklistTemplate::where('is_active', true)->findOrFail($data['checklist_template_id']);
         $svc->applyToJob($template, $jobModel);
 
         return redirect()->route('jobs.show', $jobModel->id)->with('success', 'Template applied to checklist.');
@@ -303,6 +303,10 @@ class JobController extends Controller
             );
         } catch (\InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json(['ok' => true], 201);
         }
 
         return redirect()->route('jobs.show', $job->id)->with('success', 'Photo uploaded.');

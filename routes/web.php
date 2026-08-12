@@ -257,7 +257,7 @@ Route::middleware('auth')->group(function () {
     Route::post('jobs/{id}/resume', [App\Http\Controllers\Job\JobController::class, 'resume'])->name('jobs.resume')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/photos', [App\Http\Controllers\Job\JobController::class, 'storePhoto'])->name('jobs.photos.store')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/checklist', [App\Http\Controllers\Job\JobController::class, 'addChecklistItem'])->name('jobs.checklist.store')->middleware('permission:jobs.view-own|jobs.view-all|jobs.assign');
-    Route::post('jobs/{job}/apply-template', [App\Http\Controllers\Job\JobController::class, 'applyTemplate'])->name('jobs.apply-template');
+    Route::post('jobs/{job}/apply-template', [App\Http\Controllers\Job\JobController::class, 'applyTemplate'])->name('jobs.apply-template')->middleware('permission:jobs.view-own|jobs.view-all|jobs.assign');
     Route::post('jobs/{id}/checklist/{itemId}/toggle', [App\Http\Controllers\Job\JobController::class, 'toggleChecklistItem'])->name('jobs.checklist.toggle')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/complete', [App\Http\Controllers\Job\JobController::class, 'complete'])->name('jobs.complete')->middleware('permission:jobs.view-own|jobs.view-all');
     Route::post('jobs/{id}/reassign', [App\Http\Controllers\Job\JobController::class, 'reassign'])->name('jobs.reassign')->middleware('permission:jobs.assign');

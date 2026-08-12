@@ -44,4 +44,30 @@ class ChecklistTemplateApplyTest extends TestCase
         $this->actingAs($owner)->post(route('jobs.apply-template', $job->id), ['checklist_template_id' => $t->id])->assertRedirect();
         $this->assertDatabaseHas('job_checklist_items', ['job_id' => $job->id, 'description' => 'Do X']);
     }
+
+    public function test_worker_who_did_not_create_the_job_and_lacks_assign_is_forbidden(): void
+    {
+        // A Worker has jobs.view-own (so passes the route permission gate) but
+        // not jobs.assign, so applying a template to someone else's job is 403.
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $job = Job::factory()->create(['created_by' => User::factory()->create()->id]);
+        $t = ChecklistTemplate::create(['name' => 'Svc', 'is_active' => true]);
+        ChecklistTemplateItem::create(['checklist_template_id' => $t->id, 'description' => 'Do X', 'position' => 1]);
+
+        $this->actingAs($worker)->post(route('jobs.apply-template', $job->id), ['checklist_template_id' => $t->id])->assertForbidden();
+        $this->assertDatabaseMissing('job_checklist_items', ['job_id' => $job->id]);
+    }
+
+    public function test_applying_an_inactive_template_is_rejected(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $job = Job::factory()->create(['created_by' => $owner->id]);
+        $t = ChecklistTemplate::create(['name' => 'Retired', 'is_active' => false]);
+        ChecklistTemplateItem::create(['checklist_template_id' => $t->id, 'description' => 'Do X', 'position' => 1]);
+
+        $this->actingAs($owner)->post(route('jobs.apply-template', $job->id), ['checklist_template_id' => $t->id])->assertNotFound();
+        $this->assertDatabaseMissing('job_checklist_items', ['job_id' => $job->id]);
+    }
 }

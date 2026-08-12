@@ -172,13 +172,22 @@
                 return new Promise(function (resolve) {
                     try {
                         var req = indexedDB.open(OFFLINE_DB, 1);
+                        req.onupgradeneeded = function () {
+                            var db = req.result;
+                            if (!db.objectStoreNames.contains(OFFLINE_STORE)) {
+                                db.createObjectStore(OFFLINE_STORE, { keyPath: 'id', autoIncrement: true });
+                            }
+                        };
                         req.onsuccess = function () {
                             var db = req.result;
                             if (!db.objectStoreNames.contains(OFFLINE_STORE)) { resolve(0); return; }
                             var g = db.transaction(OFFLINE_STORE, 'readonly').objectStore(OFFLINE_STORE).getAll();
                             g.onsuccess = function () {
                                 resolve((g.result || []).filter(function (r) {
-                                    return String(r.userId) === String(OMT_USER_ID);
+                                    // Same predicate as getPendingPhotosForJob: a legacy
+                                    // record with no userId counts as this worker's, so the
+                                    // logout warning matches what will actually try to sync.
+                                    return r.userId == null || String(r.userId) === String(OMT_USER_ID);
                                 }).length);
                             };
                             g.onerror = function () { resolve(0); };

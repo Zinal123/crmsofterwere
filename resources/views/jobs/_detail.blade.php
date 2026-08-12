@@ -593,7 +593,7 @@ if (navigator.geolocation) {
             records.forEach(function (record) {
                 chain = chain.then(function () {
                     return uploadPhotoBlob(record.blob, record).then(function (response) {
-                        if (response.ok || response.redirected) {
+                        if (response.status === 201) {
                             return removePendingPhoto(record.id);
                         }
                         // Still queued (e.g. job no longer in_progress) - leave it for the
@@ -644,8 +644,8 @@ if (navigator.geolocation) {
             };
 
             uploadPhotoBlob(blob, meta).then(function (response) {
-                if (response.redirected) {
-                    window.location.href = response.url;
+                if (response.status === 201) {
+                    window.location.reload();
                     return;
                 }
                 if (response.status === 422) {
@@ -653,6 +653,14 @@ if (navigator.geolocation) {
                         alert(data.message || 'Upload failed. Please try again.');
                         window.location.reload();
                     });
+                }
+                if (response.status === 401) {
+                    window.location.href = '{{ route('login') }}';
+                    return;
+                }
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
                 }
                 window.location.reload();
             }).catch(function () {

@@ -31,6 +31,10 @@ class EnforceIdleTimeout
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'You were signed out after a period of inactivity on this device.'], 401);
+            }
+
             return redirect()->route('login')->with('error', 'You were signed out after a period of inactivity on this device.');
         }
 

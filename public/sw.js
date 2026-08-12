@@ -97,6 +97,12 @@ self.addEventListener('notificationclick', function (event) {
 function omtOpenDb() {
     return new Promise(function (resolve, reject) {
         var req = indexedDB.open(OMT_OFFLINE_DB, 1);
+        req.onupgradeneeded = function () {
+            var db = req.result;
+            if (!db.objectStoreNames.contains(OMT_OFFLINE_STORE)) {
+                db.createObjectStore(OMT_OFFLINE_STORE, { keyPath: 'id', autoIncrement: true });
+            }
+        };
         req.onsuccess = function () { resolve(req.result); };
         req.onerror = function () { reject(req.error); };
     });
@@ -134,19 +140,25 @@ async function omtDrainOutbox() {
         form.append('_token', r.csrfToken || '');
         form.append('photo', r.blob, 'proof-' + (r.queuedAt || Date.now()) + '.jpg');
         form.append('stage', r.stage || 'general');
-        if (r.latitude) { form.append('latitude', r.latitude); }
-        if (r.longitude) { form.append('longitude', r.longitude); }
+        // Unconditional: latitude/longitude are server-required; a falsy-but-valid
+        // "0" (the equator/prime meridian) must not be dropped into a 422 loop.
+        form.append('latitude', r.latitude);
+        form.append('longitude', r.longitude);
         var resp = await fetch(r.url, {
             method: 'POST',
             body: form,
             credentials: 'same-origin',
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
         });
-        if (resp.ok || resp.redirected) {
+        // Delete ONLY on the server's positive 201 (photo stored). A redirect
+        // (302→job page OR 302→login), 419 stale CSRF, 401 expired session, or
+        // 422 rejected upload must NEVER delete — the record stays queued and
+        // the page path (which uses a fresh session token) drains it later.
+        if (resp.status === 201) {
             await omtDelete(db, r.id);
-        } else if (resp.status === 419 || resp.status === 401) {
-            break;
         }
+        // Any other status: leave the record, continue to the next one so a
+        // single stuck record does not starve the fresh ones behind it.
     }
     var clientsList = await self.clients.matchAll();
     clientsList.forEach(function (c) { c.postMessage({ type: 'omt-outbox-drained' }); });
