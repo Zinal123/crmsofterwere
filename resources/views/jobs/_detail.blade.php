@@ -477,6 +477,30 @@ if (navigator.geolocation) {
     var OFFLINE_DB_NAME = 'oracle-crm-offline-photos';
     var OFFLINE_STORE_NAME = 'pending_photos';
     var jobId = {{ $job->id }};
+    // Replay data stored with each queued photo so it can upload standalone
+    // (from the page OR from the service worker's Background Sync). Injected
+    // server-side so it's always the signed-in worker's own identity/token.
+    var OMT_USER_ID = @json((string) auth()->id());
+    var OMT_CSRF = @json(csrf_token());
+    var OMT_UPLOAD_URL = uploadForm ? uploadForm.action : '{{ route('jobs.photos.store', $job->id) }}';
+
+    // Ask the service worker to drain the outbox when connectivity returns,
+    // even if this tab is closed. Feature-detected; the online-event drain
+    // below stays as the fallback (e.g. iOS Safari has no Background Sync).
+    function requestBackgroundSync() {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+            navigator.serviceWorker.ready.then(function (reg) {
+                if ('sync' in reg) { reg.sync.register('omt-photo-outbox').catch(function () {}); }
+            }).catch(function () {});
+        }
+    }
+
+    // The page updates its queue panel when the SW reports a background drain.
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function (e) {
+            if (e.data && e.data.type === 'omt-outbox-drained') { renderOfflineQueuePanel(); }
+        });
+    }
 
     function openOfflineDb() {
         return new Promise(function (resolve, reject) {
@@ -508,7 +532,13 @@ if (navigator.geolocation) {
             return new Promise(function (resolve, reject) {
                 var request = db.transaction(OFFLINE_STORE_NAME, 'readonly').objectStore(OFFLINE_STORE_NAME).getAll();
                 request.onsuccess = function () {
-                    resolve(request.result.filter(function (record) { return record.jobId === jobId; }));
+                    // Only this worker's photos for this job — on a shared tablet a
+                    // record from a previous worker (different userId) is never shown
+                    // or synced here. Legacy records with no userId are treated as own.
+                    resolve(request.result.filter(function (record) {
+                        return record.jobId === jobId
+                            && (record.userId == null || String(record.userId) === String(OMT_USER_ID));
+                    }));
                 };
                 request.onerror = function () { reject(request.error); };
             });
@@ -627,8 +657,9 @@ if (navigator.geolocation) {
                 window.location.reload();
             }).catch(function () {
                 // Network failure, not a validation error - queue instead of losing the photo.
-                queuePhotoOffline({ jobId: meta.jobId, blob: blob, latitude: meta.latitude, longitude: meta.longitude, stage: meta.stage, queuedAt: Date.now() })
+                queuePhotoOffline({ jobId: meta.jobId, blob: blob, latitude: meta.latitude, longitude: meta.longitude, stage: meta.stage, userId: OMT_USER_ID, csrfToken: OMT_CSRF, url: OMT_UPLOAD_URL, queuedAt: Date.now() })
                     .then(function () {
+                        requestBackgroundSync();
                         alert('No connection - photo saved on this device and will upload automatically once you\'re back online.');
                         renderOfflineQueuePanel();
                     })
