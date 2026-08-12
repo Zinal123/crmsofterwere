@@ -15,10 +15,20 @@ class TicketProblemType extends Model
     protected $fillable = [
         'category',
         'name',
+        'description',
+        'default_priority',
+        'estimated_resolution_hours',
+        'checklist_template_id',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'estimated_resolution_hours' => 'integer',
     ];
+
+    public function checklistTemplate()
+    {
+        return $this->belongsTo(\App\Models\ChecklistTemplate::class);
+    }
 }
