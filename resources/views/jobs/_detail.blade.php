@@ -55,6 +55,22 @@
                                 <input type="text" id="new-checklist-item" name="description" class="form-control form-control-sm" placeholder="Add a work instruction or checklist step" required maxlength="255">
                                 <x-ui.button variant="secondary" size="sm" type="submit" icon="ri-add-line" ariaLabel="Add checklist item" />
                             </form>
+
+                            @isset($checklistTemplates)
+                                @if($checklistTemplates->isNotEmpty())
+                                    <form action="{{ route('jobs.apply-template', $job->id) }}" method="POST" class="d-flex gap-2 mt-2">
+                                        @csrf
+                                        <label for="apply-template" class="visually-hidden">Apply traveler template</label>
+                                        <select id="apply-template" name="checklist_template_id" class="form-select form-select-sm" required>
+                                            <option value="" selected disabled>Apply traveler template…</option>
+                                            @foreach($checklistTemplates as $template)
+                                                <option value="{{ $template->id }}">{{ $template->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-ui.button variant="secondary" size="sm" type="submit" icon="ri-file-list-3-line" ariaLabel="Apply traveler template">Apply</x-ui.button>
+                                    </form>
+                                @endif
+                            @endisset
                         @endif
                     </div>
                 </div>

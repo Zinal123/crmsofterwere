@@ -92,14 +92,28 @@ class JobController extends Controller
 
         $workers = $this->userRepository->byRole('Worker');
 
+        $checklistTemplates = \App\Models\ChecklistTemplate::where('is_active', true)->orderBy('name')->get();
+
         if (! $request->user()->can('jobs.view-all')) {
-            return view('worker.jobs.show', compact('job', 'workers'));
+            return view('worker.jobs.show', compact('job', 'workers', 'checklistTemplates'));
         }
 
         $materialAvailability = app(\App\Services\Job\JobMaterialService::class)->availabilityFor($job);
         $products = \App\Models\Product::orderBy('name')->get();
 
-        return view('jobs.show', compact('job', 'workers', 'materialAvailability', 'products'));
+        return view('jobs.show', compact('job', 'workers', 'materialAvailability', 'products', 'checklistTemplates'));
+    }
+
+    public function applyTemplate(Request $request, $job, \App\Services\Job\ChecklistTemplateService $svc)
+    {
+        $data = $request->validate(['checklist_template_id' => 'required|integer|exists:checklist_templates,id']);
+        $jobModel = $this->repository->find($job);
+        abort_if(! $jobModel, 404);
+        abort_unless($jobModel->created_by === $request->user()->id || $request->user()->can('jobs.assign'), 403);
+        $template = \App\Models\ChecklistTemplate::findOrFail($data['checklist_template_id']);
+        $svc->applyToJob($template, $jobModel);
+
+        return redirect()->route('jobs.show', $jobModel->id)->with('success', 'Template applied to checklist.');
     }
 
     public function addMaterial(Request $request, $job, \App\Services\Job\JobMaterialService $svc)
