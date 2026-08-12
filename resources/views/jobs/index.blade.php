@@ -33,6 +33,13 @@
                                     </div>
                                 </div>
                                 <p class="text-muted mb-1">{{ $job->machine->name ?? $job->site_name }}</p>
+                                @if(isset($materialStatus[$job->id]))
+                                    @if($materialStatus[$job->id])
+                                        <span class="badge bg-success-subtle text-success"><i class="ri-checkbox-circle-line align-middle"></i> Parts ready</span>
+                                    @else
+                                        <span class="badge bg-danger-subtle text-danger"><i class="ri-alert-line align-middle"></i> Shortage</span>
+                                    @endif
+                                @endif
                                 @if($job->status === 'rejected')
                                     <p class="text-danger small mb-0">{{ $job->rejection_reason }}</p>
                                 @endif

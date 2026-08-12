@@ -83,4 +83,15 @@ class JobMaterialManageTest extends TestCase
             ->assertOk()
             ->assertSee('Material shortage');
     }
+
+    public function test_jobs_list_shows_material_shortage_badge(): void
+    {
+        $job = Job::factory()->create(['status' => 'assigned']);
+        $p = $this->makeProductWithStock('Coil', 0);
+        app(JobMaterialService::class)->add($job, $p->id, 2);
+
+        $this->actingAs($this->owner())
+            ->get(route('jobs.index'))
+            ->assertSee('Shortage');
+    }
 }
