@@ -18,7 +18,7 @@ class JobMaterialService
 
     public function remove(int $materialId): void
     {
-        JobMaterial::where('id', $materialId)->delete();
+        JobMaterial::findOrFail($materialId)->delete();
     }
 
     public function substitute(int $materialId, int $newProductId): JobMaterial
@@ -30,14 +30,17 @@ class JobMaterialService
     }
 
     /**
-     * Per-material availability for a job. Availability is computed EXCLUDING
-     * this job's own demand (via the service's $excludingJobId), so a job is
-     * judged against the stock other requests/jobs have not already claimed.
+     * Per-material availability for a job. Each line's availability is computed
+     * EXCLUDING that single line's own demand (via the service's
+     * $excludingJobMaterialId), so a line is judged against the stock other
+     * requests and other job-material lines have not already claimed.
      */
     public function availabilityFor(Job $job): array
     {
-        $lines = $job->materials()->with('product')->get()->map(function (JobMaterial $m) use ($job) {
-            $free = $this->availability->available($m->product_id, null, $job->id);
+        $job->loadMissing('materials.product');
+
+        $lines = $job->materials->map(function (JobMaterial $m) {
+            $free = $this->availability->available($m->product_id, null, $m->id);
 
             return [
                 'product_name' => $m->product->name ?? 'Unknown part',

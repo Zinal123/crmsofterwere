@@ -119,4 +119,36 @@ class JobMaterialManageTest extends TestCase
         $this->actingAs($owner)->post(route('jobs.materials.substitute', $mat->id), ['new_product_id' => $alt->id])->assertRedirect();
         $this->assertDatabaseHas('job_materials', ['id' => $mat->id, 'product_id' => $alt->id]);
     }
+
+    public function test_availability_for_does_not_flag_a_jobs_own_full_demand(): void
+    {
+        $job = Job::factory()->create(['status' => 'in_progress']);
+        $p = $this->makeProductWithStock('Gasket', 5);
+        app(JobMaterialService::class)->add($job, $p->id, 5);
+
+        $result = app(JobMaterialService::class)->availabilityFor($job);
+
+        $this->assertTrue($result['all_available']);
+    }
+
+    public function test_manager_without_manage_materials_is_forbidden_on_all_routes(): void
+    {
+        $manager = User::factory()->create();
+        $manager->syncRoles(['Manager']);
+        $job = Job::factory()->create(['status' => 'assigned']);
+        $p = $this->makeProductWithStock('Bolt', 5);
+        $mat = \App\Models\JobMaterial::create(['job_id' => $job->id, 'product_id' => $p->id, 'quantity' => 1]);
+
+        $this->actingAs($manager)
+            ->post(route('jobs.materials.store', $job->id), ['product_id' => $p->id, 'quantity' => 2])
+            ->assertForbidden();
+
+        $this->actingAs($manager)
+            ->delete(route('jobs.materials.destroy', $mat->id))
+            ->assertForbidden();
+
+        $this->actingAs($manager)
+            ->post(route('jobs.materials.substitute', $mat->id), ['new_product_id' => $p->id])
+            ->assertForbidden();
+    }
 }

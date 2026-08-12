@@ -55,8 +55,20 @@ class AvailabilityJobDemandTest extends TestCase
     {
         $p = $this->makeProductWithStock(10);
         $openJob = Job::factory()->create(['status' => 'in_progress']);
-        JobMaterial::create(['job_id' => $openJob->id, 'product_id' => $p->id, 'quantity' => 4]);
+        $material = JobMaterial::create(['job_id' => $openJob->id, 'product_id' => $p->id, 'quantity' => 4]);
 
-        $this->assertSame(10, app(AvailabilityService::class)->available($p->id, null, $openJob->id));
+        $this->assertSame(10, app(AvailabilityService::class)->available($p->id, null, $material->id));
+    }
+
+    public function test_availability_for_flags_shortage_when_two_lines_share_a_product(): void
+    {
+        $p = $this->makeProductWithStock(5);
+        $job = Job::factory()->create(['status' => 'in_progress']);
+        JobMaterial::create(['job_id' => $job->id, 'product_id' => $p->id, 'quantity' => 3]);
+        JobMaterial::create(['job_id' => $job->id, 'product_id' => $p->id, 'quantity' => 3]);
+
+        $result = app(\App\Services\Job\JobMaterialService::class)->availabilityFor($job);
+
+        $this->assertFalse($result['all_available']);
     }
 }

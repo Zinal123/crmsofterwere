@@ -21,9 +21,10 @@ class AvailabilityService
      * in progress holds the parts it needs). Fulfilled requests already reduced
      * on-hand directly, so they're not subtracted again here; rejected requests
      * and completed/rejected jobs never hold a claim. Pass $excludingRequestId
-     * or $excludingJobId to omit a specific request's / job's own demand.
+     * or $excludingJobMaterialId to omit a specific request's / a single job
+     * material line's own demand.
      */
-    public function available(int $productId, ?int $excludingRequestId = null, ?int $excludingJobId = null): int
+    public function available(int $productId, ?int $excludingRequestId = null, ?int $excludingJobMaterialId = null): int
     {
         $onHand = $this->inventoryRepository->allKeyedByProductId()->get($productId)?->quantity ?? 0;
 
@@ -36,7 +37,7 @@ class AvailabilityService
         $reservedByJobs = (int) JobMaterial::query()
             ->where('product_id', $productId)
             ->whereHas('job', fn ($q) => $q->open())
-            ->when($excludingJobId, fn ($q) => $q->where('job_id', '!=', $excludingJobId))
+            ->when($excludingJobMaterialId, fn ($q) => $q->where('id', '!=', $excludingJobMaterialId))
             ->sum('quantity');
 
         return max(0, $onHand - $reservedByRequests - $reservedByJobs);

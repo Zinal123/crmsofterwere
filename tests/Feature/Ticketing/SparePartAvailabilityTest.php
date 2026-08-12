@@ -64,6 +64,20 @@ class SparePartAvailabilityTest extends TestCase
         $this->assertSame('approved', $updated->status);
     }
 
+    public function test_open_job_demand_blocks_a_spare_part_approval(): void
+    {
+        $p = Product::create(['name' => 'Seal', 'rate' => '100', 'unit' => 'pcs', 'make' => 'X']);
+        Invetry::create(['product_id' => $p->id, 'quantity' => 5, 'vandername' => 'V', 'rate' => '100']);
+
+        $job = \App\Models\Job::factory()->create(['status' => 'in_progress']);
+        \App\Models\JobMaterial::create(['job_id' => $job->id, 'product_id' => $p->id, 'quantity' => 4]);
+
+        $req = $this->makeRequest($p, 3, 'pending');
+
+        $this->expectException(\InvalidArgumentException::class);
+        app(SparePartRequestService::class)->updateStatus($req, 'approved');
+    }
+
     public function test_request_list_shows_available_or_not_available_badge(): void
     {
         $owner = \App\Models\User::factory()->create();

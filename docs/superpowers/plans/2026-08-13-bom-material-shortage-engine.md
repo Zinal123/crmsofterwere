@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Availability is **always derived** (`on_hand − reserved`); do not add a stored `reserved_quantity` column.
-- Reserved demand statuses: a spare-part request reserves stock while `status = 'approved'` (not `pending`, not `fulfilled`, not `rejected`); a job reserves its materials while `status IN ('pending_approval','assigned','in_progress','on_hold')`.
+- Reserved demand statuses: a spare-part request reserves stock while `status IN ('pending','approved')`; a job reserves its materials while open.
 - Money/quantity math stays integer for quantities.
 - All new permissions go through `RolesAndPermissionsSeeder` and are granted to `Owner`.
 - Tests run with `php artisan test`; SQLite in-memory. Reuse `RolesAndPermissionsSeeder` in `setUp()`.
