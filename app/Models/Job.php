@@ -71,4 +71,9 @@ class Job extends Model
     {
         return $this->hasOne(Ticket::class);
     }
+
+    public function materials(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JobMaterial::class);
+    }
 }
