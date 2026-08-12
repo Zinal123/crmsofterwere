@@ -35,6 +35,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'expenses.view', 'expenses.manage', 'expenses.delete', 'expenses.view-audit',
         'vendor-payments.view', 'vendor-payments.manage',
         'vendors.view-audit',
+        'checklist-templates.manage',
     ];
 
     public function run(): void

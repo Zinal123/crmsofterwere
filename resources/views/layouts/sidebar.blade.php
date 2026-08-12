@@ -64,7 +64,7 @@
                 </li>
                 @endcan
 
-                @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage', 'vendors.view'])
+                @canany(['products.view', 'products.manage-config', 'client-machines.manage', 'client-machines.view', 'ticket-problem-types.manage', 'vendors.view', 'checklist-templates.manage'])
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')
                 <li class="nav-item">
@@ -109,6 +109,11 @@
                 @can('vendors.view')
                 <li class="nav-item">
                     <a href="{{route('admin.vendors.index')}}" class="nav-link"><i class="ri-truck-line"></i><span>@lang('Vendors')</span></a>
+                </li>
+                @endcan
+                @can('checklist-templates.manage')
+                <li class="nav-item">
+                    <a href="{{route('admin.checklist-templates.index')}}" class="nav-link"><i class="ri-list-check-2"></i><span>@lang('Checklist Templates')</span></a>
                 </li>
                 @endcan
                 @endcanany

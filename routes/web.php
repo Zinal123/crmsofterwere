@@ -206,6 +206,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('admin/vendors/{id}/payments/{paymentId}', [App\Http\Controllers\Vendor\VendorController::class, 'destroyPaymentRecord'])->name('admin.vendors.payments.destroy');
     });
 
+    Route::middleware('permission:checklist-templates.manage')->group(function () {
+        Route::get('admin/checklist-templates', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'index'])->name('admin.checklist-templates.index');
+        Route::post('admin/checklist-templates', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'store'])->name('admin.checklist-templates.store');
+        Route::put('admin/checklist-templates/{id}', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'update'])->name('admin.checklist-templates.update');
+        Route::delete('admin/checklist-templates/{id}', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'destroy'])->name('admin.checklist-templates.destroy');
+        Route::post('admin/checklist-templates/{id}/items', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'storeItem'])->name('admin.checklist-templates.items.store');
+        Route::delete('admin/checklist-templates/items/{itemId}', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'destroyItem'])->name('admin.checklist-templates.items.destroy');
+    });
+
     Route::middleware('permission:ticket-problem-types.manage')->group(function () {
         Route::get('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'index'])->name('admin.ticket-problem-types.index');
         Route::post('admin/ticket-problem-types', [App\Http\Controllers\Ticketing\TicketProblemTypeController::class, 'store'])->name('admin.ticket-problem-types.store');
