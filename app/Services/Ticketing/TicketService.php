@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\TicketStatusChangedNotification;
 use App\Repositories\Contracts\TicketRepositoryInterface;
+use App\Services\Job\ChecklistTemplateService;
 use App\Services\Job\JobService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ class TicketService
     public function __construct(
         private TicketRepositoryInterface $repository,
         private JobService $jobService,
+        private ChecklistTemplateService $checklistTemplateService,
     ) {
     }
 
@@ -81,6 +83,11 @@ class TicketService
             'site_name' => $siteLabel,
             'assigned_to' => $workerId,
         ], $actor);
+
+        $template = $ticket->problemType?->checklistTemplate;
+        if ($template && $template->is_active) {
+            $this->checklistTemplateService->applyToJob($template, $job);
+        }
 
         $ticket->job_id = $job->id;
         $ticket->status = 'assigned';
