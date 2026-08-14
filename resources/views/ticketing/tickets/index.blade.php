@@ -18,7 +18,7 @@ Support Tickets
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Client</th><th>Machine</th><th>Category</th><th>Problem</th><th>Status</th><th></th></tr>
+                        <tr><th>Client</th><th>Machine</th><th>Category</th><th>Problem</th><th>Priority</th><th>Status</th><th></th></tr>
                     </thead>
                     <tbody>
                         @forelse($tickets as $ticket)
@@ -27,6 +27,22 @@ Support Tickets
                             <td>{{ $ticket->clientMachine->product->name ?? '-' }} ({{ $ticket->clientMachine->serial_number ?? '-' }})</td>
                             <td>{{ ucfirst($ticket->problemType->category ?? '-') }}</td>
                             <td>{{ $ticket->problemType->name ?? '-' }}</td>
+                            <td>
+                                <x-ui.status-badge
+                                    :status="ucfirst($ticket->priority)"
+                                    :variant="match($ticket->priority) {
+                                        'urgent' => 'danger',
+                                        'high' => 'warning',
+                                        'low' => 'light',
+                                        default => 'secondary',
+                                    }"
+                                    :icon="match($ticket->priority) {
+                                        'urgent' => 'ri-alarm-warning-line',
+                                        'high' => 'ri-arrow-up-circle-line',
+                                        'low' => 'ri-arrow-down-circle-line',
+                                        default => 'ri-subtract-line',
+                                    }" />
+                            </td>
                             <td>
                                 <x-ui.status-badge
                                     :status="ucfirst(str_replace('_', ' ', $ticket->status))"
@@ -48,7 +64,7 @@ Support Tickets
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6"><x-ui.empty-state icon="ri-file-list-3-line" message="No tickets raised yet." /></td></tr>
+                        <tr><td colspan="7"><x-ui.empty-state icon="ri-file-list-3-line" message="No tickets raised yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

@@ -15,20 +15,36 @@ My Tickets
                 <h6 class="mb-1">{{ $ticket->problemType->name ?? 'Ticket' }}</h6>
                 <p class="text-muted small mb-0">{{ $ticket->clientMachine->product->name ?? '-' }} ({{ $ticket->clientMachine->serial_number ?? '-' }})</p>
             </div>
-            <x-ui.status-badge
-                :status="ucfirst(str_replace('_', ' ', $ticket->status))"
-                :variant="match($ticket->status) {
-                    'resolved' => 'success',
-                    'in_progress' => 'info',
-                    'assigned' => 'warning',
-                    default => 'danger',
-                }"
-                :icon="match($ticket->status) {
-                    'resolved' => 'ri-checkbox-circle-line',
-                    'in_progress' => 'ri-tools-line',
-                    'assigned' => 'ri-user-follow-line',
-                    default => 'ri-time-line',
-                }" />
+            <div class="d-flex flex-column align-items-end gap-1">
+                <x-ui.status-badge
+                    :status="ucfirst($ticket->priority)"
+                    :variant="match($ticket->priority) {
+                        'urgent' => 'danger',
+                        'high' => 'warning',
+                        'low' => 'light',
+                        default => 'secondary',
+                    }"
+                    :icon="match($ticket->priority) {
+                        'urgent' => 'ri-alarm-warning-line',
+                        'high' => 'ri-arrow-up-circle-line',
+                        'low' => 'ri-arrow-down-circle-line',
+                        default => 'ri-subtract-line',
+                    }" />
+                <x-ui.status-badge
+                    :status="ucfirst(str_replace('_', ' ', $ticket->status))"
+                    :variant="match($ticket->status) {
+                        'resolved' => 'success',
+                        'in_progress' => 'info',
+                        'assigned' => 'warning',
+                        default => 'danger',
+                    }"
+                    :icon="match($ticket->status) {
+                        'resolved' => 'ri-checkbox-circle-line',
+                        'in_progress' => 'ri-tools-line',
+                        'assigned' => 'ri-user-follow-line',
+                        default => 'ri-time-line',
+                    }" />
+            </div>
         </div>
     </div>
 </a>

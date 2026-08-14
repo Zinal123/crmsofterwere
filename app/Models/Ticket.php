@@ -18,6 +18,7 @@ class Ticket extends Model
         'problem_type_id',
         'description',
         'status',
+        'priority',
         'job_id',
     ];
 

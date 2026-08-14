@@ -5,6 +5,7 @@ namespace App\Services\Ticketing;
 use App\Models\ClientMachine;
 use App\Models\Job;
 use App\Models\Ticket;
+use App\Models\TicketProblemType;
 use App\Models\User;
 use App\Notifications\TicketStatusChangedNotification;
 use App\Repositories\Contracts\TicketRepositoryInterface;
@@ -46,12 +47,15 @@ class TicketService
     public function raise(ClientMachine $machine, int $problemTypeId, ?string $description, array $photoPaths = []): Ticket
     {
         return DB::transaction(function () use ($machine, $problemTypeId, $description, $photoPaths) {
+            $problemType = TicketProblemType::find($problemTypeId);
+
             $ticket = $this->repository->create([
                 'client_machine_id' => $machine->id,
                 'client_account_id' => $machine->client_account_id,
                 'problem_type_id' => $problemTypeId,
                 'description' => $description,
                 'status' => 'open',
+                'priority' => $problemType->default_priority ?? 'medium',
             ]);
 
             foreach ($photoPaths as $path) {
