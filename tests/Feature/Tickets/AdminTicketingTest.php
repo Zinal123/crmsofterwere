@@ -68,6 +68,7 @@ class AdminTicketingTest extends TestCase
         $storeResponse = $this->actingAs($owner)->post(route('admin.ticket-problem-types.store'), [
             'category' => 'electrical',
             'name' => 'Custom Fault',
+            'default_priority' => 'medium',
         ]);
         $storeResponse->assertRedirect(route('admin.ticket-problem-types.index'));
 

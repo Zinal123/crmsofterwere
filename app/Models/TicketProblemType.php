@@ -12,6 +12,9 @@ class TicketProblemType extends Model
 
     protected $auditStatusFields = ['is_active'];
 
+    public const CATEGORIES = ['electrical', 'mechanical', 'hydraulic', 'pneumatic', 'plc_software', 'calibration', 'consumable', 'other'];
+    public const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
+
     protected $fillable = [
         'category',
         'name',

@@ -43,4 +43,33 @@ class ProblemTypeEnrichmentTest extends TestCase
 
         $this->assertDatabaseHas('ticket_problem_types', ['id' => $type->id, 'checklist_template_id' => null]);
     }
+
+    public function test_store_accepts_and_saves_the_new_fields(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $owner = \App\Models\User::factory()->create();
+        $tpl = \App\Models\ChecklistTemplate::create(['name' => 'PM', 'is_active' => true]);
+
+        $this->actingAs($owner)->post(route('admin.ticket-problem-types.store'), [
+            'category' => 'pneumatic',
+            'name' => 'Air line rupture',
+            'description' => 'Hissing at the manifold.',
+            'default_priority' => 'urgent',
+            'estimated_resolution_hours' => 2,
+            'checklist_template_id' => $tpl->id,
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('ticket_problem_types', [
+            'category' => 'pneumatic', 'default_priority' => 'urgent', 'checklist_template_id' => $tpl->id,
+        ]);
+    }
+
+    public function test_store_rejects_an_unknown_category(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $owner = \App\Models\User::factory()->create();
+        $this->actingAs($owner)->post(route('admin.ticket-problem-types.store'), [
+            'category' => 'banana', 'name' => 'x',
+        ])->assertSessionHasErrors('category');
+    }
 }

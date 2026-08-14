@@ -24,11 +24,7 @@ class TicketProblemTypeService
 
     public function create(array $data): TicketProblemType
     {
-        return $this->repository->create([
-            'category' => $data['category'],
-            'name' => $data['name'],
-            'is_active' => true,
-        ]);
+        return $this->repository->create(array_merge($data, ['is_active' => true]));
     }
 
     public function toggleActive(int $id): TicketProblemType
