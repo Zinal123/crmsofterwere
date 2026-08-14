@@ -11,6 +11,19 @@
         --vz-border-radius-sm: .375rem;
         --vz-border-radius-lg: .75rem;
         --vz-border-radius-xl: 1rem;
+
+        /* Auth-shell palette (login/forgot-password/confirm screens). Not
+           theme-mode-dependent - these auth pages don't toggle dark mode -
+           so this is the single unconditional source of truth for
+           auth/partials/styles.blade.php, instead of that file hardcoding
+           its own copy of these hex values. */
+        --oms-auth-body-bg: #F0F4FF;
+        --oms-auth-sidebar: #0D1B48;
+        --oms-auth-accent: #F7941D;
+        --oms-auth-muted: #6B7BB8;
+        --oms-auth-muted-light: #93A0C9;
+        --oms-auth-border-light: #E4EAFB;
+        --oms-auth-bg-light: #EEF2FF;
     }
 
     /* Lining, fixed-width figures so money columns line up digit-for-digit.

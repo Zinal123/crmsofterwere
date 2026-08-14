@@ -3,7 +3,7 @@
         min-height: 100vh;
         min-height: 100dvh;
         display: flex;
-        background: #F0F4FF;
+        background: var(--oms-auth-body-bg);
     }
 
     /* ── Hero panel (branding) — desktop only ────────────────────────── */
@@ -14,7 +14,7 @@
         overflow: hidden;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(150deg, #0D1B48 0%, #1a2d6b 60%, #0D1B48 100%);
+        background: linear-gradient(150deg, var(--oms-auth-sidebar) 0%, #1a2d6b 60%, var(--oms-auth-sidebar) 100%);
     }
 
     .oms-auth-hero-ring {
@@ -40,8 +40,8 @@
         pointer-events: none;
     }
 
-    .oms-auth-hero-glow-1 { top: 0; left: 0; background: radial-gradient(circle, #F7941D, transparent); }
-    .oms-auth-hero-glow-2 { bottom: 0; right: 0; background: radial-gradient(circle, #4361EE, transparent); }
+    .oms-auth-hero-glow-1 { top: 0; left: 0; background: radial-gradient(circle, var(--oms-auth-accent), transparent); }
+    .oms-auth-hero-glow-2 { bottom: 0; right: 0; background: radial-gradient(circle, var(--vz-primary), transparent); }
 
     .oms-auth-hero-content {
         position: relative;
@@ -108,7 +108,7 @@
 
     .oms-auth-tagline {
         text-align: center;
-        color: #6B7BB8;
+        color: var(--oms-auth-muted);
         font-size: .85rem;
         margin: -.75rem 0 1.75rem;
     }
@@ -137,7 +137,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #4361EE, #F7941D);
+        background: linear-gradient(90deg, var(--vz-primary), var(--oms-auth-accent));
     }
 
     .oms-auth-badge {
@@ -148,13 +148,13 @@
         justify-content: center;
         border-radius: .75rem;
         background: linear-gradient(135deg, rgba(67, 97, 238, .12), rgba(247, 148, 29, .14));
-        color: #4361EE;
+        color: var(--vz-primary);
         font-size: 1.2rem;
         margin-bottom: .9rem;
     }
 
     .oms-auth-card-header h5 {
-        color: #0D1B48;
+        color: var(--oms-auth-sidebar);
         font-weight: 700;
     }
 
@@ -167,7 +167,7 @@
         left: .95rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #6B7BB8;
+        color: var(--oms-auth-muted);
         font-size: 1.05rem;
         pointer-events: none;
     }
@@ -175,12 +175,12 @@
     .oms-auth-card .form-control {
         border-radius: .6rem;
         padding-block: .62rem;
-        border-color: #E4EAFB;
-        background: #EEF2FF;
+        border-color: var(--oms-auth-border-light);
+        background: var(--oms-auth-bg-light);
     }
 
     .oms-auth-card .form-control:focus {
-        border-color: #4361EE;
+        border-color: var(--vz-primary);
         box-shadow: 0 0 0 .2rem rgba(67, 97, 238, .15);
     }
 
@@ -200,14 +200,14 @@
     .oms-auth-below {
         text-align: center;
         font-size: .9rem;
-        color: #6B7BB8;
+        color: var(--oms-auth-muted);
         margin-top: 1.5rem;
     }
 
     .oms-auth-footer {
         text-align: center;
         font-size: .8rem;
-        color: #93A0C9;
+        color: var(--oms-auth-muted-light);
         margin-top: 1.75rem;
     }
 </style>
