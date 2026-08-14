@@ -2,7 +2,7 @@
     /* Admin Panel UI Design reference (Admin Panel UI Design/src/styles/theme.css):
        primary #4361EE, accent #F7941D, sidebar #0D1B48, body bg #F0F4FF,
        0.75rem card radius. Applied as CSS-variable overrides on top of the
-       existing Velzon build - same mechanism as the previous single-color
+       existing admin-template build - same mechanism as the previous single-color
        brand theme, extended with the sidebar/background/radius tokens the
        old override didn't touch. */
     :root {
@@ -41,7 +41,7 @@
     .trend-tab { cursor: pointer; }
 
     /* Scoped to light mode only - a bare :root rule here would win the
-       cascade over Velzon's own [data-bs-theme=dark] body-bg (same
+       cascade over the base template's own [data-bs-theme=dark] body-bg (same
        specificity, later source order) and leave dark mode showing this
        light background instead of a dark one. */
     [data-bs-theme=light] {
@@ -79,7 +79,7 @@
         background-color: #4361ee;
     }
 
-    /* Velzon's default page-content top padding leaves a large empty gap
+    /* The base admin template's default page-content top padding leaves a large empty gap
        above the page-title bar on every page (measured ~55px on this
        layout). Pull the title bar up closer to the fixed topbar while
        keeping it clear of it (topbar is 71px tall). */

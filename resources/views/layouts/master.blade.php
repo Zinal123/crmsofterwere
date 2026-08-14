@@ -11,7 +11,6 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
     @include('layouts.head-css')
-    @include('layouts.partials.theme-overrides')
 </head>
 
 @section('body')

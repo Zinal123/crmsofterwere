@@ -11,4 +11,6 @@
 <link href="{{ URL::asset('build/css/custom.min.css') }}" id="app-style-2" rel="stylesheet" type="text/css" />
 <!-- Oracle Machine Tech brand color override -->
 <link href="{{ URL::asset('build/css/brand-theme.css') }}" id="app-style-3" rel="stylesheet" type="text/css" />
+<!-- Oracle Machine Tech theme tokens (sidebar/accent/body-bg/radius) -->
+@include('layouts.partials.theme-overrides')
 {{-- @yield('css') --}}
