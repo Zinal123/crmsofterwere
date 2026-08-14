@@ -3,7 +3,8 @@
 @section('title', 'My Jobs')
 
 @section('content')
-<h4 class="mb-3">My Jobs</h4>
+@include('worker.jobs._summary')
+<h5 class="mb-3">My Jobs</h5>
 
 @if($machines->isNotEmpty())
     <button type="button" class="btn btn-danger btn-shopfloor w-100 mb-3" data-bs-toggle="modal" data-bs-target="#flagMachineDownModal">

@@ -44,7 +44,15 @@ class JobController extends Controller
 
         $machines = $this->machineService->list();
 
-        return view('worker.jobs.index', compact('jobs', 'machines'));
+        $today = now()->toDateString();
+        $summary = [
+            'todo' => $jobs->whereIn('status', ['assigned', 'on_hold'])->count(),
+            'in_progress' => $jobs->where('status', 'in_progress')->count(),
+            'overdue' => $jobs->filter(fn ($j) => $j->overdue_flagged_at && $j->status !== 'completed')->count(),
+            'completed_today' => $jobs->filter(fn ($j) => $j->status === 'completed' && optional($j->updated_at)->toDateString() === $today)->count(),
+        ];
+
+        return view('worker.jobs.index', compact('jobs', 'machines', 'summary'));
     }
 
     public function create(Request $request)
