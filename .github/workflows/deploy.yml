@@ -78,6 +78,11 @@ jobs:
             set -e
             cd "${{ secrets.DEPLOY_PATH }}"
 
+            # If any step below fails, this guarantees maintenance mode gets
+            # turned back off before the script exits - a failed deploy
+            # should never leave the live site stuck on a 503 page.
+            trap 'php artisan up || true' EXIT
+
             php artisan down --render="errors::503" || true
 
             git fetch origin meet-update
