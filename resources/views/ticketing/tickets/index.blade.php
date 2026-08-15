@@ -28,20 +28,7 @@ Support Tickets
                             <td>{{ ucfirst($ticket->problemType->category ?? '-') }}</td>
                             <td>{{ $ticket->problemType->name ?? '-' }}</td>
                             <td>
-                                <x-ui.status-badge
-                                    :status="ucfirst($ticket->priority)"
-                                    :variant="match($ticket->priority) {
-                                        'urgent' => 'danger',
-                                        'high' => 'warning',
-                                        'low' => 'light',
-                                        default => 'secondary',
-                                    }"
-                                    :icon="match($ticket->priority) {
-                                        'urgent' => 'ri-alarm-warning-line',
-                                        'high' => 'ri-arrow-up-circle-line',
-                                        'low' => 'ri-arrow-down-circle-line',
-                                        default => 'ri-subtract-line',
-                                    }" />
+                                <x-ui.priority-badge :priority="$ticket->priority" />
                             </td>
                             <td>
                                 <x-ui.status-badge

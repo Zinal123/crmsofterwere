@@ -44,12 +44,11 @@ class JobController extends Controller
 
         $machines = $this->machineService->list();
 
-        $today = now()->toDateString();
         $summary = [
             'todo' => $jobs->whereIn('status', ['assigned', 'on_hold'])->count(),
             'in_progress' => $jobs->where('status', 'in_progress')->count(),
-            'overdue' => $jobs->filter(fn ($j) => $j->overdue_flagged_at && $j->status !== 'completed')->count(),
-            'completed_today' => $jobs->filter(fn ($j) => $j->status === 'completed' && optional($j->updated_at)->toDateString() === $today)->count(),
+            'overdue' => $jobs->filter(fn ($j) => $j->overdue_flagged_at && !in_array($j->status, \App\Models\Job::TERMINAL_STATUSES, true))->count(),
+            'completed_today' => $jobs->filter(fn ($j) => $j->status === 'completed' && optional($j->completed_at)->isToday())->count(),
         ];
 
         return view('worker.jobs.index', compact('jobs', 'machines', 'summary'));

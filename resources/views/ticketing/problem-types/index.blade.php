@@ -75,19 +75,7 @@ Problem Types
                             <td>{{ ucwords(str_replace('_', ' ', $problemType->category)) }}</td>
                             <td>{{ $problemType->name }}</td>
                             <td>
-                                @php
-                                    $priorityVariant = match($problemType->default_priority) {
-                                        'urgent' => 'danger',
-                                        'high' => 'warning',
-                                        'medium' => 'info',
-                                        default => 'success',
-                                    };
-                                @endphp
-                                <x-ui.status-badge
-                                    :status="ucfirst($problemType->default_priority ?? 'Medium')"
-                                    :variant="$priorityVariant"
-                                    icon="ri-flag-line"
-                                />
+                                <x-ui.priority-badge :priority="$problemType->default_priority" />
                             </td>
                             <td>{{ $problemType->estimated_resolution_hours ?? '—' }}</td>
                             <td>{{ $problemType->checklistTemplate->name ?? '—' }}</td>

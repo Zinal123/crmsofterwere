@@ -16,20 +16,7 @@ My Tickets
                 <p class="text-muted small mb-0">{{ $ticket->clientMachine->product->name ?? '-' }} ({{ $ticket->clientMachine->serial_number ?? '-' }})</p>
             </div>
             <div class="d-flex flex-column align-items-end gap-1">
-                <x-ui.status-badge
-                    :status="ucfirst($ticket->priority)"
-                    :variant="match($ticket->priority) {
-                        'urgent' => 'danger',
-                        'high' => 'warning',
-                        'low' => 'light',
-                        default => 'secondary',
-                    }"
-                    :icon="match($ticket->priority) {
-                        'urgent' => 'ri-alarm-warning-line',
-                        'high' => 'ri-arrow-up-circle-line',
-                        'low' => 'ri-arrow-down-circle-line',
-                        default => 'ri-subtract-line',
-                    }" />
+                <x-ui.priority-badge :priority="$ticket->priority" />
                 <x-ui.status-badge
                     :status="ucfirst(str_replace('_', ' ', $ticket->status))"
                     :variant="match($ticket->status) {

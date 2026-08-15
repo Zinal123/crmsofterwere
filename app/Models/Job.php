@@ -10,7 +10,7 @@ class Job extends Model
     use HasFactory;
 
     /** Statuses that are terminal — never counted as overdue regardless of due_date. */
-    private const TERMINAL_STATUSES = ['completed', 'rejected'];
+    public const TERMINAL_STATUSES = ['completed', 'rejected'];
 
     protected $fillable = [
         'title', 'description', 'machine_id', 'site_name', 'created_by', 'assigned_to',

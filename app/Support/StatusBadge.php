@@ -16,6 +16,8 @@ class StatusBadge
             'success' => 'bg-success-subtle text-success',
             'warning' => 'bg-warning-subtle text-warning',
             'danger' => 'bg-danger-subtle text-danger',
+            'secondary' => 'bg-secondary-subtle text-secondary',
+            'light' => 'bg-light-subtle text-dark',
             default => 'bg-info-subtle text-info',
         };
 

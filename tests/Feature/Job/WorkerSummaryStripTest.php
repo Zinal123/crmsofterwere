@@ -17,6 +17,20 @@ class WorkerSummaryStripTest extends TestCase
         $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
     }
 
+    /**
+     * Extracts the worker-summary strip's markup (from id="worker-summary" up
+     * to the "My Jobs" <h5> that immediately follows it per
+     * resources/views/worker/jobs/index.blade.php) so count assertions can't
+     * accidentally match unrelated numbers in the job cards below.
+     */
+    private function extractWorkerSummaryStrip(string $content): string
+    {
+        preg_match('/id="worker-summary".*?(?=<h5)/s', $content, $m);
+        $this->assertNotEmpty($m, 'worker-summary strip not found in response');
+
+        return $m[0];
+    }
+
     public function test_worker_landing_shows_correct_summary_counts(): void
     {
         $worker = User::factory()->create();
@@ -50,19 +64,52 @@ class WorkerSummaryStripTest extends TestCase
         $res->assertSee('Overdue');
         $res->assertSeeText('Completed Today');
 
-        $content = $res->getContent();
-        $this->assertStringContainsString('id="worker-summary"', $content);
-
-        preg_match('/<div id="worker-summary".*?<\/div>\s*<\/div>\s*<\/div>/s', $content, $m);
-        $this->assertNotEmpty($m, 'worker-summary strip not found');
-
-        $start = strpos($content, 'id="worker-summary"');
-        $strip = substr($content, $start, 2000);
+        $strip = $this->extractWorkerSummaryStrip($res->getContent());
 
         // 2 assigned = todo, 2 in_progress (one of which is also overdue-flagged), 1 overdue, 1 completed_today
         $this->assertMatchesRegularExpression('/>\s*2\s*<.*?To Do/s', $strip);
         $this->assertMatchesRegularExpression('/>\s*2\s*<.*?In Progress/s', $strip);
         $this->assertMatchesRegularExpression('/>\s*1\s*<.*?Overdue/s', $strip);
         $this->assertMatchesRegularExpression('/>\s*1\s*<.*?Completed Today/s', $strip);
+    }
+
+    public function test_a_job_updated_today_but_completed_yesterday_does_not_count_as_completed_today(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        Job::factory()->create([
+            'assigned_to' => $worker->id,
+            'status' => 'completed',
+            'completed_at' => now()->subDay(),
+        ]);
+
+        $res = $this->actingAs($worker)->get(route('jobs.index'));
+
+        $res->assertOk();
+
+        $strip = $this->extractWorkerSummaryStrip($res->getContent());
+
+        $this->assertMatchesRegularExpression('/>\s*0\s*<.*?Completed Today/s', $strip);
+    }
+
+    public function test_a_rejected_but_still_flagged_job_does_not_count_as_overdue(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        Job::factory()->create([
+            'assigned_to' => $worker->id,
+            'status' => 'rejected',
+            'overdue_flagged_at' => now()->subHour(),
+        ]);
+
+        $res = $this->actingAs($worker)->get(route('jobs.index'));
+
+        $res->assertOk();
+
+        $strip = $this->extractWorkerSummaryStrip($res->getContent());
+
+        $this->assertMatchesRegularExpression('/>\s*0\s*<.*?Overdue/s', $strip);
     }
 }
