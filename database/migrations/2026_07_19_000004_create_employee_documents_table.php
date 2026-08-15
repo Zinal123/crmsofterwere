@@ -20,7 +20,7 @@ return new class extends Migration
             // type MySQL refuses as FK-incompatible with the real users table (only
             // caught by testing against live MySQL; sqlite's weak typing let this pass
             // silently in the automated test suite).
-            $table->unsignedBigInteger('uploaded_by');
+            $table->integer('uploaded_by');
             $table->timestamps();
 
             $table->foreign('uploaded_by')->references('id')->on('users');

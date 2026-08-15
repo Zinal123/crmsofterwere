@@ -32,7 +32,7 @@ return new class extends Migration
             // type MySQL refuses as FK-incompatible with the real users table (only
             // caught by testing against live MySQL; sqlite's weak typing let this pass
             // silently in the automated test suite).
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

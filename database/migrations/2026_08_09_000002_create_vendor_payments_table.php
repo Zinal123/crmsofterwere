@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('date');
             $table->enum('payment_mode', ['cash', 'bank', 'upi', 'cheque']);
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();

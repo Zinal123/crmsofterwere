@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
             // See 2026_07_18_000007_create_jobs_table.php: users.id is a legacy signed
             // int on this app's live DB, incompatible with foreignId()'s unsigned bigint.
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_id');
             $table->string('action');
             $table->text('description');
             $table->json('metadata')->nullable();

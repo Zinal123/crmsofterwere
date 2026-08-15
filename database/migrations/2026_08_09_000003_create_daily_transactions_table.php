@@ -30,7 +30,7 @@ return new class extends Migration
             // links to it - see DailyTransactionService.
             $table->string('linked_type')->nullable();
             $table->unsignedBigInteger('linked_id')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();

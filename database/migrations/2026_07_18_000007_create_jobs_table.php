@@ -14,18 +14,19 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('machine_id')->nullable()->constrained('machines')->nullOnDelete();
             $table->string('site_name')->nullable();
-            // Plain integer() + explicit foreign(), not foreignId()->constrained(): this
-            // app's live `users.id` column predates Laravel's id() convention and is a
-            // signed `int`, not `unsigned bigint` - foreignId() would create a column
-            // type MySQL refuses as FK-incompatible with the real users table (only
-            // caught by testing against live MySQL; sqlite's weak typing let this pass
-            // silently in the automated test suite).
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('assigned_to')->nullable();
+            // Plain integer() + explicit foreign(): this app's live `users.id`
+            // column predates Laravel's id() convention and is a signed
+            // `int` (confirmed via SHOW CREATE TABLE on production) - both
+            // foreignId() AND unsignedBigInteger() create a column type
+            // MySQL refuses as FK-incompatible with the real users table
+            // (only caught by testing against live MySQL; sqlite's weak
+            // typing let this pass silently in the automated test suite).
+            $table->integer('created_by');
+            $table->integer('assigned_to')->nullable();
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
             $table->date('due_date')->nullable();
             $table->enum('status', ['pending_approval', 'assigned', 'in_progress', 'on_hold', 'completed', 'rejected']);
-            $table->unsignedBigInteger('decided_by')->nullable();
+            $table->integer('decided_by')->nullable();
             $table->timestamp('decided_at')->nullable();
             $table->text('rejection_reason')->nullable();
             $table->text('on_hold_reason')->nullable();

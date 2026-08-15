@@ -16,7 +16,13 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            // Plain signed auto-increment int, matching this app's actual
+            // live schema (predates Laravel's bigint id() convention, same
+            // drift as create_product_table/create_invoice_table - confirmed
+            // via SHOW CREATE TABLE on production). Every migration with a
+            // FK to users.id (jobs, job_photos, employees, audit_logs, etc.)
+            // already uses plain integer() to match.
+            $table->integer('id', true);
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

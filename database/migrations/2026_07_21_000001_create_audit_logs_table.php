@@ -21,7 +21,7 @@ return new class extends Migration
             // bigint - foreignId() creates an FK-incompatible column type against the real
             // table. Nullable so a write with no authenticated actor (a seeder, a console
             // command) doesn't crash on insert.
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
