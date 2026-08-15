@@ -78,25 +78,34 @@ jobs:
             set -e
             cd "${{ secrets.DEPLOY_PATH }}"
 
+            # Hostinger's bare `php`/`composer` resolve to PHP 8.1 (CloudLinux's
+            # selector at /etc/cl.selector/php-cli is hardwired to 8.1
+            # regardless of directory), but this app's locked dependencies
+            # need 8.2+ and the site itself is configured for 8.3 in hPanel.
+            # Call the real 8.3 binary explicitly everywhere instead of
+            # relying on PATH.
+            PHP=/opt/alt/php83/usr/bin/php
+            COMPOSER=/usr/local/bin/composer
+
             # If any step below fails, this guarantees maintenance mode gets
             # turned back off before the script exits - a failed deploy
             # should never leave the live site stuck on a 503 page.
-            trap 'php artisan up || true' EXIT
+            trap '$PHP artisan up || true' EXIT
 
-            php artisan down --render="errors::503" || true
+            $PHP artisan down --render="errors::503" || true
 
             git fetch origin meet-update
             git reset --hard origin/meet-update
 
-            composer install --no-dev --optimize-autoloader --no-interaction
+            $PHP $COMPOSER install --no-dev --optimize-autoloader --no-interaction
 
-            php artisan migrate --force
-            php artisan db:seed --class=RolesAndPermissionsSeeder --force
+            $PHP artisan migrate --force
+            $PHP artisan db:seed --class=RolesAndPermissionsSeeder --force
 
-            php artisan storage:link || true
+            $PHP artisan storage:link || true
 
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+            $PHP artisan config:cache
+            $PHP artisan route:cache
+            $PHP artisan view:cache
 
-            php artisan up
+            $PHP artisan up
