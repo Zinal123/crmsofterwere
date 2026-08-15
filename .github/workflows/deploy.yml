@@ -1,0 +1,87 @@
+name: CI/CD — test and deploy
+
+# Tests run on every push and PR touching meet-update, so a PR gets the same
+# gate before it's even merged. Deploy only runs on a direct push to
+# meet-update (never on a PR), and only after the test job succeeds.
+on:
+  push:
+    branches: [meet-update]
+  pull_request:
+    branches: [meet-update]
+  # Lets you fire the whole pipeline by hand from the Actions tab (Run
+  # workflow) - useful for the first end-to-end test before trusting it to
+  # run unattended on every push.
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, json, bcmath, pdo_sqlite, sqlite3, fileinfo, gd, curl, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Copy testing environment
+        # .env.testing is committed to the repo (sqlite in-memory, array
+        # drivers, a real APP_KEY) - this is the exact env local `php
+        # artisan test` runs use too, so CI matches local behavior.
+        run: cp .env.testing .env
+
+      - name: Run test suite
+        run: php artisan test
+
+  deploy:
+    name: Deploy to production
+    needs: test
+    runs-on: ubuntu-latest
+    # A push to meet-update deploys automatically; a manual "Run workflow"
+    # click also deploys (e.g. to re-run a deploy with no new commit). A
+    # pull_request event never deploys, even one opened against meet-update.
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/meet-update'
+    environment: production
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          username: ${{ secrets.DEPLOY_SSH_USERNAME }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            php artisan down --render="errors::503" || true
+
+            git fetch origin meet-update
+            git reset --hard origin/meet-update
+
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            php artisan migrate --force
+            php artisan db:seed --class=RolesAndPermissionsSeeder --force
+
+            php artisan storage:link || true
+
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            php artisan up
