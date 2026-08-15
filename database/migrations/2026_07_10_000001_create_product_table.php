@@ -9,7 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product', function (Blueprint $table) {
-            $table->id();
+            // Plain signed auto-increment int, matching this app's actual
+            // live schema (predates Laravel's bigint id() convention) - every
+            // other migration referencing product_id (gear, motor, power,
+            // rack, invetry, cuttingway, etc.) already uses plain integer(),
+            // and $table->id() here would silently diverge from that on a
+            // fresh install (confirmed live: production's product.id is
+            // `int(11)` signed, not bigint unsigned).
+            $table->integer('id', true);
             $table->string('name')->nullable();
             $table->string('rate')->nullable();
             $table->string('unit')->nullable();

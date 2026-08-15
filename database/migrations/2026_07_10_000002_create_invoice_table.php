@@ -9,7 +9,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invoice', function (Blueprint $table) {
-            $table->id();
+            // Plain signed auto-increment int, matching this app's actual
+            // live schema (predates Laravel's bigint id() convention) - every
+            // other migration referencing invoice_id (invoiceproduct,
+            // paidamount, customer) already uses plain integer(), and $table
+            // ->id() here would silently diverge from that on a fresh
+            // install. See create_product_table for the identical drift.
+            $table->integer('id', true);
             $table->string('invoice_id')->nullable();
             $table->date('date')->nullable();
             $table->string('bankname')->nullable();

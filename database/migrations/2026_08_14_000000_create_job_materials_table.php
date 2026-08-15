@@ -10,7 +10,11 @@ return new class extends Migration
         Schema::create('job_materials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
-            $table->unsignedBigInteger('product_id');
+            // product.id is a plain SIGNED `int` on this app's live schema
+            // (predates Laravel's bigint id() convention) - must match
+            // exactly or MySQL refuses the FK (errno 150, confirmed live on
+            // the quotation_items migration this one runs right after).
+            $table->integer('product_id');
             $table->unsignedInteger('quantity')->default(1);
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('product')->restrictOnDelete();
