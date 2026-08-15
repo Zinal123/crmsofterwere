@@ -47,6 +47,16 @@ jobs:
       - name: Run test suite
         run: php artisan test
 
+      - name: Show Laravel log on failure
+        # Widespread 500s in CI that don't reproduce locally are almost
+        # always a real exception the test assertions never print (they
+        # only see "expected 200 got 500", not why) - this surfaces the
+        # actual stack trace so we don't have to guess from screenshots.
+        if: failure()
+        run: |
+          echo "--- storage/logs/laravel.log (last 200 lines) ---"
+          tail -n 200 storage/logs/laravel.log 2>/dev/null || echo "(no log file found)"
+
   deploy:
     name: Deploy to production
     needs: test
