@@ -8,6 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // A prior deploy attempt got as far as creating this table (with the
+        // since-fixed wrong column type for completed_by) before the FK
+        // constraint step failed - MySQL doesn't roll the CREATE back when a
+        // later implicit ALTER for the constraint errors, so the table was
+        // left sitting on production without this migration ever being
+        // recorded as run. This feature was never live (the migration never
+        // completed), so there's no real data at risk - drop and recreate
+        // cleanly rather than trying to ALTER the orphaned table's columns.
+        Schema::dropIfExists('job_checklist_items');
+
         Schema::create('job_checklist_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
