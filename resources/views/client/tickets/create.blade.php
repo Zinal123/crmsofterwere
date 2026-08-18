@@ -18,8 +18,9 @@ Report a Problem
                 <label class="form-label" for="ticket-category">Category <span class="text-danger">*</span></label>
                 <select id="ticket-category" class="form-select">
                     <option value="">-- Select category --</option>
-                    <option value="electrical">Electrical</option>
-                    <option value="mechanical">Mechanical</option>
+                    @foreach(\App\Models\TicketProblemType::CATEGORIES as $category)
+                    <option value="{{ $category }}">{{ ucwords(str_replace('_', ' ', $category)) }}</option>
+                    @endforeach
                 </select>
             </div>
 

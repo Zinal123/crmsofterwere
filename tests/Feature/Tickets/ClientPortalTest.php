@@ -158,6 +158,19 @@ class ClientPortalTest extends TestCase
         $this->assertSame('open', $ticket->status);
     }
 
+    public function test_report_a_problem_form_offers_every_problem_type_category(): void
+    {
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+
+        $response = $this->actingAs($account, 'client')->get(route('client.tickets.create', $machine->id));
+
+        $response->assertOk();
+        foreach (\App\Models\TicketProblemType::CATEGORIES as $category) {
+            $response->assertSee('value="' . $category . '"', false);
+        }
+    }
+
     public function test_client_cannot_raise_a_ticket_for_someone_elses_machine(): void
     {
         $account = ClientAccount::factory()->create();
