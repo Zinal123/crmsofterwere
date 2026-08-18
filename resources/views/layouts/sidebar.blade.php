@@ -71,26 +71,11 @@
                     <a href="{{route('product')}}" class="nav-link"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
                 </li>
                 @endcan
-                @can('products.manage-config')
-                <li class="nav-item">
-                    <a href="#sidebarEcommerce" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
-                        <i class="ri-settings-3-line"></i> <span>@lang('Fiber Machine Config')</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarEcommerce">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{route('standerconfig' ,1)}}" class="nav-link">@lang('Standard Config')</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{route('TechnicalParameters' ,1)}}"class="nav-link">@lang('Technical Parameters')</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{route('standerconfiglist',1)}}" class="nav-link">@lang('Standard Config List')</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                @endcan
+                {{-- Fiber Machine Config is per-product (software/laser/power/etc.
+                     are all scoped to a single product_id) - there is no single
+                     correct destination for a sidebar link, so it's reached via
+                     the config icons on each product's own row on the Product
+                     list instead (@can('products.manage-config') there). --}}
                 @can('client-machines.manage')
                 <li class="nav-item">
                     <a href="{{route('admin.client-accounts.index')}}" class="nav-link"><i class="ri-contacts-line"></i><span>@lang('Client Accounts')</span></a>

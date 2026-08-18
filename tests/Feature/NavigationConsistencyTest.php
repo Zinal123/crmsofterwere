@@ -174,6 +174,37 @@ class NavigationConsistencyTest extends TestCase
         $response->assertSee('Back to Products');
     }
 
+    public function test_product_list_links_to_machine_config_for_the_specific_product(): void
+    {
+        $owner = $this->owner();
+        // A throwaway first product so the real one under test is guaranteed
+        // not to be id 1 - otherwise this assertion could pass by coincidence
+        // against the very old hardcoded-to-1 bug it's meant to catch.
+        Product::factory()->create();
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee(route('standerconfig', $product->id), false);
+        $response->assertSee(route('TechnicalParameters', $product->id), false);
+        $response->assertSee(route('standerconfiglist', $product->id), false);
+    }
+
+    public function test_sidebar_machine_config_link_does_not_hardcode_a_single_product(): void
+    {
+        // The old submenu always pointed at product id 1 no matter which
+        // product a user actually meant - config is per-product, so there
+        // is no single correct destination here. Machine config is reached
+        // per-row from the Product list instead (see the test above).
+        $response = $this->actingAs($this->owner())->get(route('root'));
+
+        $response->assertOk();
+        $response->assertDontSee(route('standerconfig', 1), false);
+        $response->assertDontSee(route('TechnicalParameters', 1), false);
+        $response->assertDontSee(route('standerconfiglist', 1), false);
+    }
+
     // --- Fix 2: breadcrumb's first item links to the dashboard, not a dead javascript: link ---
 
     public function test_breadcrumb_first_item_links_to_the_dashboard_not_a_dead_link(): void

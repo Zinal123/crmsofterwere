@@ -106,6 +106,17 @@ list view
                                     </button>
                                 </form>
                                 @endcan
+                                @can('products.manage-config')
+                                <a href="{{ route('standerconfig', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Standard Config" aria-label="Standard Config">
+                                    <i class="ri-settings-3-line align-bottom"></i>
+                                </a>
+                                <a href="{{ route('TechnicalParameters', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Technical Parameters" aria-label="Technical Parameters">
+                                    <i class="ri-sliders-line align-bottom"></i>
+                                </a>
+                                <a href="{{ route('standerconfiglist', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Standard Config List" aria-label="Standard Config List">
+                                    <i class="ri-list-settings-line align-bottom"></i>
+                                </a>
+                                @endcan
                                 <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
                                     <i class="ri-delete-bin-fill align-bottom"></i>
                                 </a>
