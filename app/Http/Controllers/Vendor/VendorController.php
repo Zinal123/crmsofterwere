@@ -25,6 +25,15 @@ class VendorController extends Controller
         ]);
     }
 
+    public function paymentsIndex(Request $request)
+    {
+        return view('vendor.payments-index', [
+            'payments' => $this->payableService->forDateRange($request->input('from'), $request->input('to')),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+        ]);
+    }
+
     public function show($id)
     {
         $vendor = $this->service->find((int) $id);

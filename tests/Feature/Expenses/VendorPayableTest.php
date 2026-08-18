@@ -29,6 +29,45 @@ class VendorPayableTest extends TestCase
         $this->seed(RolesAndPermissionsSeeder::class);
     }
 
+    public function test_vendor_payments_index_lists_payments_across_all_vendors_in_range(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $inRangeVendor = Vendor::create(['name' => 'In Range Vendor Co', 'category' => 'Accessories', 'is_active' => true]);
+        $outOfRangeVendor = Vendor::create(['name' => 'Out Of Range Vendor Co', 'category' => 'Accessories', 'is_active' => true]);
+        VendorPayment::create(['vendor_id' => $inRangeVendor->id, 'amount' => 5000, 'date' => '2026-07-10', 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+        VendorPayment::create(['vendor_id' => $outOfRangeVendor->id, 'amount' => 8000, 'date' => '2026-06-10', 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('vendor-payments.index', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        $response->assertSee('In Range Vendor Co');
+        $response->assertDontSee('Out Of Range Vendor Co');
+    }
+
+    public function test_vendor_payments_index_links_each_row_to_that_vendors_page(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $vendor = $this->vendor();
+        VendorPayment::create(['vendor_id' => $vendor->id, 'amount' => 5000, 'date' => '2026-07-10', 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('vendor-payments.index', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        $response->assertSee(route('admin.vendors.show', $vendor->id));
+    }
+
+    public function test_worker_cannot_view_the_vendor_payments_index(): void
+    {
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        $response = $this->actingAs($worker)->get(route('vendor-payments.index'));
+
+        $response->assertForbidden();
+    }
+
     public function test_owner_can_view_a_vendors_payable_ledger(): void
     {
         $owner = User::factory()->create();

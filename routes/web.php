@@ -198,6 +198,7 @@ Route::middleware('auth')->group(function () {
         Route::put('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'update'])->name('admin.vendors.update');
         Route::delete('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'destroy'])->name('admin.vendors.destroy');
     });
+    Route::middleware('permission:vendor-payments.view')->get('admin/vendor-payments', [App\Http\Controllers\Vendor\VendorController::class, 'paymentsIndex'])->name('vendor-payments.index');
     Route::middleware('permission:vendor-payments.view')->get('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'show'])->name('admin.vendors.show');
     Route::middleware('permission:vendor-payments.manage')->group(function () {
         Route::post('admin/vendors/{id}/bills', [App\Http\Controllers\Vendor\VendorController::class, 'storeBill'])->name('admin.vendors.bills.store');

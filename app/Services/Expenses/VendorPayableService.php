@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorBill;
 use App\Models\VendorPayment;
+use Illuminate\Database\Eloquent\Collection;
 
 class VendorPayableService
 {
@@ -82,5 +83,20 @@ class VendorPayableService
     public function deletePayment(VendorPayment $payment): void
     {
         $payment->delete();
+    }
+
+    public function forDateRange(?string $from, ?string $to): Collection
+    {
+        $query = VendorPayment::with('vendor');
+
+        if ($from && $to) {
+            $query->whereBetween('date', [$from, $to]);
+        } elseif ($from) {
+            $query->where('date', '>=', $from);
+        } elseif ($to) {
+            $query->where('date', '<=', $to);
+        }
+
+        return $query->orderByDesc('date')->get();
     }
 }
