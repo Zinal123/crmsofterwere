@@ -58,9 +58,12 @@ class InvoiceService
     {
         $columns = self::DATATABLE_COLUMNS;
         $search = $request->input('search.value');
+        $dateRange = ($request->filled('from') || $request->filled('to'))
+            ? ['from' => $request->input('from'), 'to' => $request->input('to')]
+            : null;
 
         $recordsTotal = $this->repository->countAllInvoices();
-        $recordsFiltered = $this->repository->countFilteredInvoices($columns, $search);
+        $recordsFiltered = $this->repository->countFilteredInvoices($columns, $search, $dateRange);
 
         $orderColumnIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir', 'desc') === 'asc' ? 'asc' : 'desc';
@@ -71,7 +74,7 @@ class InvoiceService
         $start = max((int) $request->input('start', 0), 0);
         $length = (int) $request->input('length', 10);
 
-        $rows = $this->repository->getPaginatedInvoiceRows($columns, $search, $orderColumn, $orderDir, $start, $length);
+        $rows = $this->repository->getPaginatedInvoiceRows($columns, $search, $orderColumn, $orderDir, $start, $length, $dateRange);
 
         $data = $rows->map(function ($item) {
             if ($item->amount == $item->paidamount) {

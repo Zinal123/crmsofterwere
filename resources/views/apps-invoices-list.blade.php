@@ -25,6 +25,24 @@ list view
 <div class="row">
     <div class="col-lg-12">
         <x-ui.data-table-card title="Invoices" :create-route="route('invoice.create')" create-label="Create Invoice">
+            <form method="GET" action="{{ route('invoice') }}" class="row g-2 align-items-end mb-3">
+                <div class="col-auto">
+                    <label for="from" class="form-label small mb-1">From</label>
+                    <input type="date" id="from" name="from" class="form-control" value="{{ request('from') }}">
+                </div>
+                <div class="col-auto">
+                    <label for="to" class="form-label small mb-1">To</label>
+                    <input type="date" id="to" name="to" class="form-control" value="{{ request('to') }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="ri-filter-3-line align-middle me-1"></i> Apply</button>
+                </div>
+                @if(request('from') || request('to'))
+                    <div class="col-auto">
+                        <a href="{{ route('invoice') }}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                @endif
+            </form>
             <div class="table-responsive">
                 <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width:100%">
@@ -125,7 +143,13 @@ document.addEventListener('DOMContentLoaded', function() {
     new DataTable('#example', {
         serverSide: true,
         processing: true,
-        ajax: '{{ route("invoice.data") }}',
+        ajax: {
+            url: '{{ route("invoice.data") }}',
+            data: function (d) {
+                d.from = @json(request('from'));
+                d.to = @json(request('to'));
+            }
+        },
         columns: [
             { data: 0, orderable: true, searchable: true },
             { data: 1, orderable: true, searchable: true },

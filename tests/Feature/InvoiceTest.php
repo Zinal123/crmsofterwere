@@ -92,6 +92,40 @@ class InvoiceTest extends TestCase
         $response->assertSee('Paid');
     }
 
+    public function test_datatable_endpoint_filters_by_date_range_when_provided(): void
+    {
+        $user = User::factory()->create();
+        $inRange = Invoice::factory()->create(['date' => '2026-07-15']);
+        Customer::factory()->create(['invoice_id' => $inRange->id, 'name' => 'In Range Buyer']);
+        $outOfRange = Invoice::factory()->create(['date' => '2026-06-15']);
+        Customer::factory()->create(['invoice_id' => $outOfRange->id, 'name' => 'Out Of Range Buyer']);
+
+        $response = $this->actingAs($user)->get(route('invoice.data', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        // recordsTotal stays the true unfiltered count (DataTables
+        // convention) - only recordsFiltered reflects the date range.
+        $response->assertJsonFragment(['recordsTotal' => 2, 'recordsFiltered' => 1]);
+        $response->assertSee('In Range Buyer');
+        $response->assertDontSee('Out Of Range Buyer');
+    }
+
+    public function test_datatable_endpoint_returns_every_invoice_when_no_date_range_given(): void
+    {
+        // Existing behaviour must not regress: with no from/to, every invoice
+        // still shows up, exactly as before this filter was added.
+        $user = User::factory()->create();
+        $one = Invoice::factory()->create(['date' => '2026-07-15']);
+        Customer::factory()->create(['invoice_id' => $one->id]);
+        $two = Invoice::factory()->create(['date' => '2020-01-01']);
+        Customer::factory()->create(['invoice_id' => $two->id]);
+
+        $response = $this->actingAs($user)->get(route('invoice.data'));
+
+        $response->assertOk();
+        $response->assertJsonFragment(['recordsTotal' => 2, 'recordsFiltered' => 2]);
+    }
+
     public function test_datatable_status_badge_uses_icon_and_correct_color(): void
     {
         $user = \App\Models\User::factory()->create();
@@ -105,6 +139,19 @@ class InvoiceTest extends TestCase
         $response->assertOk();
         $response->assertSee('ri-checkbox-circle-line', false);
         $response->assertSee('ri-time-line', false);
+    }
+
+    public function test_invoice_list_page_reflects_a_date_range_from_the_url_into_its_filter_and_ajax_call(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        $response->assertSee('value="2026-07-01"', false);
+        $response->assertSee('value="2026-07-31"', false);
+        $response->assertSee('d.from = "2026-07-01"', false);
+        $response->assertSee('d.to = "2026-07-31"', false);
     }
 
     public function test_invoice_list_datatable_has_processing_and_language_config(): void

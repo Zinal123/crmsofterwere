@@ -76,12 +76,27 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
         );
     }
 
+    /** @param array{from?: ?string, to?: ?string}|null $dateRange */
+    private function applyDateRange($query, ?array $dateRange): void
+    {
+        $from = $dateRange['from'] ?? null;
+        $to = $dateRange['to'] ?? null;
+
+        if ($from && $to) {
+            $query->whereBetween('invoice.date', [$from, $to]);
+        } elseif ($from) {
+            $query->where('invoice.date', '>=', $from);
+        } elseif ($to) {
+            $query->where('invoice.date', '<=', $to);
+        }
+    }
+
     public function countAllInvoices(): int
     {
         return $this->invoiceCustomerJoin()->count();
     }
 
-    public function countFilteredInvoices(array $columns, ?string $search): int
+    public function countFilteredInvoices(array $columns, ?string $search, ?array $dateRange = null): int
     {
         $query = $this->invoiceCustomerJoin()->select(['invoice.*', 'customer.name', 'customer.phone', 'customer.id as customer_id']);
 
@@ -92,11 +107,13 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
                 }
             });
         }
+
+        $this->applyDateRange($query, $dateRange);
 
         return $query->count();
     }
 
-    public function getPaginatedInvoiceRows(array $columns, ?string $search, string $orderColumn, string $orderDir, int $start, int $length): Collection
+    public function getPaginatedInvoiceRows(array $columns, ?string $search, string $orderColumn, string $orderDir, int $start, int $length, ?array $dateRange = null): Collection
     {
         $query = $this->invoiceCustomerJoin()->select(['invoice.*', 'customer.name', 'customer.phone', 'customer.id as customer_id']);
 
@@ -107,6 +124,8 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
                 }
             });
         }
+
+        $this->applyDateRange($query, $dateRange);
 
         $query->orderBy($orderColumn, $orderDir);
 

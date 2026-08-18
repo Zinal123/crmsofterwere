@@ -24,9 +24,9 @@ interface InvoiceRepositoryInterface
 
     public function countAllInvoices(): int;
 
-    public function countFilteredInvoices(array $columns, ?string $search): int;
+    public function countFilteredInvoices(array $columns, ?string $search, ?array $dateRange = null): int;
 
-    public function getPaginatedInvoiceRows(array $columns, ?string $search, string $orderColumn, string $orderDir, int $start, int $length): Collection;
+    public function getPaginatedInvoiceRows(array $columns, ?string $search, string $orderColumn, string $orderDir, int $start, int $length, ?array $dateRange = null): Collection;
 
     public function getCustomersByInvoiceId($invoiceId): Collection;
 
