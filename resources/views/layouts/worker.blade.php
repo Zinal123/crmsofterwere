@@ -101,6 +101,7 @@
             <button type="button" id="high-contrast-toggle" class="btn btn-outline-light btn-shopfloor ms-2" style="min-height: 44px; padding: 8px 16px; font-size: 1rem;" title="Toggle high-contrast mode" aria-label="Toggle high-contrast mode">
                 <i class="ri-contrast-2-line align-bottom"></i>
             </button>
+            <a href="{{ route('profile') }}" class="btn btn-outline-light btn-shopfloor ms-2" style="min-height: 44px; padding: 8px 16px; font-size: 1rem;">My Profile</a>
             <form id="worker-logout-form" action="{{ route('logout') }}" method="POST" class="d-inline ms-2">
                 @csrf
                 <button type="submit" class="btn btn-outline-light btn-shopfloor" style="min-height: 44px; padding: 8px 16px; font-size: 1rem;">Log Out</button>

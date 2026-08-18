@@ -34,21 +34,19 @@ class CommandPaletteTest extends TestCase
         $response->assertSee('My Profile');
     }
 
-    public function test_worker_only_sees_commands_they_can_access(): void
+    public function test_worker_kiosk_has_no_command_palette_but_keeps_a_profile_link(): void
     {
         $worker = User::factory()->create();
         $worker->syncRoles(['Worker']);
 
-        $response = $this->actingAs($worker)->get(route('root'));
+        // root() sends Worker straight to the job kiosk (layouts.worker),
+        // a deliberately stripped-down shop-floor surface that doesn't
+        // include the admin-chrome command palette. It keeps a direct
+        // "My Profile" link instead, so that access isn't lost entirely.
+        $response = $this->actingAs($worker)->get(route('jobs.index'));
 
         $response->assertOk();
-        $response->assertSee('commandPalette');
-        // Allowed for a worker:
-        $response->assertSee('Jobs');
+        $response->assertDontSee('commandPalette');
         $response->assertSee('My Profile');
-        // Gated away from a worker:
-        $response->assertDontSee('Chart of Accounts');
-        $response->assertDontSee('Roles &amp; Permissions');
-        $response->assertDontSee('Create Invoice');
     }
 }

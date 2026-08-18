@@ -35,9 +35,9 @@ Daily Expenses
                             <td>{{ $transaction->date->format('d M Y') }}</td>
                             <td>
                                 @if($transaction->type === 'payment')
-                                    <x-ui.status-badge status="Send" variant="danger" icon="ri-arrow-up-circle-line" />
+                                    <x-ui.status-badge status="Money Out" variant="danger" icon="ri-arrow-up-circle-line" />
                                 @else
-                                    <x-ui.status-badge status="Receive" variant="success" icon="ri-arrow-down-circle-line" />
+                                    <x-ui.status-badge status="Money In" variant="success" icon="ri-arrow-down-circle-line" />
                                 @endif
                             </td>
                             <td>{{ $transaction->category->name ?? '—' }}</td>

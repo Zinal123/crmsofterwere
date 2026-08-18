@@ -39,19 +39,35 @@ class HomeController extends Controller
      * The dashboard at '/', rendered per role. Every staff role now has
      * dashboard.view and lands here; each sees a view scoped to what its job
      * actually is (owner = strategic, manager = operational, account =
-     * finance, worker = my jobs) rather than one shared page.
+     * finance) rather than one shared page.
+     *
+     * Worker is the one exception: they don't get an admin-chrome dashboard
+     * at all. Their real workspace is the Worker Kiosk (JobController@index,
+     * layouts.worker - no sidebar, large touch targets, built for shop-floor
+     * use), which already opens with its own "today at a glance" summary
+     * strip. A separate admin-styled dashboard.worker page in between just
+     * duplicated those same counts in a different visual language - a first
+     * login would land on the full admin shell, then the very next click
+     * (into Jobs) would drop into a completely different-looking kiosk
+     * screen. Sending Worker straight to the kiosk removes that jarring
+     * chrome-switch entirely instead of trying to make both screens match.
      */
     public function root(Request $request)
     {
         $user = $request->user();
 
+        if ($user->hasRole('Worker')) {
+            return redirect()->route('jobs.index');
+        }
+
         return match (true) {
             $user->hasRole('Owner') => view('index', $this->dashboardService->ownerViewData(...$this->dashboardRange($request))),
             $user->hasRole('Manager') => view('dashboard.manager', $this->dashboardService->managerViewData()),
             $user->hasRole('Account') => view('dashboard.account', $this->dashboardService->accountViewData()),
-            $user->hasRole('Worker') => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
             // Any other role that has been granted dashboard.view still gets a
-            // safe, data-light landing rather than a 500.
+            // safe, data-light landing rather than a 500. Reuses the worker
+            // view/data as a generic scaffold - not Worker-specific, just the
+            // lightest-weight dashboard available for an unanticipated role.
             default => view('dashboard.worker', $this->dashboardService->workerViewData($user)),
         };
     }

@@ -69,12 +69,11 @@ class RoleDashboardTest extends TestCase
         $response->assertSee('Payables');
     }
 
-    public function test_worker_lands_on_the_my_day_dashboard(): void
+    public function test_worker_is_sent_straight_to_the_job_kiosk(): void
     {
         $response = $this->actingAs($this->userWithRole('Worker'))->get(route('root'));
 
-        $response->assertOk();
-        $response->assertSee('My Active Jobs');
+        $response->assertRedirect(route('jobs.index'));
     }
 
     public function test_each_scaffolded_role_now_has_dashboard_access(): void

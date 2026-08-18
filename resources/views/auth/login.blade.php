@@ -31,10 +31,10 @@
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                <label for="username" class="form-label">Email <span class="text-danger">*</span></label>
                 <div class="oms-input-group">
-                    <i class="ri-user-line oms-input-icon"></i>
-                    <input type="text" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" id="username" name="email" placeholder="Enter username">
+                    <i class="ri-mail-line oms-input-icon"></i>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" id="username" name="email" placeholder="Enter your email">
                 </div>
                 @error('email')
                     <span class="invalid-feedback d-block" role="alert">

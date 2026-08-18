@@ -60,6 +60,8 @@ class PermissionEnforcementTest extends TestCase
         $worker->syncRoles(['Worker']);
         $worker->givePermissionTo('dashboard.view');
 
-        $this->actingAs($worker)->get(route('root'))->assertOk();
+        // Worker is routed straight to the job kiosk instead of an admin
+        // dashboard render; reachable means a redirect there, not a 200.
+        $this->actingAs($worker)->get(route('root'))->assertRedirect(route('jobs.index'));
     }
 }
