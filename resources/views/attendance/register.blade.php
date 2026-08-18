@@ -3,9 +3,21 @@
 @section('content')
 <div class="container-fluid">
     <x-ui.back-link :route="route('employees.index')" label="Back to Employees" />
+    @php
+        $prevMonth = $month - 1; $prevYear = $year;
+        if ($prevMonth < 1) { $prevMonth = 12; $prevYear--; }
+        $nextMonth = $month + 1; $nextYear = $year;
+        if ($nextMonth > 12) { $nextMonth = 1; $nextYear++; }
+    @endphp
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ $employee->name }} — Attendance Register ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="card-title mb-0">{{ $employee->name }} — Attendance Register ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>
+                <div class="d-flex gap-1">
+                    <a href="{{ route('attendance.register', ['employee' => $employee->id, 'year' => $prevYear, 'month' => $prevMonth]) }}" class="btn btn-sm btn-outline-secondary"><i class="ri-arrow-left-s-line align-bottom"></i> Previous Month</a>
+                    <a href="{{ route('attendance.register', ['employee' => $employee->id, 'year' => $nextYear, 'month' => $nextMonth]) }}" class="btn btn-sm btn-outline-secondary">Next Month <i class="ri-arrow-right-s-line align-bottom"></i></a>
+                </div>
+            </div>
             <div class="table-responsive">
             <table class="table table-bordered">
                 <thead><tr><th>Date</th><th>Status</th><th>Overtime Hours</th><th></th></tr></thead>

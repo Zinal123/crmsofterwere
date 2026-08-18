@@ -27,6 +27,36 @@ class PayrollControllerTest extends TestCase
         $response->assertSee('500');
     }
 
+    public function test_payroll_page_has_previous_and_next_month_links(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+
+        $response->assertOk();
+        $response->assertSee(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 6]));
+        $response->assertSee(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 8]));
+    }
+
+    public function test_payroll_page_links_to_the_attendance_register_for_the_same_month(): void
+    {
+        // The days present/half/leave/absent stats on this page are computed
+        // from attendance for this employee and month - there was no link
+        // to see the underlying rows they came from.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+
+        $response = $this->actingAs($owner)->get(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+
+        $response->assertOk();
+        $response->assertSee(route('attendance.register', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+    }
+
     public function test_owner_adds_a_salary_payment(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

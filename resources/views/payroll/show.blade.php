@@ -3,9 +3,22 @@
 @section('content')
 <div class="container-fluid">
     <x-ui.back-link :route="route('employees.index')" label="Back to Employees" />
+    @php
+        $prevMonth = $month - 1; $prevYear = $year;
+        if ($prevMonth < 1) { $prevMonth = 12; $prevYear--; }
+        $nextMonth = $month + 1; $nextYear = $year;
+        if ($nextMonth > 12) { $nextMonth = 1; $nextYear++; }
+    @endphp
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ $employee->name }} — Payroll ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="card-title mb-0">{{ $employee->name }} — Payroll ({{ $year }}-{{ str_pad($month, 2, '0', STR_PAD_LEFT) }})</h5>
+                <div class="d-flex gap-1">
+                    <a href="{{ route('attendance.register', ['employee' => $employee->id, 'year' => $year, 'month' => $month]) }}" class="btn btn-sm btn-outline-secondary"><i class="ri-calendar-check-line align-bottom"></i> View Attendance</a>
+                    <a href="{{ route('employees.payroll', ['employee' => $employee->id, 'year' => $prevYear, 'month' => $prevMonth]) }}" class="btn btn-sm btn-outline-secondary"><i class="ri-arrow-left-s-line align-bottom"></i> Previous Month</a>
+                    <a href="{{ route('employees.payroll', ['employee' => $employee->id, 'year' => $nextYear, 'month' => $nextMonth]) }}" class="btn btn-sm btn-outline-secondary">Next Month <i class="ri-arrow-right-s-line align-bottom"></i></a>
+                </div>
+            </div>
             <div class="row g-2">
                 <div class="col-md-3"><p class="text-muted mb-0">Days Present</p><h5>{{ $earnings['days_present'] }}</h5></div>
                 <div class="col-md-3"><p class="text-muted mb-0">Half Days</p><h5>{{ $earnings['days_half'] }}</h5></div>
