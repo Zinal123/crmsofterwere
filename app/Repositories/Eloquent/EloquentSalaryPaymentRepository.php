@@ -27,6 +27,21 @@ class EloquentSalaryPaymentRepository implements SalaryPaymentRepositoryInterfac
         )->orderBy('date')->get();
     }
 
+    public function forDateRange(?string $from, ?string $to): Collection
+    {
+        $query = $this->tenantScope->apply(SalaryPayment::with('employee'));
+
+        if ($from && $to) {
+            $query->whereBetween('date', [$from, $to]);
+        } elseif ($from) {
+            $query->where('date', '>=', $from);
+        } elseif ($to) {
+            $query->where('date', '<=', $to);
+        }
+
+        return $query->orderByDesc('date')->get();
+    }
+
     public function totalForEmployeeAndMonth(int $employeeId, int $year, int $month): float
     {
         return (float) $this->tenantScope->apply(

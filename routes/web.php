@@ -19,13 +19,13 @@ Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, '
 
 Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
-// These 13 routes must be registered before the {any} catch-all below:
+// These 14 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
 // would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
 // (invoice.create, invoice.histry, invoice, invoice.vender, invoice.inventrylist, product,
 // machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark, reports.index,
-// expenses.index)
+// expenses.index, payroll.index)
 Route::middleware('auth')->group(function () {
     // Registered here (before the {any} catch-all further down) so /profile
     // resolves to the controller with its $user data, not the view directly.
@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('jobs-pending-approval', [App\Http\Controllers\Job\JobController::class, 'pendingApproval'])->name('jobs.pending-approval')->middleware('permission:jobs.approve');
     Route::get('employees', [App\Http\Controllers\Workforce\EmployeeController::class, 'index'])->name('employees.index')->middleware('permission:employees.view');
     Route::get('attendance', [App\Http\Controllers\Workforce\AttendanceController::class, 'mark'])->name('attendance.mark')->middleware('permission:attendance.manage');
+    Route::get('payroll', [App\Http\Controllers\Workforce\PayrollController::class, 'index'])->name('payroll.index')->middleware('permission:payroll.view');
 });
 
 // Client portal - separate "client" guard, own session, own layout. Registered

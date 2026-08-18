@@ -22,6 +22,11 @@ class SalaryPaymentService
         return $this->repository->forEmployeeAndMonth($employeeId, $year, $month);
     }
 
+    public function forDateRange(?string $from, ?string $to): Collection
+    {
+        return $this->repository->forDateRange($from, $to);
+    }
+
     public function update($id, array $data): SalaryPayment
     {
         $payment = $this->repository->find($id);

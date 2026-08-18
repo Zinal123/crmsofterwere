@@ -11,6 +11,8 @@ interface SalaryPaymentRepositoryInterface
 
     public function forEmployeeAndMonth(int $employeeId, int $year, int $month): Collection;
 
+    public function forDateRange(?string $from, ?string $to): Collection;
+
     public function totalForEmployeeAndMonth(int $employeeId, int $year, int $month): float;
 
     public function find($id): ?SalaryPayment;

@@ -17,6 +17,15 @@ class PayrollController extends Controller
     ) {
     }
 
+    public function index(Request $request)
+    {
+        return view('payroll.index', [
+            'payments' => $this->paymentService->forDateRange($request->input('from'), $request->input('to')),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+        ]);
+    }
+
     public function show(Request $request, $employee)
     {
         $employeeModel = $this->employeeService->find($employee);

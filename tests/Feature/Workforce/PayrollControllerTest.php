@@ -57,6 +57,48 @@ class PayrollControllerTest extends TestCase
         $response->assertSee(route('attendance.register', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
     }
 
+    public function test_salary_payments_index_lists_payments_across_all_employees_in_range(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $inRange = Employee::factory()->create(['name' => 'Ramesh Patel']);
+        $outOfRange = Employee::factory()->create(['name' => 'Suresh Yadav']);
+        \App\Models\SalaryPayment::create(['employee_id' => $inRange->id, 'date' => '2026-07-10', 'amount' => 15000, 'paid_by' => $owner->id]);
+        \App\Models\SalaryPayment::create(['employee_id' => $outOfRange->id, 'date' => '2026-06-10', 'amount' => 12000, 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('payroll.index', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        $response->assertSee('Ramesh Patel');
+        $response->assertDontSee('Suresh Yadav');
+    }
+
+    public function test_salary_payments_index_links_each_row_to_that_employees_payroll_page(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        \App\Models\SalaryPayment::create(['employee_id' => $employee->id, 'date' => '2026-07-10', 'amount' => 15000, 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('payroll.index', ['from' => '2026-07-01', 'to' => '2026-07-31']));
+
+        $response->assertOk();
+        $response->assertSee(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+    }
+
+    public function test_worker_cannot_view_the_salary_payments_index(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+
+        $response = $this->actingAs($worker)->get(route('payroll.index'));
+
+        $response->assertForbidden();
+    }
+
     public function test_owner_adds_a_salary_payment(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);
