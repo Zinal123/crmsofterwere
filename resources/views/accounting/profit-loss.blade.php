@@ -33,7 +33,13 @@
                 </tr>
                 @foreach($report['income'] as $line)
                     <tr>
-                        <td class="ps-4">{{ $line['account'] }}</td>
+                        <td class="ps-4">
+                            @if(isset($line['link']))
+                                <a href="{{ $line['link'] }}">{{ $line['account'] }}</a>
+                            @else
+                                {{ $line['account'] }}
+                            @endif
+                        </td>
                         <td class="text-end">{{ \App\Support\IndianNumber::format($line['amount']) }}</td>
                     </tr>
                 @endforeach
@@ -47,7 +53,13 @@
                 </tr>
                 @foreach($report['expenses'] as $line)
                     <tr>
-                        <td class="ps-4">{{ $line['account'] }}</td>
+                        <td class="ps-4">
+                            @if(isset($line['link']))
+                                <a href="{{ $line['link'] }}">{{ $line['account'] }}</a>
+                            @else
+                                {{ $line['account'] }}
+                            @endif
+                        </td>
                         <td class="text-end">{{ \App\Support\IndianNumber::format($line['amount']) }}</td>
                     </tr>
                 @endforeach

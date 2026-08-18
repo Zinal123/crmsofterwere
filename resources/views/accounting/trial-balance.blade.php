@@ -35,7 +35,14 @@
                 @foreach($report['rows'] as $row)
                     <tr>
                         <td class="font-monospace">{{ $row['code'] }}</td>
-                        <td>{{ $row['name'] }}</td>
+                        <td>
+                            @if(isset($row['link']))
+                                <a href="{{ $row['link'] }}">{{ $row['name'] }}</a>
+                            @else
+                                {{ $row['name'] }}
+                                <i class="ri-information-line text-muted" title="No drill-down for this row - it's either a computed figure (Cash, GST Payable, Owner's Equity) or would need an unpaid-only filter that doesn't exist yet (Receivable, Payable)."></i>
+                            @endif
+                        </td>
                         <td class="text-end">{{ $row['debit'] != 0 ? \App\Support\IndianNumber::format($row['debit']) : '—' }}</td>
                         <td class="text-end">{{ $row['credit'] != 0 ? \App\Support\IndianNumber::format($row['credit']) : '—' }}</td>
                     </tr>

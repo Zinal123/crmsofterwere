@@ -93,6 +93,70 @@ class AccountingTest extends TestCase
         $this->assertEqualsWithDelta(20000, $salaryLine['amount'], 0.01);
     }
 
+    public function test_profit_and_loss_lines_link_to_the_matching_filtered_list(): void
+    {
+        $from = now()->startOfMonth();
+        $to = now()->endOfMonth();
+
+        $report = app(AccountingService::class)->profitAndLoss($from, $to);
+
+        $salesLine = collect($report['income'])->firstWhere('account', 'Sales Income');
+        $otherIncomeLine = collect($report['income'])->firstWhere('account', 'Other Income');
+        $salaryLine = collect($report['expenses'])->firstWhere('account', 'Salaries & Wages');
+        $vendorLine = collect($report['expenses'])->firstWhere('account', 'Vendor Purchases');
+        $operatingLine = collect($report['expenses'])->firstWhere('account', 'Operating Expenses');
+
+        $this->assertSame(route('invoice', ['from' => $from->toDateString(), 'to' => $to->toDateString()]), $salesLine['link']);
+        $this->assertSame(route('expenses.index', ['from' => $from->toDateString(), 'to' => $to->toDateString(), 'type' => 'receipt', 'exclude_mirrors' => 1]), $otherIncomeLine['link']);
+        $this->assertSame(route('payroll.index', ['from' => $from->toDateString(), 'to' => $to->toDateString()]), $salaryLine['link']);
+        $this->assertSame(route('vendor-payments.index', ['from' => $from->toDateString(), 'to' => $to->toDateString()]), $vendorLine['link']);
+        $this->assertSame(route('expenses.index', ['from' => $from->toDateString(), 'to' => $to->toDateString(), 'type' => 'payment', 'exclude_mirrors' => 1]), $operatingLine['link']);
+    }
+
+    public function test_trial_balance_rows_link_to_the_matching_filtered_list_where_one_exists(): void
+    {
+        $asOf = now()->endOfMonth();
+
+        $report = app(AccountingService::class)->trialBalance($asOf);
+        $rows = $report['rows']->keyBy('code');
+
+        $this->assertSame(route('invoice', ['to' => $asOf->toDateString()]), $rows['4000']['link']); // Sales
+        $this->assertSame(route('expenses.index', ['to' => $asOf->toDateString(), 'type' => 'receipt', 'exclude_mirrors' => 1]), $rows['4900']['link']); // Other Income
+        $this->assertSame(route('payroll.index', ['to' => $asOf->toDateString()]), $rows['5000']['link']); // Salaries
+        $this->assertSame(route('vendor-payments.index', ['to' => $asOf->toDateString()]), $rows['5100']['link']); // Vendor Purchases
+        $this->assertSame(route('expenses.index', ['to' => $asOf->toDateString(), 'type' => 'payment', 'exclude_mirrors' => 1]), $rows['5900']['link']); // Operating
+
+        // Cash, Receivable, Payable, GST Payable, and Owner's Equity are not
+        // sums of one record type (Equity is explicitly the balancing figure,
+        // GST is a computed difference) - no link for these.
+        $this->assertArrayNotHasKey('link', $rows['1000']);
+        $this->assertArrayNotHasKey('link', $rows['1100']);
+        $this->assertArrayNotHasKey('link', $rows['2000']);
+        $this->assertArrayNotHasKey('link', $rows['2100']);
+        $this->assertArrayNotHasKey('link', $rows['3000']);
+    }
+
+    public function test_profit_and_loss_page_renders_the_drill_down_links(): void
+    {
+        $owner = $this->owner();
+
+        $response = $this->actingAs($owner)->get(route('accounting.profit-loss'));
+
+        $response->assertOk();
+        $response->assertSee(route('payroll.index', ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]));
+    }
+
+    public function test_trial_balance_page_renders_a_drill_down_link_and_the_info_icon_for_non_drillable_rows(): void
+    {
+        $owner = $this->owner();
+
+        $response = $this->actingAs($owner)->get(route('accounting.trial-balance'));
+
+        $response->assertOk();
+        $response->assertSee(route('vendor-payments.index', ['to' => now()->toDateString()]));
+        $response->assertSee('ri-information-line', false);
+    }
+
     public function test_trial_balance_debits_equal_credits(): void
     {
         $owner = $this->owner();

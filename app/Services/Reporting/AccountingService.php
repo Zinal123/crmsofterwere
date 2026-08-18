@@ -61,15 +61,17 @@ class AccountingService
      */
     public function profitAndLoss(Carbon $from, Carbon $to): array
     {
+        $range = ['from' => $from->toDateString(), 'to' => $to->toDateString()];
+
         $income = [
-            ['account' => 'Sales Income', 'amount' => $this->invoiceSales($from, $to)],
-            ['account' => 'Other Income', 'amount' => $this->dailyTotal('receipt', $from, $to)],
+            ['account' => 'Sales Income', 'amount' => $this->invoiceSales($from, $to), 'link' => route('invoice', $range)],
+            ['account' => 'Other Income', 'amount' => $this->dailyTotal('receipt', $from, $to), 'link' => $this->dailyTransactionLink($range, 'receipt')],
         ];
 
         $expenses = [
-            ['account' => 'Salaries & Wages', 'amount' => $this->moneySum(SalaryPayment::query(), 'amount', 'date', $from, $to)],
-            ['account' => 'Vendor Purchases', 'amount' => $this->moneySum(VendorPayment::query(), 'amount', 'date', $from, $to)],
-            ['account' => 'Operating Expenses', 'amount' => $this->dailyTotal('payment', $from, $to)],
+            ['account' => 'Salaries & Wages', 'amount' => $this->moneySum(SalaryPayment::query(), 'amount', 'date', $from, $to), 'link' => route('payroll.index', $range)],
+            ['account' => 'Vendor Purchases', 'amount' => $this->moneySum(VendorPayment::query(), 'amount', 'date', $from, $to), 'link' => route('vendor-payments.index', $range)],
+            ['account' => 'Operating Expenses', 'amount' => $this->dailyTotal('payment', $from, $to), 'link' => $this->dailyTransactionLink($range, 'payment')],
         ];
 
         $totalIncome = array_sum(array_column($income, 'amount'));
@@ -125,19 +127,38 @@ class AccountingService
             '5900' => $operating,
         ];
 
-        $rows = ChartAccount::orderBy('sort_order')->get()->map(function (ChartAccount $account) use ($balances) {
+        // Only these five rows are sums of one record type that a filtered
+        // list actually exists for. Cash/Receivable/Payable/GST/Equity are
+        // either computed differences or would need an "unpaid only" filter
+        // that doesn't exist yet - no link for those.
+        $range = ['to' => $asOf->toDateString()];
+        $links = [
+            '4000' => route('invoice', $range),
+            '4900' => $this->dailyTransactionLink($range, 'receipt'),
+            '5000' => route('payroll.index', $range),
+            '5100' => route('vendor-payments.index', $range),
+            '5900' => $this->dailyTransactionLink($range, 'payment'),
+        ];
+
+        $rows = ChartAccount::orderBy('sort_order')->get()->map(function (ChartAccount $account) use ($balances, $links) {
             $balance = round($balances[$account->code] ?? 0, 2);
             $side = $account->normalBalanceSide();
 
             // A negative natural balance flips sides (e.g. a net loss makes
             // Owner's Equity a debit) so the columns still foot.
-            return [
+            $row = [
                 'code' => $account->code,
                 'name' => $account->name,
                 'type' => $account->type,
                 'debit' => ($side === 'debit') === ($balance >= 0) ? abs($balance) : 0.0,
                 'credit' => ($side === 'credit') === ($balance >= 0) ? abs($balance) : 0.0,
             ];
+
+            if (isset($links[$account->code])) {
+                $row['link'] = $links[$account->code];
+            }
+
+            return $row;
         });
 
         return [
@@ -178,6 +199,12 @@ class AccountingService
             ->orderByDesc('total')
             ->get()
             ->map(fn ($row) => ['category' => $row->category, 'total' => (float) $row->total]);
+    }
+
+    /** Drill-down link for a dailyTotal() figure - must exclude the same linked mirror rows the total itself excludes, or the list wouldn't add up to the number that was clicked. */
+    private function dailyTransactionLink(array $range, string $type): string
+    {
+        return route('expenses.index', $range + ['type' => $type, 'exclude_mirrors' => 1]);
     }
 
     /** Standalone (non-mirror) daily transactions of a type, optionally within a range. */
