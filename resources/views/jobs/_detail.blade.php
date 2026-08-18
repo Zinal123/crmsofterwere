@@ -25,7 +25,7 @@
                 </div>
             </div>
             <p>{{ $job->description }}</p>
-            <p class="text-muted">{{ $job->machine->name ?? $job->site_name }} &middot; Priority: {{ ucfirst($job->priority) }}</p>
+            <p class="text-muted">{{ $job->machine->name ?? $job->site_name }} &middot; Priority: {{ ucfirst($job->priority) }} &middot; Assigned to: {{ $job->assignee->name ?? 'Unassigned' }}</p>
 
             @if($job->checklistItems->isNotEmpty() || $job->created_by === auth()->id() || auth()->user()->can('jobs.assign'))
                 <div class="card border mb-3">

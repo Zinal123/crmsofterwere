@@ -39,6 +39,30 @@ class JobManagerUiTest extends TestCase
         $response->assertSee(route('jobs.reject', $job->id), false);
     }
 
+    public function test_a_viewer_without_reassign_permission_can_still_see_who_a_job_is_assigned_to(): void
+    {
+        // The assignee's name previously only ever appeared inside the
+        // reassignment <select>, which is gated behind jobs.assign - so
+        // anyone with view access but not assign access (no seeded role
+        // today has exactly that combination, but it's a real permission
+        // boundary, not a hypothetical one) had no way to see who was
+        // working a job at all.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $viewer = User::factory()->create();
+        // UserFactory auto-assigns Owner (which has every permission) - strip
+        // it first so this user genuinely has only jobs.view-all.
+        $viewer->syncRoles([]);
+        $viewer->givePermissionTo(['jobs.view-all']);
+        $worker = User::factory()->create(['name' => 'Ramesh Patel']);
+        $job = Job::factory()->create(['status' => 'assigned', 'assigned_to' => $worker->id]);
+
+        $response = $this->actingAs($viewer)->get(route('jobs.show', $job->id));
+
+        $response->assertOk();
+        $response->assertDontSee(route('jobs.reassign', $job->id), false);
+        $response->assertSee('Ramesh Patel');
+    }
+
     public function test_manager_sees_audit_trail_on_job_detail(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);
