@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends(auth()->user()->hasRole('Worker') ? 'layouts.worker' : 'layouts.master')
 @section('title') My Profile @endsection
 
 @section('content')

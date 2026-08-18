@@ -132,6 +132,8 @@
         @yield('content')
     </main>
 
+    @yield('script')
+
     <script>
         document.getElementById('high-contrast-toggle').addEventListener('click', function () {
             var isHighContrast = document.documentElement.getAttribute('data-contrast') === 'high';
