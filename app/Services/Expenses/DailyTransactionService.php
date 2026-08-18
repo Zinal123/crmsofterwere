@@ -21,9 +21,27 @@ class DailyTransactionService
     ) {
     }
 
-    public function listAll(): Collection
+    public function listAll(?string $from = null, ?string $to = null, ?string $type = null, bool $excludeLinkedMirrors = false): Collection
     {
-        return DailyTransaction::with('category')->orderByDesc('date')->orderByDesc('id')->get();
+        $query = DailyTransaction::with('category')->orderByDesc('date')->orderByDesc('id');
+
+        if ($from && $to) {
+            $query->whereBetween('date', [$from, $to]);
+        } elseif ($from) {
+            $query->where('date', '>=', $from);
+        } elseif ($to) {
+            $query->where('date', '<=', $to);
+        }
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        if ($excludeLinkedMirrors) {
+            $query->whereNull('linked_type');
+        }
+
+        return $query->get();
     }
 
     /**

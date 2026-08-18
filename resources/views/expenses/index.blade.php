@@ -24,6 +24,35 @@ Daily Expenses
 <div class="row">
     <div class="col-lg-12">
         <x-ui.data-table-card title="Recent Transactions" :createRoute="route('expenses.cashbook')" createLabel="Cash Book">
+            <form method="GET" action="{{ route('expenses.index') }}" class="row g-2 align-items-end mb-3">
+                <div class="col-auto">
+                    <label for="filter-from" class="form-label small mb-1">From</label>
+                    <input type="date" id="filter-from" name="from" class="form-control" value="{{ request('from') }}">
+                </div>
+                <div class="col-auto">
+                    <label for="filter-to" class="form-label small mb-1">To</label>
+                    <input type="date" id="filter-to" name="to" class="form-control" value="{{ request('to') }}">
+                </div>
+                <div class="col-auto">
+                    <label for="filter-type" class="form-label small mb-1">Type</label>
+                    <select id="filter-type" name="type" class="form-select">
+                        <option value="">All</option>
+                        <option value="payment" @selected(request('type') === 'payment')>Money Out</option>
+                        <option value="receipt" @selected(request('type') === 'receipt')>Money In</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="ri-filter-3-line align-middle me-1"></i> Apply</button>
+                </div>
+                @if(request('from') || request('to') || request('type'))
+                    <div class="col-auto">
+                        <a href="{{ route('expenses.index') }}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                @endif
+            </form>
+            @if(request('exclude_mirrors'))
+                <p class="text-muted small"><i class="ri-information-line align-middle"></i> Wage and vendor payments already counted from payroll/vendor records are hidden here to match the report total.</p>
+            @endif
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>

@@ -20,10 +20,15 @@ class DailyTransactionController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         return view('expenses.index', [
-            'transactions' => $this->service->listAll(),
+            'transactions' => $this->service->listAll(
+                $request->input('from'),
+                $request->input('to'),
+                $request->input('type'),
+                $request->boolean('exclude_mirrors'),
+            ),
             'paymentCategories' => $this->categoryService->listActiveByType('payment'),
             'receiptCategories' => $this->categoryService->listActiveByType('receipt'),
             'employees' => $this->employeeService->activeList(),

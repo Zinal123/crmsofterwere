@@ -43,6 +43,56 @@ class DailyTransactionTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_daily_expenses_page_filters_by_date_range_and_type_when_provided(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $payment = ExpenseCategory::create(['name' => 'Diesel', 'type' => 'payment', 'party_model' => null]);
+        $receipt = ExpenseCategory::create(['name' => 'Misc Income', 'type' => 'receipt', 'party_model' => null]);
+
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $payment->id, 'amount' => 3000, 'date' => '2026-07-10', 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'In-range payment']);
+        \App\Models\DailyTransaction::create(['type' => 'receipt', 'expense_category_id' => $receipt->id, 'amount' => 5000, 'date' => '2026-07-10', 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'In-range receipt']);
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $payment->id, 'amount' => 9999, 'date' => '2026-06-10', 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'Out-of-range payment']);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index', ['from' => '2026-07-01', 'to' => '2026-07-31', 'type' => 'payment']));
+
+        $response->assertOk();
+        $response->assertSee('In-range payment');
+        $response->assertDontSee('In-range receipt');
+        $response->assertDontSee('Out-of-range payment');
+    }
+
+    public function test_daily_expenses_page_can_exclude_linked_mirror_rows_to_match_the_pl_total(): void
+    {
+        // AccountingService excludes linked_type-mirror rows from Operating
+        // Expenses to avoid double-counting a wage/vendor payment that's
+        // already counted from payroll/vendor records. A drill-down link
+        // from that report line has to exclude the same rows, or the list
+        // it lands on won't add up to the number that was clicked.
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $wages = ExpenseCategory::create(['name' => 'Worker Wages', 'type' => 'payment', 'party_model' => 'employee']);
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $wages->id, 'amount' => 20000, 'date' => '2026-07-10', 'payment_mode' => 'cash', 'created_by' => $owner->id, 'linked_type' => 'salary_payment', 'linked_id' => 1, 'description' => 'Payroll mirror row']);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index', ['from' => '2026-07-01', 'to' => '2026-07-31', 'type' => 'payment', 'exclude_mirrors' => '1']));
+
+        $response->assertOk();
+        $response->assertDontSee('Payroll mirror row');
+    }
+
+    public function test_daily_expenses_page_shows_everything_when_no_filter_given(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $category = ExpenseCategory::create(['name' => 'Diesel', 'type' => 'payment', 'party_model' => null]);
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $category->id, 'amount' => 3000, 'date' => '2020-01-01', 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'Ancient transaction']);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertSee('Ancient transaction');
+    }
+
     public function test_a_standalone_expense_with_no_party_is_recorded_directly(): void
     {
         $owner = User::factory()->create();
