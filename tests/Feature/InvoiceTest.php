@@ -257,6 +257,20 @@ class InvoiceTest extends TestCase
         $response->assertViewHas('cgstamount', 0);
     }
 
+    public function test_invoice_details_shows_the_real_invoice_number_not_a_hardcoded_placeholder(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['invoice_id' => 'INV-2026-0042']);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee('INV-2026-0042');
+        $response->assertDontSee('GC-24');
+    }
+
     public function test_invoice_details_sums_mixed_gst_rates_across_line_items(): void
     {
         $user = User::factory()->create();

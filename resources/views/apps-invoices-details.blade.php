@@ -122,7 +122,7 @@ $number = $amount;
             <div class="row border-bottom border-dark">
               <div class="col-6">
                 <span>Invoice No.</span>
-                <p class="fw-bold mb-0">GC-24</p>
+                <p class="fw-bold mb-0">{{ $item->invoice_id }}</p>
               </div>
               <div class="col-6">
                 <span>Dated</span>
