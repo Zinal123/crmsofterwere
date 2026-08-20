@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::post('employees/{employee}/payments', [App\Http\Controllers\Workforce\PayrollController::class, 'storePayment'])->name('employees.payments.store')->middleware('permission:payroll.manage-payments');
     Route::put('employees/{employee}/payments/{paymentId}', [App\Http\Controllers\Workforce\PayrollController::class, 'updatePayment'])->name('employees.payments.update')->middleware('permission:payroll.manage-payments');
     Route::delete('employees/{employee}/payments/{paymentId}', [App\Http\Controllers\Workforce\PayrollController::class, 'destroyPayment'])->name('employees.payments.destroy')->middleware('permission:payroll.manage-payments');
+    Route::get('admin/audit-logs', [App\Http\Controllers\Auditing\AuditLogController::class, 'index'])->name('admin.audit-logs.index');
     Route::get('audit-logs/{type}/{id}', [App\Http\Controllers\Auditing\AuditLogController::class, 'forRecord'])->name('audit-logs.for-record');
 
     Route::get('/co2quation/{id}' ,[App\Http\Controllers\Quotation\QutationController::class,'Co2quation'])->name('co2quation')->middleware('permission:quotations.view');

@@ -177,7 +177,7 @@
                 @endcan
                 @endcanany
 
-                @canany(['admin.manage-roles', 'admin.manage-users'])
+                @if(auth()->user()->canAny(['admin.manage-roles', 'admin.manage-users']) || app(\App\Services\Auditing\AuditLogService::class)->hasAnyAuditAccess(auth()->user()))
                 <li class="menu-title"><span>Admin</span></li>
                 @can('admin.manage-roles')
                 <li class="nav-item">
@@ -189,7 +189,12 @@
                     <a href="{{ route('admin.users.index') }}" class="nav-link"><i class="ri-user-settings-line"></i><span>Users</span></a>
                 </li>
                 @endcan
-                @endcanany
+                @if(app(\App\Services\Auditing\AuditLogService::class)->hasAnyAuditAccess(auth()->user()))
+                <li class="nav-item">
+                    <a href="{{ route('admin.audit-logs.index') }}" class="nav-link"><i class="ri-history-line"></i><span>Audit Log</span></a>
+                </li>
+                @endif
+                @endif
 
             </ul>
         </div>

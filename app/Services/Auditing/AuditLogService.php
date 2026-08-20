@@ -67,6 +67,30 @@ class AuditLogService
         return $this->repository->forRecord($type, $id);
     }
 
+    /** Every auditable type this user currently has view-audit access to. */
+    public function viewableTypesFor(Authenticatable $user): array
+    {
+        return array_values(array_filter(
+            array_keys(self::TYPE_PERMISSIONS),
+            fn (string $type) => $this->canView($user, $type)
+        ));
+    }
+
+    public function hasAnyAuditAccess(Authenticatable $user): bool
+    {
+        return $this->viewableTypesFor($user) !== [];
+    }
+
+    public function paginatedIndex(Authenticatable $user, ?string $typeFilter = null): array
+    {
+        $viewableTypes = $this->viewableTypesFor($user);
+
+        return [
+            'logs' => $this->repository->paginateForTypes($viewableTypes, $typeFilter),
+            'viewableTypes' => $viewableTypes,
+        ];
+    }
+
     public function log(Model $model, string $action, ?string $fieldName = null, $oldValue = null, $newValue = null): void
     {
         $this->repository->record($model, $action, $fieldName, $oldValue, $newValue);

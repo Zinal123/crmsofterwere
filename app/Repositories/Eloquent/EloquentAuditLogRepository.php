@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\AuditLog;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
 use App\Support\Tenancy\TenantScope;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
@@ -51,5 +52,18 @@ class EloquentAuditLogRepository implements AuditLogRepositoryInterface
         return $this->tenantScope->apply(
             AuditLog::where('auditable_type', $type)->where('auditable_id', $id)
         )->orderByDesc('created_at')->get();
+    }
+
+    public function paginateForTypes(array $types, ?string $typeFilter = null): LengthAwarePaginator
+    {
+        $query = $this->tenantScope->apply(
+            AuditLog::with('user')->whereIn('auditable_type', $types)
+        );
+
+        if ($typeFilter !== null && in_array($typeFilter, $types, true)) {
+            $query->where('auditable_type', $typeFilter);
+        }
+
+        return $query->orderByDesc('created_at')->paginate(25)->withQueryString();
     }
 }
