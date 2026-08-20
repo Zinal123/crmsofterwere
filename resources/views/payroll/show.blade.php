@@ -24,12 +24,12 @@
                 <div class="col-md-3"><p class="text-muted mb-0">Half Days</p><h5>{{ $earnings['days_half'] }}</h5></div>
                 <div class="col-md-3"><p class="text-muted mb-0">Leave</p><h5>{{ $earnings['days_leave'] }}</h5></div>
                 <div class="col-md-3"><p class="text-muted mb-0">Absent</p><h5>{{ $earnings['days_absent'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Day Rate (₹)</p><h5>{{ $earnings['day_rate'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Base Earned (₹)</p><h5>{{ $earnings['base_earned'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Overtime Earned (₹)</p><h5>{{ $earnings['overtime_earned'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Total Earned (₹)</p><h5>{{ $earnings['total_earned'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Total Paid (₹)</p><h5>{{ $earnings['total_paid'] }}</h5></div>
-                <div class="col-md-3"><p class="text-muted mb-0">Balance Due (₹)</p><h4 class="text-danger">{{ $earnings['balance_due'] }}</h4></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Day Rate (₹)</p><h5 class="tabular-nums">{{ \App\Support\IndianNumber::format($earnings['day_rate']) }}</h5></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Base Earned (₹)</p><h5 class="tabular-nums">{{ \App\Support\IndianNumber::format($earnings['base_earned']) }}</h5></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Overtime Earned (₹)</p><h5 class="tabular-nums">{{ \App\Support\IndianNumber::format($earnings['overtime_earned']) }}</h5></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Total Earned (₹)</p><h5 class="tabular-nums">{{ \App\Support\IndianNumber::format($earnings['total_earned']) }}</h5></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Total Paid (₹)</p><h5 class="tabular-nums">{{ \App\Support\IndianNumber::format($earnings['total_paid']) }}</h5></div>
+                <div class="col-md-3"><p class="text-muted mb-0">Balance Due (₹)</p><h4 class="text-danger tabular-nums">{{ \App\Support\IndianNumber::format($earnings['balance_due']) }}</h4></div>
             </div>
         </div>
     </div>
@@ -38,13 +38,13 @@
         <div class="card-body">
             <h5 class="card-title">Payments This Month</h5>
             <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered tabular-nums">
                 <thead><tr><th>Date</th><th>Amount</th><th>Note</th><th></th></tr></thead>
                 <tbody>
                     @forelse($payments as $payment)
                         <tr>
                             <td>{{ $payment->date->toDateString() }}</td>
-                            <td>{{ $payment->amount }}</td>
+                            <td>{{ \App\Support\IndianNumber::format($payment->amount) }}</td>
                             <td>{{ $payment->note }}</td>
                             <td>
                                 <div class="d-flex gap-1 flex-wrap">

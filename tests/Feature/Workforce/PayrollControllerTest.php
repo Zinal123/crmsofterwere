@@ -27,6 +27,22 @@ class PayrollControllerTest extends TestCase
         $response->assertSee('500');
     }
 
+    public function test_payroll_page_formats_money_figures_like_every_other_financial_table(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create(['pay_type' => 'daily', 'pay_rate' => 25000]);
+        Attendance::create(['employee_id' => $employee->id, 'date' => '2026-07-01', 'status' => 'present', 'marked_by' => $owner->id]);
+        \App\Models\SalaryPayment::create(['employee_id' => $employee->id, 'date' => '2026-07-05', 'amount' => 12500, 'paid_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('employees.payroll', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+
+        $response->assertOk();
+        $response->assertSee(\App\Support\IndianNumber::format(25000));
+        $response->assertSee(\App\Support\IndianNumber::format(12500));
+    }
+
     public function test_payroll_page_has_previous_and_next_month_links(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);
