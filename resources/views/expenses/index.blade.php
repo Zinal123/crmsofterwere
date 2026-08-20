@@ -42,15 +42,19 @@ Daily Expenses
                         <option value="receipt" @selected(request('type') === 'receipt')>Money In</option>
                     </select>
                 </div>
+                <input type="hidden" name="category_id" value="{{ request('category_id') }}">
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary"><i class="ri-filter-3-line align-middle me-1"></i> Apply</button>
                 </div>
-                @if(request('from') || request('to') || request('type'))
+                @if(request('from') || request('to') || request('type') || request('category_id'))
                     <div class="col-auto">
                         <a href="{{ route('expenses.index') }}" class="btn btn-outline-secondary">Clear</a>
                     </div>
                 @endif
             </form>
+            @if($filteredCategory)
+                <p class="text-muted small"><i class="ri-filter-3-line align-middle"></i> Filtered to category: <strong>{{ $filteredCategory->name }}</strong></p>
+            @endif
             @if(request('exclude_mirrors'))
                 <p class="text-muted small"><i class="ri-information-line align-middle"></i> Wage and vendor payments already counted from payroll/vendor records are hidden here to match the report total.</p>
             @endif
@@ -70,7 +74,13 @@ Daily Expenses
                                     <x-ui.status-badge status="Money In" variant="success" icon="ri-arrow-down-circle-line" />
                                 @endif
                             </td>
-                            <td>{{ $transaction->category->name ?? '—' }}</td>
+                            <td>
+                                @if($transaction->category)
+                                    <a href="{{ route('expenses.index', ['category_id' => $transaction->category->id]) }}">{{ $transaction->category->name }}</a>
+                                @else
+                                    —
+                                @endif
+                            </td>
                             <td>{{ \App\Support\IndianNumber::format($transaction->amount) }}</td>
                             <td>{{ ucfirst($transaction->payment_mode) }}</td>
                             <td>{{ $transaction->description ?: '—' }}</td>

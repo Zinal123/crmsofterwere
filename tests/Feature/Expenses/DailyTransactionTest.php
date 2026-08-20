@@ -67,6 +67,35 @@ class DailyTransactionTest extends TestCase
         $this->assertSame(3, substr_count($response->getContent(), 'ri-add-line'));
     }
 
+    public function test_transaction_category_links_to_filter_the_list_by_that_category(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $fuel = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $fuel->id, 'amount' => 3000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id]);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertSee(route('expenses.index', ['category_id' => $fuel->id]));
+    }
+
+    public function test_filtering_by_category_id_shows_only_that_categorys_transactions(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $fuel = ExpenseCategory::create(['name' => 'Diesel / Fuel', 'type' => 'payment', 'party_model' => null]);
+        $misc = ExpenseCategory::create(['name' => 'Misc Income', 'type' => 'receipt', 'party_model' => null]);
+        \App\Models\DailyTransaction::create(['type' => 'payment', 'expense_category_id' => $fuel->id, 'amount' => 3000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'Fuel line']);
+        \App\Models\DailyTransaction::create(['type' => 'receipt', 'expense_category_id' => $misc->id, 'amount' => 5000, 'date' => now(), 'payment_mode' => 'cash', 'created_by' => $owner->id, 'description' => 'Misc line']);
+
+        $response = $this->actingAs($owner)->get(route('expenses.index', ['category_id' => $fuel->id]));
+
+        $response->assertOk();
+        $response->assertSee('Fuel line');
+        $response->assertDontSee('Misc line');
+    }
+
     public function test_worker_cannot_view_the_daily_expenses_page(): void
     {
         $worker = User::factory()->create();

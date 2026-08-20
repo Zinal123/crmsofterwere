@@ -21,7 +21,7 @@ class DailyTransactionService
     ) {
     }
 
-    public function listAll(?string $from = null, ?string $to = null, ?string $type = null, bool $excludeLinkedMirrors = false): Collection
+    public function listAll(?string $from = null, ?string $to = null, ?string $type = null, bool $excludeLinkedMirrors = false, ?int $categoryId = null): Collection
     {
         $query = DailyTransaction::with('category')->orderByDesc('date')->orderByDesc('id');
 
@@ -39,6 +39,10 @@ class DailyTransactionService
 
         if ($excludeLinkedMirrors) {
             $query->whereNull('linked_type');
+        }
+
+        if ($categoryId) {
+            $query->where('expense_category_id', $categoryId);
         }
 
         return $query->get();
