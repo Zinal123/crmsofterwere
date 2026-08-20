@@ -88,6 +88,27 @@ class EmployeeDocumentTest extends TestCase
         $this->assertDatabaseHas('employee_documents', ['employee_id' => $employee->id, 'document_type' => 'aadhar']);
     }
 
+    public function test_employee_edit_page_links_each_document_to_view_it(): void
+    {
+        Storage::fake('public');
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create();
+        $employee->documents()->create([
+            'document_type' => 'aadhar',
+            'document_number' => '1234-5678-9012',
+            'path' => 'employee-documents/' . $employee->id . '/doc_test.jpg',
+            'uploaded_by' => $owner->id,
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('employees.edit', $employee->id));
+
+        $response->assertOk();
+        $response->assertSee(asset('storage/employee-documents/' . $employee->id . '/doc_test.jpg'), false);
+        $response->assertSee('rel="noopener noreferrer"', false);
+    }
+
     public function test_owner_uploads_a_document_over_the_10mb_limit_gets_a_clean_422(): void
     {
         Storage::fake('public');

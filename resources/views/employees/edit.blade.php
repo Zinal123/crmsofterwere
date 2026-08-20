@@ -31,6 +31,7 @@
                         <div class="border rounded p-2">
                             <span class="badge bg-info-subtle text-info text-uppercase">{{ str_replace('_', ' ', $document->document_type) }}</span>
                             <p class="small mb-0">{{ $document->document_number }}</p>
+                            <a href="{{ asset('storage/' . $document->path) }}" target="_blank" rel="noopener noreferrer" class="small">View Document</a>
                         </div>
                     </div>
                 @empty
