@@ -41,6 +41,30 @@ class JobPhotoUploadTest extends TestCase
         $this->assertDatabaseHas('job_audit_logs', ['job_id' => $job->id, 'action' => 'photo_uploaded']);
     }
 
+    public function test_job_detail_photo_map_link_has_noopener(): void
+    {
+        // target="_blank" without rel="noopener" lets the opened page's JS
+        // reach back into this one via window.opener - a small but real
+        // security nit on an external link (Google Maps).
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $job = Job::factory()->create();
+        $job->photos()->create([
+            'uploaded_by' => $owner->id,
+            'path' => 'job-photos/test.jpg',
+            'stage' => 'before',
+            'location_captured' => true,
+            'map_link' => 'https://maps.google.com/?q=23.0225,72.5714',
+            'address' => 'Test Location',
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('jobs.show', $job->id));
+
+        $response->assertOk();
+        $response->assertSee('rel="noopener noreferrer"', false);
+    }
+
     public function test_a_photo_can_be_tagged_as_before_or_after(): void
     {
         Storage::fake('public');

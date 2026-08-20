@@ -261,7 +261,7 @@
                                 :icon="$photo->stage === 'before' ? 'ri-history-line' : 'ri-checkbox-circle-line'" />
                         @endif
                         @if($photo->location_captured)
-                            <a href="{{ $photo->map_link }}" target="_blank" class="small d-block">{{ $photo->address ?? 'View location' }}</a>
+                            <a href="{{ $photo->map_link }}" target="_blank" rel="noopener noreferrer" class="small d-block">{{ $photo->address ?? 'View location' }}</a>
                         @else
                             <span class="small text-danger d-block">Location not captured</span>
                         @endif
