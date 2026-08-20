@@ -8,6 +8,7 @@ use App\Models\Invetry;
 use App\Models\Product;
 use App\Models\SparePartRequest;
 use App\Models\User;
+use App\Models\Vendor;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -41,6 +42,47 @@ class ProductInventoryMergeTest extends TestCase
             'quantity' => 40,
             'vandername' => 'Precitec India',
         ]);
+    }
+
+    public function test_creating_a_product_can_link_its_inventory_to_a_real_vendor(): void
+    {
+        $vendor = Vendor::create(['name' => 'Precitec India', 'category' => 'Accessories', 'is_active' => true]);
+
+        $response = $this->actingAs($this->owner())->post(route('productstore'), [
+            'name' => 'Precision Nozzle',
+            'quantity' => 40,
+            'vendor_id' => $vendor->id,
+        ]);
+
+        $response->assertRedirect(route('product'));
+        $product = Product::where('name', 'Precision Nozzle')->firstOrFail();
+        $this->assertDatabaseHas('invetry', ['product_id' => $product->id, 'vendor_id' => $vendor->id]);
+    }
+
+    public function test_the_product_page_links_to_a_tracked_vendors_own_record(): void
+    {
+        $vendor = Vendor::create(['name' => 'Precitec India', 'category' => 'Accessories', 'is_active' => true]);
+        $owner = $this->owner();
+        $product = Product::factory()->create(['name' => 'Linked Vendor Product']);
+        Invetry::factory()->create(['product_id' => $product->id, 'vendor_id' => $vendor->id, 'vandername' => null]);
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee(route('admin.vendors.show', $vendor->id), false);
+        $response->assertSee('Precitec India');
+    }
+
+    public function test_the_product_page_still_shows_free_text_vendor_name_when_not_linked(): void
+    {
+        $owner = $this->owner();
+        $product = Product::factory()->create(['name' => 'Untracked Vendor Product']);
+        Invetry::factory()->create(['product_id' => $product->id, 'vendor_id' => null, 'vandername' => 'One-Off Supplier']);
+
+        $response = $this->actingAs($owner)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('One-Off Supplier');
     }
 
     public function test_creating_a_product_without_quantity_creates_no_inventory_row(): void

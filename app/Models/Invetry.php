@@ -19,6 +19,7 @@ class Invetry extends Model
         'product_id',
         'quantity',
         'vandername',
+        'vendor_id',
         'rate',
         'low_stock_notified_at',
         'low_stock_threshold',
@@ -31,6 +32,11 @@ class Invetry extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
     }
 
     public function effectiveLowStockThreshold(): int

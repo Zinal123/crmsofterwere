@@ -28,6 +28,7 @@ class InventryController extends Controller
         $request->validate([
             'product_id' => 'required|integer|exists:product,id',
             'quantity' => 'nullable|integer',
+            'vendor_id' => 'nullable|integer|exists:vendors,id',
         ]);
 
         $this->service->create($request->all());

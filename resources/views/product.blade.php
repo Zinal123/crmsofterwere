@@ -57,7 +57,13 @@ list view
                                 <span class="badge bg-secondary-subtle text-secondary">Not tracked</span>
                             @endif
                         </td>
-                        <td>{{ $item->inventory->vandername ?? '—' }}</td>
+                        <td>
+                            @if($item->inventory?->vendor_id)
+                                <a href="{{ route('admin.vendors.show', $item->inventory->vendor_id) }}">{{ $item->inventory->vendor->name }}</a>
+                            @else
+                                {{ $item->inventory->vandername ?? '—' }}
+                            @endif
+                        </td>
 
                             <td>
                             <div class="d-flex gap-2 flex-wrap">
@@ -185,7 +191,18 @@ list view
                         </div><!--end col-->
                         <div class="col-xxl-6">
                             <div>
-                                <label for="createVendorName" class="form-label">Vendor Name</label>
+                                <label for="createVendorSelect" class="form-label">Vendor</label>
+                                <select class="form-select" id="createVendorSelect" name="vendor_id">
+                                    <option value="">-- Not a tracked vendor --</option>
+                                    @foreach($vendors as $vendor)
+                                        <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="createVendorName" class="form-label">Vendor Name (if not tracked above)</label>
                                 <input type="text" class="form-control" id="createVendorName" name="vandername" placeholder="Enter vendor">
                             </div>
                         </div><!--end col-->
@@ -265,7 +282,16 @@ list view
                         <input type="number" min="0" class="form-control" id="addStockQuantity" name="quantity" required>
                     </div>
                     <div class="mb-3">
-                        <label for="addStockVendorName" class="form-label">Vendor Name</label>
+                        <label for="addStockVendorSelect" class="form-label">Vendor</label>
+                        <select class="form-select" id="addStockVendorSelect" name="vendor_id">
+                            <option value="">-- Not a tracked vendor --</option>
+                            @foreach($vendors as $vendor)
+                                <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addStockVendorName" class="form-label">Vendor Name (if not tracked above)</label>
                         <input type="text" class="form-control" id="addStockVendorName" name="vandername" placeholder="Enter vendor">
                     </div>
                     <div class="modal-footer">

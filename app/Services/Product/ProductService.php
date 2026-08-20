@@ -58,11 +58,12 @@ class ProductService
         return DB::transaction(function () use ($data) {
             $product = $this->repository->create($data);
 
-            if (!empty($data['quantity']) || !empty($data['vandername'])) {
+            if (!empty($data['quantity']) || !empty($data['vandername']) || !empty($data['vendor_id'])) {
                 $this->inventoryRepository->create([
                     'product_id' => $product->id,
                     'quantity' => $data['quantity'] ?? 0,
                     'vandername' => $data['vandername'] ?? null,
+                    'vendor_id' => $data['vendor_id'] ?? null,
                     'rate' => $data['rate'] ?? null,
                 ]);
             }

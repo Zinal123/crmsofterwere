@@ -4,18 +4,22 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Services\Product\ProductService;
+use App\Services\Vendor\VendorService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductService $service)
-    {
+    public function __construct(
+        private ProductService $service,
+        private VendorService $vendorService,
+    ) {
     }
 
     public function index(Request $request)
     {
         $product = $this->service->listWithInventory();
-        return view('product', compact('product'));
+        $vendors = $this->vendorService->listAll();
+        return view('product', compact('product', 'vendors'));
     }
 
     public function productstore(Request $request)
@@ -27,6 +31,7 @@ class ProductController extends Controller
             'make' => 'nullable|string|max:255',
             'quantity' => 'nullable|integer|min:0',
             'vandername' => 'nullable|string|max:255',
+            'vendor_id' => 'nullable|integer|exists:vendors,id',
         ]);
 
         $this->service->createWithInventory($data);
