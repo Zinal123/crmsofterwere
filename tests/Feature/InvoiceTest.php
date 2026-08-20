@@ -569,6 +569,31 @@ class InvoiceTest extends TestCase
         $response->assertSee('Precision CNC Works');
     }
 
+    public function test_paymenthistry_breadcrumb_says_payment_history_not_invoices(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice.histry'));
+
+        $response->assertOk();
+        $response->assertSee('Payment History');
+        $response->assertDontSee('list view');
+    }
+
+    public function test_paymenthistry_page_has_no_dead_unreachable_modal_markup(): void
+    {
+        // Neither modal on this page has ever had a trigger button in the
+        // table - it's a read-only listing (id/customer/amount only, no
+        // action column) - so both were 100% dead, copy-pasted leftovers.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice.histry'));
+
+        $response->assertOk();
+        $response->assertDontSee('exampleModalgrid', false);
+        $response->assertDontSee('deleteOrder', false);
+    }
+
     public function test_owner_can_update_an_invoices_header_and_customer_details(): void
     {
         $user = User::factory()->create();

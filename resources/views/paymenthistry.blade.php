@@ -14,10 +14,10 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1')
-invoices
+Invoices
 @endslot
 @slot('title')
-list view
+Payment History
 @endslot
 @endcomponent
  <!-- end row-->
@@ -59,61 +59,6 @@ list view
                 </table>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade flip" id="deleteOrder" tabindex="-1" aria-labelledby="deleteOrderLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-body p-5 text-center">
-                                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#4361ee,secondary:#f7941d" style="width:90px;height:90px">
-                                </lord-icon>
-                                <div class="mt-4 text-center">
-                                    <h4>You are about to delete a order ?</h4>
-                                    <p class="text-muted fs-15 mb-4">Deleting your order will remove
-                                        all of
-                                        your information from our database.</p>
-                                    <div class="hstack gap-2 justify-content-center remove">
-                                        <button class="btn btn-link link-success fw-medium text-decoration-none" data-bs-dismiss="modal" id="deleteRecord-close"><i class="ri-close-line me-1 align-middle"></i>
-                                            Close</button>
-                                        <button class="btn btn-danger" id="delete-record">Yes,
-                                            Delete It</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalgridLabel">Payment</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="paymentForm">
-                                    <!-- Input to show the ID -->
-                                    <div class="mb-3">
-                                      
-                                      <input type="hidden" class="form-control" id="itemIdInput" readonly>
-                                    </div>
-                          
-                                    <!-- Input to enter the amount paid -->
-                                    <div class="mb-3">
-                                      <label for="paidAmountInput" class="form-label">Paid Amount</label>
-                                      <input type="number" class="form-control" id="paidAmountInput" name = "paidamount" required>
-                                    </div>
-                          
-                                    <!-- Submit button -->
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                      <button type="submit" class="btn btn-primary" id="submitPaymentBtn">Submit Payment</button>
-                                    </div>
-                                  </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <!--end modal -->
         </x-ui.data-table-card>
 
     </div>
@@ -142,80 +87,4 @@ integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="ano
 
 
 
-<script>
-   
-document.addEventListener('DOMContentLoaded', function() {
-    // Listen for click events on buttons with the 'open-modal' class
-    const buttons = document.querySelectorAll('.open-modal');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Get the data-id from the clicked button
-            const itemId = this.getAttribute('data-id');
-            
-            // Set the value of the input field in the modal to the item ID
-            document.getElementById('itemIdInput').value = itemId;
-        });
-    });
-});
-
-    
-document.getElementById('paymentForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const itemId = document.getElementById('itemIdInput').value;
-        const paidAmount = document.getElementById('paidAmountInput').value;
-
-        // Make an AJAX request to update the payment
-        fetch('/update-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security (if using Laravel)
-            },
-            body: JSON.stringify({
-                id: itemId,
-                paidamount: paidAmount
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show SweetAlert successss message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Updated!',
-                    text: 'The payment was updated successfully.',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-
-                // Hide the modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModalgrid'));
-                modal.hide();
-                location.reload();
-            } else {
-                // Show SweetAlert error message
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'There was an issue updating the payment. Please try again.',
-                });
-            }
-        })
-        // .catch(error => {
-        //     console.error('Error:', error);
-
-        //     // Show SweetAlert error message in case of a request failure
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error!',
-        //         text: 'An unexpected error occurred. Please try again later.',
-        //     });
-        // });
-    });
-
-    </script>
-
-   
 @endsection
