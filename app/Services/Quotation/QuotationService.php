@@ -4,6 +4,7 @@ namespace App\Services\Quotation;
 
 use App\Models\Quation;
 use App\Repositories\Contracts\BankRepositoryInterface;
+use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Services\Inventory\AvailabilityService;
@@ -17,6 +18,7 @@ class QuotationService
         private ProductConfigRepositoryInterface $productConfigRepository,
         private BankRepositoryInterface $bankRepository,
         private AvailabilityService $availabilityService,
+        private InvoiceRepositoryInterface $invoiceRepository,
     ) {
     }
 
@@ -84,6 +86,81 @@ class QuotationService
             'rack' => $this->productConfigRepository->getRack($productId)->firstWhere('id', $quotation->rack),
             'software1' => $this->productConfigRepository->getSoftware1($productId)->firstWhere('id', $quotation->software),
         ];
+    }
+
+    /**
+     * Creates a real Invoice (+ Customer + line items) from a quotation's
+     * already-collected client info and pricing lines. $state is required
+     * from the caller because the quotation form never captures it, and
+     * Invoice needs a state for correct SGST/CGST vs IGST math - guessing
+     * one would risk a wrong tax calculation on a real financial document.
+     *
+     * Only quotation items with a linked product_id become invoice line
+     * items (Invoiceproduct requires a real product reference); items that
+     * are free-text-only are counted and skipped rather than dropped
+     * silently - the caller is expected to surface that count to the user.
+     * GST is left at 0 on every created line - review/adjust rates on the
+     * resulting invoice before finalizing it.
+     */
+    public function convertToInvoice(int $id, string $state): array
+    {
+        return DB::transaction(function () use ($id, $state) {
+            $quotation = $this->repository->findWithDetails($id);
+
+            if ($quotation->invoice_id !== null) {
+                throw new \InvalidArgumentException('This quotation has already been converted to invoice #' . $quotation->invoice_id . '.');
+            }
+
+            $linkedItems = $quotation->items->filter(fn ($item) => $item->product_id !== null);
+            $skippedCount = $quotation->items->count() - $linkedItems->count();
+            $total = (float) $linkedItems->sum('amount');
+
+            $invoice = $this->invoiceRepository->createInvoice([
+                'invoice_id' => 'QTN-' . $quotation->id,
+                'date' => $quotation->date ?? now()->toDateString(),
+                'placesupply' => $state,
+                'totalamountbeforetax' => $total,
+                'amount' => $total,
+                'amountwithtax' => $total,
+                'paidamount' => 0,
+                'remaining_amount' => $total,
+            ]);
+
+            $this->invoiceRepository->createCustomer([
+                'invoice_id' => $invoice->id,
+                'name' => $quotation->clientname,
+                'address' => $quotation->companyaddress,
+                'phone' => $quotation->phone,
+                'email' => $quotation->email,
+                'state' => $state,
+                'billinggst' => $quotation->gstno,
+                'sname' => $quotation->clientname,
+                'saddress' => $quotation->companyaddress,
+                'sphone' => $quotation->phone,
+                'sstate' => $state,
+                'shippinggst' => $quotation->gstno,
+            ]);
+
+            foreach ($linkedItems as $item) {
+                $quantity = $item->quantity ?: 1;
+                $this->invoiceRepository->createInvoiceProduct([
+                    'invoice_id' => $invoice->id,
+                    'product_name' => $item->product_id,
+                    'quantity' => $quantity,
+                    'rate' => $quantity > 0 ? round($item->amount / $quantity, 2) : $item->amount,
+                    'gst' => 0,
+                    'gstamount' => 0,
+                    'total' => $item->amount,
+                    'totalamount' => $item->amount,
+                ]);
+            }
+
+            $quotation->status = 'converted';
+            $quotation->invoice_id = $invoice->id;
+            $this->repository->save($quotation);
+
+            return ['invoice' => $invoice, 'skipped_items' => $skippedCount];
+        });
     }
 
     /**

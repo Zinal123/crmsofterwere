@@ -70,6 +70,26 @@ class QutationController extends Controller
         return redirect()->route('listqutation')->with('success', 'Quotation updated.');
     }
 
+    public function convertToInvoice(Request $request, $id)
+    {
+        $data = $request->validate([
+            'state' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Support\IndianStates::LIST)],
+        ]);
+
+        try {
+            $result = $this->service->convertToInvoice($id, $data['state']);
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('listqutation')->with('error', $e->getMessage());
+        }
+
+        $message = 'Invoice ' . $result['invoice']->invoice_id . ' created. GST rates default to 0 - review and adjust on each line before finalizing.';
+        if ($result['skipped_items'] > 0) {
+            $message .= ' ' . $result['skipped_items'] . ' quotation line(s) with no linked product could not be auto-added - add them manually.';
+        }
+
+        return redirect()->route('invoice.details', $result['invoice']->id)->with('success', $message);
+    }
+
     public function Co2quation($id)
     {
         return view('qutation', array_merge($this->service->getQuotationFormViewData($id), ['defaultType' => 'co2']));

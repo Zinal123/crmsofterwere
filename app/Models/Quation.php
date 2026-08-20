@@ -16,6 +16,8 @@ class Quation extends Authenticatable
    
     protected $table = 'quationform';
     protected $fillable = [
+        'status',
+        'invoice_id',
         'product_id',
         'clientname',
         'companyname',
