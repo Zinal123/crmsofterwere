@@ -26,7 +26,7 @@ class PermissionEnforcementTest extends TestCase
         // Merged into the product page - this route now just redirects there
         // (still permission-gated, so still worth asserting it's reachable).
         $this->actingAs($owner)->get(route('invoice.inventrylist'))->assertRedirect(route('product'));
-        $this->actingAs($owner)->get(route('invoice.vender'))->assertOk();
+        $this->actingAs($owner)->get(route('admin.vendors.index'))->assertOk();
         $this->actingAs($owner)->get(route('invoice.histry'))->assertOk();
         $this->actingAs($owner)->get(route('listqutation'))->assertOk();
     }
@@ -39,7 +39,7 @@ class PermissionEnforcementTest extends TestCase
         $this->actingAs($worker)->get(route('product'))->assertStatus(403);
         $this->actingAs($worker)->get(route('invoice'))->assertStatus(403);
         $this->actingAs($worker)->get(route('invoice.inventrylist'))->assertStatus(403);
-        $this->actingAs($worker)->get(route('invoice.vender'))->assertStatus(403);
+        $this->actingAs($worker)->get(route('admin.vendors.index'))->assertStatus(403);
         $this->actingAs($worker)->get(route('invoice.histry'))->assertStatus(403);
         $this->actingAs($worker)->get(route('listqutation'))->assertStatus(403);
     }

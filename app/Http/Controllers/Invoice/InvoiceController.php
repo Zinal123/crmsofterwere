@@ -147,8 +147,4 @@ class InvoiceController extends Controller
         return view('paymenthistry', ['Paidamount' => $this->service->getPaymentHistory()]);
     }
 
-    public function vender()
-    {
-        return view('vender');
-    }
 }

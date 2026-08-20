@@ -19,11 +19,11 @@ Route::get('index/{locale}', [App\Http\Controllers\Home\HomeController::class, '
 
 Route::middleware(['auth', 'permission:dashboard.view'])->get('/', [App\Http\Controllers\Home\HomeController::class, 'root'])->name('root');
 
-// These 14 routes must be registered before the {any} catch-all below:
+// These 13 routes must be registered before the {any} catch-all below:
 // all are single URL segments, so without this ordering the catch-all
 // would intercept them first (see app/Http/Controllers/Home/HomeController.php
 // @index) and skip both the real controller and this auth check entirely.
-// (invoice.create, invoice.histry, invoice, invoice.vender, invoice.inventrylist, product,
+// (invoice.create, invoice.histry, invoice, invoice.inventrylist, product,
 // machines.index, jobs.index, jobs.pending-approval, employees.index, attendance.mark, reports.index,
 // expenses.index, payroll.index)
 Route::middleware('auth')->group(function () {
@@ -40,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
     Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry')->middleware('permission:payment-history.view');
     Route::get('apps-invoices-list' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'index'])->name('invoice')->middleware('permission:invoices.view');
-    Route::get('vender', [App\Http\Controllers\Invoice\InvoiceController::class, 'vender'])->name('invoice.vender')->middleware('permission:vendors.view');
     Route::get('inventrylist', [App\Http\Controllers\Inventory\InventryController::class, 'inventry'])->name('invoice.inventrylist')->middleware('permission:inventory.view');
     Route::get('product' ,[App\Http\Controllers\Product\ProductController::class, 'index'])->name('product')->middleware('permission:products.view');
     Route::get('machines', [App\Http\Controllers\Job\MachineController::class, 'index'])->name('machines.index')->middleware('permission:jobs.manage-machines');

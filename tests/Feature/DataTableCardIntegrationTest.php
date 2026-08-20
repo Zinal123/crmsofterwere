@@ -39,9 +39,12 @@ class DataTableCardIntegrationTest extends TestCase
 
     public function test_vendor_list_uses_shared_card_shell(): void
     {
+        // route('invoice.vender') was a dead, superseded decoy page (raw PHP
+        // in the view, permission-gated as vendors.view but actually listing
+        // customers) - deleted. admin.vendors.index is the real vendor list.
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('invoice.vender'));
+        $response = $this->actingAs($user)->get(route('admin.vendors.index'));
 
         $response->assertOk();
         $response->assertSee('card-header border-0', false);
