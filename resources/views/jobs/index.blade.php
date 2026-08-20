@@ -7,11 +7,10 @@
         <div class="row g-2">
             @forelse($jobs as $job)
                 <div class="col-12 col-md-6 col-lg-4">
-                    <a href="{{ route('jobs.show', $job->id) }}" class="text-decoration-none text-body job-tap-card">
-                        <div class="card border">
+                    <div class="card border job-tap-card" style="cursor: pointer;" onclick="if (!event.target.closest('a')) { window.location = '{{ route('jobs.show', $job->id) }}'; }">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">
-                                    <h5 class="card-title mb-1">{{ $job->title }}</h5>
+                                    <h5 class="card-title mb-1"><a href="{{ route('jobs.show', $job->id) }}" class="text-decoration-none text-body">{{ $job->title }}</a></h5>
                                     <div class="d-flex gap-1">
                                         @if($job->overdue_flagged_at)
                                             <x-ui.status-badge status="Overdue" variant="danger" icon="ri-alarm-warning-line" />
@@ -54,8 +53,7 @@
                                     <p class="text-danger small mb-0">{{ $job->rejection_reason }}</p>
                                 @endif
                             </div>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             @empty
                 <div class="col-12">

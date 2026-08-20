@@ -81,6 +81,35 @@ class JobManagerUiTest extends TestCase
         $response->assertSee(route('machines.index') . '#machine-' . $machine->id, false);
     }
 
+    public function test_jobs_index_machine_link_is_not_nested_inside_the_card_link(): void
+    {
+        // Real bug caught by browser-driven testing, not the HTTP test
+        // client: the whole job card is wrapped in <a href="jobs.show">, and
+        // the machine link is <a href="machines.index">. Nesting an <a>
+        // inside another <a> is invalid HTML - browsers silently close the
+        // outer anchor the moment the inner one opens, so everything after
+        // the machine link (material-status badges, the rest of the card)
+        // stopped being part of any link at all, breaking "click anywhere on
+        // the card to open the job" for most of the card's surface. Assert
+        // structurally, via a real DOM parser, that no <a> ever contains
+        // another <a> - a plain string/substring assertion can't catch this.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create();
+        Job::factory()->create(['machine_id' => $machine->id]);
+
+        $response = $this->actingAs($owner)->get(route('jobs.index'));
+        $response->assertOk();
+
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($response->getContent());
+        $xpath = new \DOMXPath($dom);
+        $nestedAnchors = $xpath->query('//a[.//a]');
+
+        $this->assertSame(0, $nestedAnchors->length, 'Found an <a> containing another <a> - invalid HTML that browsers will silently mangle.');
+    }
+
     public function test_jobs_index_hides_the_machine_link_from_a_role_without_machine_access(): void
     {
         // Manager has jobs.view-all (so sees this page) but not
