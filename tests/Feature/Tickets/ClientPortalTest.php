@@ -31,6 +31,17 @@ class ClientPortalTest extends TestCase
         $this->assertAuthenticatedAs($account, 'client');
     }
 
+    public function test_client_login_form_has_a_remember_me_checkbox(): void
+    {
+        // ClientLoginController already reads request->boolean('remember')
+        // and passes it to Auth::attempt() - the form itself had no
+        // checkbox to actually set it.
+        $response = $this->get(route('client.login'));
+
+        $response->assertOk();
+        $response->assertSee('name="remember"', false);
+    }
+
     public function test_client_can_log_in_with_phone_and_password(): void
     {
         $account = ClientAccount::factory()->create(['phone' => '9876543210', 'password' => Hash::make('password123')]);
