@@ -212,7 +212,13 @@ $number = $amount;
                     @foreach($invoiceproduct as $item3)
                     <tr>
                     <th scope="row">{{$i++}}</th>
-                    <td>{{$item3->product}}</td>
+                    <td>
+                        @can('products.view')
+                            <a href="{{ route('product') . '#product-' . $item3->product_name }}">{{$item3->product}}</a>
+                        @else
+                            {{$item3->product}}
+                        @endcan
+                    </td>
                     <td class="text-center">{{$item3->hsn}}</td>
                     <td class="text-center">{{$item3->unit}}</td>
                     <td class="text-center">{{$item3->quantity}}</td>

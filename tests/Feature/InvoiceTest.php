@@ -318,6 +318,39 @@ class InvoiceTest extends TestCase
         $response->assertDontSee('GC-24');
     }
 
+    public function test_invoice_details_line_item_links_to_its_product_for_a_user_who_can_view_products(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        $product = \App\Models\Product::factory()->create();
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'product_name' => $product->id]);
+
+        $response = $this->actingAs($user)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee(route('product') . '#product-' . $product->id, false);
+    }
+
+    public function test_invoice_details_line_item_is_plain_text_for_a_role_without_product_access(): void
+    {
+        // Account has invoices.view-details but not products.view - a link
+        // that leads straight to a 403 would be worse than plain text.
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $account = User::factory()->create();
+        $account->syncRoles(['Account']);
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'state' => 'Gujarat']);
+        $product = \App\Models\Product::factory()->create(['name' => 'Untouchable Product']);
+        Invoiceproduct::factory()->create(['invoice_id' => $invoice->id, 'product_name' => $product->id]);
+
+        $response = $this->actingAs($account)->get(route('invoice.details', $invoice->id));
+
+        $response->assertOk();
+        $response->assertSee('Untouchable Product');
+        $response->assertDontSee(route('product') . '#product-' . $product->id, false);
+    }
+
     public function test_invoice_details_sums_mixed_gst_rates_across_line_items(): void
     {
         $user = User::factory()->create();

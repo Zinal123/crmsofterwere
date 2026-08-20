@@ -39,7 +39,7 @@ list view
                     </thead>
                     <tbody class="list form-check-all">
                     @foreach ($product as $item)
-                        <tr>
+                        <tr id="product-{{ $item->id }}">
                         <td>{{$item->id}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->make}}</td>
