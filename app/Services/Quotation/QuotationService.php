@@ -6,6 +6,7 @@ use App\Models\Quation;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductConfigRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Services\Inventory\AvailabilityService;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,6 +20,7 @@ class QuotationService
         private BankRepositoryInterface $bankRepository,
         private AvailabilityService $availabilityService,
         private InvoiceRepositoryInterface $invoiceRepository,
+        private ProductRepositoryInterface $productRepository,
     ) {
     }
 
@@ -205,6 +207,7 @@ class QuotationService
             'rack' => $this->productConfigRepository->getRack($productId),
             'softere' => $this->productConfigRepository->getSoftware1($productId),
             'bank' => $this->bankRepository->all(),
+            'linkableProducts' => $this->productRepository->allOrderedByLatest(),
         ];
     }
 }

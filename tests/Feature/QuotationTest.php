@@ -134,6 +134,25 @@ class QuotationTest extends TestCase
         ]);
     }
 
+    public function test_generatequtation_form_offers_a_product_select_on_each_pricing_row(): void
+    {
+        // Real-browser functional testing found that the pricing rows only
+        // ever had free-text description/amount fields - there was no way
+        // for a real user to set items[N][product_id] even though the
+        // backend has always accepted and persisted it (see the two tests
+        // below). That made "Convert to Invoice" silently produce an empty
+        // ₹0 invoice for every real quotation, since every line always
+        // lacked a product_id. Assert the form itself now offers the field.
+        $user = User::factory()->create();
+        $part = Product::factory()->create(['name' => 'Focus Lens Assembly']);
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+
+        $response->assertOk();
+        $response->assertSee('items[0][product_id]', false);
+        $response->assertSee('Focus Lens Assembly');
+    }
+
     public function test_a_pricing_row_can_optionally_link_to_a_tracked_inventory_item(): void
     {
         $user = User::factory()->create();

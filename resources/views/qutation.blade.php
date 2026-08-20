@@ -362,11 +362,18 @@ Qutation
                   </div>
 
                   <h5 class="mb-0">Pricing</h5>
+                  @php
+                      $productOptions = '<option value="">-- none --</option>' . $linkableProducts->map(
+                          fn ($product) => '<option value="' . $product->id . '">' . e($product->name) . '</option>'
+                      )->implode('');
+                  @endphp
                   <table class="table" id="pricing-table">
                     <thead>
                       <tr>
                         <th>SR.No</th>
                         <th>Description</th>
+                        <th>Product (optional)</th>
+                        <th>Qty</th>
                         <th>Amount</th>
                         <th></th>
                       </tr>
@@ -375,18 +382,24 @@ Qutation
                       <tr>
                         <td class="pricing-row-number">1</td>
                         <td><input type="text" class="form-control" placeholder="e.g. Machine unit price" name="items[0][description]"></td>
+                        <td><select class="form-select" name="items[0][product_id]">{!! $productOptions !!}</select></td>
+                        <td><input type="number" min="1" class="form-control" placeholder="1" name="items[0][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[0][amount]"></td>
                         <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                      <tr>
                         <td class="pricing-row-number">2</td>
                         <td><input type="text" class="form-control" placeholder="e.g. Installation charges" name="items[1][description]"></td>
+                        <td><select class="form-select" name="items[1][product_id]">{!! $productOptions !!}</select></td>
+                        <td><input type="number" min="1" class="form-control" placeholder="1" name="items[1][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[1][amount]"></td>
                         <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                      <tr>
                         <td class="pricing-row-number">3</td>
                         <td><input type="text" class="form-control" placeholder="e.g. Transport charges" name="items[2][description]"></td>
+                        <td><select class="form-select" name="items[2][product_id]">{!! $productOptions !!}</select></td>
+                        <td><input type="number" min="1" class="form-control" placeholder="1" name="items[2][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[2][amount]"></td>
                         <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
@@ -415,6 +428,7 @@ Qutation
         var rowsBody = document.getElementById('pricing-rows');
         var addRowBtn = document.getElementById('pricing-add-row');
         var rowIndex = rowsBody.querySelectorAll('tr').length;
+        var productOptionsHtml = rowsBody.querySelector('select').innerHTML;
 
         function renumberRows() {
             rowsBody.querySelectorAll('tr').forEach(function (row, i) {
@@ -427,6 +441,8 @@ Qutation
             row.innerHTML =
                 '<td class="pricing-row-number"></td>' +
                 '<td><input type="text" class="form-control" placeholder="Description" name="items[' + rowIndex + '][description]"></td>' +
+                '<td><select class="form-select" name="items[' + rowIndex + '][product_id]">' + productOptionsHtml + '</select></td>' +
+                '<td><input type="number" min="1" class="form-control" placeholder="1" name="items[' + rowIndex + '][quantity]"></td>' +
                 '<td><input type="text" class="form-control" placeholder="Enter amount" name="items[' + rowIndex + '][amount]"></td>' +
                 '<td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>';
             rowsBody.appendChild(row);
