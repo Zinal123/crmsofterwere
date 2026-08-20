@@ -29,7 +29,11 @@
                             @php $existingRow = $existing->get($employee->id); @endphp
                             <tr>
                                 <td>
-                                    {{ $employee->name }}
+                                    @can('attendance.view')
+                                        <a href="{{ route('attendance.register', ['employee' => $employee->id, 'year' => \Illuminate\Support\Carbon::parse($date)->year, 'month' => \Illuminate\Support\Carbon::parse($date)->month]) }}">{{ $employee->name }}</a>
+                                    @else
+                                        {{ $employee->name }}
+                                    @endcan
                                     <input type="hidden" name="rows[{{ $index }}][employee_id]" value="{{ $employee->id }}">
                                 </td>
                                 <td>

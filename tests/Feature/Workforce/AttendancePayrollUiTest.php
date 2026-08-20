@@ -29,6 +29,19 @@ class AttendancePayrollUiTest extends TestCase
         $response->assertDontSee('Inactive Worker');
     }
 
+    public function test_mark_page_links_each_employee_to_their_attendance_register(): void
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $employee = Employee::factory()->create(['is_active' => true]);
+
+        $response = $this->actingAs($owner)->get(route('attendance.mark', ['date' => '2026-07-15']));
+
+        $response->assertOk();
+        $response->assertSee(route('attendance.register', ['employee' => $employee->id, 'year' => 2026, 'month' => 7]));
+    }
+
     public function test_register_page_shows_the_months_marked_days(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);
