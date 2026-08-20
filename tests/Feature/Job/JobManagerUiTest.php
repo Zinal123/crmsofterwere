@@ -3,6 +3,7 @@
 namespace Tests\Feature\Job;
 
 use App\Models\Job;
+use App\Models\Machine;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,6 +62,40 @@ class JobManagerUiTest extends TestCase
         $response->assertOk();
         $response->assertDontSee(route('jobs.reassign', $job->id), false);
         $response->assertSee('Ramesh Patel');
+    }
+
+    public function test_jobs_index_links_the_machine_name_to_the_machines_page(): void
+    {
+        // No dedicated machine "show" page exists (index+modals is the
+        // deliberate pattern) - the machine name was plain text with no way
+        // to jump to that machine's own record at all.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+        $machine = Machine::factory()->create();
+        Job::factory()->create(['machine_id' => $machine->id]);
+
+        $response = $this->actingAs($owner)->get(route('jobs.index'));
+
+        $response->assertOk();
+        $response->assertSee(route('machines.index') . '#machine-' . $machine->id, false);
+    }
+
+    public function test_jobs_index_hides_the_machine_link_from_a_role_without_machine_access(): void
+    {
+        // Manager has jobs.view-all (so sees this page) but not
+        // jobs.manage-machines (which machines.index requires) - showing a
+        // link that leads straight to a 403 would be worse than none.
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $manager = User::factory()->create();
+        $manager->syncRoles(['Manager']);
+        $machine = Machine::factory()->create();
+        Job::factory()->create(['machine_id' => $machine->id]);
+
+        $response = $this->actingAs($manager)->get(route('jobs.index'));
+
+        $response->assertOk();
+        $response->assertDontSee(route('machines.index'), false);
     }
 
     public function test_manager_sees_audit_trail_on_job_detail(): void

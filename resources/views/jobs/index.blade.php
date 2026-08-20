@@ -32,7 +32,17 @@
                                             }" />
                                     </div>
                                 </div>
-                                <p class="text-muted mb-1">{{ $job->machine->name ?? $job->site_name }}</p>
+                                <p class="text-muted mb-1">
+                                    @can('jobs.manage-machines')
+                                        @if($job->machine)
+                                            <a href="{{ route('machines.index') . '#machine-' . $job->machine->id }}">{{ $job->machine->name }}</a>
+                                        @else
+                                            {{ $job->site_name }}
+                                        @endif
+                                    @else
+                                        {{ $job->machine->name ?? $job->site_name }}
+                                    @endcan
+                                </p>
                                 @if(isset($materialStatus[$job->id]))
                                     @if($materialStatus[$job->id])
                                         <span class="badge bg-success-subtle text-success"><i class="ri-checkbox-circle-line align-middle"></i> Parts ready</span>

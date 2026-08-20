@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 @forelse($machines as $machine)
-                    <tr>
+                    <tr id="machine-{{ $machine->id }}">
                         <td>{{ $machine->name }}</td>
                         <td>
                             <x-ui.status-badge
