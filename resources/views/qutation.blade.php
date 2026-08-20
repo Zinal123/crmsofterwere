@@ -51,14 +51,14 @@ Qutation
                     <br>
                     <div class ="row">
                         <div class="col-md-3">
-                        <label class="col-form-label" for="basic-default-name">Quotation For</label><br>
-                        <input type="radio" id="html" name="fav_language" value="With Canopy">
-                        <label class="col-form-label" for="basic-default-name">With Canopy</label>
+                        <label class="col-form-label" for="canopy-yes">Quotation For</label><br>
+                        <input type="radio" id="canopy-yes" name="fav_language" value="With Canopy">
+                        <label class="col-form-label" for="canopy-yes">With Canopy</label>
                         </div>
                         <div class="col-md-3">
-                        <label class="col-form-label" style="visibility: hidden;" for="basic-default-name">Quotation For</label><br>
-                        <input type="radio" id="html-2" name="fav_language" value="Without Canopy">
-                        <label class="col-form-label" for="basic-default-name">Without Canopy</label>
+                        <label class="col-form-label" style="visibility: hidden;" for="canopy-no">Quotation For</label><br>
+                        <input type="radio" id="canopy-no" name="fav_language" value="Without Canopy">
+                        <label class="col-form-label" for="canopy-no">Without Canopy</label>
                         </div>
 
 
@@ -67,22 +67,22 @@ Qutation
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Client Name</label><br>
-                            <input type="text" class="form-control" placeholder="Enter client name" name="clientname"/>
+                            <label class="col-form-label" for="quotation-client-name">Client Name</label><br>
+                            <input type="text" id="quotation-client-name" class="form-control" placeholder="Enter client name" name="clientname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Name</label><br>
-                            <input type="text" class="form-control" placeholder="Enter company name" name="companyname"/>
+                            <label class="col-form-label" for="quotation-company-name">Company Name</label><br>
+                            <input type="text" id="quotation-company-name" class="form-control" placeholder="Enter company name" name="companyname"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">GST No.</label><br>
-                            <input type="text" class="form-control" placeholder="Enter GST number" name="gstno"/>
+                            <label class="col-form-label" for="quotation-gst-no">GST No.</label><br>
+                            <input type="text" id="quotation-gst-no" class="form-control" placeholder="Enter GST number" name="gstno"/>
                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Company Address</label><br>
-                            <input type="text" class="form-control" placeholder="Enter company address" name="companyaddress"/>
+                            <label class="col-form-label" for="quotation-company-address">Company Address</label><br>
+                            <input type="text" id="quotation-company-address" class="form-control" placeholder="Enter company address" name="companyaddress"/>
                            </div>
                            <div class="col-md-4">
                             <label class="col-form-label" for="quotation-bank">Select Bank</label><br>
@@ -94,23 +94,23 @@ Qutation
                             </select>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Email Id</label><br>
-                            <input type="email" class="form-control" name="email"/>
+                            <label class="col-form-label" for="quotation-email">Email Id</label><br>
+                            <input type="email" id="quotation-email" class="form-control" name="email"/>
                            </div>
 
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">WhatsApp Number</label><br>
-                            <input type="number" class="form-control"  name="phone"/>
+                            <label class="col-form-label" for="quotation-whatsapp">WhatsApp Number</label><br>
+                            <input type="number" id="quotation-whatsapp" class="form-control"  name="phone"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Date</label><br>
-                            <input type="date" class="form-control" name ="date"/>
+                            <label class="col-form-label" for="quotation-date">Date</label><br>
+                            <input type="date" id="quotation-date" class="form-control" name ="date"/>
                            </div>
                            <div class="col-md-4">
-                            <label class="col-form-label" for="basic-default-name">Reminder Date</label><br>
-                            <input type="date" class="form-control"  name ="reminderdate"/>
+                            <label class="col-form-label" for="quotation-reminder-date">Reminder Date</label><br>
+                            <input type="date" id="quotation-reminder-date" class="form-control"  name ="reminderdate"/>
                            </div>
 
                         </div>
@@ -409,12 +409,6 @@ Qutation
                     </tbody>
                   </table>
                   <button type="button" class="btn btn-soft-secondary btn-sm" id="pricing-add-row"><i class="ri-add-line align-bottom me-1"></i> Add Row</button>
-                   <div class ="row mt-3">
-                    <div class="col-md-12">
-                    <label class="col-sm-2 col-form-label" for="basic-default-email">Optional And Party's Scopr</label><br>
-
-
-                   </div>
                    <div class ="row">
                     <div class="col-md-12">
                     <label class="col-sm-2 col-form-label" for="quotation-notes">Notes</label><br>

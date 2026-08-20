@@ -29,6 +29,33 @@ class QuotationTest extends TestCase
         $response->assertSee('Rajesh Patel');
     }
 
+    public function test_generatequtation_form_labels_are_all_associated_with_a_real_field(): void
+    {
+        // Regression test: 12 labels on this form all pointed at
+        // for="basic-default-name", an id that (at most) one input actually
+        // had - clicking almost any label did nothing instead of focusing
+        // its field. Every <label for="X"> must have a matching id="X" (or
+        // name="X" for a radio group, since multiple radios share a name)
+        // somewhere on the page.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+        $response->assertOk();
+
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($response->getContent());
+        $xpath = new \DOMXPath($dom);
+
+        $labels = $xpath->query('//label[@for]');
+        $this->assertGreaterThan(0, $labels->length);
+
+        foreach ($labels as $label) {
+            $for = $label->getAttribute('for');
+            $matches = $xpath->query("//*[@id='" . $for . "'] | //*[@name='" . $for . "']");
+            $this->assertGreaterThan(0, $matches->length, "No element with id or name \"$for\" for label \"{$label->textContent}\"");
+        }
+    }
+
     public function test_generatequtation_page_shows_config_for_the_requested_product(): void
     {
         $user = User::factory()->create();
