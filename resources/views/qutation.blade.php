@@ -49,22 +49,6 @@ Qutation
                         </div>
                     </div>
                     <br>
-                    <div class ="row">
-                        <div class="col-md-3">
-                        <label class="col-form-label" for="canopy-yes">Quotation For</label><br>
-                        <input type="radio" id="canopy-yes" name="fav_language" value="With Canopy">
-                        <label class="col-form-label" for="canopy-yes">With Canopy</label>
-                        </div>
-                        <div class="col-md-3">
-                        <label class="col-form-label" style="visibility: hidden;" for="canopy-no">Quotation For</label><br>
-                        <input type="radio" id="canopy-no" name="fav_language" value="Without Canopy">
-                        <label class="col-form-label" for="canopy-no">Without Canopy</label>
-                        </div>
-
-
-
-                        </div>
-                        <br>
                         <div class="row">
                             <div class="col-md-4">
                             <label class="col-form-label" for="quotation-client-name">Client Name</label><br>

@@ -29,6 +29,21 @@ class QuotationTest extends TestCase
         $response->assertSee('Rajesh Patel');
     }
 
+    public function test_generatequtation_form_has_no_dead_canopy_field(): void
+    {
+        // "With Canopy / Without Canopy" was leftover unedited Velzon demo
+        // markup (originally a language-select widget) - never validated,
+        // never saved to any column, never shown anywhere including the
+        // PDF. Removed rather than left to silently discard a real choice.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('generatequtation', 1));
+
+        $response->assertOk();
+        $response->assertDontSee('fav_language', false);
+        $response->assertDontSee('With Canopy');
+    }
+
     public function test_generatequtation_form_labels_are_all_associated_with_a_real_field(): void
     {
         // Regression test: 12 labels on this form all pointed at
