@@ -43,6 +43,49 @@ class ReportsTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_reports_page_links_to_accounting_for_a_user_who_can_see_it(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        // "View Full Accounting Reports" is distinctive text this page adds
+        // itself - the sidebar already links to Accounting whenever the
+        // user has this same permission, so asserting the bare route URL
+        // would pass even without this fix (a false positive).
+        $response->assertSee('View Full Accounting Reports');
+    }
+
+    public function test_reports_page_hides_the_accounting_link_from_a_role_without_accounting_access(): void
+    {
+        // Manager has reports.view but not accounting.view - showing a link
+        // that leads straight to a 403 would be worse than no link at all.
+        $manager = User::factory()->create();
+        $manager->syncRoles(['Manager']);
+
+        $response = $this->actingAs($manager)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertDontSee('View Full Accounting Reports');
+    }
+
+    public function test_reports_tables_use_aligned_number_styling(): void
+    {
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $response = $this->actingAs($owner)->get(route('reports.index'));
+
+        $response->assertOk();
+        // 4 tables previously missing it: Technician Performance, Machine
+        // Service History, Expenses by Category, Inventory Levels. Matches
+        // the exact class string so it can't collide with the "tabular-nums"
+        // CSS rule definition that's already present on every page's layout.
+        $this->assertSame(4, substr_count($response->getContent(), 'table-bordered align-middle mb-0 tabular-nums'));
+    }
+
     public function test_job_throughput_counts_jobs_by_status(): void
     {
         $owner = User::factory()->create();

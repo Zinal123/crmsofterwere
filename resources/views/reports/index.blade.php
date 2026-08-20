@@ -4,7 +4,12 @@
 <div class="container-fluid">
     <x-ui.back-link :route="route('root')" label="Back to Dashboard" />
 
-    <h4 class="mb-3">Reports</h4>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Reports</h4>
+        @can('accounting.view')
+            <a href="{{ route('accounting.chart') }}" class="btn btn-soft-primary btn-sm"><i class="ri-file-chart-line align-middle me-1"></i> View Full Accounting Reports</a>
+        @endcan
+    </div>
 
     <div class="card mb-3">
         <div class="card-body">
@@ -56,7 +61,7 @@
         <div class="card-body">
             <h5 class="card-title">Technician Performance</h5>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle mb-0">
+                <table class="table table-bordered align-middle mb-0 tabular-nums">
                     <thead>
                         <tr><th>Worker</th><th>Completed Jobs</th><th>Avg. Completion Time</th></tr>
                     </thead>
@@ -80,7 +85,7 @@
         <div class="card-body">
             <h5 class="card-title">Machine Service History</h5>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle mb-0">
+                <table class="table table-bordered align-middle mb-0 tabular-nums">
                     <thead>
                         <tr><th>Machine</th><th>Total Jobs</th><th>Last Service</th></tr>
                     </thead>
@@ -105,7 +110,7 @@
             <h5 class="card-title">Expenses by Category</h5>
             <p class="text-muted small">Money out (payments) from the Daily Expenses module, summed per category.</p>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle mb-0">
+                <table class="table table-bordered align-middle mb-0 tabular-nums">
                     <thead>
                         <tr><th>Category</th><th>Total</th></tr>
                     </thead>
@@ -129,7 +134,7 @@
             <h5 class="card-title">Inventory Levels</h5>
             <p class="text-muted small">Current stock on hand. This is not an inventory-turns report — that needs a stock-movement history this app doesn't track yet.</p>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle mb-0">
+                <table class="table table-bordered align-middle mb-0 tabular-nums">
                     <thead>
                         <tr><th>Part</th><th>Quantity</th><th>Status</th></tr>
                     </thead>
