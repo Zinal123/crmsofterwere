@@ -569,6 +569,25 @@ class InvoiceTest extends TestCase
         $response->assertSee('Precision CNC Works');
     }
 
+    public function test_paymenthistry_rows_link_to_the_invoice_they_are_a_payment_against(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['amount' => 100000, 'paidamount' => 0, 'remaining_amount' => 100000]);
+        Customer::factory()->create(['invoice_id' => $invoice->id, 'name' => 'Precision CNC Works']);
+
+        $this->actingAs($user)->post('/update-payment', [
+            'id' => $invoice->id,
+            'customer_id' => Customer::first()->id,
+            'paidAmount' => 25000,
+            'payment_method' => 'cash',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('invoice.histry'));
+
+        $response->assertOk();
+        $response->assertSee(route('invoice.details', $invoice->id), false);
+    }
+
     public function test_paymenthistry_breadcrumb_says_payment_history_not_invoices(): void
     {
         $user = User::factory()->create();

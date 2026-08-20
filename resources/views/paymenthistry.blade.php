@@ -49,10 +49,16 @@ Payment History
                             <tbody class="list form-check-all" id="invoice-list-data">
                                 @foreach($Paidamount as $item)
                                  <tr>
-                                  <td>{{$item->id}}</td>
+                                  <td>
+                                    @if($item->invoice_id)
+                                        <a href="{{ route('invoice.details', $item->invoice_id) }}">{{$item->id}}</a>
+                                    @else
+                                        {{$item->id}}
+                                    @endif
+                                  </td>
                                   <td>{{$item->cname}}</td>
                                   <td>{{$item->paidAmount}}</td>
-                                  
+
                                  </tr>
                                 @endforeach
                             </tbody>
