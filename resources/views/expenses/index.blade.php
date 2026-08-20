@@ -110,9 +110,9 @@ Daily Expenses
                         <label class="form-label">Type <span class="text-danger">*</span></label>
                         <div class="btn-group w-100" role="group">
                             <input type="radio" class="btn-check" name="type" id="type-payment" value="payment" checked>
-                            <label class="btn btn-outline-danger" for="type-payment">Send Payment</label>
+                            <label class="btn btn-outline-danger" for="type-payment">Money Out</label>
                             <input type="radio" class="btn-check" name="type" id="type-receipt" value="receipt">
-                            <label class="btn btn-outline-success" for="type-receipt">Receive Payment</label>
+                            <label class="btn btn-outline-success" for="type-receipt">Money In</label>
                         </div>
                     </div>
 

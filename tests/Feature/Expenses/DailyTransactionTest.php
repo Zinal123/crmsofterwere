@@ -33,6 +33,21 @@ class DailyTransactionTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_add_transaction_modal_uses_the_same_wording_as_the_table_badges(): void
+    {
+        // Table badges were reworded to "Money Out"/"Money In" but the
+        // modal's own radio labels were left saying "Send Payment"/"Receive
+        // Payment" - same page, two different phrasings for the same thing.
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $response = $this->actingAs($owner)->get(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertDontSee('Send Payment');
+        $response->assertDontSee('Receive Payment');
+    }
+
     public function test_worker_cannot_view_the_daily_expenses_page(): void
     {
         $worker = User::factory()->create();
