@@ -48,6 +48,25 @@ class DailyTransactionTest extends TestCase
         $response->assertDontSee('Receive Payment');
     }
 
+    public function test_cash_book_link_is_not_styled_as_a_create_action(): void
+    {
+        // Cash Book is a report link, not a "create new" action, but it
+        // reused the shared card's createRoute/createLabel slot - which
+        // always renders a green "+" button, the same visual language as
+        // the real "Add Transaction" create action right above it.
+        $owner = User::factory()->create();
+        $owner->assignRole('Owner');
+
+        $response = $this->actingAs($owner)->get(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertSee(route('expenses.cashbook'), false);
+        // The page's other 3 "+" icons are real create actions (Add
+        // Transaction button, its modal submit, quick-add category) -
+        // Cash Book's was the 4th, a report link wearing a "create" icon.
+        $this->assertSame(3, substr_count($response->getContent(), 'ri-add-line'));
+    }
+
     public function test_worker_cannot_view_the_daily_expenses_page(): void
     {
         $worker = User::factory()->create();

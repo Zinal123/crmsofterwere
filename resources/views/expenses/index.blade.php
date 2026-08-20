@@ -12,18 +12,19 @@ Daily Expenses
 @endslot
 @endcomponent
 
-@can('expenses.manage')
 <div class="d-flex justify-content-end gap-2 mb-3">
-    <a href="{{ route('admin.expense-categories.index') }}" class="btn btn-soft-secondary"><i class="ri-price-tag-3-line align-middle"></i> Manage Categories</a>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
-        <i class="ri-add-line align-middle"></i> Add Transaction
-    </button>
+    <a href="{{ route('expenses.cashbook') }}" class="btn btn-soft-secondary"><i class="ri-book-2-line align-middle"></i> Cash Book</a>
+    @can('expenses.manage')
+        <a href="{{ route('admin.expense-categories.index') }}" class="btn btn-soft-secondary"><i class="ri-price-tag-3-line align-middle"></i> Manage Categories</a>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+            <i class="ri-add-line align-middle"></i> Add Transaction
+        </button>
+    @endcan
 </div>
-@endcan
 
 <div class="row">
     <div class="col-lg-12">
-        <x-ui.data-table-card title="Recent Transactions" :createRoute="route('expenses.cashbook')" createLabel="Cash Book">
+        <x-ui.data-table-card title="Recent Transactions">
             <form method="GET" action="{{ route('expenses.index') }}" class="row g-2 align-items-end mb-3">
                 <div class="col-auto">
                     <label for="filter-from" class="form-label small mb-1">From</label>
