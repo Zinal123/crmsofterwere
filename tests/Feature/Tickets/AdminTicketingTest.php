@@ -155,6 +155,52 @@ class AdminTicketingTest extends TestCase
         $response->assertSessionHas('error');
     }
 
+    public function test_ticket_detail_links_the_client_and_machine_for_a_user_who_can_view_them(): void
+    {
+        $owner = User::factory()->create();
+        $account = ClientAccount::factory()->create();
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $problemType = TicketProblemType::factory()->create();
+        $ticket = Ticket::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'problem_type_id' => $problemType->id,
+            'status' => 'open',
+        ]);
+
+        $response = $this->actingAs($owner)->get(route('admin.tickets.show', $ticket->id));
+
+        $response->assertOk();
+        $response->assertSee(route('admin.client-accounts.index') . '#client-' . $account->id, false);
+        $response->assertSee(route('admin.client-machines.index') . '#client-machine-' . $machine->id, false);
+    }
+
+    public function test_ticket_detail_hides_client_and_machine_links_from_a_role_without_access(): void
+    {
+        // Manager has tickets.view but neither client-machines.manage (for
+        // the client accounts index) nor client-machines.view (for the
+        // machines index) - showing links that lead straight to a 403 would
+        // be worse than plain text.
+        $manager = User::factory()->create();
+        $manager->syncRoles(['Manager']);
+        $account = ClientAccount::factory()->create(['name' => 'Plain Text Client']);
+        $machine = ClientMachine::factory()->create(['client_account_id' => $account->id]);
+        $problemType = TicketProblemType::factory()->create();
+        $ticket = Ticket::create([
+            'client_machine_id' => $machine->id,
+            'client_account_id' => $account->id,
+            'problem_type_id' => $problemType->id,
+            'status' => 'open',
+        ]);
+
+        $response = $this->actingAs($manager)->get(route('admin.tickets.show', $ticket->id));
+
+        $response->assertOk();
+        $response->assertSee('Plain Text Client');
+        $response->assertDontSee(route('admin.client-accounts.index'), false);
+        $response->assertDontSee(route('admin.client-machines.index'), false);
+    }
+
     public function test_worker_cannot_reach_the_ticket_inbox(): void
     {
         $worker = User::factory()->create();

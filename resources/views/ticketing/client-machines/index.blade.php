@@ -73,7 +73,7 @@ Client Machines
                     </thead>
                     <tbody>
                         @forelse($clientMachines as $machine)
-                        <tr>
+                        <tr id="client-machine-{{ $machine->id }}">
                             <td>{{ $machine->clientAccount->name ?? '-' }}</td>
                             <td>{{ $machine->product->name ?? '-' }}</td>
                             <td>{{ $machine->serial_number }}</td>

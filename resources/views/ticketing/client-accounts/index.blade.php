@@ -51,7 +51,7 @@ Client Accounts
                     </thead>
                     <tbody>
                         @forelse($clientAccounts as $account)
-                        <tr>
+                        <tr id="client-{{ $account->id }}">
                             <td>{{ $account->name }}</td>
                             <td>{{ $account->email }}</td>
                             <td>{{ $account->phone ?: '-' }}</td>

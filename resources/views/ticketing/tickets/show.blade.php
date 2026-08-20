@@ -66,9 +66,23 @@ Ticket #{{ $ticket->id }}
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Client & Machine</h5>
-                <p class="mb-1"><strong>Client:</strong> {{ $ticket->clientAccount->name ?? '-' }}</p>
+                <p class="mb-1">
+                    <strong>Client:</strong>
+                    @can('client-machines.manage')
+                        <a href="{{ route('admin.client-accounts.index') . '#client-' . $ticket->client_account_id }}">{{ $ticket->clientAccount->name ?? '-' }}</a>
+                    @else
+                        {{ $ticket->clientAccount->name ?? '-' }}
+                    @endcan
+                </p>
                 <p class="mb-1"><strong>Phone:</strong> {{ $ticket->clientAccount->phone ?? '-' }}</p>
-                <p class="mb-1"><strong>Product:</strong> {{ $ticket->clientMachine->product->name ?? '-' }}</p>
+                <p class="mb-1">
+                    <strong>Product:</strong>
+                    @can('client-machines.view')
+                        <a href="{{ route('admin.client-machines.index') . '#client-machine-' . $ticket->client_machine_id }}">{{ $ticket->clientMachine->product->name ?? '-' }}</a>
+                    @else
+                        {{ $ticket->clientMachine->product->name ?? '-' }}
+                    @endcan
+                </p>
                 <p class="mb-0"><strong>Serial No:</strong> {{ $ticket->clientMachine->serial_number ?? '-' }}</p>
             </div>
         </div>
