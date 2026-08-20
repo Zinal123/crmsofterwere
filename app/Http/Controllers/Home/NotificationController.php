@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    /** Every notification for the user, newest first - the dropdown only ever shows the latest 10. */
+    public function index(Request $request)
+    {
+        return view('notifications.index', [
+            'notifications' => $request->user()->notifications()->latest()->paginate(20),
+        ]);
+    }
+
     /** Mark a single notification read (fired as the user opens it). */
     public function read(Request $request, string $id)
     {

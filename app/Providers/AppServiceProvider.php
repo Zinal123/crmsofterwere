@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\Paginator;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+        // This app is Bootstrap 5 throughout (no Tailwind CSS loaded) -
+        // Laravel's default pagination view is Tailwind-styled and would
+        // render unstyled/broken here otherwise.
+        Paginator::useBootstrapFive();
          // Check if the sessions directory exists; if not, create it
     if (!File::isDirectory(storage_path('framework/sessions'))) {
         File::makeDirectory(storage_path('framework/sessions'), 0755, true);

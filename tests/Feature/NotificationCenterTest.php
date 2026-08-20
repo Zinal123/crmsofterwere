@@ -105,6 +105,65 @@ class NotificationCenterTest extends TestCase
         $this->assertEquals(0, $owner->fresh()->unreadNotifications()->count());
     }
 
+    public function test_view_all_notifications_link_appears_in_the_dropdown(): void
+    {
+        $owner = $this->owner();
+
+        $response = $this->actingAs($owner)->get(route('root'));
+
+        $response->assertOk();
+        $response->assertSee(route('notifications.index'), false);
+    }
+
+    public function test_notifications_index_shows_more_than_the_dropdowns_10_item_limit(): void
+    {
+        // The topbar dropdown only ever loads the latest 10 - this page is
+        // specifically for seeing everything beyond that.
+        $owner = $this->owner();
+        for ($i = 1; $i <= 15; $i++) {
+            $this->pushNotification($owner, LowStockNotification::class, [
+                'invetry_id' => $i, 'product_name' => "Part $i", 'quantity' => 0,
+            ]);
+        }
+
+        $response = $this->actingAs($owner)->get(route('notifications.index'));
+
+        $response->assertOk();
+        $response->assertSee('Part 1');
+        $response->assertSee('Part 11');
+    }
+
+    public function test_notifications_index_pagination_is_bootstrap_styled(): void
+    {
+        // Laravel's default pagination view is Tailwind-styled - this app
+        // has no Tailwind CSS loaded (Bootstrap 5 throughout), so it would
+        // render as unstyled plain links without the AppServiceProvider fix.
+        $owner = $this->owner();
+        for ($i = 1; $i <= 25; $i++) {
+            $this->pushNotification($owner, LowStockNotification::class, ['invetry_id' => $i, 'product_name' => "Part $i", 'quantity' => 0]);
+        }
+
+        $response = $this->actingAs($owner)->get(route('notifications.index'));
+
+        $response->assertOk();
+        $response->assertSee('page-link', false);
+        $response->assertDontSee('sm:hidden', false);
+    }
+
+    public function test_notifications_index_only_shows_the_current_users_own_notifications(): void
+    {
+        $owner = $this->owner();
+        $other = $this->owner();
+        $this->pushNotification($owner, LowStockNotification::class, ['invetry_id' => 1, 'product_name' => 'My Part', 'quantity' => 0]);
+        $this->pushNotification($other, LowStockNotification::class, ['invetry_id' => 2, 'product_name' => 'Someone Elses Part', 'quantity' => 0]);
+
+        $response = $this->actingAs($owner)->get(route('notifications.index'));
+
+        $response->assertOk();
+        $response->assertSee('My Part');
+        $response->assertDontSee('Someone Elses Part');
+    }
+
     public function test_a_user_cannot_mark_another_users_notification_read(): void
     {
         $owner = $this->owner();
