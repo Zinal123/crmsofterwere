@@ -59,6 +59,17 @@ class ProductController extends Controller
         return redirect()->route('product');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ids = (array) $request->input('ids', []);
+
+        foreach ($ids as $id) {
+            $this->service->delete($id);
+        }
+
+        return redirect()->route('product')->with('success', count($ids) . ' product(s) deleted.');
+    }
+
     public function toggleSparePart($id)
     {
         $this->service->toggleSparePart($id);

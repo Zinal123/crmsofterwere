@@ -77,4 +77,47 @@ class ProductTest extends TestCase
         $response->assertOk();
         $response->assertSee('data-bs-target="#editProduct-' . $product->id . '"', false);
     }
+
+    public function test_product_list_page_shows_bulk_select_checkboxes_and_bulk_bar(): void
+    {
+        $user = User::factory()->create();
+        $product = \App\Models\Product::create(['name' => 'Bulk Candidate', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'OLD-1']);
+
+        $response = $this->actingAs($user)->get(route('product'));
+
+        $response->assertOk();
+        $response->assertSee('class="form-check-input bulk-select-row" value="' . $product->id . '"', false);
+        $response->assertSee('id="products-bulk-bar"', false);
+        $response->assertSee(route('product.bulk-delete'), false);
+    }
+
+    public function test_owner_can_bulk_delete_products(): void
+    {
+        $user = User::factory()->create();
+        $keep = \App\Models\Product::create(['name' => 'Keep Me', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'KEEP-1']);
+        $deleteOne = \App\Models\Product::create(['name' => 'Delete Me 1', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'DEL-1']);
+        $deleteTwo = \App\Models\Product::create(['name' => 'Delete Me 2', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'DEL-2']);
+
+        $response = $this->actingAs($user)->post(route('product.bulk-delete'), [
+            'ids' => [$deleteOne->id, $deleteTwo->id],
+        ]);
+
+        $response->assertRedirect(route('product'));
+        $this->assertDatabaseMissing('product', ['id' => $deleteOne->id]);
+        $this->assertDatabaseMissing('product', ['id' => $deleteTwo->id]);
+        $this->assertDatabaseHas('product', ['id' => $keep->id]);
+    }
+
+    public function test_worker_cannot_bulk_delete_products(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $worker = User::factory()->create();
+        $worker->syncRoles(['Worker']);
+        $product = \App\Models\Product::create(['name' => 'Protected', 'rate' => 1000, 'unit' => 'Nos', 'make' => 'OLD-1']);
+
+        $response = $this->actingAs($worker)->post(route('product.bulk-delete'), ['ids' => [$product->id]]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('product', ['id' => $product->id]);
+    }
 }

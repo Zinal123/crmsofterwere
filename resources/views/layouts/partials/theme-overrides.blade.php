@@ -219,4 +219,39 @@
         outline: 2px solid var(--vz-primary);
         outline-offset: 2px;
     }
+
+    /* Floating bulk-action bar - appears once one or more table rows are
+       checkbox-selected (e.g. Products). Hidden via transform+opacity
+       rather than display:none so the show/hide is animatable and the
+       bar doesn't reflow the page underneath it (it's position:fixed). */
+    .oms-bulk-bar {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate(-50%, 100px);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        background: var(--vz-card-bg);
+        border: 1px solid var(--vz-border-color);
+        box-shadow: 0 8px 28px rgba(13, 27, 72, .18);
+        border-radius: .75rem;
+        padding: .6rem 1rem;
+        transition: transform .18s ease, opacity .18s ease;
+    }
+    .oms-bulk-bar.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .oms-bulk-bar-count {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    [data-bs-theme=dark] .oms-bulk-bar {
+        box-shadow: 0 8px 28px rgba(0, 0, 0, .5);
+    }
 </style>

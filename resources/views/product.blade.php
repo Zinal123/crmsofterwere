@@ -26,6 +26,11 @@ list view
                 <table class="table table-hover table-bordered align-middle" id="products-table">
                     <thead class="text-muted">
                         <tr>
+                            @can('products.delete')
+                            <th style="width:36px;">
+                                <input type="checkbox" class="form-check-input bulk-select-all" aria-label="Select all products">
+                            </th>
+                            @endcan
                             <th class="sort text-uppercase" data-sort="invoice_id">ID</th>
                             <th class="sort text-uppercase" data-sort="product">
                                 Product</th>
@@ -40,6 +45,11 @@ list view
                     <tbody class="list form-check-all">
                     @foreach ($product as $item)
                         <tr id="product-{{ $item->id }}">
+                        @can('products.delete')
+                        <td>
+                            <input type="checkbox" class="form-check-input bulk-select-row" value="{{ $item->id }}" aria-label="Select {{ $item->name }}">
+                        </td>
+                        @endcan
                         <td>{{$item->id}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->make}}</td>
@@ -346,6 +356,19 @@ list view
     <x-ui.audit-trail-modal type="inventory" />
 @endcan
 <x-ui.confirm-modal recordType="product" />
+
+@can('products.delete')
+<output class="oms-bulk-bar" id="products-bulk-bar" aria-live="polite">
+    <span class="oms-bulk-bar-count"><span id="products-bulk-count">0</span> selected</span>
+    <form id="products-bulk-delete-form" action="{{ route('product.bulk-delete') }}" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-danger btn-sm" data-confirm-delete>
+            <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete Selected
+        </button>
+    </form>
+    <button type="button" class="btn btn-light btn-sm" id="products-bulk-clear">Clear</button>
+</output>
+@endcan
 @endsection
 @section('script')
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
@@ -438,6 +461,56 @@ document.addEventListener('DOMContentLoaded', function () {
             zeroRecords: 'No matching products found.',
             search: 'Search products:',
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('products-table');
+    const bar = document.getElementById('products-bulk-bar');
+    if (!table || !bar) {
+        return;
+    }
+    const countEl = document.getElementById('products-bulk-count');
+    const form = document.getElementById('products-bulk-delete-form');
+    const clearBtn = document.getElementById('products-bulk-clear');
+
+    function refresh() {
+        const selected = Array.from(table.querySelectorAll('.bulk-select-row:checked'));
+        countEl.textContent = selected.length;
+        bar.classList.toggle('show', selected.length > 0);
+        form.querySelectorAll('input[name="ids[]"]').forEach(function (el) { el.remove(); });
+        selected.forEach(function (cb) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = cb.value;
+            form.appendChild(input);
+        });
+    }
+
+    // Delegated on document (not `table`) so it keeps working after
+    // DataTables tears down and rebuilds the table's DOM on init/redraw.
+    document.addEventListener('change', function (event) {
+        if (event.target.matches('.bulk-select-row')) {
+            refresh();
+        }
+        if (event.target.matches('.bulk-select-all')) {
+            const checked = event.target.checked;
+            table.querySelectorAll('.bulk-select-row').forEach(function (cb) {
+                // Only select rows DataTables is currently showing (not filtered/paginated away).
+                if (cb.closest('tr').offsetParent !== null) {
+                    cb.checked = checked;
+                }
+            });
+            refresh();
+        }
+    });
+
+    clearBtn.addEventListener('click', function () {
+        table.querySelectorAll('.bulk-select-row:checked, .bulk-select-all:checked').forEach(function (cb) {
+            cb.checked = false;
+        });
+        refresh();
     });
 });
 </script>
