@@ -158,4 +158,65 @@
     .page-title-box {
         margin-top: -68px;
     }
+
+    /* Toggle switch (the ui.toggle Blade component) - used for genuinely binary,
+       immediately-actionable record states (Active/Inactive on Users,
+       Machines, Client Accounts, Problem Types, Expense Categories).
+       State is never color-alone: the thumb's left/right position and the
+       track's gray/green color both change together. The visible track is
+       a normal 40x22px switch, but the real click/tap target (the label
+       and its hidden-under-opacity checkbox) is a full 44x44px box, so the
+       accessible hit area doesn't depend on the switch looking oversized. */
+    .oms-toggle {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin: 0;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .oms-toggle input[type="checkbox"] {
+        position: absolute;
+        inset: 0;
+        width: 44px;
+        height: 44px;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .oms-toggle-track {
+        width: 40px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--vz-secondary-bg, #e9ecef);
+        border: 1px solid var(--vz-border-color);
+        position: relative;
+        transition: background-color .15s ease, border-color .15s ease;
+        pointer-events: none;
+    }
+    .oms-toggle-thumb {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+        transition: transform .15s ease;
+    }
+    .oms-toggle input:checked ~ .oms-toggle-track {
+        background: var(--vz-success);
+        border-color: var(--vz-success);
+    }
+    .oms-toggle input:checked ~ .oms-toggle-track .oms-toggle-thumb {
+        transform: translateX(18px);
+    }
+    .oms-toggle input:focus-visible ~ .oms-toggle-track {
+        outline: 2px solid var(--vz-primary);
+        outline-offset: 2px;
+    }
 </style>

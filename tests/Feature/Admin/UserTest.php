@@ -28,16 +28,30 @@ class UserTest extends TestCase
         $response->assertSee('Existing Owner');
     }
 
-    public function test_users_page_shows_status_badge_with_icon(): void
+    public function test_users_page_shows_a_toggle_reflecting_each_users_active_state(): void
     {
+        // The status badge + separate Activate/Deactivate button were
+        // replaced with a single toggle switch - assert structurally, via
+        // the real checkbox's checked attribute, that an active user's
+        // toggle is on and an inactive user's is off (not just that some
+        // "active"-ish text appears somewhere on the page).
         $owner = \App\Models\User::factory()->create();
-        \App\Models\User::factory()->create(['is_active' => false]);
+        $inactiveUser = \App\Models\User::factory()->create(['is_active' => false]);
 
         $response = $this->actingAs($owner)->get(route('admin.users.index'));
-
         $response->assertOk();
-        $response->assertSee('ri-checkbox-circle-line', false);
-        $response->assertSee('ri-close-circle-line', false);
+
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($response->getContent());
+        $xpath = new \DOMXPath($dom);
+
+        $ownerToggle = $xpath->query('//input[@type="checkbox"][@aria-label="' . $owner->name . ' active status"]')->item(0);
+        $inactiveToggle = $xpath->query('//input[@type="checkbox"][@aria-label="' . $inactiveUser->name . ' active status"]')->item(0);
+
+        $this->assertNotNull($ownerToggle, 'Active-status toggle for the owner not found.');
+        $this->assertTrue($ownerToggle->hasAttribute('checked'));
+        $this->assertNotNull($inactiveToggle, 'Active-status toggle for the inactive user not found.');
+        $this->assertFalse($inactiveToggle->hasAttribute('checked'));
     }
 
     public function test_owner_can_create_a_worker_with_a_temporary_password(): void

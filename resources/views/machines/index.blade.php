@@ -17,18 +17,14 @@
                     <tr id="machine-{{ $machine->id }}">
                         <td>{{ $machine->name }}</td>
                         <td>
-                            <x-ui.status-badge
-                                :status="$machine->is_active ? 'Active' : 'Inactive'"
-                                :variant="$machine->is_active ? 'success' : 'secondary'"
-                                icon="{{ $machine->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line' }}" />
+                            <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <x-ui.toggle :checked="$machine->is_active" name="is_active" :ariaLabel="$machine->name . ' active status'" />
+                            </form>
                         </td>
                         <td>
                             <div class="d-flex gap-2 flex-wrap">
                                 <x-ui.button variant="primary" :soft="true" size="sm" type="button" icon="ri-edit-line" data-bs-toggle="modal" data-bs-target="#editMachine-{{ $machine->id }}" ariaLabel="Edit" title="Edit" />
-                                <form action="{{ route('machines.toggle', $machine->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <x-ui.button variant="secondary" :soft="true" size="sm" type="submit" :icon="$machine->is_active ? 'ri-forbid-line' : 'ri-toggle-line'" :ariaLabel="$machine->is_active ? 'Disable' : 'Enable'" data-bs-toggle="tooltip" :title="$machine->is_active ? 'Disable' : 'Enable'" />
-                                </form>
                                 <x-ui.button variant="secondary" :soft="true" size="sm" type="button" icon="ri-qr-code-line" class="show-machine-qr" data-machine-id="{{ $machine->id }}" data-machine-name="{{ $machine->name }}" data-machine-token="{{ \App\Support\MachineQrCode::token($machine->id) }}" ariaLabel="QR Code" title="QR Code" />
                                 @can('machines.view-audit')
                                 <x-ui.button variant="secondary" :soft="true" size="sm" type="button" icon="ri-history-line" data-bs-toggle="modal" data-bs-target="#auditTrailModal-machine" data-audit-id="{{ $machine->id }}" ariaLabel="History" title="History" />

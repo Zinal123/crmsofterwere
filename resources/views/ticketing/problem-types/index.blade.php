@@ -67,7 +67,7 @@ Problem Types
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Category</th><th>Name</th><th>Priority</th><th>Est. Hours</th><th>Checklist Template</th><th>Status</th><th></th></tr>
+                        <tr><th>Category</th><th>Name</th><th>Priority</th><th>Est. Hours</th><th>Checklist Template</th><th>Status</th></tr>
                     </thead>
                     <tbody>
                         @forelse($problemTypes as $problemType)
@@ -80,23 +80,14 @@ Problem Types
                             <td>{{ $problemType->estimated_resolution_hours ?? '—' }}</td>
                             <td>{{ $problemType->checklistTemplate->name ?? '—' }}</td>
                             <td>
-                                <x-ui.status-badge
-                                    :status="$problemType->is_active ? 'Active' : 'Inactive'"
-                                    :variant="$problemType->is_active ? 'success' : 'danger'"
-                                    :icon="$problemType->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                                />
-                            </td>
-                            <td>
                                 <form action="{{ route('admin.ticket-problem-types.toggle', $problemType->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-soft-secondary btn-sm" data-bs-toggle="tooltip" title="{{ $problemType->is_active ? 'Disable' : 'Enable' }}" aria-label="{{ $problemType->is_active ? 'Disable' : 'Enable' }}">
-                                        <i class="{{ $problemType->is_active ? 'ri-forbid-line' : 'ri-toggle-line' }} align-bottom"></i>
-                                    </button>
+                                    <x-ui.toggle :checked="$problemType->is_active" name="is_active" :ariaLabel="$problemType->name . ' active status'" />
                                 </form>
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="7"><x-ui.empty-state icon="ri-error-warning-line" message="No problem types yet." /></td></tr>
+                        <tr><td colspan="6"><x-ui.empty-state icon="ri-error-warning-line" message="No problem types yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>

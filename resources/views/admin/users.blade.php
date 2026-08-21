@@ -76,11 +76,7 @@ Users
                                 @endif
                             </td>
                             <td>
-                                <x-ui.status-badge
-                                    :status="$user->is_active ? 'Active' : 'Inactive'"
-                                    :variant="$user->is_active ? 'success' : 'danger'"
-                                    :icon="$user->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                                />
+                                <x-ui.toggle :checked="$user->is_active" name="is_active" :ariaLabel="$user->name . ' active status'" :formId="'user-role-form-' . $user->id" />
                             </td>
                             <td>
                                 <div class="d-flex gap-2 flex-wrap mb-1">
@@ -93,19 +89,16 @@ Users
                                     </button>
                                     @endcan
                                 </div>
-                                <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="d-flex gap-1">
+                                <form id="user-role-form-{{ $user->id }}" action="{{ route('admin.users.update', $user->id) }}" method="POST" class="d-flex gap-1">
                                     @csrf
                                     @method('PUT')
-                                    <select name="role" class="form-select form-select-sm">
+                                    <label class="visually-hidden" for="user-role-select-{{ $user->id }}">Role for {{ $user->name }}</label>
+                                    <select id="user-role-select-{{ $user->id }}" name="role" class="form-select form-select-sm">
                                         @foreach($roles as $role)
                                             <option value="{{ $role->name }}" {{ $user->roles->pluck('name')->first() === $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" name="is_active" value="{{ $user->is_active ? '0' : '1' }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                        <i class="{{ $user->is_active ? 'ri-user-unfollow-line' : 'ri-user-follow-line' }} align-bottom"></i>
-                                        {{ $user->is_active ? 'Deactivate' : 'Activate' }}
-                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Save Role</button>
                                 </form>
                             </td>
                         </tr>

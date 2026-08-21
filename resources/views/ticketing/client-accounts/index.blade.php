@@ -56,11 +56,10 @@ Client Accounts
                             <td>{{ $account->email }}</td>
                             <td>{{ $account->phone ?: '-' }}</td>
                             <td>
-                                <x-ui.status-badge
-                                    :status="$account->is_active ? 'Active' : 'Inactive'"
-                                    :variant="$account->is_active ? 'success' : 'danger'"
-                                    :icon="$account->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                                />
+                                <form action="{{ route('admin.client-accounts.toggle', $account->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <x-ui.toggle :checked="$account->is_active" name="is_active" :ariaLabel="$account->name . ' active status'" />
+                                </form>
                             </td>
                             <td>{{ $account->machines()->count() }}</td>
                             <td>
@@ -73,12 +72,6 @@ Client Accounts
                                         <i class="ri-history-line align-bottom"></i>
                                     </button>
                                     @endcan
-                                    <form action="{{ route('admin.client-accounts.toggle', $account->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-soft-{{ $account->is_active ? 'warning' : 'success' }} btn-sm" title="{{ $account->is_active ? 'Deactivate' : 'Activate' }}" aria-label="{{ $account->is_active ? 'Deactivate' : 'Activate' }}">
-                                            <i class="{{ $account->is_active ? 'ri-forbid-line' : 'ri-checkbox-circle-line' }} align-bottom"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

@@ -50,7 +50,7 @@ Categories
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <thead>
-                        <tr><th>Name</th><th>Applies To</th><th>Links To</th><th>Status</th><th></th></tr>
+                        <tr><th>Name</th><th>Applies To</th><th>Links To</th><th>Status</th></tr>
                     </thead>
                     <tbody>
                         @forelse($categories as $category)
@@ -59,23 +59,14 @@ Categories
                             <td>{{ $category->type === 'payment' ? 'Payment' : 'Receipt' }}</td>
                             <td>{{ $category->party_model ? ucfirst(str_replace('_', ' ', $category->party_model)) : '—' }}</td>
                             <td>
-                                <x-ui.status-badge
-                                    :status="$category->is_active ? 'Active' : 'Inactive'"
-                                    :variant="$category->is_active ? 'success' : 'danger'"
-                                    :icon="$category->is_active ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                                />
-                            </td>
-                            <td>
                                 <form action="{{ route('admin.expense-categories.toggle', $category->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-soft-secondary btn-sm" data-bs-toggle="tooltip" title="{{ $category->is_active ? 'Disable' : 'Enable' }}" aria-label="{{ $category->is_active ? 'Disable' : 'Enable' }}">
-                                        <i class="{{ $category->is_active ? 'ri-forbid-line' : 'ri-toggle-line' }} align-bottom"></i>
-                                    </button>
+                                    <x-ui.toggle :checked="$category->is_active" name="is_active" :ariaLabel="$category->name . ' active status'" />
                                 </form>
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="5"><x-ui.empty-state icon="ri-price-tag-3-line" message="No categories yet." /></td></tr>
+                        <tr><td colspan="4"><x-ui.empty-state icon="ri-price-tag-3-line" message="No categories yet." /></td></tr>
                         @endforelse
                     </tbody>
                 </table>
