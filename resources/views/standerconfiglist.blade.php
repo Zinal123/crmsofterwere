@@ -95,7 +95,7 @@ Standard Config List
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
                                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editMotor-{{ $item->id }}" title="Edit" aria-label="Edit">
-                                                     <i class="ri-pencil-fill align-bottom"></i>
+                                                     <i class="ri-edit-line align-bottom"></i>
                                                    </button>
                                                    <form action="{{ route('motordelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this motor entry? This cannot be undone.');">
                                                        @csrf
@@ -152,7 +152,7 @@ Standard Config List
                                                 <td>
                                                     <div class="d-flex gap-2 flex-wrap">
                                                         <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editGear-{{ $item2->id }}" title="Edit" aria-label="Edit">
-                                                             <i class="ri-pencil-fill align-bottom"></i>
+                                                             <i class="ri-edit-line align-bottom"></i>
                                                            </button>
                                                            <form action="{{ route('geardelete', $item2->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this gear entry? This cannot be undone.');">
                                                                @csrf
@@ -206,7 +206,7 @@ Standard Config List
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editRack-{{ $item3->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                       </button>
                                                       <form action="{{ route('rackdelete', $item3->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this rack entry? This cannot be undone.');">
                                                           @csrf
@@ -259,7 +259,7 @@ Standard Config List
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSoftware1-{{ $item4->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                       </button>
                                                       <form action="{{ route('software1delete', $item4->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this software entry? This cannot be undone.');">
                                                           @csrf

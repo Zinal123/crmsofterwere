@@ -53,7 +53,7 @@
                                     <form action="{{ route('employees.payments.destroy', [$employee->id, $payment->id]) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm-delete><i class="ri-delete-bin-line align-bottom"></i> Delete</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm-delete><i class="ri-delete-bin-fill align-bottom"></i> Delete</button>
                                     </form>
                                     @endcan
                                     @can('payroll.view-audit')

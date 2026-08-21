@@ -98,7 +98,7 @@ Standard Config
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
                                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSoftware-{{ $item->id }}" title="Edit" aria-label="Edit">
-                                                    <i class="ri-pencil-fill align-bottom"></i>
+                                                    <i class="ri-edit-line align-bottom"></i>
                                                 </button>
                                                 <form action="{{ route('softereweredelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this software entry? This cannot be undone.');">
                                                     @csrf
@@ -154,7 +154,7 @@ Standard Config
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLasercutting-{{ $item1->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                     </button>
                                                     <form action="{{ route('cuttingdelete', $item1->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this laser cutting machine entry? This cannot be undone.');">
                                                         @csrf
@@ -209,7 +209,7 @@ Standard Config
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editFocusing-{{ $item2->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                     </button>
                                                     <form action="{{ route('focusingdelete', $item2->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this focusing laser cutting head entry? This cannot be undone.');">
                                                         @csrf
@@ -264,7 +264,7 @@ Standard Config
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPower-{{ $item3->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                     </button>
                                                     <form action="{{ route('powerdelete', $item3->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this power source entry? This cannot be undone.');">
                                                         @csrf

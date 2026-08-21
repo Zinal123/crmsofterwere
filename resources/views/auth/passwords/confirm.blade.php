@@ -38,7 +38,7 @@ Confirm Password
             </div>
 
             <div class="mt-4">
-                <button class="btn btn-success w-100" type="submit">Confirm Password</button>
+                <button class="btn btn-primary w-100" type="submit">Confirm Password</button>
             </div>
         </form>
     </div>

@@ -90,7 +90,7 @@ Technical Parameters
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
                                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCuttingWay-{{ $item->id }}" title="Edit" aria-label="Edit">
-                                                    <i class="ri-pencil-fill align-bottom"></i>
+                                                    <i class="ri-edit-line align-bottom"></i>
                                                 </button>
                                                 <form action="{{ route('cuttingwaydelete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this cutting way entry? This cannot be undone.');">
                                                     @csrf
@@ -143,7 +143,7 @@ Technical Parameters
                                             <td>
                                                 <div class="d-flex gap-2 flex-wrap">
                                                     <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCncThickness-{{ $item1->id }}" title="Edit" aria-label="Edit">
-                                                        <i class="ri-pencil-fill align-bottom"></i>
+                                                        <i class="ri-edit-line align-bottom"></i>
                                                     </button>
                                                     <form action="{{ route('cncthinknessdelete', $item1->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this CNC thickness entry? This cannot be undone.');">
                                                         @csrf

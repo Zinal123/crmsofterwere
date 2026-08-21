@@ -53,7 +53,7 @@ Checklist Templates
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
-                            <i class="ri-delete-bin-line align-bottom"></i>
+                            <i class="ri-delete-bin-fill align-bottom"></i>
                         </button>
                     </form>
                 </div>

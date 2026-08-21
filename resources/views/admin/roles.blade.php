@@ -53,7 +53,7 @@ Roles & Permissions
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-soft-danger btn-sm p-1 ms-1" data-confirm-delete data-bs-toggle="tooltip" title="Delete Role" aria-label="Delete Role">
-                                                <i class="ri-delete-bin-line align-bottom"></i>
+                                                <i class="ri-delete-bin-fill align-bottom"></i>
                                             </button>
                                         </form>
                                     @endif

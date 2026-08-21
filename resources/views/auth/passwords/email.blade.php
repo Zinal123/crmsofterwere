@@ -43,7 +43,7 @@
             </div>
 
             <div class="mt-4">
-                <button class="btn btn-success w-100" type="submit">Reset password</button>
+                <button class="btn btn-primary w-100" type="submit">Reset password</button>
             </div>
         </form>
     </div>
