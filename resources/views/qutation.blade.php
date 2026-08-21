@@ -36,6 +36,13 @@ Qutation
                 <form action="{{route('generatequtationstore')}}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" id="quotation-product-id" value="{{ $defaultType === 'co2' ? 2 : 1 }}"/>
+
+                    <div class="card mb-3">
+                        <div class="card-header bg-transparent d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">1</span>
+                            <h5 class="card-title mb-0">Client Information</h5>
+                        </div>
+                        <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
                             <label class="col-form-label" for="quotation-type-fiber">Machine Type</label><br>
@@ -98,10 +105,16 @@ Qutation
                            </div>
 
                         </div>
-                        <br>
+                        </div>
+                    </div>
 
                         <div id="fiber-fields" @if($defaultType === 'co2') style="display:none;" @endif>
-                        <h5 class="mb-0">Standard Configuration</h5>
+                        <div class="card mb-3">
+                        <div class="card-header bg-transparent d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">2</span>
+                            <h5 class="card-title mb-0">Standard Configuration</h5>
+                        </div>
+                        <div class="card-body">
                         <table class="table">
                     <thead>
                       <tr>
@@ -155,8 +168,15 @@ Qutation
                      </tr>
                     </tbody>
                   </table>
-                  <br>
-                  <h5 class="mb-0">Standard Technical Parameters</h5>
+                        </div>
+                        </div>
+
+                        <div class="card mb-3">
+                        <div class="card-header bg-transparent d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">3</span>
+                            <h5 class="card-title mb-0">Standard Technical Parameters</h5>
+                        </div>
+                        <div class="card-body">
                   <table class="table">
                     <thead>
                       <tr>
@@ -234,8 +254,15 @@ Qutation
                      </tr>
                     </tbody>
                   </table>
-                  <br>
-                  <h5 class="mb-0">Standard Configuration List</h5>
+                        </div>
+                        </div>
+
+                        <div class="card mb-3">
+                        <div class="card-header bg-transparent d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">4</span>
+                            <h5 class="card-title mb-0">Standard Configuration List</h5>
+                        </div>
+                        <div class="card-body">
                   <table class="table">
                     <thead>
                       <tr>
@@ -300,11 +327,17 @@ Qutation
                     </tbody>
 
                   </table>
-                  <br>
+                        </div>
+                        </div>
                   </div>
 
                   <div id="co2-fields" @if($defaultType !== 'co2') style="display:none;" @endif>
-                  <h5 class="mb-0">Standard Technical Parameters</h5>
+                  <div class="card mb-3">
+                        <div class="card-header bg-transparent d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">2</span>
+                            <h5 class="card-title mb-0">Standard Technical Parameters</h5>
+                        </div>
+                        <div class="card-body">
                   <table class="table">
                     <thead>
                       <tr>
@@ -358,10 +391,13 @@ Qutation
 
                     </tbody>
                   </table>
-                  <br>
+                        </div>
+                        </div>
                   </div>
 
-                  <h5 class="mb-0">Pricing</h5>
+                  <div class="card mb-3">
+                        <div class="card-header bg-transparent"><h5 class="card-title mb-0">Pricing</h5></div>
+                        <div class="card-body">
                   @php
                       $productOptions = '<option value="">-- none --</option>' . $linkableProducts->map(
                           fn ($product) => '<option value="' . $product->id . '">' . e($product->name) . '</option>'
@@ -412,7 +448,10 @@ Qutation
                     <textarea id="quotation-notes" name="note" class="form-control" rows="4"></textarea>
 
                    </div>
-                   <br>
+                   </div>
+                        </div>
+                  </div>
+
                    <div class="row justify-content-end">
                           <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary" style="float: right;">Submit</button>
