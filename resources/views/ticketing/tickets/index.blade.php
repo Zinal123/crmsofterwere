@@ -16,7 +16,7 @@ Support Tickets
     <div class="col-lg-12">
         <x-ui.data-table-card title="Support Tickets">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Client</th><th>Machine</th><th>Category</th><th>Problem</th><th>Priority</th><th>Status</th><th></th></tr>
                     </thead>

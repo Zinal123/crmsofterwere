@@ -102,7 +102,7 @@
     <div class="col-lg-8">
         <x-ui.data-table-card title="Bills">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Date</th><th>Bill #</th><th>Amount</th><th>Balance</th>@can('vendor-payments.manage')<th></th>@endcan</tr>
                     </thead>
@@ -146,7 +146,7 @@
 
         <x-ui.data-table-card title="Payments">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Date</th><th>Against</th><th>Amount</th><th>Mode</th>@can('vendor-payments.manage')<th></th>@endcan</tr>
                     </thead>

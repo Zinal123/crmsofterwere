@@ -65,7 +65,7 @@ Problem Types
     <div class="col-lg-8">
         <x-ui.data-table-card title="Problem Types">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Category</th><th>Name</th><th>Priority</th><th>Est. Hours</th><th>Checklist Template</th><th>Status</th></tr>
                     </thead>

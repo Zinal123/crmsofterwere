@@ -53,7 +53,7 @@
                                 @csrf
                                 <label for="new-checklist-item" class="visually-hidden">New work instruction</label>
                                 <input type="text" id="new-checklist-item" name="description" class="form-control form-control-sm" placeholder="Add a work instruction or checklist step" required maxlength="255">
-                                <x-ui.button variant="secondary" size="sm" type="submit" icon="ri-add-line" ariaLabel="Add checklist item" />
+                                <x-ui.button variant="secondary" size="sm" type="submit" icon="ri-add-line" ariaLabel="Add checklist item" title="Add checklist item" />
                             </form>
 
                             @isset($checklistTemplates)

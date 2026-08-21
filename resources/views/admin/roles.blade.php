@@ -33,7 +33,7 @@ Roles & Permissions
     <div class="col-12">
         <x-ui.data-table-card title="Roles & Permissions">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" id="roles-matrix-table">
+                <table class="table table-hover table-bordered align-middle" id="roles-matrix-table">
                     <thead>
                         <tr>
                             <th>Permission</th>

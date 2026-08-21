@@ -45,7 +45,7 @@ Client Accounts
     <div class="col-lg-8">
         <x-ui.data-table-card title="Client Accounts">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Machines</th><th></th></tr>
                     </thead>

@@ -48,7 +48,7 @@ Categories
     <div class="col-lg-8">
         <x-ui.data-table-card title="Expense Categories">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Name</th><th>Applies To</th><th>Links To</th><th>Status</th></tr>
                     </thead>

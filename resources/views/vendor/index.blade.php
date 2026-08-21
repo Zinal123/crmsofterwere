@@ -75,7 +75,7 @@ Vendors
     <div class="{{ auth()->user()->can('vendors.manage') ? 'col-lg-8' : 'col-lg-12' }}">
         <x-ui.data-table-card title="Vendors">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>Name</th>

@@ -59,7 +59,7 @@ Daily Expenses
                 <p class="text-muted small"><i class="ri-information-line align-middle"></i> Wage and vendor payments already counted from payroll/vendor records are hidden here to match the report total.</p>
             @endif
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Mode</th><th>Description</th>@can('expenses.delete')<th></th>@endcan</tr>
                     </thead>

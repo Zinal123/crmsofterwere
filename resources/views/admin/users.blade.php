@@ -49,7 +49,7 @@ Users
     <div class="col-lg-8">
         <x-ui.data-table-card title="Users">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" id="users-table">
+                <table class="table table-hover table-bordered align-middle" id="users-table">
                     <thead>
                         <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>
                     </thead>

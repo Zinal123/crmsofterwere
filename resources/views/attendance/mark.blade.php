@@ -16,7 +16,7 @@
                 @csrf
                 <input type="hidden" name="date" value="{{ $date }}">
                 <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>Employee</th>

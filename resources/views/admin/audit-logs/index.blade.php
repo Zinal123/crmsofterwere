@@ -34,7 +34,7 @@
                 </form>
 
                 <div class="table-responsive">
-                    <table class="table table-sm table-bordered align-middle">
+                    <table class="table table-hover table-sm table-bordered align-middle">
                         <thead>
                             <tr>
                                 <th>Date/Time</th>

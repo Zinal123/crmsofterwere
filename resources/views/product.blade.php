@@ -23,7 +23,7 @@ list view
                 <x-ui.button variant="success" size="sm" icon="ri-add-line" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Create Product</x-ui.button>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" id="products-table">
+                <table class="table table-hover table-bordered align-middle" id="products-table">
                     <thead class="text-muted">
                         <tr>
                             <th class="sort text-uppercase" data-sort="invoice_id">ID</th>

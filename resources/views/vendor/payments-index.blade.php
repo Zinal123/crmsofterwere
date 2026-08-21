@@ -25,7 +25,7 @@
                 @endif
             </form>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle tabular-nums">
+                <table class="table table-hover table-bordered align-middle tabular-nums">
                     <thead><tr><th>Date</th><th>Vendor</th><th>Amount (₹)</th><th>Mode</th><th>Description</th></tr></thead>
                     <tbody>
                         @forelse($payments as $payment)

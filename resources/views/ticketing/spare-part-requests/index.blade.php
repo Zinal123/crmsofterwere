@@ -16,7 +16,7 @@ Spare Part Requests
     <div class="col-lg-12">
         <x-ui.data-table-card title="Spare Part Requests">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Client</th><th>Machine</th><th>Part</th><th>Qty</th><th>Note</th><th>Status</th>@can('spare-part-requests.manage')<th></th>@endcan</tr>
                     </thead>

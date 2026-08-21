@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-hover table-bordered">
                 <thead><tr><th>Date</th><th>Status</th><th>Overtime Hours</th><th></th></tr></thead>
                 <tbody>
                     @forelse($attendanceRows as $row)

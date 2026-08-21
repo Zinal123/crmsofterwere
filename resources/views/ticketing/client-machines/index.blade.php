@@ -67,7 +67,7 @@ Client Machines
     <div class="col-lg-8">
         <x-ui.data-table-card title="Client Machines">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                         <tr><th>Client</th><th>Product</th><th>Serial Number</th><th>Installed</th><th></th></tr>
                     </thead>

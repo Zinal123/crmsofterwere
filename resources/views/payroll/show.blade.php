@@ -38,7 +38,7 @@
         <div class="card-body">
             <h5 class="card-title">Payments This Month</h5>
             <div class="table-responsive">
-            <table class="table table-bordered tabular-nums">
+            <table class="table table-hover table-bordered tabular-nums">
                 <thead><tr><th>Date</th><th>Amount</th><th>Note</th><th></th></tr></thead>
                 <tbody>
                     @forelse($payments as $payment)

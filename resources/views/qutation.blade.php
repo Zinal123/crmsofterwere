@@ -421,7 +421,7 @@ Qutation
                         <td><select class="form-select" name="items[0][product_id]">{!! $productOptions !!}</select></td>
                         <td><input type="number" min="1" class="form-control" placeholder="1" name="items[0][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[0][amount]"></td>
-                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" title="Remove row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                      <tr>
                         <td class="pricing-row-number">2</td>
@@ -429,7 +429,7 @@ Qutation
                         <td><select class="form-select" name="items[1][product_id]">{!! $productOptions !!}</select></td>
                         <td><input type="number" min="1" class="form-control" placeholder="1" name="items[1][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[1][amount]"></td>
-                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" title="Remove row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                      <tr>
                         <td class="pricing-row-number">3</td>
@@ -437,7 +437,7 @@ Qutation
                         <td><select class="form-select" name="items[2][product_id]">{!! $productOptions !!}</select></td>
                         <td><input type="number" min="1" class="form-control" placeholder="1" name="items[2][quantity]"></td>
                         <td><input type="text" class="form-control" placeholder="Enter amount" name="items[2][amount]"></td>
-                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" title="Remove row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>
                      </tr>
                     </tbody>
                   </table>
@@ -483,7 +483,7 @@ Qutation
                 '<td><select class="form-select" name="items[' + rowIndex + '][product_id]">' + productOptionsHtml + '</select></td>' +
                 '<td><input type="number" min="1" class="form-control" placeholder="1" name="items[' + rowIndex + '][quantity]"></td>' +
                 '<td><input type="text" class="form-control" placeholder="Enter amount" name="items[' + rowIndex + '][amount]"></td>' +
-                '<td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>';
+                '<td><button type="button" class="btn btn-sm btn-outline-danger pricing-remove-row" title="Remove row" aria-label="Remove row"><i class="ri-delete-bin-line"></i></button></td>';
             rowsBody.appendChild(row);
             rowIndex++;
             renumberRows();

@@ -19,7 +19,7 @@
 
             @if(count($materialAvailability['lines']))
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle">
+                    <table class="table table-hover table-sm align-middle">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -58,7 +58,7 @@
                                                 <form action="{{ route('jobs.materials.destroy', $line['material_id']) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <x-ui.button variant="danger" size="sm" type="submit" icon="ri-delete-bin-fill" ariaLabel="Remove material" />
+                                                    <x-ui.button variant="danger" size="sm" type="submit" icon="ri-delete-bin-fill" ariaLabel="Remove material" title="Remove material" />
                                                 </form>
                                             </div>
                                         @endcan

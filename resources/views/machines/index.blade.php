@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <x-ui.back-link :route="route('root')" label="Back to Dashboard" />
     <x-ui.data-table-card title="Machines">
-        <table class="table table-bordered align-middle" id="machinesTable">
+        <table class="table table-hover table-bordered align-middle" id="machinesTable">
             <thead>
                 <tr>
                     <th>Name</th>
