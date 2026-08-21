@@ -81,13 +81,9 @@
         </div>
     </div>
     <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-header border-0"><h5 class="card-title mb-0">Collection Rate</h5></div>
-            <div class="card-body pt-0 text-center">
-                <div id="collectionGauge" style="height: 320px;"></div>
-                <p class="text-muted small mb-0">Share of invoiced money collected</p>
-            </div>
-        </div>
+        <x-ui.metric label="Collection Rate" :value="$collectionRate . '%'" icon="ri-percent-line" color="primary" class="h-100">
+            <x-slot:description>Share of invoiced money collected, all-time.</x-slot:description>
+        </x-ui.metric>
     </div>
 </div>
 
@@ -150,6 +146,17 @@
         var expenseBreakdown = @json(collect($financials['expense_breakdown'])->values());
         var inr = function (v) { return '₹' + Math.round(v).toLocaleString('en-IN'); };
 
+        // Design-system tokens (kept in sync with build/css/brand-theme.css).
+        // Brand orange is reserved for identity contexts only - charts use
+        // primary blue plus semantic success/danger/info so a series color
+        // always means the same thing it means on a badge.
+        var isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        var C = isDark
+            ? { primary: '#6C93E8', success: '#5FD79A', danger: '#F09088', info: '#7DB2F0', warning: '#F0BA52', text: '#C7CEDB' }
+            : { primary: '#2954A6', success: '#16794F', danger: '#B42318', info: '#1B5FA6', warning: '#9A6400', text: '#3A4358' };
+        var gridColor = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.08)';
+        var donutPalette = [C.primary, C.success, C.danger, C.info, C.warning, '#7B5CC4', '#5B84E0'];
+
         var el = document.querySelector('#accountTrendChart');
         if (el) {
             new ApexCharts(el, {
@@ -158,29 +165,15 @@
                     { name: 'Income', data: trend.map(function (m) { return m.income; }) },
                     { name: 'Expenses', data: trend.map(function (m) { return m.expense; }) }
                 ],
-                colors: ['#10B981', '#F7941D'],
+                colors: [C.success, C.danger],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
                 stroke: { curve: 'smooth', width: 2 },
                 dataLabels: { enabled: false },
-                xaxis: { categories: trend.map(function (m) { return m.label; }) },
-                yaxis: { labels: { formatter: function (v) { return '₹' + Math.round(v / 1000) + 'k'; } } },
-                legend: { position: 'top' },
-                grid: { borderColor: 'rgba(0,0,0,.08)', strokeDashArray: 4 },
+                xaxis: { categories: trend.map(function (m) { return m.label; }), labels: { style: { colors: C.text } } },
+                yaxis: { labels: { formatter: function (v) { return '₹' + Math.round(v / 1000) + 'k'; }, style: { colors: C.text } } },
+                legend: { position: 'top', labels: { colors: C.text } },
+                grid: { borderColor: gridColor, strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
-            }).render();
-        }
-
-        var gaugeEl = document.querySelector('#collectionGauge');
-        if (gaugeEl) {
-            new ApexCharts(gaugeEl, {
-                chart: { type: 'radialBar', height: 320, fontFamily: 'inherit' },
-                series: [{{ (int) $collectionRate }}],
-                labels: ['Collected'],
-                colors: ['#4361EE'],
-                plotOptions: { radialBar: { hollow: { size: '60%' }, dataLabels: {
-                    name: { offsetY: 20, color: '#888', fontSize: '13px' },
-                    value: { offsetY: -12, fontSize: '26px', fontWeight: 600, formatter: function (v) { return v + '%'; } }
-                } } }
             }).render();
         }
 
@@ -190,8 +183,8 @@
                 chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
                 series: expenseBreakdown.map(function (c) { return c.total; }),
                 labels: expenseBreakdown.map(function (c) { return c.category; }),
-                colors: ['#4361EE', '#F7941D', '#10B981', '#7B2FBE', '#EF4444', '#0EA5E9', '#F59E0B'],
-                legend: { position: 'bottom' },
+                colors: donutPalette,
+                legend: { position: 'bottom', labels: { colors: C.text } },
                 dataLabels: { enabled: true, formatter: function (v) { return Math.round(v) + '%'; } },
                 tooltip: { y: { formatter: inr } }
             }).render();

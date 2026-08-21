@@ -61,23 +61,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-6 col-md-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="stat-icon bg-warning-subtle text-warning"><i class="ri-pause-circle-line"></i></span>
+                            <div>
+                                <p class="text-muted mb-0 small">On Hold</p>
+                                <h5 class="mb-0 tabular-nums">{{ $onHold }}</h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Row 2: workload donut + active jobs -->
+<!-- My Active Jobs: the "My Workload" donut this used to sit next to was
+     removed - it plotted Assigned/In Progress/On Hold, the same same-moment
+     snapshot now shown as plain stat tiles above (On Hold folded in as a
+     5th tile), not a trend a chart would add insight to. -->
 <div class="row">
-    <div class="col-xl-4">
-        <div class="card dash-card">
-            <div class="card-header border-0"><h5 class="card-title mb-0">My Workload</h5></div>
-            <div class="card-body pt-0">
-                <div id="workerStatusChart" style="height: 320px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-8">
+    <div class="col-12">
         <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">My Active Jobs</h5>
@@ -116,27 +120,4 @@
     </div>
 </div>
 
-@endsection
-
-@section('script')
-<script src="{{ URL::asset('build/libs/apexcharts/apexcharts.min.js') }}"></script>
-<script>
-    (function () {
-        if (typeof ApexCharts === 'undefined') return;
-        var el = document.querySelector('#workerStatusChart');
-        var series = [{{ (int) $assignedToday }}, {{ (int) $inProgress }}, {{ (int) $onHold }}];
-        if (el && series.some(function (n) { return n > 0; })) {
-            new ApexCharts(el, {
-                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
-                series: series,
-                labels: ['Assigned', 'In Progress', 'On Hold'],
-                colors: ['#0EA5E9', '#4361EE', '#F7941D'],
-                legend: { position: 'bottom' },
-                dataLabels: { enabled: true }
-            }).render();
-        } else if (el) {
-            el.innerHTML = '<div class="text-center text-muted py-5"><i class="ri-briefcase-line fs-1 d-block mb-2"></i>No active jobs right now.</div>';
-        }
-    })();
-</script>
 @endsection

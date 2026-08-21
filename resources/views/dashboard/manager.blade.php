@@ -97,17 +97,12 @@
 </div>
 @endif
 
-<!-- Row 2: pipeline donut + completions by worker -->
+<!-- Completions by worker: the pipeline donut this used to sit next to was
+     removed - it plotted the exact same 3 numbers already shown as plain
+     stat tiles above, a same-moment snapshot dressed up as a chart with
+     nothing a number didn't already say. -->
 <div class="row">
-    <div class="col-xl-5">
-        <div class="card dash-card">
-            <div class="card-header border-0"><h5 class="card-title mb-0">Job Pipeline</h5></div>
-            <div class="card-body pt-0">
-                <div id="jobPipelineChart" style="height: 320px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-7">
+    <div class="col-12">
         <div class="card dash-card">
             <div class="card-header border-0"><h5 class="card-title mb-0">Completions by Worker (Today)</h5></div>
             <div class="card-body pt-0">
@@ -130,27 +125,4 @@
     </div>
 </div>
 
-@endsection
-
-@section('script')
-<script src="{{ URL::asset('build/libs/apexcharts/apexcharts.min.js') }}"></script>
-<script>
-    (function () {
-        if (typeof ApexCharts === 'undefined') return;
-        var el = document.querySelector('#jobPipelineChart');
-        var series = [{{ (int) $jobStats['pending_approval'] }}, {{ (int) $jobStats['pending_completion'] }}, {{ (int) $jobStats['completed_today'] }}];
-        if (el && series.some(function (n) { return n > 0; })) {
-            new ApexCharts(el, {
-                chart: { type: 'donut', height: 320, fontFamily: 'inherit' },
-                series: series,
-                labels: ['Pending Approval', 'In Progress', 'Completed Today'],
-                colors: ['#F7941D', '#4361EE', '#10B981'],
-                legend: { position: 'bottom' },
-                dataLabels: { enabled: true }
-            }).render();
-        } else if (el) {
-            el.innerHTML = '<div class="text-center text-muted py-5"><i class="ri-inbox-line fs-1 d-block mb-2"></i>No jobs in the pipeline right now.</div>';
-        }
-    })();
-</script>
 @endsection
