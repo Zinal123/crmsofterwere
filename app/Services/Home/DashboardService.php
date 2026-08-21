@@ -35,6 +35,9 @@ class DashboardService
         $from = $from ?: Carbon::now()->startOfMonth();
         $to = $to ?: Carbon::now()->endOfMonth();
 
+        $financials = $this->financialSnapshot($from, $to);
+        $previousFinancials = $this->financialSnapshot($from->copy()->subMonthNoOverflow()->startOfMonth(), $from->copy()->subMonthNoOverflow()->endOfMonth());
+
         return array_merge([
             'totalRevenue' => $this->repository->getTotalRevenue(),
             'totalInvoices' => $this->repository->getTotalInvoices(),
@@ -47,7 +50,8 @@ class DashboardService
             'avgTicketSize' => $this->averageTicketSize(),
             'productsCount' => Product::count(),
             'collectionRate' => $this->collectionRate(),
-            'financials' => $this->financialSnapshot($from, $to),
+            'financials' => $financials,
+            'netProfitChangePct' => $this->percentChange($financials['net_profit_month'], $previousFinancials['net_profit_month']),
             'trend' => $this->accounting->monthlyTrend(6),
             'revenueTrend' => $this->accounting->monthlyRevenue(6),
             'rangeFrom' => $from,
@@ -150,6 +154,20 @@ class DashboardService
         $count = $this->repository->getTotalInvoices();
 
         return $count > 0 ? round($this->repository->getTotalRevenue() / $count, 2) : 0.0;
+    }
+
+    /**
+     * Percent change of current vs previous, signed so a shrinking loss
+     * reads as positive - null when there's no meaningful baseline
+     * (previous is ~0) rather than an infinite/undefined percentage.
+     */
+    private function percentChange(float $current, float $previous): ?float
+    {
+        if (abs($previous) < 0.01) {
+            return null;
+        }
+
+        return round((($current - $previous) / abs($previous)) * 100, 1);
     }
 
     /** Share of invoiced money actually collected, as a whole-number percent. */

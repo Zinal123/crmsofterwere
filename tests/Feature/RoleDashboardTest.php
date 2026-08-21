@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Invoice;
 use App\Models\User;
+use Carbon\Carbon;
 use Database\Seeders\ChartOfAccountsSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,6 +38,21 @@ class RoleDashboardTest extends TestCase
         $response->assertSee('Financials'); // financial snapshot section
         $response->assertSee('Average Ticket Size');
         $response->assertSee('Technician Performance');
+    }
+
+    public function test_owner_dashboard_shows_a_real_net_profit_change_vs_last_month(): void
+    {
+        // The old "Collection Rate" gauge chart plotted a single scalar as if
+        // it were a trend - replaced with a plain stat plus a genuine
+        // month-over-month delta on Net Profit, since that figure actually
+        // is period-scoped and has a meaningful prior period to compare to.
+        Invoice::factory()->create(['date' => Carbon::now()->startOfMonth()->addDays(2), 'totalamountbeforetax' => 200000, 'amountwithtax' => 200000]);
+        Invoice::factory()->create(['date' => Carbon::now()->subMonthNoOverflow()->startOfMonth()->addDays(2), 'totalamountbeforetax' => 100000, 'amountwithtax' => 100000]);
+
+        $response = $this->actingAs($this->userWithRole('Owner'))->get(route('root'));
+
+        $response->assertOk();
+        $response->assertSee('100.0% vs last month');
     }
 
     public function test_owner_dashboard_honours_the_date_range_filter(): void
