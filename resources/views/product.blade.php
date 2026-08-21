@@ -66,7 +66,7 @@ list view
                         </td>
 
                             <td>
-                            <div class="d-flex gap-2 flex-wrap">
+                            <div class="d-flex gap-1 justify-content-center align-items-center">
                                 @can('products.update')
                                 <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProduct-{{ $item->id }}" title="Edit" aria-label="Edit">
                                     <i class="ri-edit-line align-bottom"></i>
@@ -74,58 +74,68 @@ list view
                                 @endcan
                                 @can('inventory.update')
                                     @if($item->inventory)
-                                    <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}" data-bs-toggle="tooltip" title="Update Qty" aria-label="Update Qty">
+                                    <button type="button" class="btn btn-soft-primary btn-sm open-update-qty-modal" data-id="{{ $item->inventory->id }}" title="Update Qty" aria-label="Update Qty">
                                         <i class="ri-stack-line align-bottom"></i>
                                     </button>
-                                    <form action="{{ route('inventory.set-low-stock-threshold', $item->inventory->id) }}" method="POST" class="d-inline-flex align-items-center gap-1">
-                                        @csrf
-                                        <label class="visually-hidden" for="threshold-{{ $item->inventory->id }}">Low-stock threshold</label>
-                                        <input type="number" min="0" name="low_stock_threshold" id="threshold-{{ $item->inventory->id }}" class="form-control form-control-sm" style="width: 70px;" value="{{ $item->inventory->low_stock_threshold }}" placeholder="{{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }}" title="Low-stock threshold (default {{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }})">
-                                        <button type="submit" class="btn btn-soft-secondary btn-sm" title="Save low-stock threshold" aria-label="Save low-stock threshold"><i class="ri-alarm-warning-line align-bottom"></i></button>
-                                    </form>
                                     @endif
                                 @endcan
                                 @can('inventory.create')
                                     @if(!$item->inventory)
-                                    <button type="button" class="btn btn-soft-success btn-sm open-add-stock-modal" data-product-id="{{ $item->id }}" data-product-name="{{ $item->name }}" data-bs-toggle="tooltip" title="Add Stock" aria-label="Add Stock">
+                                    <button type="button" class="btn btn-soft-success btn-sm open-add-stock-modal" data-product-id="{{ $item->id }}" data-product-name="{{ $item->name }}" title="Add Stock" aria-label="Add Stock">
                                         <i class="ri-add-box-line align-bottom"></i>
                                     </button>
                                     @endif
                                 @endcan
-                                @can('products.view-audit')
-                                <button type="button" class="btn btn-soft-info btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}" title="History" aria-label="History">
-                                    <i class="ri-history-line align-bottom"></i>
-                                </button>
-                                @endcan
-                                @can('inventory.view-audit')
-                                    @if($item->inventory)
-                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-inventory" data-audit-id="{{ $item->inventory->id }}" title="Stock History" aria-label="Stock History">
-                                        <i class="ri-history-line align-bottom"></i>
+
+                                @canany(['products.view-audit', 'inventory.view-audit', 'spare-parts.manage', 'products.manage-config', 'products.delete'])
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="More actions" aria-label="More actions">
+                                        <i class="ri-more-2-fill align-bottom"></i>
                                     </button>
-                                    @endif
-                                @endcan
-                                @can('spare-parts.manage')
-                                <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ $item->is_spare_part ? 'Unmark this as a spare part? Clients will no longer be able to request it.' : 'Mark this as a spare part? It will become requestable by clients in the portal.' }}');">
-                                    @csrf
-                                    <button type="submit" class="btn btn-soft-{{ $item->is_spare_part ? 'warning' : 'secondary' }} btn-sm" title="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}" aria-label="{{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}">
-                                        <i class="ri-tools-fill align-bottom"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                                @can('products.manage-config')
-                                <a href="{{ route('standerconfig', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Standard Config" aria-label="Standard Config">
-                                    <i class="ri-settings-3-line align-bottom"></i>
-                                </a>
-                                <a href="{{ route('TechnicalParameters', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Technical Parameters" aria-label="Technical Parameters">
-                                    <i class="ri-sliders-line align-bottom"></i>
-                                </a>
-                                <a href="{{ route('standerconfiglist', $item->id) }}" class="btn btn-soft-secondary btn-sm" title="Standard Config List" aria-label="Standard Config List">
-                                    <i class="ri-list-settings-line align-bottom"></i>
-                                </a>
-                                @endcan
-                                <a href="{{route('product.delete' ,$item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete title="Delete" aria-label="Delete">
-                                    <i class="ri-delete-bin-fill align-bottom"></i>
-                                </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        @can('inventory.update')
+                                            @if($item->inventory)
+                                            <li>
+                                                <form action="{{ route('inventory.set-low-stock-threshold', $item->inventory->id) }}" method="POST" class="px-3 py-1">
+                                                    @csrf
+                                                    <label class="form-label small text-muted mb-1" for="threshold-{{ $item->inventory->id }}">Low-stock threshold</label>
+                                                    <div class="d-flex gap-1">
+                                                        <input type="number" min="0" name="low_stock_threshold" id="threshold-{{ $item->inventory->id }}" class="form-control form-control-sm" style="width: 80px;" value="{{ $item->inventory->low_stock_threshold }}" placeholder="{{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }}" title="Default {{ \App\Models\Invetry::LOW_STOCK_THRESHOLD }}">
+                                                        <button type="submit" class="btn btn-soft-secondary btn-sm" title="Save low-stock threshold" aria-label="Save low-stock threshold"><i class="ri-check-line align-bottom"></i></button>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            @endif
+                                        @endcan
+                                        @can('products.view-audit')
+                                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#auditTrailModal-product" data-audit-id="{{ $item->id }}"><i class="ri-history-line align-bottom me-1"></i> History</button></li>
+                                        @endcan
+                                        @can('inventory.view-audit')
+                                            @if($item->inventory)
+                                            <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#auditTrailModal-inventory" data-audit-id="{{ $item->inventory->id }}"><i class="ri-history-line align-bottom me-1"></i> Stock History</button></li>
+                                            @endif
+                                        @endcan
+                                        @can('spare-parts.manage')
+                                        <li>
+                                            <form action="{{ route('product.toggle-spare-part', $item->id) }}" method="POST" onsubmit="return confirm('{{ $item->is_spare_part ? 'Unmark this as a spare part? Clients will no longer be able to request it.' : 'Mark this as a spare part? It will become requestable by clients in the portal.' }}');">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item"><i class="ri-tools-fill align-bottom me-1"></i> {{ $item->is_spare_part ? 'Unmark Spare Part' : 'Mark as Spare Part' }}</button>
+                                            </form>
+                                        </li>
+                                        @endcan
+                                        @can('products.manage-config')
+                                        <li><a href="{{ route('standerconfig', $item->id) }}" class="dropdown-item"><i class="ri-settings-3-line align-bottom me-1"></i> Standard Config</a></li>
+                                        <li><a href="{{ route('TechnicalParameters', $item->id) }}" class="dropdown-item"><i class="ri-sliders-line align-bottom me-1"></i> Technical Parameters</a></li>
+                                        <li><a href="{{ route('standerconfiglist', $item->id) }}" class="dropdown-item"><i class="ri-list-settings-line align-bottom me-1"></i> Standard Config List</a></li>
+                                        @endcan
+                                        @can('products.delete')
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a href="{{route('product.delete' ,$item->id)}}" class="dropdown-item text-danger" data-confirm-delete><i class="ri-delete-bin-fill align-bottom me-1"></i> Delete</a></li>
+                                        @endcan
+                                    </ul>
+                                </div>
+                                @endcanany
                             </div>
                         </td>
                         </tr>

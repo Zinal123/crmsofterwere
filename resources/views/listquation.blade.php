@@ -51,7 +51,7 @@
                             <td>{{$item->email}}</td>
                             <td>{{$item->phone}}</td>
                             <td>
-                               <div class="d-flex gap-2 flex-wrap">
+                               <div class="d-flex gap-1 justify-content-center align-items-center">
                                    @can('quotations.update')
                                    <button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editQuotation-{{ $item->id }}" title="Edit" aria-label="Edit">
                                      <i class="ri-edit-line align-bottom"></i>
@@ -60,7 +60,7 @@
                                    @can('quotations.update')
                                        @can('invoices.create')
                                            @if($item->invoice_id)
-                                               <a href="{{ route('invoice.details', $item->invoice_id) }}" class="btn btn-soft-info btn-sm" data-bs-toggle="tooltip" title="View Invoice" aria-label="View Invoice"><i class="ri-file-list-3-line align-bottom"></i></a>
+                                               <a href="{{ route('invoice.details', $item->invoice_id) }}" class="btn btn-soft-info btn-sm" title="View Invoice" aria-label="View Invoice"><i class="ri-file-list-3-line align-bottom"></i></a>
                                            @else
                                                <button type="button" class="btn btn-soft-warning btn-sm" data-bs-toggle="modal" data-bs-target="#convertQuotation-{{ $item->id }}" title="Convert to Invoice" aria-label="Convert to Invoice">
                                                    <i class="ri-file-transfer-line align-bottom"></i>
@@ -68,18 +68,23 @@
                                            @endif
                                        @endcan
                                    @endcan
-                                   <a href="{{route('quation.pdf' ,$item->id)}}" class="btn btn-soft-success btn-sm" data-bs-toggle="tooltip" title="Download Qutation" aria-label="Download Qutation"><i class="ri-download-2-line align-bottom"></i></a>
-                                   <a href="{{route('quation.print' ,$item->id)}}" target="_blank" rel="noopener" class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip" title="Print Quotation" aria-label="Print Quotation"><i class="ri-printer-line align-bottom"></i></a>
-                                   @can('quotations.delete')
-                                   <a href="{{route('quation.delete', $item->id)}}" class="btn btn-soft-danger btn-sm" data-confirm-delete data-bs-toggle="tooltip" title="Delete" aria-label="Delete">
-                                     <i class="ri-delete-bin-fill align-bottom"></i>
-                                   </a>
-                                   @endcan
-                                   @can('quotations.view-audit')
-                                   <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}" title="History" aria-label="History">
-                                     <i class="ri-history-line align-bottom"></i>
-                                   </button>
-                                   @endcan
+
+                                   <div class="dropdown">
+                                       <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-toggle="dropdown" aria-expanded="false" title="More actions" aria-label="More actions">
+                                           <i class="ri-more-2-fill align-bottom"></i>
+                                       </button>
+                                       <ul class="dropdown-menu dropdown-menu-end">
+                                           <li><a href="{{route('quation.pdf' ,$item->id)}}" class="dropdown-item"><i class="ri-download-2-line align-bottom me-1"></i> Download</a></li>
+                                           <li><a href="{{route('quation.print' ,$item->id)}}" target="_blank" rel="noopener" class="dropdown-item"><i class="ri-printer-line align-bottom me-1"></i> Print</a></li>
+                                           @can('quotations.view-audit')
+                                           <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#auditTrailModal-quotation" data-audit-id="{{$item->id}}"><i class="ri-history-line align-bottom me-1"></i> History</button></li>
+                                           @endcan
+                                           @can('quotations.delete')
+                                           <li><hr class="dropdown-divider"></li>
+                                           <li><a href="{{route('quation.delete', $item->id)}}" class="dropdown-item text-danger" data-confirm-delete><i class="ri-delete-bin-fill align-bottom me-1"></i> Delete</a></li>
+                                           @endcan
+                                       </ul>
+                                   </div>
                                </div>
                             </td>
                         </tr>
