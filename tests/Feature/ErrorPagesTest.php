@@ -22,6 +22,21 @@ class ErrorPagesTest extends TestCase
         $response->assertSee('Back to home');
     }
 
+    public function test_404_page_footer_has_no_leftover_template_branding(): void
+    {
+        // Every other auth-styled page had already been migrated off the
+        // "Velzon. Crafted by Themesbrand" template footer - this one was
+        // missed, found during the redesign audit.
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/this-route-does-not-exist-anywhere');
+
+        $response->assertStatus(404);
+        $response->assertDontSee('Velzon', false);
+        $response->assertDontSee('Themesbrand', false);
+        $response->assertSee('Oracle Machine Tech');
+    }
+
     public function test_403_page_uses_the_styled_template(): void
     {
         $worker = User::factory()->create();
