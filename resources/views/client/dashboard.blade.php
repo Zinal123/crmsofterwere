@@ -12,7 +12,7 @@ My Machines
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-4">
+    <div class="col-6 col-sm-4">
         <a href="{{ route('client.tickets.index') }}" class="text-reset">
             <div class="card mb-0 h-100">
                 <div class="card-body text-center py-3">
@@ -23,7 +23,7 @@ My Machines
             </div>
         </a>
     </div>
-    <div class="col-4">
+    <div class="col-6 col-sm-4">
         <a href="{{ route('client.spare-parts.index') }}" class="text-reset">
             <div class="card mb-0 h-100">
                 <div class="card-body text-center py-3">
@@ -34,7 +34,7 @@ My Machines
             </div>
         </a>
     </div>
-    <div class="col-4">
+    <div class="col-6 col-sm-4">
         <div class="card mb-0 h-100 {{ $amountDue > 0 ? 'border border-danger border-opacity-25' : '' }}">
             <div class="card-body text-center py-3">
                 <i class="ri-wallet-3-line fs-3 {{ $amountDue > 0 ? 'text-danger' : 'text-success' }}"></i>

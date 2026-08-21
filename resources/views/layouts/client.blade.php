@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Oracle Machine Tech client support portal" name="description" />
-    <meta name="theme-color" content="#4361ee">
+    <meta name="theme-color" content="#2954a6">
     <link rel="manifest" href="{{ URL::asset('manifest.json') }}">
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
     @include('layouts.head-css')
@@ -15,6 +15,18 @@
         .client-topbar { background: #fff; border-bottom: 1px solid #eee; padding: .75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
         .client-topbar img { height: 32px; }
         .client-content { max-width: 720px; margin: 0 auto; padding: 1rem; }
+        /* Real users on real phones: every button in the portal gets a
+           44px-minimum touch target, regardless of Bootstrap's btn-sm
+           padding - this is the client-facing side of the app, not the
+           admin desk, so mobile hit-targets matter more here than anywhere
+           else in the app. */
+        .client-content .btn,
+        .client-topbar .btn {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
     @yield('css')
 </head>
