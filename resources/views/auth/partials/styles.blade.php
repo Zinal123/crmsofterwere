@@ -17,32 +17,6 @@
         background: linear-gradient(150deg, var(--oms-auth-sidebar) 0%, #1a2d6b 60%, var(--oms-auth-sidebar) 100%);
     }
 
-    .oms-auth-hero-ring {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, .06);
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-    }
-
-    .oms-auth-hero-ring-1 { width: 34rem; height: 34rem; }
-    .oms-auth-hero-ring-2 { width: 22rem; height: 22rem; }
-
-    .oms-auth-hero-glow {
-        position: absolute;
-        width: 16rem;
-        height: 16rem;
-        border-radius: 50%;
-        opacity: .18;
-        filter: blur(70px);
-        pointer-events: none;
-    }
-
-    .oms-auth-hero-glow-1 { top: 0; left: 0; background: radial-gradient(circle, var(--oms-auth-accent), transparent); }
-    .oms-auth-hero-glow-2 { bottom: 0; right: 0; background: radial-gradient(circle, var(--vz-primary), transparent); }
-
     .oms-auth-hero-content {
         position: relative;
         z-index: 1;

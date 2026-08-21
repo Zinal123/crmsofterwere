@@ -6,7 +6,7 @@
     "scope": "/portal",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#4361ee",
+    "theme_color": "#2954a6",
     "orientation": "portrait",
     "icons": [
         {

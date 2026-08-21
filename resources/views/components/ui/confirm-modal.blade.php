@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body p-5 text-center">
-                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#4361ee,secondary:#f7941d" style="width:90px;height:90px">
+                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#2954a6,secondary:#f0742a" style="width:90px;height:90px">
                 </lord-icon>
                 <div class="mt-4 text-center">
                     <h4>You are about to delete this {{ $recordType }}?</h4>

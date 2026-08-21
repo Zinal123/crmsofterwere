@@ -34,7 +34,7 @@
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 @can('dashboard.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('root') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('root') ? 'active' : '' }}" href="{{ route('root') }}">
                         <i class="ri-dashboard-3-line"></i> <span>@lang('translation.dashboards')</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
@@ -42,7 +42,7 @@
 
                 @can('reports.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('reports.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('reports.index') ? 'active' : '' }}" href="{{ route('reports.index') }}">
                         <i class="ri-bar-chart-box-line"></i> <span>Reports</span>
                     </a>
                 </li>
@@ -50,7 +50,7 @@
 
                 @can('accounting.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('accounting.chart') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('accounting.*') ? 'active' : '' }}" href="{{ route('accounting.chart') }}">
                         <i class="ri-book-3-line"></i> <span>Accounting</span>
                     </a>
                 </li>
@@ -58,7 +58,7 @@
 
                 @can('expenses.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('expenses.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}" href="{{ route('expenses.index') }}">
                         <i class="ri-exchange-dollar-line"></i> <span>Daily Expenses</span>
                     </a>
                 </li>
@@ -68,7 +68,7 @@
                 <li class="menu-title"><span>Masters</span></li>
                 @can('products.view')
                 <li class="nav-item">
-                    <a href="{{route('product')}}" class="nav-link"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
+                    <a href="{{route('product')}}" class="nav-link {{ request()->routeIs('product') ? 'active' : '' }}"><i class="ri-price-tag-3-line"></i><span>@lang('Product')</span></a>
                 </li>
                 @endcan
                 {{-- Fiber Machine Config is per-product (software/laser/power/etc.
@@ -78,27 +78,27 @@
                      list instead (@can('products.manage-config') there). --}}
                 @can('client-machines.manage')
                 <li class="nav-item">
-                    <a href="{{route('admin.client-accounts.index')}}" class="nav-link"><i class="ri-contacts-line"></i><span>@lang('Client Accounts')</span></a>
+                    <a href="{{route('admin.client-accounts.index')}}" class="nav-link {{ request()->routeIs('admin.client-accounts.*') ? 'active' : '' }}"><i class="ri-contacts-line"></i><span>@lang('Client Accounts')</span></a>
                 </li>
                 @endcan
                 @can('client-machines.view')
                 <li class="nav-item">
-                    <a href="{{route('admin.client-machines.index')}}" class="nav-link"><i class="ri-cpu-line"></i><span>@lang('Client Machines')</span></a>
+                    <a href="{{route('admin.client-machines.index')}}" class="nav-link {{ request()->routeIs('admin.client-machines.*') ? 'active' : '' }}"><i class="ri-cpu-line"></i><span>@lang('Client Machines')</span></a>
                 </li>
                 @endcan
                 @can('ticket-problem-types.manage')
                 <li class="nav-item">
-                    <a href="{{route('admin.ticket-problem-types.index')}}" class="nav-link"><i class="ri-error-warning-line"></i><span>@lang('Problem Types')</span></a>
+                    <a href="{{route('admin.ticket-problem-types.index')}}" class="nav-link {{ request()->routeIs('admin.ticket-problem-types.*') ? 'active' : '' }}"><i class="ri-error-warning-line"></i><span>@lang('Problem Types')</span></a>
                 </li>
                 @endcan
                 @can('vendors.view')
                 <li class="nav-item">
-                    <a href="{{route('admin.vendors.index')}}" class="nav-link"><i class="ri-truck-line"></i><span>@lang('Vendors')</span></a>
+                    <a href="{{route('admin.vendors.index')}}" class="nav-link {{ request()->routeIs('admin.vendors.*') ? 'active' : '' }}"><i class="ri-truck-line"></i><span>@lang('Vendors')</span></a>
                 </li>
                 @endcan
                 @can('checklist-templates.manage')
                 <li class="nav-item">
-                    <a href="{{route('admin.checklist-templates.index')}}" class="nav-link"><i class="ri-list-check-2"></i><span>@lang('Checklist Templates')</span></a>
+                    <a href="{{route('admin.checklist-templates.index')}}" class="nav-link {{ request()->routeIs('admin.checklist-templates.*') ? 'active' : '' }}"><i class="ri-list-check-2"></i><span>@lang('Checklist Templates')</span></a>
                 </li>
                 @endcan
                 @endcanany
@@ -107,12 +107,12 @@
                 <li class="menu-title"><span>Support Tickets</span></li>
                 @can('tickets.view')
                 <li class="nav-item">
-                    <a href="{{route('admin.tickets.index')}}" class="nav-link"><i class="ri-customer-service-2-line"></i><span>@lang('Tickets')</span></a>
+                    <a href="{{route('admin.tickets.index')}}" class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}"><i class="ri-customer-service-2-line"></i><span>@lang('Tickets')</span></a>
                 </li>
                 @endcan
                 @can('spare-part-requests.view')
                 <li class="nav-item">
-                    <a href="{{route('admin.spare-part-requests.index')}}" class="nav-link"><i class="ri-tools-fill"></i><span>@lang('Spare Part Requests')</span></a>
+                    <a href="{{route('admin.spare-part-requests.index')}}" class="nav-link {{ request()->routeIs('admin.spare-part-requests.*') ? 'active' : '' }}"><i class="ri-tools-fill"></i><span>@lang('Spare Part Requests')</span></a>
                 </li>
                 @endcan
                 @endcanany
@@ -120,7 +120,7 @@
                 @can('quotations.view')
                 <li class="menu-title"><span>Quotations</span></li>
                 <li class="nav-item">
-                    <a href="{{route('listqutation')}}" class="nav-link"><i class="ri-file-list-3-line"></i><span>@lang('Quotations')</span></a>
+                    <a href="{{route('listqutation')}}" class="nav-link {{ request()->routeIs(['listqutation', 'generatequtation', 'co2quation', 'quation.*']) ? 'active' : '' }}"><i class="ri-file-list-3-line"></i><span>@lang('Quotations')</span></a>
                 </li>
                 @endcan
 
@@ -128,12 +128,12 @@
                 <li class="menu-title"><span>Sales</span></li>
                 @can('invoices.view')
                 <li class="nav-item">
-                    <a href="{{route('invoice')}}" class="nav-link"><i class="ri-bill-line"></i><span>@lang('Invoice')</span></a>
+                    <a href="{{route('invoice')}}" class="nav-link {{ request()->routeIs(['invoice', 'invoice.create', 'invoice.details', 'invoice.data']) ? 'active' : '' }}"><i class="ri-bill-line"></i><span>@lang('Invoice')</span></a>
                 </li>
                 @endcan
                 @can('payment-history.view')
                 <li class="nav-item">
-                    <a href="{{route('invoice.histry')}}" class="nav-link"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
+                    <a href="{{route('invoice.histry')}}" class="nav-link {{ request()->routeIs('invoice.histry') ? 'active' : '' }}"><i class="ri-wallet-2-line"></i><span>@lang('Payment history')</span></a>
                 </li>
                 @endcan
                 @endcanany
@@ -142,35 +142,35 @@
                 <li class="menu-title"><span>Workforce</span></li>
                 @can('jobs.view-own')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('jobs.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs(['jobs.index', 'jobs.show', 'jobs.create', 'jobs.pdf']) ? 'active' : '' }}" href="{{ route('jobs.index') }}">
                         <i class="ri-briefcase-4-line"></i> <span>Jobs</span>
                     </a>
                 </li>
                 @endcan
                 @can('jobs.approve')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('jobs.pending-approval') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('jobs.pending-approval') ? 'active' : '' }}" href="{{ route('jobs.pending-approval') }}">
                         <i class="ri-inbox-line"></i> <span>Pending Approval</span>
                     </a>
                 </li>
                 @endcan
                 @can('jobs.manage-machines')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('machines.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('machines.*') ? 'active' : '' }}" href="{{ route('machines.index') }}">
                         <i class="ri-tools-line"></i> <span>Machines</span>
                     </a>
                 </li>
                 @endcan
                 @can('employees.view')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('employees.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('employees.*') ? 'active' : '' }}" href="{{ route('employees.index') }}">
                         <i class="ri-team-line"></i> <span>Employees</span>
                     </a>
                 </li>
                 @endcan
                 @can('attendance.manage')
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('attendance.mark') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('attendance.*') ? 'active' : '' }}" href="{{ route('attendance.mark') }}">
                         <i class="ri-calendar-check-line"></i> <span>Attendance</span>
                     </a>
                 </li>
@@ -181,17 +181,17 @@
                 <li class="menu-title"><span>Admin</span></li>
                 @can('admin.manage-roles')
                 <li class="nav-item">
-                    <a href="{{ route('admin.roles.index') }}" class="nav-link"><i class="ri-shield-user-line"></i><span>Roles & Permissions</span></a>
+                    <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}"><i class="ri-shield-user-line"></i><span>Roles & Permissions</span></a>
                 </li>
                 @endcan
                 @can('admin.manage-users')
                 <li class="nav-item">
-                    <a href="{{ route('admin.users.index') }}" class="nav-link"><i class="ri-user-settings-line"></i><span>Users</span></a>
+                    <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"><i class="ri-user-settings-line"></i><span>Users</span></a>
                 </li>
                 @endcan
                 @if(app(\App\Services\Auditing\AuditLogService::class)->hasAnyAuditAccess(auth()->user()))
                 <li class="nav-item">
-                    <a href="{{ route('admin.audit-logs.index') }}" class="nav-link"><i class="ri-history-line"></i><span>Audit Log</span></a>
+                    <a href="{{ route('admin.audit-logs.index') }}" class="nav-link {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}"><i class="ri-history-line"></i><span>Audit Log</span></a>
                 </li>
                 @endif
                 @endif

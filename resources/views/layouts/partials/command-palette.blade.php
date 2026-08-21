@@ -23,7 +23,7 @@
     .cmdk-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; color: inherit; text-decoration: none; cursor: pointer; }
     .cmdk-item i { font-size: 18px; color: var(--vz-secondary-color, #878a99); width: 20px; text-align: center; }
     .cmdk-item .cmdk-group { margin-left: auto; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--vz-secondary-color, #878a99); }
-    .cmdk-item.active, .cmdk-item:hover { background: var(--vz-primary, #4361ee); color: #fff; }
+    .cmdk-item.active, .cmdk-item:hover { background: var(--vz-primary, #2954a6); color: #fff; }
     .cmdk-item.active i, .cmdk-item:hover i, .cmdk-item.active .cmdk-group, .cmdk-item:hover .cmdk-group { color: rgba(255, 255, 255, .85); }
     .cmdk-empty { padding: 24px; text-align: center; color: var(--vz-secondary-color, #878a99); }
     .cmdk-hint { padding: 8px 14px; border-top: 1px solid var(--vz-border-color, #e9ebec); font-size: 11px; color: var(--vz-secondary-color, #878a99); display: flex; gap: 14px; }
