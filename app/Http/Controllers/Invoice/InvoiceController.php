@@ -109,6 +109,17 @@ class InvoiceController extends Controller
         return redirect()->route('invoice')->with('success', 'Invoice deleted.');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ids = (array) $request->input('ids', []);
+
+        foreach ($ids as $id) {
+            $this->service->deleteInvoice((int) $id);
+        }
+
+        return redirect()->route('invoice')->with('success', count($ids) . ' invoice(s) deleted.');
+    }
+
     public function pdf($id)
     {
         abort_unless(Invoice::where('id', $id)->exists(), 404);

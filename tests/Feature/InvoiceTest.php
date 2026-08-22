@@ -699,4 +699,114 @@ class InvoiceTest extends TestCase
         $response->assertSee('data-bs-target="#editInvoice"', false);
         $response->assertSee(route('invoice.destroy', $invoice->id), false);
     }
+
+    public function test_invoice_list_page_shows_bulk_select_checkboxes_and_bulk_bar_for_a_user_who_can_delete(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('invoice'));
+
+        $response->assertOk();
+        $response->assertSee('bulk-select-all', false);
+        $response->assertSee('id="invoices-bulk-bar"', false);
+        $response->assertSee(route('invoice.bulk-delete'), false);
+    }
+
+    public function test_invoice_list_page_hides_bulk_select_for_a_user_who_cannot_delete(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $account = User::factory()->create();
+        $account->syncRoles(['Account']);
+
+        $response = $this->actingAs($account)->get(route('invoice'));
+
+        $response->assertOk();
+        $response->assertDontSee('bulk-select-all', false);
+        $response->assertDontSee('id="invoices-bulk-bar"', false);
+    }
+
+    public function test_datatable_endpoint_includes_a_bulk_select_checkbox_for_a_user_who_can_delete(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($user)->get(route('invoice.data'));
+
+        $response->assertOk();
+        $checkboxCell = $response->json('data.0.0');
+        $this->assertStringContainsString('bulk-select-row', $checkboxCell);
+        $this->assertStringContainsString('value="' . $invoice->id . '"', $checkboxCell);
+    }
+
+    public function test_datatable_endpoint_omits_the_bulk_select_checkbox_for_a_user_who_cannot_delete(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $account = User::factory()->create();
+        $account->syncRoles(['Account']);
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($account)->get(route('invoice.data'));
+
+        $response->assertOk();
+        $response->assertDontSee('bulk-select-row', false);
+    }
+
+    public function test_datatable_endpoint_sorting_still_works_once_the_bulk_select_column_shifts_indexes(): void
+    {
+        // The checkbox column is index 0 for a user who can delete, which
+        // shifts every real column's index by one - a regression here would
+        // sort by the wrong column (or silently fall back to id) instead of
+        // the column the browser actually asked for.
+        $user = User::factory()->create();
+        $alpha = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $alpha->id, 'name' => 'Alpha Buyer']);
+        $zulu = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $zulu->id, 'name' => 'Zulu Buyer']);
+
+        // Column 1 = Customer name (0 is the checkbox column for this user).
+        $response = $this->actingAs($user)->get(route('invoice.data', [
+            'order' => [['column' => 1, 'dir' => 'asc']],
+        ]));
+
+        $response->assertOk();
+        $data = $response->json('data');
+        $this->assertSame('Alpha Buyer', $data[0][2]);
+        $this->assertSame('Zulu Buyer', $data[1][2]);
+    }
+
+    public function test_owner_can_bulk_delete_invoices(): void
+    {
+        $user = User::factory()->create();
+        $keep = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $keep->id]);
+        $deleteOne = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $deleteOne->id]);
+        $deleteTwo = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $deleteTwo->id]);
+
+        $response = $this->actingAs($user)->post(route('invoice.bulk-delete'), [
+            'ids' => [$deleteOne->id, $deleteTwo->id],
+        ]);
+
+        $response->assertRedirect(route('invoice'));
+        $this->assertDatabaseMissing('invoice', ['id' => $deleteOne->id]);
+        $this->assertDatabaseMissing('invoice', ['id' => $deleteTwo->id]);
+        $this->assertDatabaseHas('invoice', ['id' => $keep->id]);
+    }
+
+    public function test_account_role_cannot_bulk_delete_invoices(): void
+    {
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $account = User::factory()->create();
+        $account->syncRoles(['Account']);
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($account)->post(route('invoice.bulk-delete'), ['ids' => [$invoice->id]]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('invoice', ['id' => $invoice->id]);
+    }
 }

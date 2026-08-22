@@ -65,10 +65,18 @@ class InvoiceService
         $recordsTotal = $this->repository->countAllInvoices();
         $recordsFiltered = $this->repository->countFilteredInvoices($columns, $search, $dateRange);
 
+        // The bulk-select checkbox is a presentation-only leading column that
+        // doesn't exist in DATATABLE_COLUMNS (it's not searchable/orderable
+        // and would break the search WHERE clause if it were) - when it's
+        // present, every real column's index as sent by the browser is
+        // shifted right by one, so the lookup here has to shift back.
+        $canBulkDelete = (bool) optional($request->user())->can('invoices.delete');
+        $columnOffset = $canBulkDelete ? 1 : 0;
+
         $orderColumnIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir', 'desc') === 'asc' ? 'asc' : 'desc';
-        $orderColumn = ($orderColumnIndex !== null && isset($columns[$orderColumnIndex]))
-            ? $columns[$orderColumnIndex]
+        $orderColumn = ($orderColumnIndex !== null && isset($columns[$orderColumnIndex - $columnOffset]))
+            ? $columns[$orderColumnIndex - $columnOffset]
             : 'invoice.id';
 
         $start = max((int) $request->input('start', 0), 0);
@@ -76,7 +84,7 @@ class InvoiceService
 
         $rows = $this->repository->getPaginatedInvoiceRows($columns, $search, $orderColumn, $orderDir, $start, $length, $dateRange);
 
-        $data = $rows->map(function ($item) {
+        $data = $rows->map(function ($item) use ($canBulkDelete) {
             if ($item->amount == $item->paidamount) {
                 $statusHtml = \App\Support\StatusBadge::render('Paid', 'success', 'ri-checkbox-circle-line');
                 $paymentButton = '<button type="button" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-id="' . e($item->id) . '" id="savepayment" data-bs-target="#exampleModalgrid" style="display: none;" title="Payment" aria-label="Payment"><i class="ri-secure-payment-line align-bottom"></i></button>';
@@ -90,17 +98,21 @@ class InvoiceService
                 . '<div class="remove">' . $paymentButton . '</div>'
                 . '</div>';
 
-            return [
-                $item->id,
-                e($item->name),
-                e($item->phone),
-                $item->date ? date('d-M-y', strtotime($item->date)) : $item->date,
-                IndianNumber::format($item->amount),
-                IndianNumber::format($item->paidamount),
-                IndianNumber::format($item->remaining_amount),
-                $statusHtml,
-                $actionHtml,
-            ];
+            $row = [];
+            if ($canBulkDelete) {
+                $row[] = '<input type="checkbox" class="form-check-input bulk-select-row" value="' . $item->id . '" aria-label="Select invoice ' . e($item->id) . '">';
+            }
+            $row[] = $item->id;
+            $row[] = e($item->name);
+            $row[] = e($item->phone);
+            $row[] = $item->date ? date('d-M-y', strtotime($item->date)) : $item->date;
+            $row[] = IndianNumber::format($item->amount);
+            $row[] = IndianNumber::format($item->paidamount);
+            $row[] = IndianNumber::format($item->remaining_amount);
+            $row[] = $statusHtml;
+            $row[] = $actionHtml;
+
+            return $row;
         });
 
         return [

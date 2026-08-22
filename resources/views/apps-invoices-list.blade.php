@@ -48,7 +48,11 @@ list view
                 style="width:100%">
                             <thead class="text-muted">
                                 <tr>
-                                    
+                                    @can('invoices.delete')
+                                    <th style="width:36px;">
+                                        <input type="checkbox" class="form-check-input bulk-select-all" aria-label="Select all invoices">
+                                    </th>
+                                    @endcan
                                     <th class="sort text-uppercase" data-sort="invoice_id">ID</th>
                                     <th class="sort text-uppercase" data-sort="customer_name">
                                         Customer</th>
@@ -71,9 +75,10 @@ list view
                                  call (server-side, so this tbody starts empty) does its first
                                  draw - DataTables replaces the whole tbody on every draw, so
                                  these rows disappear on their own and never need JS to remove them. --}}
+                            @php($invoiceColumnCount = auth()->user()->can('invoices.delete') ? 10 : 9)
                             @for ($i = 0; $i < 5; $i++)
                                 <tr class="oms-skeleton-row">
-                                    @for ($col = 0; $col < 9; $col++)
+                                    @for ($col = 0; $col < $invoiceColumnCount; $col++)
                                         <td><span class="oms-skeleton-bar"></span></td>
                                     @endfor
                                 </tr>
@@ -81,6 +86,19 @@ list view
                             </tbody>
                 </table>
             </div>
+
+            @can('invoices.delete')
+            <output class="oms-bulk-bar" id="invoices-bulk-bar" aria-live="polite">
+                <span class="oms-bulk-bar-count"><span id="invoices-bulk-count">0</span> selected</span>
+                <form id="invoices-bulk-delete-form" action="{{ route('invoice.bulk-delete') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm" data-confirm-delete>
+                        <i class="ri-delete-bin-fill align-bottom me-1"></i> Delete Selected
+                    </button>
+                </form>
+                <button type="button" class="btn btn-light btn-sm" id="invoices-bulk-clear">Clear</button>
+            </output>
+            @endcan
 
             <!-- Modal -->
                 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
@@ -134,6 +152,9 @@ list view
     <!--end col-->
 </div>
 <!--end row-->
+@can('invoices.delete')
+    <x-ui.confirm-modal recordType="invoice" />
+@endcan
 @endsection
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -161,16 +182,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 d.to = @json(request('to'));
             }
         },
+        @php($col = auth()->user()->can('invoices.delete') ? 1 : 0)
         columns: [
-            { data: 0, orderable: true, searchable: true },
-            { data: 1, orderable: true, searchable: true },
-            { data: 2, orderable: true, searchable: true },
-            { data: 3, orderable: true, searchable: true },
-            { data: 4, orderable: true, searchable: true },
-            { data: 5, orderable: true, searchable: true },
-            { data: 6, orderable: true, searchable: true },
-            { data: 7, orderable: false, searchable: false },
-            { data: 8, orderable: false, searchable: false }
+            @can('invoices.delete')
+            { data: 0, orderable: false, searchable: false },
+            @endcan
+            { data: {{ $col }}, orderable: true, searchable: true },
+            { data: {{ $col + 1 }}, orderable: true, searchable: true },
+            { data: {{ $col + 2 }}, orderable: true, searchable: true },
+            { data: {{ $col + 3 }}, orderable: true, searchable: true },
+            { data: {{ $col + 4 }}, orderable: true, searchable: true },
+            { data: {{ $col + 5 }}, orderable: true, searchable: true },
+            { data: {{ $col + 6 }}, orderable: true, searchable: true },
+            { data: {{ $col + 7 }}, orderable: false, searchable: false },
+            { data: {{ $col + 8 }}, orderable: false, searchable: false }
         ],
         language: {
             processing: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
@@ -179,6 +204,59 @@ document.addEventListener('DOMContentLoaded', function() {
             search: 'Search invoices:',
         }
     });
+
+    @can('invoices.delete')
+    (function () {
+        const table = document.getElementById('example');
+        const bar = document.getElementById('invoices-bulk-bar');
+        const countEl = document.getElementById('invoices-bulk-count');
+        const form = document.getElementById('invoices-bulk-delete-form');
+        const clearBtn = document.getElementById('invoices-bulk-clear');
+        if (!table || !bar) {
+            return;
+        }
+
+        function refresh() {
+            const selected = Array.from(table.querySelectorAll('.bulk-select-row:checked'));
+            countEl.textContent = selected.length;
+            bar.classList.toggle('show', selected.length > 0);
+            form.querySelectorAll('input[name="ids[]"]').forEach(function (el) { el.remove(); });
+            selected.forEach(function (cb) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ids[]';
+                input.value = cb.value;
+                form.appendChild(input);
+            });
+        }
+
+        document.addEventListener('change', function (event) {
+            if (event.target.matches('.bulk-select-row')) {
+                refresh();
+            }
+            if (event.target.matches('.bulk-select-all')) {
+                const checked = event.target.checked;
+                table.querySelectorAll('.bulk-select-row').forEach(function (cb) { cb.checked = checked; });
+                refresh();
+            }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            table.querySelectorAll('.bulk-select-row:checked, .bulk-select-all:checked').forEach(function (cb) {
+                cb.checked = false;
+            });
+            refresh();
+        });
+
+        // Server-side DataTables tears down and rebuilds every row on each
+        // draw (page change, sort, search) - any selection from before that
+        // draw no longer refers to what's on screen, so drop it rather than
+        // let the bar/hidden inputs show stale state. DataTables fires this
+        // as a jQuery event (jQuery is already loaded on this page for the
+        // DataTables/Buttons plugins), not a native DOM event.
+        $(table).on('draw.dt', refresh);
+    })();
+    @endcan
 });
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Vendor;
@@ -68,5 +70,17 @@ class ConfirmDialogConsistencyTest extends TestCase
         $response->assertSee('data-confirm-delete', false);
         $response->assertSee('id="deleteOrder"', false);
         $response->assertDontSee("onsubmit=\"return confirm('Delete this role?", false);
+    }
+
+    public function test_invoice_bulk_delete_uses_the_shared_confirm_modal_not_a_browser_popup(): void
+    {
+        $invoice = Invoice::factory()->create();
+        Customer::factory()->create(['invoice_id' => $invoice->id]);
+
+        $response = $this->actingAs($this->owner())->get(route('invoice'));
+
+        $response->assertOk();
+        $response->assertSee('data-confirm-delete', false);
+        $response->assertSee('id="deleteOrder"', false);
     }
 }

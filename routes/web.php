@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::get('invoices/{id}/pdf', [App\Http\Controllers\Invoice\InvoiceController::class, 'pdf'])->name('invoice.pdf')->middleware('permission:invoices.view-details');
     Route::put('invoices/{id}', [App\Http\Controllers\Invoice\InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoices.update');
     Route::delete('invoices/{id}', [App\Http\Controllers\Invoice\InvoiceController::class, 'destroy'])->name('invoice.destroy')->middleware('permission:invoices.delete');
+    Route::post('invoices/bulk-delete', [App\Http\Controllers\Invoice\InvoiceController::class, 'bulkDelete'])->name('invoice.bulk-delete')->middleware('permission:invoices.delete');
 
     Route::post('inventrystore', [App\Http\Controllers\Inventory\InventryController::class, 'inventrystore'])->name('inventrystore')->middleware('permission:inventory.create');
     Route::post('quantityupdate', [App\Http\Controllers\Inventory\InventryController::class, 'quantityupdate'])->name('quantityupdate')->middleware('permission:inventory.update');
