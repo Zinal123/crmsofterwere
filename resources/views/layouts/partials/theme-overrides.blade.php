@@ -254,4 +254,51 @@
     [data-bs-theme=dark] .oms-bulk-bar {
         box-shadow: 0 8px 28px rgba(0, 0, 0, .5);
     }
+
+    /* Loading skeletons - a subtle animated placeholder instead of a blank
+       area while a chart/table is populated by JS after the page itself has
+       already loaded. Two flavors: a block skeleton for a whole element
+       (chart containers - covers the full height reserved by the chart's
+       own inline style, so nothing reflows once the real content replaces
+       it), and thin bar skeletons for individual table rows/cells. */
+    .oms-skeleton,
+    .oms-skeleton-row td {
+        position: relative;
+        overflow: hidden;
+        background-color: var(--vz-tertiary-bg, #e9ecef);
+        border-radius: .375rem;
+    }
+    .oms-skeleton::after,
+    .oms-skeleton-row td::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+        animation: oms-skeleton-shimmer 1.4s ease-in-out infinite;
+    }
+    [data-bs-theme=dark] .oms-skeleton::after,
+    [data-bs-theme=dark] .oms-skeleton-row td::after {
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .08), transparent);
+    }
+    @keyframes oms-skeleton-shimmer {
+        100% { transform: translateX(100%); }
+    }
+    .oms-skeleton-row td {
+        padding-top: .85rem;
+        padding-bottom: .85rem;
+    }
+    .oms-skeleton-bar {
+        display: block;
+        height: .6rem;
+        width: 70%;
+        background-color: var(--vz-tertiary-bg, #e9ecef);
+        border-radius: .25rem;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .oms-skeleton::after,
+        .oms-skeleton-row td::after {
+            animation: none;
+        }
+    }
 </style>

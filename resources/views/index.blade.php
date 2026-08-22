@@ -140,7 +140,7 @@
                 <span class="text-muted small">Income vs Expenses · 6 months</span>
             </div>
             <div class="card-body pt-0">
-                <div id="monthlyOverviewChart" style="height: 340px;"></div>
+                <div id="monthlyOverviewChart" class="oms-skeleton" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -155,7 +155,7 @@
                 </div>
             </div>
             <div class="card-body pt-0">
-                <div id="trendTabChart" style="height: 340px;"></div>
+                <div id="trendTabChart" class="oms-skeleton" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -174,7 +174,7 @@
             </div>
             <div class="card-body pt-0">
                 @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="height: 320px;"></div>
+                    <div id="expenseDonut" class="oms-skeleton" style="height: 320px;"></div>
                 @else
                     <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
                 @endif
@@ -188,7 +188,7 @@
                 <span class="text-muted small tabular-nums">₹{{ \App\Support\IndianNumber::format($totalRevenue) }}</span>
             </div>
             <div class="card-body pt-0">
-                <div id="revenueAreaChart" style="height: 320px;"></div>
+                <div id="revenueAreaChart" class="oms-skeleton" style="height: 320px;"></div>
             </div>
         </div>
     </div>
@@ -313,6 +313,10 @@
         var gridColor = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.08)';
         var donutPalette = [C.primary, C.success, C.danger, C.info, C.warning, '#7B5CC4', '#5B84E0'];
 
+        function dropSkeleton(target) {
+            if (target) target.classList.remove('oms-skeleton');
+        }
+
         var moEl = document.querySelector('#monthlyOverviewChart');
         if (moEl) {
             new ApexCharts(moEl, {
@@ -329,7 +333,7 @@
                 legend: { position: 'top', labels: { colors: C.text } },
                 grid: { borderColor: gridColor, strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
-            }).render();
+            }).render().then(function () { dropSkeleton(moEl); });
         }
 
         var revEl = document.querySelector('#revenueAreaChart');
@@ -345,7 +349,7 @@
                 yaxis: { labels: { formatter: k, style: { colors: C.text } } },
                 grid: { borderColor: gridColor, strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
-            }).render();
+            }).render().then(function () { dropSkeleton(revEl); });
         }
 
         var donutEl = document.querySelector('#expenseDonut');
@@ -359,7 +363,9 @@
                 dataLabels: { enabled: true, formatter: function (v) { return Math.round(v) + '%'; } },
                 plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total', formatter: function (w) { return inr(w.globals.seriesTotals.reduce(function (a, b) { return a + b; }, 0)); } } } } } },
                 tooltip: { y: { formatter: inr } }
-            }).render();
+            }).render().then(function () { dropSkeleton(donutEl); });
+        } else {
+            dropSkeleton(donutEl);
         }
 
         var tabEl = document.querySelector('#trendTabChart');
@@ -381,7 +387,7 @@
                 grid: { borderColor: gridColor, strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
             });
-            tabChart.render();
+            tabChart.render().then(function () { dropSkeleton(tabEl); });
             document.querySelectorAll('.trend-tab').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('.trend-tab').forEach(function (b) { b.classList.remove('active'); });

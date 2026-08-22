@@ -76,7 +76,7 @@
                 <span class="text-muted small">Last 6 months</span>
             </div>
             <div class="card-body pt-0">
-                <div id="accountTrendChart" style="height: 340px;"></div>
+                <div id="accountTrendChart" class="oms-skeleton" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
             </div>
             <div class="card-body pt-0">
                 @if(collect($financials['expense_breakdown'])->isNotEmpty())
-                    <div id="expenseDonut" style="height: 320px;"></div>
+                    <div id="expenseDonut" class="oms-skeleton" style="height: 320px;"></div>
                 @else
                     <div class="text-center text-muted py-5"><i class="ri-pie-chart-2-line fs-1 d-block mb-2"></i>No expenses recorded this month.</div>
                 @endif
@@ -157,6 +157,10 @@
         var gridColor = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.08)';
         var donutPalette = [C.primary, C.success, C.danger, C.info, C.warning, '#7B5CC4', '#5B84E0'];
 
+        function dropSkeleton(target) {
+            if (target) target.classList.remove('oms-skeleton');
+        }
+
         var el = document.querySelector('#accountTrendChart');
         if (el) {
             new ApexCharts(el, {
@@ -174,7 +178,7 @@
                 legend: { position: 'top', labels: { colors: C.text } },
                 grid: { borderColor: gridColor, strokeDashArray: 4 },
                 tooltip: { y: { formatter: inr } }
-            }).render();
+            }).render().then(function () { dropSkeleton(el); });
         }
 
         var donutEl = document.querySelector('#expenseDonut');
@@ -187,7 +191,9 @@
                 legend: { position: 'bottom', labels: { colors: C.text } },
                 dataLabels: { enabled: true, formatter: function (v) { return Math.round(v) + '%'; } },
                 tooltip: { y: { formatter: inr } }
-            }).render();
+            }).render().then(function () { dropSkeleton(donutEl); });
+        } else {
+            dropSkeleton(donutEl);
         }
     })();
 </script>

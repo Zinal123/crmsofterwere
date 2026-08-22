@@ -67,6 +67,17 @@ list view
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all" id="invoice-list-data">
+                            {{-- Skeleton placeholder rows shown only until the DataTables AJAX
+                                 call (server-side, so this tbody starts empty) does its first
+                                 draw - DataTables replaces the whole tbody on every draw, so
+                                 these rows disappear on their own and never need JS to remove them. --}}
+                            @for ($i = 0; $i < 5; $i++)
+                                <tr class="oms-skeleton-row">
+                                    @for ($col = 0; $col < 9; $col++)
+                                        <td><span class="oms-skeleton-bar"></span></td>
+                                    @endfor
+                                </tr>
+                            @endfor
                             </tbody>
                 </table>
             </div>
