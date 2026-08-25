@@ -5,7 +5,9 @@ namespace App\Services\Quotation;
 use App\Models\Quation;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
-use App\Repositories\Contracts\ProductConfigRepositoryInterface;
+use App\Repositories\Contracts\ProductCuttingParamsRepositoryInterface;
+use App\Repositories\Contracts\ProductDriveConfigRepositoryInterface;
+use App\Repositories\Contracts\ProductOpticalConfigRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Services\Inventory\AvailabilityService;
@@ -16,7 +18,9 @@ class QuotationService
 {
     public function __construct(
         private QuotationRepositoryInterface $repository,
-        private ProductConfigRepositoryInterface $productConfigRepository,
+        private ProductOpticalConfigRepositoryInterface $opticalConfigRepository,
+        private ProductDriveConfigRepositoryInterface $driveConfigRepository,
+        private ProductCuttingParamsRepositoryInterface $cuttingParamsRepository,
         private BankRepositoryInterface $bankRepository,
         private AvailabilityService $availabilityService,
         private InvoiceRepositoryInterface $invoiceRepository,
@@ -76,17 +80,17 @@ class QuotationService
         return [
             'quotation' => $quotation,
             'bank' => $quotation->bank ? $this->bankRepository->find($quotation->bank) : null,
-            'software' => $this->productConfigRepository->getSoftware($productId)->firstWhere('id', $quotation->softweredetails),
-            'lasercuttingMachine' => $this->productConfigRepository->getLaserCutting($productId)->firstWhere('id', $quotation->lasercutting),
-            'focus' => $this->productConfigRepository->getFocusing($productId)->firstWhere('id', $quotation->focus),
-            'power' => $this->productConfigRepository->getPower($productId)->firstWhere('id', $quotation->power),
-            'cuttingWay' => $this->productConfigRepository->getCuttingWay($productId)->firstWhere('id', $quotation->cuttingway),
-            'cuttingThickness' => $this->productConfigRepository->getCncThickness($productId)->firstWhere('id', $quotation->cuttingthickess),
-            'motor' => $this->productConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motor),
-            'motorType' => $this->productConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motortype),
-            'gear' => $this->productConfigRepository->getGear($productId)->firstWhere('id', $quotation->gearbox),
-            'rack' => $this->productConfigRepository->getRack($productId)->firstWhere('id', $quotation->rack),
-            'software1' => $this->productConfigRepository->getSoftware1($productId)->firstWhere('id', $quotation->software),
+            'software' => $this->opticalConfigRepository->getSoftware($productId)->firstWhere('id', $quotation->softweredetails),
+            'lasercuttingMachine' => $this->opticalConfigRepository->getLaserCutting($productId)->firstWhere('id', $quotation->lasercutting),
+            'focus' => $this->opticalConfigRepository->getFocusing($productId)->firstWhere('id', $quotation->focus),
+            'power' => $this->opticalConfigRepository->getPower($productId)->firstWhere('id', $quotation->power),
+            'cuttingWay' => $this->cuttingParamsRepository->getCuttingWay($productId)->firstWhere('id', $quotation->cuttingway),
+            'cuttingThickness' => $this->cuttingParamsRepository->getCncThickness($productId)->firstWhere('id', $quotation->cuttingthickess),
+            'motor' => $this->driveConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motor),
+            'motorType' => $this->driveConfigRepository->getMotor($productId)->firstWhere('id', $quotation->motortype),
+            'gear' => $this->driveConfigRepository->getGear($productId)->firstWhere('id', $quotation->gearbox),
+            'rack' => $this->driveConfigRepository->getRack($productId)->firstWhere('id', $quotation->rack),
+            'software1' => $this->driveConfigRepository->getSoftware1($productId)->firstWhere('id', $quotation->software),
         ];
     }
 
@@ -196,16 +200,16 @@ class QuotationService
     public function getQuotationFormViewData($productId): array
     {
         return [
-            'softeredetails' => $this->productConfigRepository->getSoftware($productId),
-            'lasercutting' => $this->productConfigRepository->getLaserCutting($productId),
-            'fource' => $this->productConfigRepository->getFocusing($productId),
-            'power' => $this->productConfigRepository->getPower($productId),
-            'cutting' => $this->productConfigRepository->getCuttingWay($productId),
-            'cnsthinks' => $this->productConfigRepository->getCncThickness($productId),
-            'motor' => $this->productConfigRepository->getMotor($productId),
-            'gear' => $this->productConfigRepository->getGear($productId),
-            'rack' => $this->productConfigRepository->getRack($productId),
-            'softere' => $this->productConfigRepository->getSoftware1($productId),
+            'softeredetails' => $this->opticalConfigRepository->getSoftware($productId),
+            'lasercutting' => $this->opticalConfigRepository->getLaserCutting($productId),
+            'fource' => $this->opticalConfigRepository->getFocusing($productId),
+            'power' => $this->opticalConfigRepository->getPower($productId),
+            'cutting' => $this->cuttingParamsRepository->getCuttingWay($productId),
+            'cnsthinks' => $this->cuttingParamsRepository->getCncThickness($productId),
+            'motor' => $this->driveConfigRepository->getMotor($productId),
+            'gear' => $this->driveConfigRepository->getGear($productId),
+            'rack' => $this->driveConfigRepository->getRack($productId),
+            'softere' => $this->driveConfigRepository->getSoftware1($productId),
             'bank' => $this->bankRepository->all(),
             'linkableProducts' => $this->productRepository->allOrderedByLatest(),
         ];

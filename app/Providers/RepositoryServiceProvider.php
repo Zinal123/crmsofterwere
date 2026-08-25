@@ -15,7 +15,9 @@ use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\JobPhotoRepositoryInterface;
 use App\Repositories\Contracts\JobRepositoryInterface;
 use App\Repositories\Contracts\MachineRepositoryInterface;
-use App\Repositories\Contracts\ProductConfigRepositoryInterface;
+use App\Repositories\Contracts\ProductCuttingParamsRepositoryInterface;
+use App\Repositories\Contracts\ProductDriveConfigRepositoryInterface;
+use App\Repositories\Contracts\ProductOpticalConfigRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\QuotationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
@@ -39,7 +41,9 @@ use App\Repositories\Eloquent\EloquentInvoiceRepository;
 use App\Repositories\Eloquent\EloquentJobPhotoRepository;
 use App\Repositories\Eloquent\EloquentJobRepository;
 use App\Repositories\Eloquent\EloquentMachineRepository;
-use App\Repositories\Eloquent\EloquentProductConfigRepository;
+use App\Repositories\Eloquent\EloquentProductCuttingParamsRepository;
+use App\Repositories\Eloquent\EloquentProductDriveConfigRepository;
+use App\Repositories\Eloquent\EloquentProductOpticalConfigRepository;
 use App\Repositories\Eloquent\EloquentProductRepository;
 use App\Repositories\Eloquent\EloquentQuotationRepository;
 use App\Repositories\Eloquent\EloquentRoleRepository;
@@ -57,7 +61,9 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
-        $this->app->bind(ProductConfigRepositoryInterface::class, EloquentProductConfigRepository::class);
+        $this->app->bind(ProductOpticalConfigRepositoryInterface::class, EloquentProductOpticalConfigRepository::class);
+        $this->app->bind(ProductDriveConfigRepositoryInterface::class, EloquentProductDriveConfigRepository::class);
+        $this->app->bind(ProductCuttingParamsRepositoryInterface::class, EloquentProductCuttingParamsRepository::class);
         $this->app->bind(InventoryRepositoryInterface::class, EloquentInventoryRepository::class);
         $this->app->bind(QuotationRepositoryInterface::class, EloquentQuotationRepository::class);
         $this->app->bind(DashboardRepositoryInterface::class, EloquentDashboardRepository::class);
