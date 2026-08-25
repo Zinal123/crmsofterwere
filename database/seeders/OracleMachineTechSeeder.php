@@ -73,7 +73,7 @@ class OracleMachineTechSeeder extends Seeder
      */
     private function seedMachineConfig(array $products): array
     {
-        [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens, $nozzle] = $products;
+        [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens] = $products;
 
         $software1 = Softerwere::create(['company' => 'Cypcut', 'product_id' => $fiberMachine->id, 'modal' => 'CypCut Pro V6.2', 'logo' => '', 'image' => '', 'description' => 'Laser cutting control software with nesting and auto-focus support.']);
         Softerwere::create(['company' => 'FSCUT', 'product_id' => $co2Machine->id, 'modal' => 'FSCUT3000E', 'logo' => '', 'image' => '', 'description' => 'CNC controller software for CO2 laser cutting systems.']);
@@ -304,7 +304,7 @@ class OracleMachineTechSeeder extends Seeder
 
     private function seedInventory(array $products): void
     {
-        [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens, $nozzle] = $products;
+        [, , $cuttingHead, $smps, $lens, $nozzle] = $products;
 
         Invetry::create(['product_id' => $nozzle->id, 'quantity' => 250, 'vandername' => 'Raytools India Pvt Ltd', 'rate' => 350]);
         Invetry::create(['product_id' => $lens->id, 'quantity' => 40, 'vandername' => 'Precitec India', 'rate' => 8500]);
