@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ConfigDefaults;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 /*
@@ -199,11 +200,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:vendors.view')->get('admin/vendors', [App\Http\Controllers\Vendor\VendorController::class, 'index'])->name('admin.vendors.index');
     Route::middleware('permission:vendors.manage')->group(function () {
         Route::post('admin/vendors', [App\Http\Controllers\Vendor\VendorController::class, 'store'])->name('admin.vendors.store');
-        Route::put('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'update'])->name('admin.vendors.update');
-        Route::delete('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'destroy'])->name('admin.vendors.destroy');
+        Route::put(ConfigDefaults::VENDOR_ID_ROUTE, [App\Http\Controllers\Vendor\VendorController::class, 'update'])->name('admin.vendors.update');
+        Route::delete(ConfigDefaults::VENDOR_ID_ROUTE, [App\Http\Controllers\Vendor\VendorController::class, 'destroy'])->name('admin.vendors.destroy');
     });
     Route::middleware('permission:vendor-payments.view')->get('admin/vendor-payments', [App\Http\Controllers\Vendor\VendorController::class, 'paymentsIndex'])->name('vendor-payments.index');
-    Route::middleware('permission:vendor-payments.view')->get('admin/vendors/{id}', [App\Http\Controllers\Vendor\VendorController::class, 'show'])->name('admin.vendors.show');
+    Route::middleware('permission:vendor-payments.view')->get(ConfigDefaults::VENDOR_ID_ROUTE, [App\Http\Controllers\Vendor\VendorController::class, 'show'])->name('admin.vendors.show');
     Route::middleware('permission:vendor-payments.manage')->group(function () {
         Route::post('admin/vendors/{id}/bills', [App\Http\Controllers\Vendor\VendorController::class, 'storeBill'])->name('admin.vendors.bills.store');
         Route::put('admin/vendors/{id}/bills/{billId}', [App\Http\Controllers\Vendor\VendorController::class, 'updateBill'])->name('admin.vendors.bills.update');

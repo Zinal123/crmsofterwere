@@ -2,6 +2,7 @@
 
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
+use App\Support\ConfigDefaults;
 use Monolog\Handler\SyslogUdpHandler;
 
 return [
@@ -56,13 +57,13 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(ConfigDefaults::LOG_PATH),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(ConfigDefaults::LOG_PATH),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
@@ -111,7 +112,7 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(ConfigDefaults::LOG_PATH),
         ],
     ],
 

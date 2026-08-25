@@ -11,6 +11,8 @@ use Spatie\Permission\Models\Role;
 
 class RoleService
 {
+    private const ROLE_NOT_FOUND = 'Role not found.';
+
     public function __construct(
         private RoleRepositoryInterface $repository,
         private AuditLogService $auditLog,
@@ -40,7 +42,7 @@ class RoleService
         $role = $this->repository->find($id);
 
         if ($role === null) {
-            throw new \InvalidArgumentException('Role not found.');
+            throw new \InvalidArgumentException(self::ROLE_NOT_FOUND);
         }
 
         if ($role->name === 'Owner') {
@@ -60,7 +62,7 @@ class RoleService
         $role = $this->repository->find($id);
 
         if ($role === null) {
-            throw new \InvalidArgumentException('Role not found.');
+            throw new \InvalidArgumentException(self::ROLE_NOT_FOUND);
         }
 
         if ($role->name === 'Owner') {
@@ -80,7 +82,7 @@ class RoleService
         $role = $this->repository->find($roleId);
 
         if ($role === null) {
-            throw new \InvalidArgumentException('Role not found.');
+            throw new \InvalidArgumentException(self::ROLE_NOT_FOUND);
         }
 
         if (!in_array($permissionName, RolesAndPermissionsSeeder::PERMISSIONS, true)) {
