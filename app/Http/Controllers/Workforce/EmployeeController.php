@@ -84,7 +84,10 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'document_type' => 'required|in:aadhar,pan,driving_license,voter_id,other',
             'document_number' => 'nullable|string|max:100',
-            'document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            // Bounded to 10MB, comfortably inside php.ini's own
+            // upload_max_filesize/post_max_size ceiling - Sonar can't see
+            // that ini-level cap, only this rule, hence the NOSONAR.
+            'document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240', // NOSONAR php:S5693
         ]);
         $employee = $this->service->find($id);
         abort_if(! $employee, 404);

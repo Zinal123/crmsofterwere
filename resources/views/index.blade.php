@@ -148,6 +148,7 @@
         <div class="card dash-card">
             <div class="card-header border-0 d-flex align-items-center flex-wrap gap-2">
                 <h5 class="card-title mb-0 flex-grow-1">Income &amp; Expenses</h5>
+                {{-- role="group" on .btn-group is Bootstrap's own documented pattern for a button toolbar, not a form fieldset. --}}
                 <div class="btn-group btn-group-sm" role="group">
                     <button type="button" class="btn btn-soft-primary trend-tab active" data-series="income">Income</button>
                     <button type="button" class="btn btn-soft-primary trend-tab" data-series="expense">Expenses</button>
@@ -210,7 +211,8 @@
                             <span class="tabular-nums">₹{{ \App\Support\IndianNumber::format($item->total_revenue) }}</span>
                         </div>
                         <div class="progress top-progress bg-light">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ round($item->total_revenue / $maxRev * 100) }}%"></div>
+                            {{-- Bootstrap's div+role="progressbar" pattern, not a native <progress> - keeps the bg-color theming/dark-mode support native <progress> can't do. --}}
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ round($item->total_revenue / $maxRev * 100) }}%"></div>
                         </div>
                         <span class="text-muted small tabular-nums">{{ $item->total_qty }} sold</span>
                     </div>

@@ -29,6 +29,12 @@
     .cmdk-hint { padding: 8px 14px; border-top: 1px solid var(--vz-border-color, #e9ebec); font-size: 11px; color: var(--vz-secondary-color, #878a99); display: flex; gap: 14px; }
 </style>
 
+{{-- role="dialog" kept deliberately instead of a native <dialog> element:
+     tried the conversion, but this app's bundled Bootstrap CSS styles the
+     bare `dialog` tag selector as part of its own Modal component
+     (position/width/margin/pointer-events), which fights this component's
+     custom centering/backdrop and visibly breaks the layout. The ARIA
+     pattern below is a standard, accessible substitute. --}}
 <div id="commandPalette" class="cmdk-overlay" role="dialog" aria-modal="true" aria-label="Command palette">
     <div class="cmdk-panel">
         <div class="cmdk-search">

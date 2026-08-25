@@ -114,7 +114,8 @@
                             <span class="tabular-nums">{{ $count }}</span>
                         </div>
                         <div class="progress top-progress bg-light">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round($count / $maxWorker * 100) }}%"></div>
+                            {{-- Bootstrap's div+role="progressbar" pattern, not a native <progress> - keeps the bg-color theming/dark-mode support native <progress> can't do. --}}
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ round($count / $maxWorker * 100) }}%"></div>
                         </div>
                     </div>
                 @empty

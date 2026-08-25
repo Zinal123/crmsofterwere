@@ -35,7 +35,10 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
+        // The $e parameter is unused in the body but not removable: Laravel's
+        // reportable() inspects the closure's type-hint via reflection to
+        // decide which exception type this reporter applies to.
+        $this->reportable(function (Throwable $e) { // NOSONAR php:S1172
             //
         });
     }

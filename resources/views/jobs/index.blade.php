@@ -7,6 +7,12 @@
         <div class="row g-2">
             @forelse($jobs as $job)
                 <div class="col-12 col-md-6 col-lg-4">
+                    {{-- This card's onclick is a mouse/touch-only convenience layer on top of
+                         the real, fully keyboard/screen-reader accessible <a> title link below -
+                         not a replacement for it, so it's deliberately not given an interactive
+                         ARIA role (that would just create a second, redundant tab stop for the
+                         same destination, and still couldn't be a real <a> since it wraps other
+                         interactive children like the status badges and dropdown). --}}
                     <div class="card border job-tap-card" style="cursor: pointer;" onclick="if (!event.target.closest('a')) { window.location = '{{ route('jobs.show', $job->id) }}'; }">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">

@@ -118,8 +118,8 @@ Daily Expenses
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label class="form-label">Type <span class="text-danger">*</span></label>
-                        <div class="btn-group w-100" role="group">
+                        <div class="form-label" id="transaction-type-label">Type <span class="text-danger">*</span></div>
+                        <div class="btn-group w-100" role="radiogroup" aria-labelledby="transaction-type-label">
                             <input type="radio" class="btn-check" name="type" id="type-payment" value="payment" checked>
                             <label class="btn btn-outline-danger" for="type-payment">Money Out</label>
                             <input type="radio" class="btn-check" name="type" id="type-receipt" value="receipt">

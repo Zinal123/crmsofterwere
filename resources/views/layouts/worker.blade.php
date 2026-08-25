@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>@yield('title') | Oracle Machine Tech</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Oracle Machine Tech CRM" name="description" />
     <meta content="Oracle Machine Tech" name="author" />
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
@@ -60,8 +60,8 @@
          * High-contrast mode (Fiix precedent: "increase readability... in
          * low visibility environments"). Pure black-on-white, thicker
          * borders/outlines, no soft/pastel badge backgrounds - readable in
-         * shop-floor glare. Toggled via [data-contrast="high"] on <html>,
-         * applied pre-paint (see the inline script below) so there's no
+         * shop-floor glare. Toggled via a [data-contrast="high"] attribute
+         * on the root element, applied pre-paint (see the inline script below) so there's no
          * flash of normal-contrast content on load.
          */
         html[data-contrast="high"] body.worker-kiosk {

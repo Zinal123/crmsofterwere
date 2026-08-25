@@ -47,7 +47,8 @@
                                             <div class="d-flex justify-content-end align-items-center gap-1">
                                                 <form action="{{ route('jobs.materials.substitute', $line['material_id']) }}" method="POST" class="d-flex align-items-center gap-1">
                                                     @csrf
-                                                    <select name="new_product_id" class="form-select form-select-sm" style="width: auto;" aria-label="Substitute part" required>
+                                                    <label class="visually-hidden" for="substitute-part-{{ $line['material_id'] }}">Substitute part</label>
+                                                    <select id="substitute-part-{{ $line['material_id'] }}" name="new_product_id" class="form-select form-select-sm" style="width: auto;" required>
                                                         <option value="">Substitute…</option>
                                                         @foreach($products as $product)
                                                             <option value="{{ $product->id }}">{{ $product->name }}</option>

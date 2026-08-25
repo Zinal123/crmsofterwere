@@ -27,6 +27,9 @@
 
     <div class="table-responsive">
         <table class="table table-bordered align-middle mb-0 tabular-nums">
+            <thead class="visually-hidden">
+                <tr><th>Account</th><th class="text-end">Amount</th></tr>
+            </thead>
             <tbody>
                 <tr class="table-light">
                     <td class="fw-semibold text-uppercase small text-muted" colspan="2">Income</td>

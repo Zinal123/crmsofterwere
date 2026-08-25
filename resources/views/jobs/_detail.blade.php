@@ -116,6 +116,7 @@
                             <h6>Add Proof Photo <span class="text-danger">*</span></h6>
 
                             <div class="mb-2" role="radiogroup" aria-label="Photo stage">
+                                {{-- Nested role="group" is redundant with the radiogroup above but harmless; it's Bootstrap's own documented .btn-group pattern. --}}
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="stage-radio" id="stage-before" value="before" autocomplete="off">
                                     <label class="btn btn-outline-secondary btn-shopfloor" for="stage-before" style="min-height: 48px;">Before</label>

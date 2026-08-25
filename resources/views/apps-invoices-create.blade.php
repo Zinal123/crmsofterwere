@@ -21,14 +21,15 @@
                 <div class="card-body border-bottom border-bottom-dashed p-4">
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="profile-user mx-auto  mb-3">
-                                <input id="profile-img-file-input" type="file" class="profile-img-file-input" />
-                                <label for="profile-img-file-input" class="d-block" tabindex="0">
-                                    <span class="overflow-hidden border border-dashed d-flex align-items-center justify-content-center rounded" style="height: 60px; width: 256px;">
-                                        <img src="{{ URL::asset('build/images/logo.png') }}" class="card-logo card-logo-dark user-profile-image img-fluid" alt="logo dark">
-                                        <img src="{{ URL::asset('build/images/header.jpeg') }}" class="card-logo card-logo-light user-profile-image img-fluid" alt="logo light">
-                                    </span>
-                                </label>
+                            {{-- Not a real upload control - this file input had no onchange
+                                 handler and nothing read its value; the logo shown here is
+                                 always the fixed company logo, swapped by theme (dark/light)
+                                 via CSS, not by this input. Simplified to a static display. --}}
+                            <div class="profile-user mx-auto mb-3">
+                                <span class="d-block overflow-hidden border border-dashed d-flex align-items-center justify-content-center rounded" style="height: 60px; width: 256px;">
+                                    <img src="{{ URL::asset('build/images/logo.png') }}" class="card-logo card-logo-dark user-profile-image img-fluid" alt="Company logo dark theme">
+                                    <img src="{{ URL::asset('build/images/header.jpeg') }}" class="card-logo card-logo-light user-profile-image img-fluid" alt="Company logo light theme">
+                                </span>
                             </div>
                             <div>
                                 
