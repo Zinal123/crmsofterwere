@@ -123,31 +123,6 @@ class JobController extends Controller
         return redirect()->route('jobs.show', $jobModel->id)->with('success', 'Template applied to checklist.');
     }
 
-    public function addMaterial(Request $request, $job, \App\Services\Job\JobMaterialService $svc)
-    {
-        $data = $request->validate(['product_id' => 'required|integer|exists:product,id', 'quantity' => 'required|integer|min:1']);
-        $jobModel = $this->repository->find($job);
-        abort_if(! $jobModel, 404);
-        $svc->add($jobModel, (int) $data['product_id'], (int) $data['quantity']);
-
-        return redirect()->route('jobs.show', $jobModel->id)->with('success', 'Material added to job.');
-    }
-
-    public function removeMaterial($material, \App\Services\Job\JobMaterialService $svc)
-    {
-        $svc->remove((int) $material);
-
-        return back()->with('success', 'Material removed.');
-    }
-
-    public function substituteMaterial(Request $request, $material, \App\Services\Job\JobMaterialService $svc)
-    {
-        $data = $request->validate(['new_product_id' => 'required|integer|exists:product,id']);
-        $svc->substitute((int) $material, (int) $data['new_product_id']);
-
-        return back()->with('success', 'Material substituted.');
-    }
-
     public function addChecklistItem(Request $request, $id)
     {
         $data = $request->validate(['description' => 'required|string|max:255']);
