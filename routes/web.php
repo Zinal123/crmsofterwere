@@ -140,6 +140,9 @@ Route::middleware('auth')->group(function () {
     Route::post('gear/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'gearstore'])->name('gearstore')->middleware('permission:products.manage-config');
     Route::post('rack/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'rackstore'])->name('rackstore')->middleware('permission:products.manage-config');
     Route::post('Software/store' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softwarestore'])->name('softwarestore')->middleware('permission:products.manage-config');
+});
+
+Route::middleware('auth')->group(function () {
 
     Route::post('softerwere/{id}/update' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softerwereupdate'])->name('softerwereupdate')->middleware('permission:products.manage-config');
     Route::post('softerwere/{id}/delete' ,[App\Http\Controllers\Product\ProductConfigController::class, 'softereweredelete'])->name('softereweredelete')->middleware('permission:products.manage-config');
@@ -213,6 +216,9 @@ Route::middleware('auth')->group(function () {
         Route::put('admin/vendors/{id}/payments/{paymentId}', [App\Http\Controllers\Vendor\VendorController::class, 'updatePaymentRecord'])->name('admin.vendors.payments.update');
         Route::delete('admin/vendors/{id}/payments/{paymentId}', [App\Http\Controllers\Vendor\VendorController::class, 'destroyPaymentRecord'])->name('admin.vendors.payments.destroy');
     });
+});
+
+Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:checklist-templates.manage')->group(function () {
         Route::get('admin/checklist-templates', [App\Http\Controllers\Admin\ChecklistTemplateController::class, 'index'])->name('admin.checklist-templates.index');

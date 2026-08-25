@@ -31,6 +31,16 @@ class OracleMachineTechSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->seedBank();
+        $products = $this->seedProducts();
+        $config = $this->seedMachineConfig($products);
+        $this->seedCustomersAndInvoices($products);
+        $this->seedQuotations($products, $config);
+        $this->seedInventory($products);
+    }
+
+    private function seedBank(): void
+    {
         Bank::create([
             'bankholdername' => 'Oracle Machine Tech',
             'bankaccountnumber' => '780305000477',
@@ -38,8 +48,12 @@ class OracleMachineTechSeeder extends Seeder
             'bankbranchname' => 'Madodhar Branch',
             'bankname' => 'ICICI Bank',
         ]);
+    }
 
-        $products = [
+    /** @return Product[] [fiberMachine, co2Machine, cuttingHead, smps, lens, nozzle] */
+    private function seedProducts(): array
+    {
+        return [
             Product::create(['name' => 'Fiber Laser Cutting Machine 1500W', 'rate' => 850000, 'unit' => 'Nos', 'make' => 'FLC-1500']),
             Product::create(['name' => 'CO2 Laser Cutting Machine 130W', 'rate' => 425000, 'unit' => 'Nos', 'make' => 'CO2-130']),
             Product::create(['name' => 'Raytools Laser Cutting Head BM109', 'rate' => 45000, 'unit' => 'Nos', 'make' => 'BM109']),
@@ -47,25 +61,32 @@ class OracleMachineTechSeeder extends Seeder
             Product::create(['name' => 'Precitec ProCutter Focusing Lens', 'rate' => 8500, 'unit' => 'Nos', 'make' => 'PC-750']),
             Product::create(['name' => 'Ceramic Nozzle Ring', 'rate' => 350, 'unit' => 'Nos', 'make' => 'CNR-02']),
         ];
+    }
+
+    /**
+     * Every machine-config table (software, cutting head, focus, power,
+     * motor/gear/rack, cutting way/thickness, software list) for the two
+     * machines - returns the first-created record of each, needed by the
+     * quotations seeded afterwards.
+     *
+     * @return array<string, mixed>
+     */
+    private function seedMachineConfig(array $products): array
+    {
         [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens, $nozzle] = $products;
 
-        // Software config
         $software1 = Softerwere::create(['company' => 'Cypcut', 'product_id' => $fiberMachine->id, 'modal' => 'CypCut Pro V6.2', 'logo' => '', 'image' => '', 'description' => 'Laser cutting control software with nesting and auto-focus support.']);
         Softerwere::create(['company' => 'FSCUT', 'product_id' => $co2Machine->id, 'modal' => 'FSCUT3000E', 'logo' => '', 'image' => '', 'description' => 'CNC controller software for CO2 laser cutting systems.']);
 
-        // Laser cutting head config
         $laserCutting1 = Lasercutting::create(['company' => 'Raytools', 'product_id' => $cuttingHead->id, 'modal' => 'BM109', 'logo' => '', 'image' => '', 'decription' => 'Auto-focus laser cutting head, capacitive height control.']);
         Lasercutting::create(['company' => 'WSX', 'product_id' => $fiberMachine->id, 'modal' => 'NC30', 'logo' => '', 'image' => '', 'decription' => 'High-precision cutting head for fiber laser machines.']);
 
-        // Focusing config
         $focus1 = Fource::create(['company' => 'Precitec', 'product_id' => $lens->id, 'modal' => 'ProCutter 2.0', 'logo' => '', 'image' => '', 'description' => 'Focusing lens assembly with real-time process monitoring.']);
         Fource::create(['company' => 'II-VI', 'product_id' => $fiberMachine->id, 'modal' => 'HighYAG', 'logo' => '', 'image' => '', 'description' => 'Focusing optics for high-power fiber laser cutting.']);
 
-        // Power source config
         $power1 = Power::create(['company' => 'IPG Photonics', 'product_id' => $fiberMachine->id, 'modal' => 'YLS-1500', 'logo' => '', 'image' => '', 'description' => '1500W fiber laser source.']);
         Power::create(['company' => 'Raycus', 'product_id' => $smps->id, 'modal' => 'RFL-1500', 'logo' => '', 'image' => '', 'description' => '1500W continuous wave fiber laser source.']);
 
-        // Motor / Gear / Rack config
         $motor1 = Motor::create(['product_id' => $fiberMachine->id, 'companyname' => 'Panasonic Servo Motor MHMF', 'image' => '']);
         Motor::create(['product_id' => $co2Machine->id, 'companyname' => 'Yaskawa Sigma-7 Servo Motor', 'image' => '']);
         $gear1 = Gear::create(['product_id' => $fiberMachine->id, 'companyname' => 'Yaskawa Precision Gearbox']);
@@ -73,17 +94,22 @@ class OracleMachineTechSeeder extends Seeder
         $rack1 = Rack::create(['product_id' => $fiberMachine->id, 'companyname' => 'THK Precision Rack']);
         Rack::create(['product_id' => $co2Machine->id, 'companyname' => 'Yang Rack & Pinion']);
 
-        // Cutting way / CNC thickness config
         $cuttingWay1 = Cutting::create(['product_id' => $fiberMachine->id, 'cuttingway' => 'Fiber Laser Cutting - up to 20mm Mild Steel']);
         Cutting::create(['product_id' => $co2Machine->id, 'cuttingway' => 'CO2 Laser Cutting - up to 15mm Stainless Steel']);
         $thickness1 = Cnsthinks::create(['product_id' => $fiberMachine->id, 'cuttingthinks' => '20mm Mild Steel']);
         Cnsthinks::create(['product_id' => $co2Machine->id, 'cuttingthinks' => '15mm Stainless Steel']);
 
-        // Software(list) config
         $softwareList1 = Softerwere1::create(['product_id' => $fiberMachine->id, 'companyname' => 'Cypcut Nesting Module', 'image' => '']);
         Softerwere1::create(['product_id' => $co2Machine->id, 'companyname' => 'FSCUT Nesting Module', 'image' => '']);
 
-        // Customers (2 Gujarat -> SGST+CGST, 2 other states -> IGST) + their invoices
+        return compact('software1', 'laserCutting1', 'focus1', 'power1', 'motor1', 'gear1', 'rack1', 'cuttingWay1', 'thickness1', 'softwareList1');
+    }
+
+    /** 2 Gujarat customers (SGST+CGST) + 2 other-state customers (IGST), each with an invoice. */
+    private function seedCustomersAndInvoices(array $products): void
+    {
+        [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens, $nozzle] = $products;
+
         $customersData = [
             [
                 'name' => 'UTKARSH MART', 'address' => 'Sai garden,shopping centre,opp G.I.D.C  Bardoli Road,Kabilpour navsari-396424',
@@ -180,8 +206,15 @@ class OracleMachineTechSeeder extends Seeder
                 ]);
             }
         }
+    }
 
-        // Quotations
+    private function seedQuotations(array $products, array $config): void
+    {
+        [$fiberMachine, $co2Machine] = $products;
+        ['software1' => $software1, 'laserCutting1' => $laserCutting1, 'focus1' => $focus1, 'power1' => $power1,
+            'motor1' => $motor1, 'gear1' => $gear1, 'rack1' => $rack1, 'cuttingWay1' => $cuttingWay1,
+            'thickness1' => $thickness1, 'softwareList1' => $softwareList1] = $config;
+
         Quation::create([
             'product_id' => $fiberMachine->id,
             'clientname' => 'Rakesh Patel',
@@ -267,8 +300,12 @@ class OracleMachineTechSeeder extends Seeder
             'amount2' => 8500,
             'note' => 'Prices exclusive of GST. Valid for 15 days.',
         ]);
+    }
 
-        // Inventory
+    private function seedInventory(array $products): void
+    {
+        [$fiberMachine, $co2Machine, $cuttingHead, $smps, $lens, $nozzle] = $products;
+
         Invetry::create(['product_id' => $nozzle->id, 'quantity' => 250, 'vandername' => 'Raytools India Pvt Ltd', 'rate' => 350]);
         Invetry::create(['product_id' => $lens->id, 'quantity' => 40, 'vandername' => 'Precitec India', 'rate' => 8500]);
         Invetry::create(['product_id' => $smps->id, 'quantity' => 15, 'vandername' => 'Siemens Distributor Ahmedabad', 'rate' => 12500]);

@@ -27,20 +27,25 @@ class EnforceIdleTimeout
         $lastActivity = $request->session()->get('last_activity_at');
 
         if ($lastActivity !== null && now()->diffInMinutes($lastActivity) > self::IDLE_LIMIT_MINUTES) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'You were signed out after a period of inactivity on this device.'], 401);
-            }
-
-            return redirect()->route('login')->with('error', 'You were signed out after a period of inactivity on this device.');
+            return $this->forceLogout($request);
         }
 
         $this->touch($request);
 
         return $next($request);
+    }
+
+    private function forceLogout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'You were signed out after a period of inactivity on this device.'], 401);
+        }
+
+        return redirect()->route('login')->with('error', 'You were signed out after a period of inactivity on this device.');
     }
 
     private function touch(Request $request): void
