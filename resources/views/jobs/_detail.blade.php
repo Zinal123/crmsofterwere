@@ -136,7 +136,7 @@
                                 <div id="camera-capture">
                                     <video id="camera-video" autoplay playsinline muted class="w-100 rounded mb-2" style="max-height: 320px; background: #000; display: none;"></video>
                                     {{-- Canvas doubles as the annotation surface: after Capture, the frozen
-                                         frame stays on canvas (not a static <img>) so the Worker can draw
+                                         frame stays on canvas (not a static image element) so the Worker can draw
                                          directly on it (arrows/notes) before it's flattened and uploaded. --}}
                                     <canvas id="camera-canvas" class="w-100 rounded mb-2" style="max-height: 320px; background: #000; display: none; touch-action: none;" aria-label="Captured proof photo, tap or drag to annotate"></canvas>
 

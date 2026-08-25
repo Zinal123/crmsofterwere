@@ -42,7 +42,7 @@ class DemoDataSeeder extends Seeder
             TicketProblemTypeSeeder::class,
         ]);
 
-        [$owner, $manager, $account, $workers] = $this->users();
+        [$owner, , , $workers] = $this->users();
         $products = $this->products();
         $this->inventory($products);
         $this->invoices($products);
@@ -365,7 +365,7 @@ class DemoDataSeeder extends Seeder
         // Spread payments and receipts across the last 6 months.
         for ($m = 5; $m >= 0; $m--) {
             $base = Carbon::now()->subMonths($m);
-            foreach (range(1, random_int(4, 7)) as $n) {
+            for ($paymentIndex = 0, $paymentCount = random_int(4, 7); $paymentIndex < $paymentCount; $paymentIndex++) {
                 $cat = $catModels['payment'][array_rand($catModels['payment'])];
                 DailyTransaction::create([
                     'type' => 'payment',
@@ -377,7 +377,7 @@ class DemoDataSeeder extends Seeder
                     'created_by' => $owner->id,
                 ]);
             }
-            foreach (range(1, random_int(1, 3)) as $n) {
+            for ($receiptIndex = 0, $receiptCount = random_int(1, 3); $receiptIndex < $receiptCount; $receiptIndex++) {
                 $cat = $catModels['receipt'][array_rand($catModels['receipt'])];
                 DailyTransaction::create([
                     'type' => 'receipt',
