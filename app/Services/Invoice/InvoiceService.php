@@ -5,6 +5,7 @@ namespace App\Services\Invoice;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\Integration\TallySyncQueueService;
 use App\Support\IndianNumber;
 use App\Support\IndianStates;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,6 +20,7 @@ class InvoiceService
         private InvoiceRepositoryInterface $repository,
         private ProductRepositoryInterface $productRepository,
         private BankRepositoryInterface $bankRepository,
+        private TallySyncQueueService $tallySyncQueueService,
     ) {
     }
 
@@ -195,6 +197,8 @@ class InvoiceService
                     ]);
                 }
             }
+
+            $this->tallySyncQueueService->enqueueSalesInvoice($id);
         });
     }
 
