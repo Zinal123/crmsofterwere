@@ -37,6 +37,10 @@ Route::middleware('auth')->group(function () {
         Route::get('accounting/profit-loss', [App\Http\Controllers\Reporting\AccountingController::class, 'profitAndLoss'])->name('accounting.profit-loss');
         Route::get('accounting/trial-balance', [App\Http\Controllers\Reporting\AccountingController::class, 'trialBalance'])->name('accounting.trial-balance');
     });
+    Route::middleware('permission:tally-sync.view')->group(function () {
+        Route::get('tally-sync', [App\Http\Controllers\Integration\TallySyncController::class, 'index'])->name('tally-sync.index');
+        Route::post('tally-sync/{tallySyncQueue}/retry', [App\Http\Controllers\Integration\TallySyncController::class, 'retry'])->name('tally-sync.retry');
+    });
     Route::get('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'index'])->name('expenses.index')->middleware('permission:expenses.view');
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
     Route::get('paymenthistry', [App\Http\Controllers\Invoice\InvoiceController::class, 'paymenthistry'])->name('invoice.histry')->middleware('permission:payment-history.view');

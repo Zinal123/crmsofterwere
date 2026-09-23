@@ -56,6 +56,14 @@
                 </li>
                 @endcan
 
+                @can('tally-sync.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('tally-sync.*') ? 'active' : '' }}" href="{{ route('tally-sync.index') }}">
+                        <i class="ri-exchange-line"></i> <span>Tally Sync</span>
+                    </a>
+                </li>
+                @endcan
+
                 @can('expenses.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}" href="{{ route('expenses.index') }}">
