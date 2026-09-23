@@ -69,4 +69,20 @@ class TallyClientTest extends TestCase
         $this->assertFalse($response->accepted);
         $this->assertStringContainsString('HTTP 500', $response->errorMessage);
     }
+
+    public function test_it_reports_a_malformed_host_without_throwing(): void
+    {
+        $connection = new TallyConnection([
+            'host' => '192.168.1.50 not-a-host',
+            'port' => 9000,
+            'company_name' => 'Oracle Machine Tech',
+            'username' => 'admin',
+            'password' => 'secret',
+        ]);
+
+        $response = (new TallyClient())->post($connection, '<ENVELOPE></ENVELOPE>', 15);
+
+        $this->assertFalse($response->accepted);
+        $this->assertNotNull($response->errorMessage);
+    }
 }

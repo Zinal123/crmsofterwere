@@ -3,7 +3,6 @@
 namespace App\Services\Integration;
 
 use App\Models\TallyConnection;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class TallyClient
@@ -14,7 +13,7 @@ class TallyClient
 
         try {
             $response = Http::timeout($timeoutSeconds)->withBody($xml, 'text/xml')->post($url);
-        } catch (ConnectionException $e) {
+        } catch (\Throwable $e) {
             return TallyResponse::networkFailure('Could not reach Tally server: '.$e->getMessage());
         }
 
