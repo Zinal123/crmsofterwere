@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class TallySyncQueue extends Model
@@ -21,9 +22,19 @@ class TallySyncQueue extends Model
         'last_error',
     ];
 
-    protected $casts = [
-        'payload' => 'array',
-    ];
+    /**
+     * Encode/decode payload manually instead of the plain 'array' cast:
+     * json_encode() drops the ".0" from whole-number floats (e.g. sgst_amount
+     * 4500.0 becomes "4500"), so a plain round-trip silently turns those
+     * amounts into ints. JSON_PRESERVE_ZERO_FRACTION keeps them as floats.
+     */
+    protected function payload(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => $value === null ? null : json_decode($value, true),
+            set: fn (?array $value) => $value === null ? null : json_encode($value, JSON_PRESERVE_ZERO_FRACTION),
+        );
+    }
 
     public function scopePending(Builder $query): Builder
     {
