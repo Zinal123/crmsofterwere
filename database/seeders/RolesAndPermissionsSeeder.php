@@ -32,6 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'spare-parts.manage', 'spare-part-requests.view', 'spare-part-requests.manage', 'spare-part-requests.view-audit',
         'reports.view',
         'accounting.view',
+        'tally-sync.view',
         'expenses.view', 'expenses.manage', 'expenses.delete', 'expenses.view-audit',
         'vendor-payments.view', 'vendor-payments.manage',
         'vendors.view-audit',
@@ -73,7 +74,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'payment-history.view',
             'expenses.view', 'expenses.manage',
             'vendors.view', 'vendor-payments.view', 'vendor-payments.manage',
-            'reports.view', 'accounting.view',
+            'reports.view', 'accounting.view', 'tally-sync.view',
         ]);
     }
 }
