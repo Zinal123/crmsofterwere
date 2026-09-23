@@ -14,7 +14,9 @@ class TallySyncQueueService
     {
         $invoice = Invoice::with('customer')->findOrFail($invoiceId);
         $customer = $invoice->customer;
-        $lineItems = Invoiceproduct::where('invoice_id', $invoiceId)->get();
+        $lineItems = Invoiceproduct::join('product', 'invoiceproduct.product_name', '=', 'product.id', 'left')
+            ->where('invoice_id', $invoiceId)
+            ->get(['invoiceproduct.*', 'product.name as product']);
 
         $totalGst = (float) $lineItems->sum('gstamount');
         $isHomeState = $customer?->state === IndianStates::HOME_STATE;
@@ -41,7 +43,7 @@ class TallySyncQueueService
             'cgst_amount' => $isHomeState ? round($totalGst / 2, 2) : 0.0,
             'igst_amount' => $isHomeState ? 0.0 : round($totalGst, 2),
             'line_items' => $lineItems->map(fn (Invoiceproduct $line) => [
-                'product_name' => $line->product_name,
+                'product_name' => $line->product,
                 'hsn' => $line->hsn,
                 'unit' => $line->unit,
                 'quantity' => $line->quantity,

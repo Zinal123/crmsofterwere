@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Invoiceproduct;
+use App\Models\Product;
 use App\Models\TallySyncQueue;
 use App\Services\Integration\TallySyncQueueService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,9 +33,10 @@ class TallySyncQueueServiceTest extends TestCase
             'state' => 'Gujarat',
             'billinggst' => '24BBBBB1111B1Z5',
         ]);
+        $product = Product::factory()->create(['name' => 'Widget X']);
         Invoiceproduct::create([
             'invoice_id' => $invoice->id,
-            'product_name' => 'Widget',
+            'product_name' => $product->id,
             'hsn' => '8456',
             'unit' => 'Nos',
             'rate' => 50000,
@@ -59,6 +61,7 @@ class TallySyncQueueServiceTest extends TestCase
         $this->assertSame(0.0, $queue->payload['igst_amount']);
         $this->assertCount(1, $queue->payload['line_items']);
         $this->assertSame('8456', $queue->payload['line_items'][0]['hsn']);
+        $this->assertSame('Widget X', $queue->payload['line_items'][0]['product_name']);
 
         $this->assertDatabaseHas('tally_sync_queue', ['reference_no' => 'SALES-'.$invoice->id]);
     }
@@ -67,12 +70,14 @@ class TallySyncQueueServiceTest extends TestCase
     {
         $invoice = Invoice::create(['invoice_id' => 'INV-002', 'date' => '2026-09-22', 'totalamountbeforetax' => 1000, 'amountwithtax' => 1180, 'placesupply' => 'Maharashtra']);
         Customer::create(['invoice_id' => $invoice->id, 'name' => 'Out Of State', 'state' => 'Maharashtra']);
-        Invoiceproduct::create(['invoice_id' => $invoice->id, 'product_name' => 'Widget', 'gst' => 18, 'gstamount' => 180, 'totalamount' => 1180]);
+        $product = Product::factory()->create(['name' => 'Widget Y']);
+        Invoiceproduct::create(['invoice_id' => $invoice->id, 'product_name' => $product->id, 'gst' => 18, 'gstamount' => 180, 'totalamount' => 1180]);
 
         $queue = (new TallySyncQueueService())->enqueueSalesInvoice($invoice->id);
 
         $this->assertSame(0.0, $queue->payload['sgst_amount']);
         $this->assertSame(0.0, $queue->payload['cgst_amount']);
         $this->assertSame(180.0, $queue->payload['igst_amount']);
+        $this->assertSame('Widget Y', $queue->payload['line_items'][0]['product_name']);
     }
 }
