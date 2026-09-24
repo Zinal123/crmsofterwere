@@ -5,6 +5,7 @@ namespace App\Services\Invoice;
 use App\Repositories\Contracts\BankRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\Integration\TallyPostingService;
 use App\Services\Integration\TallySyncQueueService;
 use App\Support\IndianNumber;
 use App\Support\IndianStates;
@@ -21,6 +22,7 @@ class InvoiceService
         private ProductRepositoryInterface $productRepository,
         private BankRepositoryInterface $bankRepository,
         private TallySyncQueueService $tallySyncQueueService,
+        private TallyPostingService $tallyPostingService,
     ) {
     }
 
@@ -127,7 +129,7 @@ class InvoiceService
 
     public function createInvoiceWithDetails(Request $request): void
     {
-        DB::transaction(function () use ($request) {
+        $queue = DB::transaction(function () use ($request) {
             $input['invoice_id'] = $request->input('invoice_id');
             $input['date'] = $request->input('invoice_date');
             $input['paycondition'] = $request->input('paycondition');
@@ -198,8 +200,18 @@ class InvoiceService
                 }
             }
 
-            $this->tallySyncQueueService->enqueueSalesInvoice($id);
+            return $this->tallySyncQueueService->enqueueSalesInvoice($id);
         });
+
+        // Attempted outside the transaction - this makes a real network
+        // call to Tally, which must never hold the invoice's DB
+        // transaction open. A Tally failure here must never break invoice
+        // creation, which has already committed by this point.
+        try {
+            $this->tallyPostingService->attempt($queue);
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     public function getInvoiceDetails($id): array
