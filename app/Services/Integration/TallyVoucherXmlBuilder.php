@@ -57,6 +57,9 @@ class TallyVoucherXmlBuilder
         $voucher = $dom->createElement('VOUCHER');
         $voucher->setAttribute('VCHTYPE', 'Sales');
         $voucher->setAttribute('ACTION', 'Create');
+        // Tally import de-duplication key: a retried/overlapping post of the
+        // same invoice refers to the same voucher instead of a duplicate.
+        $voucher->setAttribute('REMOTEID', 'SALES-'.$payload['invoice_id']);
 
         $voucher->appendChild($dom->createElement('DATE', $this->tallyDate($payload['invoice_date'])));
         $voucher->appendChild($dom->createElement('VOUCHERTYPENAME', 'Sales'));
@@ -103,12 +106,16 @@ class TallyVoucherXmlBuilder
         $unit = htmlspecialchars((string) ($line['unit'] ?? ''), ENT_XML1);
         $quantity = (float) $line['quantity'];
         $rate = (float) $line['rate'];
+        // Pre-tax line value, matching the Sales ledger's total_before_tax.
+        // 'total_amount' is tax-inclusive and must not be used here. Rows
+        // queued before 'taxable_amount' existed fall back to qty * rate.
+        $taxableAmount = isset($line['taxable_amount']) ? (float) $line['taxable_amount'] : ($quantity * $rate);
 
         $entry = $dom->createElement('ALLINVENTORYENTRIES.LIST');
         $entry->appendChild($dom->createElement('STOCKITEMNAME', htmlspecialchars((string) $line['product_name'], ENT_XML1)));
         $entry->appendChild($dom->createElement('ISDEEMEDPOSITIVE', 'No'));
         $entry->appendChild($dom->createElement('RATE', number_format($rate, 2, '.', '').'/'.$unit));
-        $entry->appendChild($dom->createElement('AMOUNT', number_format((float) $line['total_amount'], 2, '.', '')));
+        $entry->appendChild($dom->createElement('AMOUNT', number_format($taxableAmount, 2, '.', '')));
 
         $batchAllocation = $dom->createElement('BATCHALLOCATIONS.LIST');
         $batchAllocation->appendChild($dom->createElement('ACTUALQTY', number_format($quantity, 2, '.', '').' '.$unit));

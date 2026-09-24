@@ -81,6 +81,28 @@ class TallyConnectionScreenTest extends TestCase
         $this->assertSame('192.168.1.51', $connection->host);
     }
 
+    public function test_saving_clears_a_stale_last_error(): void
+    {
+        $owner = $this->owner();
+        $connection = TallyConnection::create([
+            'host' => '192.168.1.50', 'port' => 9000, 'company_name' => 'Oracle Machine Tech',
+            'username' => 'admin', 'password' => 'wrong-password', 'status' => 'failed',
+            'last_error' => 'Authentication failed',
+        ]);
+
+        $this->actingAs($owner)->post(route('tally-connection.update'), [
+            'host' => '192.168.1.50',
+            'port' => 9000,
+            'company_name' => 'Oracle Machine Tech',
+            'username' => 'admin',
+            'password' => 'right-password',
+        ])->assertRedirect(route('tally-connection.edit'));
+
+        $connection->refresh();
+        $this->assertSame('disconnected', $connection->status);
+        $this->assertNull($connection->last_error);
+    }
+
     public function test_connect_button_triggers_a_real_test_and_shows_the_result(): void
     {
         $owner = $this->owner();

@@ -36,7 +36,7 @@ class TallyPostingServiceTest extends TestCase
                 'line_items' => [[
                     'product_name' => 'Widget X', 'hsn' => '8456', 'unit' => 'Nos',
                     'quantity' => 1, 'rate' => 50000, 'gst_percent' => 18,
-                    'gst_amount' => 9000, 'total_amount' => 50000,
+                    'gst_amount' => 9000, 'total_amount' => 50000, 'taxable_amount' => 50000.0,
                 ]],
             ],
             'status' => 'pending',
@@ -75,6 +75,24 @@ class TallyPostingServiceTest extends TestCase
         $this->assertSame('failed', $queue->status);
         $this->assertSame('Ledger Test Customer does not exist', $queue->last_error);
         $this->assertSame(1, $queue->attempts);
+    }
+
+    public function test_a_network_failure_does_not_count_against_the_attempt_cap(): void
+    {
+        $this->connection();
+        $queue = $this->queue();
+
+        Http::fake(function () {
+            throw new \Illuminate\Http\Client\ConnectionException('timed out');
+        });
+
+        app(TallyPostingService::class)->attempt($queue);
+        $queue->refresh();
+
+        $this->assertSame('pending', $queue->status);
+        $this->assertSame(0, $queue->attempts);
+        $this->assertStringContainsString('Could not reach Tally server', (string) $queue->last_error);
+        $this->assertStringContainsString('timed out', (string) $queue->last_error);
     }
 
     public function test_it_leaves_the_row_pending_when_no_connection_is_configured(): void

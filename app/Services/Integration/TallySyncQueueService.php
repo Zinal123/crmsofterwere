@@ -51,6 +51,10 @@ class TallySyncQueueService
                 'gst_percent' => $line->gst,
                 'gst_amount' => $line->gstamount,
                 'total_amount' => $line->totalamount,
+                // Pre-tax line total (invoiceproduct.total). Left null when the
+                // column is null so the builder falls back to qty * rate
+                // instead of posting a 0.00 inventory line.
+                'taxable_amount' => $line->total !== null ? (float) $line->total : null,
             ])->values()->all(),
         ];
 

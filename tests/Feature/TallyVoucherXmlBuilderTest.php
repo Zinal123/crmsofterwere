@@ -28,7 +28,8 @@ class TallyVoucherXmlBuilderTest extends TestCase
                     'rate' => 50000,
                     'gst_percent' => 18,
                     'gst_amount' => 9000,
-                    'total_amount' => 50000,
+                    'total_amount' => 59000,
+                    'taxable_amount' => 50000.0,
                 ],
             ],
         ];
@@ -53,6 +54,7 @@ class TallyVoucherXmlBuilderTest extends TestCase
         $voucher = $doc->BODY->IMPORTDATA->REQUESTDATA->TALLYMESSAGE->VOUCHER;
 
         $this->assertSame('Sales', (string) $voucher['VCHTYPE']);
+        $this->assertSame('SALES-1', (string) $voucher['REMOTEID']);
         $this->assertSame('INV-001', (string) $voucher->VOUCHERNUMBER);
         $this->assertSame('SALES-1', (string) $voucher->REFERENCE);
         $this->assertSame('Test Customer', (string) $voucher->PARTYLEDGERNAME);
@@ -86,6 +88,22 @@ class TallyVoucherXmlBuilderTest extends TestCase
         $this->assertCount(1, $inventoryEntries);
         $this->assertSame('Widget X', (string) $inventoryEntries[0]->STOCKITEMNAME);
         $this->assertSame('50000.00', (string) $inventoryEntries[0]->AMOUNT);
+    }
+
+    public function test_it_falls_back_to_quantity_times_rate_when_taxable_amount_is_missing(): void
+    {
+        $this->configureLedgers();
+
+        $payload = $this->payload();
+        unset($payload['line_items'][0]['taxable_amount']);
+        $payload['line_items'][0]['quantity'] = 2;
+        $payload['line_items'][0]['rate'] = 25000;
+
+        $xml = (new TallyVoucherXmlBuilder())->buildSalesVoucher($payload, 'Oracle Machine Tech');
+        $doc = simplexml_load_string($xml);
+        $voucher = $doc->BODY->IMPORTDATA->REQUESTDATA->TALLYMESSAGE->VOUCHER;
+
+        $this->assertSame('50000.00', (string) $voucher->{'ALLINVENTORYENTRIES.LIST'}[0]->AMOUNT);
     }
 
     public function test_it_omits_the_igst_ledger_entry_when_the_amount_is_zero(): void

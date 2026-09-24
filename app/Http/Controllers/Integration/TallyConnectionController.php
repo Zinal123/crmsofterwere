@@ -39,6 +39,7 @@ class TallyConnectionController extends Controller
         }
 
         $connection->status = 'disconnected';
+        $connection->last_error = null;
         $connection->save();
 
         return redirect()->route('tally-connection.edit')->with('success', 'Tally connection details saved.');

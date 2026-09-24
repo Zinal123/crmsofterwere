@@ -51,6 +51,17 @@ class TallyPostingService
             return;
         }
 
+        // rawBody is null only for TallyResponse::networkFailure() (Tally
+        // unreachable, timeout, or non-2xx HTTP). That's an outage, not a
+        // data problem, so keep the row pending for the sweep and don't
+        // count it against the attempt cap. A real Tally rejection (parsed
+        // response body) still counts, since it needs a human to fix.
+        if ($response->rawBody === null) {
+            $queue->update(['last_error' => $response->errorMessage]);
+
+            return;
+        }
+
         $queue->update([
             'status' => 'failed',
             'last_error' => $response->errorMessage,

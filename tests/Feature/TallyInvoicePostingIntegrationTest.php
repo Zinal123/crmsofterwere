@@ -88,7 +88,10 @@ class TallyInvoicePostingIntegrationTest extends TestCase
         $response = $this->postInvoice($user, $product);
 
         $response->assertOk();
-        $this->assertDatabaseHas('tally_sync_queue', ['status' => 'failed']);
+        // A network outage leaves the row pending (for the scheduled sweep
+        // to keep retrying) without counting against the attempt cap.
+        $this->assertDatabaseHas('tally_sync_queue', ['status' => 'pending', 'attempts' => 0]);
+        $this->assertDatabaseMissing('tally_sync_queue', ['last_error' => null]);
     }
 
     /**
