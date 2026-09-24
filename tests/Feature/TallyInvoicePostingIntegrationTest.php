@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Product;
 use App\Models\TallyConnection;
 use App\Models\User;
+use App\Services\Integration\TallyPostingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -88,5 +89,30 @@ class TallyInvoicePostingIntegrationTest extends TestCase
 
         $response->assertOk();
         $this->assertDatabaseHas('tally_sync_queue', ['status' => 'failed']);
+    }
+
+    /**
+     * The test above ("...when_tally_is_unreachable") only proves that a
+     * ConnectionException thrown inside Http::fake() survives - but that
+     * exception never reaches InvoiceService's own try/catch, because
+     * TallyClient::post() already absorbs it internally and normalizes it
+     * into a TallyResponse with accepted = false. This test instead forces
+     * a \Throwable to escape TallyPostingService::attempt() itself, which
+     * is the only way to actually exercise InvoiceService's try/catch
+     * around attempt().
+     */
+    public function test_invoice_creation_still_succeeds_when_tally_posting_service_itself_throws(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        $this->mock(TallyPostingService::class, function ($mock) {
+            $mock->shouldReceive('attempt')->once()->andThrow(new \RuntimeException('Simulated internal Tally posting failure'));
+        });
+
+        $response = $this->postInvoice($user, $product);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('invoice', ['invoice_id' => 'INV-TALLY-POST-001']);
     }
 }
