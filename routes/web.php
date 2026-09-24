@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:tally-sync.view')->group(function () {
         Route::get('tally-sync', [App\Http\Controllers\Integration\TallySyncController::class, 'index'])->name('tally-sync.index');
         Route::post('tally-sync/{tallySyncQueue}/retry', [App\Http\Controllers\Integration\TallySyncController::class, 'retry'])->name('tally-sync.retry');
+        Route::get('tally-connection', [App\Http\Controllers\Integration\TallyConnectionController::class, 'edit'])->name('tally-connection.edit');
+        Route::post('tally-connection', [App\Http\Controllers\Integration\TallyConnectionController::class, 'update'])->name('tally-connection.update');
+        Route::post('tally-connection/connect', [App\Http\Controllers\Integration\TallyConnectionController::class, 'connect'])->name('tally-connection.connect');
     });
     Route::get('expenses', [App\Http\Controllers\Expenses\DailyTransactionController::class, 'index'])->name('expenses.index')->middleware('permission:expenses.view');
     Route::get('apps-invoices-create' ,[App\Http\Controllers\Invoice\InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoices.create');
