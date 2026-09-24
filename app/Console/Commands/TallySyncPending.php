@@ -17,7 +17,11 @@ class TallySyncPending extends Command
         $rows = TallySyncQueue::whereIn('status', ['pending', 'failed'])->get();
 
         foreach ($rows as $row) {
-            $service->attempt($row);
+            try {
+                $service->attempt($row);
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         $this->info("Processed {$rows->count()} Tally sync queue row(s).");

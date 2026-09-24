@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('jobs:flag-overdue')->dailyAt('07:00');
         $schedule->command('inventory:flag-low-stock')->dailyAt('07:15');
-        $schedule->command('tally:sync-pending')->everyFiveMinutes();
+        $schedule->command('tally:sync-pending')->everyFiveMinutes()->withoutOverlapping();
     }
 
     /**
