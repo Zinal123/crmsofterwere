@@ -57,19 +57,21 @@ class TallySyncStatusScreenTest extends TestCase
         $this->assertDatabaseHas('tally_sync_queue', ['id' => $queue->id, 'status' => 'pending', 'last_error' => null]);
     }
 
-    public function test_status_screen_warns_when_the_agent_has_never_checked_in(): void
+    public function test_status_screen_warns_when_tally_is_not_connected(): void
     {
         $owner = $this->owner();
-        \Illuminate\Support\Facades\Cache::forget('tally_agent_last_checkin');
 
-        $this->actingAs($owner)->get(route('tally-sync.index'))->assertSee('Agent has not checked in');
+        $this->actingAs($owner)->get(route('tally-sync.index'))->assertSee('Tally is not connected');
     }
 
-    public function test_status_screen_does_not_warn_when_the_agent_checked_in_recently(): void
+    public function test_status_screen_does_not_warn_when_tally_is_connected(): void
     {
         $owner = $this->owner();
-        \Illuminate\Support\Facades\Cache::put('tally_agent_last_checkin', now(), now()->addDay());
+        \App\Models\TallyConnection::create([
+            'host' => '192.168.1.50', 'port' => 9000, 'company_name' => 'Oracle Machine Tech',
+            'username' => 'admin', 'password' => 'secret', 'status' => 'connected',
+        ]);
 
-        $this->actingAs($owner)->get(route('tally-sync.index'))->assertDontSee('Agent has not checked in');
+        $this->actingAs($owner)->get(route('tally-sync.index'))->assertDontSee('Tally is not connected');
     }
 }

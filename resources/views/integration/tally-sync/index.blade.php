@@ -7,16 +7,12 @@
 @endcomponent
 
 <x-ui.data-table-card title="Tally Sync Queue">
-    <p class="text-muted small mb-3">Invoices queued for the local Tally sync agent to post into Tally Prime as Sales vouchers. Failed rows can be retried once the underlying issue (e.g. a missing ledger in Tally) is fixed.</p>
+    <p class="text-muted small mb-3">Invoices queued to post into Tally Prime as Sales vouchers. Failed rows can be retried once the underlying issue (e.g. a missing ledger in Tally) is fixed.</p>
 
-    @if ($agentIsStale)
+    @if ($notConnected)
     <div class="alert alert-warning">
         <i class="ri-error-warning-line align-middle me-1"></i>
-        @if ($lastCheckin)
-            Agent has not checked in since {{ $lastCheckin->diffForHumans() }} &mdash; confirm it's still running on the Tally machine.
-        @else
-            Agent has not checked in yet &mdash; confirm it's installed and running on the Tally machine.
-        @endif
+        Tally is not connected &mdash; <a href="{{ route('tally-connection.edit') }}">check the connection settings</a> before invoices can sync.
     </div>
     @endif
 
