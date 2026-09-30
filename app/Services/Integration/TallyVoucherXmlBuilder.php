@@ -14,7 +14,7 @@ class TallyVoucherXmlBuilder
      * "Open questions" section of
      * docs/superpowers/specs/2026-09-23-tally-direct-connection-design.md.
      * The one structural property that IS guaranteed regardless of sign
-     * convention: all ALLLEDGERENTRIES.LIST amounts sum to zero (Tally
+     * convention: all LEDGERENTRIES.LIST amounts plus the per-line sales allocations sum to zero (Tally
      * requires this for any voucher to balance).
      */
     public function buildSalesVoucher(array $payload, string $companyName): string
@@ -69,10 +69,11 @@ class TallyVoucherXmlBuilder
         $voucher->appendChild($dom->createElement('PARTYLEDGERNAME', htmlspecialchars($customerName, ENT_XML1)));
 
         $totalWithTax = (float) $payload['total_with_tax'];
-        $totalBeforeTax = (float) $payload['total_before_tax'];
 
         $voucher->appendChild($this->ledgerEntry($dom, $customerName, true, -$totalWithTax));
-        $voucher->appendChild($this->ledgerEntry($dom, (string) config('tally.ledgers.sales'), false, $totalBeforeTax));
+        // The Sales ledger is posted per stock line (inside each inventory
+        // entry's ACCOUNTINGALLOCATIONS.LIST), not as its own ledger entry -
+        // verified against a live TallyPrime, which throws on the other shape.
 
         if ((float) $payload['sgst_amount'] > 0) {
             $voucher->appendChild($this->ledgerEntry($dom, (string) config('tally.ledgers.sgst'), false, (float) $payload['sgst_amount']));
@@ -93,7 +94,7 @@ class TallyVoucherXmlBuilder
 
     private function ledgerEntry(\DOMDocument $dom, string $ledgerName, bool $isDeemedPositive, float $amount): \DOMElement
     {
-        $entry = $dom->createElement('ALLLEDGERENTRIES.LIST');
+        $entry = $dom->createElement('LEDGERENTRIES.LIST');
         $entry->appendChild($dom->createElement('LEDGERNAME', htmlspecialchars($ledgerName, ENT_XML1)));
         $entry->appendChild($dom->createElement('ISDEEMEDPOSITIVE', $isDeemedPositive ? 'Yes' : 'No'));
         $entry->appendChild($dom->createElement('AMOUNT', number_format($amount, 2, '.', '')));
@@ -117,10 +118,14 @@ class TallyVoucherXmlBuilder
         $entry->appendChild($dom->createElement('RATE', number_format($rate, 2, '.', '').'/'.$unit));
         $entry->appendChild($dom->createElement('AMOUNT', number_format($taxableAmount, 2, '.', '')));
 
-        $batchAllocation = $dom->createElement('BATCHALLOCATIONS.LIST');
-        $batchAllocation->appendChild($dom->createElement('ACTUALQTY', number_format($quantity, 2, '.', '').' '.$unit));
-        $batchAllocation->appendChild($dom->createElement('BILLEDQTY', number_format($quantity, 2, '.', '').' '.$unit));
-        $entry->appendChild($batchAllocation);
+        $entry->appendChild($dom->createElement('ACTUALQTY', number_format($quantity, 2, '.', '').' '.$unit));
+        $entry->appendChild($dom->createElement('BILLEDQTY', number_format($quantity, 2, '.', '').' '.$unit));
+
+        $salesAllocation = $dom->createElement('ACCOUNTINGALLOCATIONS.LIST');
+        $salesAllocation->appendChild($dom->createElement('LEDGERNAME', htmlspecialchars((string) config('tally.ledgers.sales'), ENT_XML1)));
+        $salesAllocation->appendChild($dom->createElement('ISDEEMEDPOSITIVE', 'No'));
+        $salesAllocation->appendChild($dom->createElement('AMOUNT', number_format($taxableAmount, 2, '.', '')));
+        $entry->appendChild($salesAllocation);
 
         return $entry;
     }

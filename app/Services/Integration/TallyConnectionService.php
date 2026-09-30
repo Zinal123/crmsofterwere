@@ -65,23 +65,26 @@ class TallyConnectionService
         $envelope = $dom->createElement('ENVELOPE');
         $dom->appendChild($envelope);
 
+        // Verified against a live TallyPrime: only the Collection-style
+        // export request is accepted; the REQUESTDESC/REPORTNAME form is
+        // rejected as "Unknown Request".
         $header = $dom->createElement('HEADER');
+        $header->appendChild($dom->createElement('VERSION', '1'));
         $header->appendChild($dom->createElement('TALLYREQUEST', 'Export'));
+        $header->appendChild($dom->createElement('TYPE', 'Collection'));
+        $header->appendChild($dom->createElement('ID', 'List of Companies'));
         $envelope->appendChild($header);
 
-        $requestDesc = $dom->createElement('REQUESTDESC');
-        $requestDesc->appendChild($dom->createElement('REPORTNAME', 'List of Companies'));
-
         $staticVariables = $dom->createElement('STATICVARIABLES');
+        $staticVariables->appendChild($dom->createElement('SVEXPORTFORMAT', '$$SysName:XML'));
         $staticVariables->appendChild($dom->createElement('SVCURRENTUSER', htmlspecialchars($connection->username, ENT_XML1)));
         $staticVariables->appendChild($dom->createElement('SVCURRENTUSERPASSWORD', htmlspecialchars($connection->password, ENT_XML1)));
-        $requestDesc->appendChild($staticVariables);
 
-        $exportData = $dom->createElement('EXPORTDATA');
-        $exportData->appendChild($requestDesc);
+        $desc = $dom->createElement('DESC');
+        $desc->appendChild($staticVariables);
 
         $body = $dom->createElement('BODY');
-        $body->appendChild($exportData);
+        $body->appendChild($desc);
         $envelope->appendChild($body);
 
         return $dom->saveXML();

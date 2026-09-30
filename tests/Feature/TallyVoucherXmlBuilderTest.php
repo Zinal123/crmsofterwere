@@ -69,8 +69,12 @@ class TallyVoucherXmlBuilderTest extends TestCase
         $voucher = $doc->BODY->IMPORTDATA->REQUESTDATA->TALLYMESSAGE->VOUCHER;
 
         $total = 0.0;
-        foreach ($voucher->{'ALLLEDGERENTRIES.LIST'} as $entry) {
+        foreach ($voucher->{'LEDGERENTRIES.LIST'} as $entry) {
             $total += (float) $entry->AMOUNT;
+        }
+        // The Sales ledger is posted inside each stock line.
+        foreach ($voucher->{'ALLINVENTORYENTRIES.LIST'} as $item) {
+            $total += (float) $item->{'ACCOUNTINGALLOCATIONS.LIST'}->AMOUNT;
         }
 
         $this->assertEqualsWithDelta(0.0, $total, 0.001);
@@ -115,10 +119,11 @@ class TallyVoucherXmlBuilderTest extends TestCase
         $voucher = $doc->BODY->IMPORTDATA->REQUESTDATA->TALLYMESSAGE->VOUCHER;
 
         $ledgerNames = [];
-        foreach ($voucher->{'ALLLEDGERENTRIES.LIST'} as $entry) {
+        foreach ($voucher->{'LEDGERENTRIES.LIST'} as $entry) {
             $ledgerNames[] = (string) $entry->LEDGERNAME;
         }
 
+        $this->assertContains('SGST', $ledgerNames);
         $this->assertNotContains('IGST', $ledgerNames);
     }
 }

@@ -27,12 +27,14 @@ class TallyResponse
         }
 
         $errors = isset($xml->ERRORS) ? (int) $xml->ERRORS : 0;
-        $created = isset($xml->CREATED) ? (int) $xml->CREATED : 0;
+        // A re-post of a voucher with the same REMOTEID comes back as ALTERED
+        // rather than CREATED - that is still a successful sync.
+        $created = (isset($xml->CREATED) ? (int) $xml->CREATED : 0) + (isset($xml->ALTERED) ? (int) $xml->ALTERED : 0);
 
         if ($errors > 0 || $created < 1) {
-            $message = isset($xml->LINEERROR)
+            $message = isset($xml->LINEERROR) && (string) $xml->LINEERROR !== ''
                 ? (string) $xml->LINEERROR
-                : (isset($xml->EXCEPTIONS) ? (string) $xml->EXCEPTIONS : 'Tally rejected the voucher (no error detail returned).');
+                : 'Tally rejected the voucher (no error detail returned) - check the stock item, ledger and unit names exist in Tally and the voucher date is allowed.';
 
             return new self(accepted: false, tallyVoucherId: null, errorMessage: $message, rawBody: $body);
         }
